@@ -7,17 +7,17 @@ func ExampleTraceDispatch_Channel() {
 	channel := ""
 	event := ""
 
-	d.Trace(nil, channel, event, "")
-	fmt.Printf("test: Trace() -> [channel:%v]\n", channel)
+	d.Dispatch(nil, channel, event, "")
+	fmt.Printf("test: Dispatch() -> [channel:%v]\n", channel)
 
 	channel = EmissaryChannel
-	d.Trace(nil, channel, event, "")
-	fmt.Printf("test: Trace() -> [channel:%v]\n", channel)
+	d.Dispatch(nil, channel, event, "")
+	fmt.Printf("test: Dispatch() -> [channel:%v]\n", channel)
 
 	//Output:
-	//test: Trace() -> [channel:]
+	//test: Dispatch() -> [channel:]
 	//trace -> 2024-11-24T18:40:08.606Z [emissary] [] [<nil>]
-	//test: Trace() -> [channel:emissary] []
+	//test: Dispatch() -> [channel:emissary] []
 
 }
 
@@ -26,21 +26,21 @@ func ExampleTraceDispatch_Event() {
 	channel := ""
 	event := ""
 
-	d.Trace(nil, channel, event, "")
-	fmt.Printf("test: Trace() -> [%v]\n", event)
+	d.Dispatch(nil, channel, event, "")
+	fmt.Printf("test: Dispatch() -> [%v]\n", event)
 
 	event = ShutdownEvent
-	d.Trace(nil, channel, event, "")
-	fmt.Printf("test: Trace() -> [%v]\n", event)
+	d.Dispatch(nil, channel, event, "")
+	fmt.Printf("test: Dispatch() -> [%v]\n", event)
 
 	event = ObservationEvent
-	d.Trace(nil, channel, event, "")
-	fmt.Printf("test: Trace() -> [channel:%v] [%v]\n", channel, event)
+	d.Dispatch(nil, channel, event, "")
+	fmt.Printf("test: Dispatch() -> [channel:%v] [%v]\n", channel, event)
 
 	//Output:
-	//test: Trace() -> []
+	//test: Dispatch() -> []
 	//trace -> 2024-11-24T18:46:04.697Z [] [event:shutdown] [<nil>]
-	//test: Trace() -> [event:shutdown]
-	//test: Trace() -> [channel:] [event:observation]
+	//test: Dispatch() -> [event:shutdown]
+	//test: Dispatch() -> [channel:] [event:observation]
 
 }

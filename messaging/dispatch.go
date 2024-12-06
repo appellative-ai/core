@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-type TraceDispatcher interface {
-	Tracer
+type Dispatcher interface {
+	Dispatch(agent Agent, channel, event, activity string)
 }
 
 type traceDispatch struct {
@@ -33,7 +33,7 @@ func (t *traceDispatch) validChannel(channel string) bool {
 	return t.channel == channel
 }
 
-func (t *traceDispatch) Trace(agent Agent, channel, event, activity string) {
+func (t *traceDispatch) Dispatch(agent Agent, channel, event, activity string) {
 	if !t.validEvent(event) || !t.validChannel(channel) {
 		return
 	}
@@ -48,7 +48,7 @@ func (t *traceDispatch) Trace(agent Agent, channel, event, activity string) {
 	}
 }
 
-func NewTraceDispatcher(events []string, channel string) TraceDispatcher {
+func NewTraceDispatcher(events []string, channel string) Dispatcher {
 	t := new(traceDispatch)
 	if len(events) == 0 {
 		t.allEvents = true
