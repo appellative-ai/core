@@ -3,6 +3,7 @@ package host
 import (
 	"errors"
 	"fmt"
+	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/messaging"
 	"net/http"
 	"time"
@@ -18,6 +19,8 @@ var Exchange = messaging.NewExchange()
 // ContentMap - slice of any content to be included in a message
 type ContentMap map[string]map[string]string
 
+type ResourceMap map[string]core.HttpExchange
+
 func RegisterControlAgent(uri string, handler messaging.Handler) (messaging.Agent, error) {
 	a, err := messaging.NewControlAgent(uri, handler)
 	if err != nil {
@@ -27,11 +30,11 @@ func RegisterControlAgent(uri string, handler messaging.Handler) (messaging.Agen
 }
 
 // Startup - templated function to start all registered resources.
-func Startup(duration time.Duration, content ContentMap) bool {
-	return startup(Exchange, duration, content)
+func Startup(duration time.Duration, resources ResourceMap) bool {
+	return startup(Exchange, duration, resources)
 }
 
-func startup(ex *messaging.Exchange, duration time.Duration, content ContentMap) bool {
+func startup(ex *messaging.Exchange, duration time.Duration, resources ResourceMap) bool {
 	var failures []string
 	var count = ex.Count()
 
@@ -39,7 +42,7 @@ func startup(ex *messaging.Exchange, duration time.Duration, content ContentMap)
 		return true
 	}
 	cache := messaging.NewCache()
-	toSend := createToSend(ex, content, messaging.NewCacheHandler(cache))
+	toSend := createToSend(ex, resources, messaging.NewCacheHandler(cache))
 	sendMessages(ex, toSend)
 	for wait := time.Duration(float64(duration) * 0.25); duration >= 0; duration -= wait {
 		time.Sleep(wait)
@@ -64,14 +67,14 @@ func startup(ex *messaging.Exchange, duration time.Duration, content ContentMap)
 	return false
 }
 
-func createToSend(ex *messaging.Exchange, cm ContentMap, fn messaging.Handler) messaging.Map {
+func createToSend(ex *messaging.Exchange, resources ResourceMap, fn messaging.Handler) messaging.Map {
 	m := make(messaging.Map)
 	for _, k := range ex.List() {
 		msg := messaging.NewMessage(messaging.ControlChannelType, k, startupLocation, messaging.StartupEvent, nil)
 		msg.ReplyTo = fn
-		if cm != nil {
-			if content, ok := cm[k]; ok {
-				msg.SetContent(messaging.ContentTypeConfig, content)
+		if resources != nil {
+			if ex, ok := resources[k]; ok {
+				msg.SetContent(messaging.ContentTypeConfig, ex)
 			}
 		}
 		m[k] = msg

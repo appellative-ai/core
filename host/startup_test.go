@@ -41,7 +41,7 @@ func ExampleCreateToSend() {
 	fmt.Printf("test: createToSend(nil,nil) -> [to:%v] [from:%v]\n", msg.To(), msg.From())
 
 	//Output:
-	//test: createToSend(nil,nil) -> [to:startup/none] [from:github/advanced-go/stdlib/host:Startup]
+	//test: createToSend(nil,nil) -> [to:startup/none] [from:github/advanced-go/core/host:Startup]
 
 }
 
