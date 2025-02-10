@@ -3,6 +3,7 @@ package messaging
 import (
 	"errors"
 	"fmt"
+	"github.com/behavioral-ai/core/aspect"
 	uri2 "github.com/behavioral-ai/core/uri"
 	"net/http"
 	"net/url"

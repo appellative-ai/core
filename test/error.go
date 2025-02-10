@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"github.com/behavioral-ai/core/aspect"
 	//fmt2 "github.com/advanced-go/stdlib/fmt"
 	"strconv"
 	"strings"

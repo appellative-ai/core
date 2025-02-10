@@ -24,17 +24,17 @@ const (
 )
 
 var (
-	origin = aspect.Origin{}
+	origin = Origin{}
 	logger = defaultLog
 )
 
 // SetOrigin - initialize the origin
-func SetOrigin(o aspect.Origin) {
+func SetOrigin(o Origin) {
 	origin = o
 }
 
 // LogFn - log function
-type LogFn func(o aspect.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller)
+type LogFn func(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller)
 
 // SetLogFn - override logging
 func SetLogFn(fn LogFn) {

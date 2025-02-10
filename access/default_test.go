@@ -2,6 +2,7 @@ package access
 
 import (
 	"fmt"
+	"github.com/behavioral-ai/core/aspect"
 	"github.com/behavioral-ai/core/uri"
 	"net/http"
 	"net/url"
@@ -10,7 +11,7 @@ import (
 
 func ExampleDefault_Host() {
 	start := time.Now().UTC()
-	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	req, _ := http.NewRequest("GET", "https://www.google.com/search?q=test", nil)
 	req.Header.Add(XRequestId, "123-456")
@@ -57,7 +58,7 @@ func ExampleDefault_Access_Request_Status() {
 	h.Add(XRelatesTo, "test-request-interface")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	resp := aspect.StatusNotFound()
 	time.Sleep(time.Millisecond * 500)
@@ -76,7 +77,7 @@ func ExampleDefault_Access_Request_Status_Code() {
 	h.Add(XRelatesTo, "test-request-interface")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
@@ -95,7 +96,7 @@ func ExampleDefault_Threshold_Duration() {
 	h.Add(XRelatesTo, "test-request-interface")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
@@ -114,7 +115,7 @@ func ExampleDefault_Threshold_Int() {
 	h.Add(XRelatesTo, "test-request-interface")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
@@ -133,7 +134,7 @@ func ExampleDefault_Threshold_Deadline() {
 	h.Add(XRelatesTo, "test-request-interface")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	//ctx, _ := context.WithDeadline(context.Background(), time.Now().Add(time.Second*2))
 	resp := http.StatusGatewayTimeout

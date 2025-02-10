@@ -1,6 +1,7 @@
 package test
 
 import (
+	"github.com/behavioral-ai/core/aspect"
 	"github.com/behavioral-ai/core/messaging"
 )
 

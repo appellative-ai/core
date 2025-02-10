@@ -3,6 +3,7 @@ package httpx
 import (
 	"context"
 	"fmt"
+	"github.com/behavioral-ai/core/aspect"
 	"io"
 	"net/http"
 	"time"

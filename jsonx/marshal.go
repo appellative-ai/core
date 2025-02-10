@@ -3,6 +3,7 @@ package jsonx
 import (
 	"encoding/json"
 	"errors"
+	"github.com/behavioral-ai/core/aspect"
 )
 
 func Marshal(v any) ([]byte, *aspect.Status) {

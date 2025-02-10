@@ -10,7 +10,7 @@ func ExampleLogAccess() {
 	var start time.Time //:= time.Now().UTC()
 	r, _ := http.NewRequest("PUT", "/github/advanced-go/example-domain/activity:entry", nil)
 	r.Host = "localhost:8080"
-	s := DefaultFormat(aspect.Origin{Region: "us", Zone: "zone", Host: r.Host, InstanceId: "id-012"}, EgressTraffic, start, time.Millisecond*345, r, &http.Response{StatusCode: 200, Status: "OK"}, Routing{From: "from", Route: "route", To: Primary, Percent: 10, Code: RoutingFailover}, Controller{Timeout: -1, RateLimit: 0, RateBurst: 0, Code: ControllerTimeout})
+	s := DefaultFormat(Origin{Region: "us", Zone: "zone", Host: r.Host, InstanceId: "id-012"}, EgressTraffic, start, time.Millisecond*345, r, &http.Response{StatusCode: 200, Status: "OK"}, Routing{From: "from", Route: "route", To: Primary, Percent: 10, Code: RoutingFailover}, Controller{Timeout: -1, RateLimit: 0, RateBurst: 0, Code: ControllerTimeout})
 
 	fmt.Printf("test: log() -> %v\n", s)
 

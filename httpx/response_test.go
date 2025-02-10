@@ -3,6 +3,7 @@ package httpx
 import (
 	"errors"
 	"fmt"
+	"github.com/behavioral-ai/core/aspect"
 	"github.com/behavioral-ai/core/iox"
 	"io"
 	"net/http"

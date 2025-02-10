@@ -3,6 +3,7 @@ package iox
 import (
 	"embed"
 	"fmt"
+	"github.com/behavioral-ai/core/aspect"
 	"net/http"
 	"net/url"
 	"os"

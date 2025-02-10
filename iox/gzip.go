@@ -2,6 +2,7 @@ package iox
 
 import (
 	"compress/gzip"
+	"github.com/behavioral-ai/core/aspect"
 	"io"
 )
 

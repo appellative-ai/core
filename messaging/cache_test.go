@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"fmt"
+	"github.com/behavioral-ai/core/aspect"
 )
 
 const (

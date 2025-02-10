@@ -2,7 +2,7 @@ package access
 
 import (
 	"fmt"
-	//fmt2 "github.com/advanced-go/stdlib/fmt"
+	"github.com/behavioral-ai/core/aspect"
 	"github.com/behavioral-ai/core/uri"
 	"log"
 	"net/http"
@@ -11,12 +11,12 @@ import (
 	"time"
 )
 
-var defaultLog = func(o aspect.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) {
+var defaultLog = func(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) {
 	s := DefaultFormat(o, traffic, start, duration, req, resp, routing, controller)
 	log.Default().Printf("%v\n", s)
 }
 
-func DefaultFormat(o aspect.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) string {
+func DefaultFormat(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) string {
 	newReq := BuildRequest(req)
 	newResp := BuildResponse(resp)
 	url, parsed := uri.ParseURL(newReq.Host, newReq.URL)

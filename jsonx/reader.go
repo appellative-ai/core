@@ -2,6 +2,7 @@ package jsonx
 
 import (
 	"bytes"
+	"github.com/behavioral-ai/core/aspect"
 	"io"
 )
 

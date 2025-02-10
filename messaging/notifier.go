@@ -1,5 +1,7 @@
 package messaging
 
+import "github.com/behavioral-ai/core/aspect"
+
 type Notifier interface {
 	Notify(status *aspect.Status) *aspect.Status
 }

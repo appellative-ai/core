@@ -3,6 +3,7 @@ package messaging
 import (
 	"errors"
 	"fmt"
+	"github.com/behavioral-ai/core/aspect"
 )
 
 func EventErrorStatus(agentId string, msg *Message) *aspect.Status {
