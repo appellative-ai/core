@@ -195,7 +195,7 @@ func (d *controller2) shutdown(uri string) runtime.Status {
 	//defer d.mu.RUnlock()
 	//for _, e := range d.m {
 	//	if e.ctrl != nil {
-	//		e.ctrl <- Message{To: e.uri, Event: core.ShutdownEvent}
+	//		e.ctrl <- Message{To: e.uri, Event: aspect.ShutdownEvent}
 	//	}
 	//}
 	m, status := d.get(uri)

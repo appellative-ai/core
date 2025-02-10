@@ -33,9 +33,9 @@ func ReadContent(rawHttp []byte) (*bytes.Buffer, error) {
 }
 
 /*
-func Content[T any](body io.Reader) (t T, status *core.Status) {
+func Content[T any](body io.Reader) (t T, status *aspect.Status) {
 	if body == nil {
-		return t, core.NewStatusError(core.StatusInvalidArgument, errors.New("error: body is nil"))
+		return t, aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: body is nil"))
 	}
 	var buf []byte
 	buf, status = io2.ReadAll(body, nil)
@@ -50,7 +50,7 @@ func Content[T any](body io.Reader) (t T, status *core.Status) {
 	default:
 		err := json.NewDecoder(body).Decode(p)
 		if err != nil {
-			status = core.NewStatusError(core.StatusJsonDecodeError, err)
+			status = aspect.NewStatusError(aspect.StatusJsonDecodeError, err)
 		}
 	}
 	return

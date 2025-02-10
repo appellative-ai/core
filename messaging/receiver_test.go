@@ -2,14 +2,17 @@ package messaging
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
+	"github.com/behavioral-ai/core/aspect"
+	//"github.com/behavioral-ai/aspect/aspect"
+
+	//"github.com/behavioral-ai/aspect/aspect"
 	"time"
 )
 
 func ExampleReceiver_Timeout() {
-	var result *core.Status
+	var result *aspect.Status
 	duration := time.Second * 2
-	status := make(chan *core.Status, 1)
+	status := make(chan *aspect.Status, 1)
 	reply := make(chan *Message, 16)
 
 	go Receiver(duration, reply, status, func(msg *Message) bool { return true })
@@ -25,9 +28,9 @@ func ExampleReceiver_Timeout() {
 }
 
 func ExampleReceiver_OK() {
-	var result *core.Status
+	var result *aspect.Status
 	duration := time.Second * 2
-	status := make(chan *core.Status)
+	status := make(chan *aspect.Status)
 	reply := make(chan *Message, 16)
 
 	go Receiver(duration, reply, status, func(msg *Message) bool {
@@ -48,9 +51,9 @@ func ExampleReceiver_OK() {
 }
 
 func ExampleReceiver_Closed() {
-	var result *core.Status
+	var result *aspect.Status
 	duration := time.Second * 5
-	status := make(chan *core.Status, 1)
+	status := make(chan *aspect.Status, 1)
 	reply := make(chan *Message, 16)
 
 	go Receiver(duration, reply, status, func(msg *Message) bool {

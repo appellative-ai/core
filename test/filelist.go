@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"net/http"
 	"strings"
 )
@@ -40,11 +39,11 @@ func (f FileList) NewUrl(req *http.Request) string {
 	return scheme + "://" + host + req.URL.String()
 }
 
-func (f FileList) NewRequest(req *http.Request) (*http.Request, *core.Status) {
+func (f FileList) NewRequest(req *http.Request) (*http.Request, *aspect.Status) {
 	r, err := http.NewRequest(req.Method, f.NewUrl(req), req.Body)
 	if err != nil {
-		return nil, core.NewStatusError(core.StatusInvalidArgument, err)
+		return nil, aspect.NewStatusError(aspect.StatusInvalidArgument, err)
 	}
 	r.Header = req.Header
-	return r, core.StatusOK()
+	return r, aspect.StatusOK()
 }

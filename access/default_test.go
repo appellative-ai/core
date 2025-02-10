@@ -2,7 +2,6 @@ package access
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/uri"
 	"net/http"
 	"net/url"
@@ -11,7 +10,7 @@ import (
 
 func ExampleDefault_Host() {
 	start := time.Now().UTC()
-	SetOrigin(core.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	req, _ := http.NewRequest("GET", "https://www.google.com/search?q=test", nil)
 	req.Header.Add(XRequestId, "123-456")
@@ -40,7 +39,7 @@ func ExampleDefault_Domain() {
 	req, _ := http.NewRequest("select", "https://github.com/advanced-go/example-domain/activity:v1/entry?"+uri.BuildQuery(values), nil)
 	req.Header.Add(XRequestId, "123-456")
 	req.Header.Add(XRelatesTo, "fmtlog testing")
-	req.Header.Add(core.XDomain, "github/advanced-go/auth-from")
+	req.Header.Add(aspect.XDomain, "github/advanced-go/auth-from")
 	//fmt.Printf("test: NewRequest() -> [err:%v] [req:%v]\n", err, req != nil)
 	resp := http.Response{StatusCode: http.StatusOK}
 	logTest(InternalTraffic, start, time.Since(start), req, &resp, Routing{Route: "route", To: Primary, Percent: -1}, Controller{Timeout: -1})
@@ -58,9 +57,9 @@ func ExampleDefault_Access_Request_Status() {
 	h.Add(XRelatesTo, "test-request-interface")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(core.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
-	resp := core.StatusNotFound()
+	resp := aspect.StatusNotFound()
 	time.Sleep(time.Millisecond * 500)
 	logTest(EgressTraffic, start, time.Since(start), req, resp, Routing{Route: "google-search", To: Secondary, Percent: -1}, Controller{Timeout: -1})
 
@@ -77,7 +76,7 @@ func ExampleDefault_Access_Request_Status_Code() {
 	h.Add(XRelatesTo, "test-request-interface")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(core.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
@@ -96,7 +95,7 @@ func ExampleDefault_Threshold_Duration() {
 	h.Add(XRelatesTo, "test-request-interface")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(core.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
@@ -115,7 +114,7 @@ func ExampleDefault_Threshold_Int() {
 	h.Add(XRelatesTo, "test-request-interface")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(core.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
@@ -134,7 +133,7 @@ func ExampleDefault_Threshold_Deadline() {
 	h.Add(XRelatesTo, "test-request-interface")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(core.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	SetOrigin(aspect.Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	//ctx, _ := context.WithDeadline(context.Background(), time.Now().Add(time.Second*2))
 	resp := http.StatusGatewayTimeout

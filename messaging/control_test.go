@@ -34,22 +34,22 @@ func ExampleNewControlAgent() {
 	d := time.Nanosecond * 1
 	a.Run()
 	a.Message(NewControlMessage(uri, "", StartupEvent))
-	//c <- Message{To: "", From: "", Event: core.StartupEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	//c <- Message{To: "", From: "", Event: aspect.StartupEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
 	a.Message(NewControlMessage(uri, "", PauseEvent))
-	//c <- Message{To: "", From: "", Event: core.PauseEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	//c <- Message{To: "", From: "", Event: aspect.PauseEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
 	a.Message(NewControlMessage(uri, "", ResumeEvent))
-	//c <- Message{To: "", From: "", Event: core.ResumeEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	//c <- Message{To: "", From: "", Event: aspect.ResumeEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
 	a.Message(NewControlMessage(uri, "", PingEvent))
-	//c <- Message{To: "", From: "", Event: core.PingEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	//c <- Message{To: "", From: "", Event: aspect.PingEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
 	a.Message(NewControlMessage(uri, "", ReconfigureEvent))
-	//c <- Message{To: "", From: "", Event: core.ReconfigureEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	//c <- Message{To: "", From: "", Event: aspect.ReconfigureEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
-	a.Shutdown() //.SendCtrl(Message{To: uri, From: "", Event: core.ShutdownEvent})
-	//c <- Message{To: "", From: "", Event: core.ShutdownEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	a.Shutdown() //.SendCtrl(Message{To: uri, From: "", Event: aspect.ShutdownEvent})
+	//c <- Message{To: "", From: "", Event: aspect.ShutdownEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(time.Millisecond * 100)
 
 	a.Shutdown()

@@ -15,16 +15,16 @@ func init() {
 }
 
 func Example_FormatUri() {
-	s := "github/behavioral-ai/core/core:testFunc"
+	s := "github/behavioral-ai/aspect/aspect:testFunc"
 
 	fmt.Printf("test: formatUri(%v) -> %v\n", s, formatUri(s))
 
-	s = "gitlab/behavioral-ai/core/core:testFunc"
+	s = "gitlab/behavioral-ai/aspect/aspect:testFunc"
 	fmt.Printf("test: formatUri(%v) -> %v\n", s, formatUri(s))
 
 	//Output:
-	//test: formatUri(github/behavioral-ai/core/core:testFunc) -> https://github.com/behavioral-ai/core/tree/main/core#testFunc
-	//test: formatUri(gitlab/behavioral-ai/core/core:testFunc) -> gitlab/behavioral-ai/core/core:testFunc
+	//test: formatUri(github/behavioral-ai/aspect/aspect:testFunc) -> https://github.com/behavioral-ai/core/tree/main/core#testFunc
+	//test: formatUri(gitlab/behavioral-ai/aspect/aspect:testFunc) -> gitlab/behavioral-ai/aspect/aspect:testFunc
 
 }
 

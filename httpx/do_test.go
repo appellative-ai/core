@@ -3,7 +3,6 @@ package httpx
 import (
 	"context"
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"io"
 	"net/http"
 	"time"
@@ -65,8 +64,8 @@ func ExampleDo_Service_Unavailable() {
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add(core.XRequestId, requestId)
-	w.Header().Add(core.XRelatesTo, relatesTo)
+	w.Header().Add(aspect.XRequestId, requestId)
+	w.Header().Add(aspect.XRelatesTo, relatesTo)
 	w.WriteHeader(statusCode)
 	w.Write([]byte(testContent))
 }
@@ -85,8 +84,8 @@ func _ExampleDo_Proxy() {
 	resp, status = Do(req)
 	fmt.Printf("test: Do() -> [resp:%v] [status:%v]\n", resp != nil, status)
 
-	fmt.Printf("test: Do() -> [write-requestId:%v] [response-requestId:%v]\n", requestId, resp.Header.Get(core.XRequestId))
-	fmt.Printf("test: Do() -> [write-relatesTo:%v] [response-relatesTo:%v]\n", relatesTo, resp.Header.Get(core.XRelatesTo))
+	fmt.Printf("test: Do() -> [write-requestId:%v] [response-requestId:%v]\n", requestId, resp.Header.Get(aspect.XRequestId))
+	fmt.Printf("test: Do() -> [write-relatesTo:%v] [response-relatesTo:%v]\n", relatesTo, resp.Header.Get(aspect.XRelatesTo))
 	fmt.Printf("test: Do() -> [write-statusCode:%v] [response-statusCode:%v]\n", statusCode, resp.StatusCode)
 
 	buf, _ := iox.ReadAll(resp.Body)
@@ -165,7 +164,7 @@ func ExampleDefaultDo_Timeout() {
 
 }
 
-func exchangeDo(r *http.Request) (*http.Response, *core.Status) {
+func exchangeDo(r *http.Request) (*http.Response, *aspect.Status) {
 	resp, status := Do(r)
 	if !status.OK() {
 		return resp, status
@@ -173,9 +172,9 @@ func exchangeDo(r *http.Request) (*http.Response, *core.Status) {
 	buf, err1 := io.ReadAll(resp.Body)
 	if err1 != nil {
 		if DeadlineExceededError(err1) {
-			return &http.Response{StatusCode: http.StatusGatewayTimeout}, core.NewStatusError(http.StatusGatewayTimeout, err1)
+			return &http.Response{StatusCode: http.StatusGatewayTimeout}, aspect.NewStatusError(http.StatusGatewayTimeout, err1)
 		}
-		return &http.Response{StatusCode: http.StatusInternalServerError}, core.NewStatusError(http.StatusInternalServerError, err1)
+		return &http.Response{StatusCode: http.StatusInternalServerError}, aspect.NewStatusError(http.StatusInternalServerError, err1)
 	}
 	if buf != nil {
 	}

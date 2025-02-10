@@ -2,7 +2,6 @@ package messaging
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"net/http"
 )
 
@@ -12,10 +11,10 @@ func handler(msg *Message) {
 
 func ExampleReplyTo() {
 	msg := NewMessageWithReply(channelNone, "test", "", "startup", handler)
-	SendReply(msg, core.StatusOK())
+	SendReply(msg, aspect.StatusOK())
 
 	msg = NewMessage(channelNone, "test", "", "startup", nil)
-	SendReply(msg, core.StatusOK())
+	SendReply(msg, aspect.StatusOK())
 
 	//Output:
 	//startup
@@ -23,7 +22,7 @@ func ExampleReplyTo() {
 }
 
 func ExampleStatusContent() {
-	status := core.NewStatus(http.StatusTeapot)
+	status := aspect.NewStatus(http.StatusTeapot)
 	m := NewMessage(channelNone, "to", "from", StartupEvent, nil)
 
 	err := m.SetContent("", status)

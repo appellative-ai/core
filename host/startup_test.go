@@ -3,7 +3,6 @@ package host
 import (
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/messaging"
 	msg2 "github.com/behavioral-ai/core/test"
 	"net/http"
@@ -41,7 +40,7 @@ func ExampleCreateToSend() {
 	fmt.Printf("test: createToSend(nil,nil) -> [to:%v] [from:%v]\n", msg.To(), msg.From())
 
 	//Output:
-	//test: createToSend(nil,nil) -> [to:startup/none] [from:github/advanced-go/core/host:Startup]
+	//test: createToSend(nil,nil) -> [to:startup/none] [from:github/advanced-go/aspect/host:Startup]
 
 }
 
@@ -114,7 +113,7 @@ func startupGood(c chan *messaging.Message) {
 			if !open {
 				return
 			}
-			messaging.SendReply(msg, core.NewStatusDuration(http.StatusOK, time.Since(start)))
+			messaging.SendReply(msg, aspect.NewStatusDuration(http.StatusOK, time.Since(start)))
 		default:
 		}
 	}
@@ -128,7 +127,7 @@ func startupBad(c chan *messaging.Message) {
 				return
 			}
 			time.Sleep(time.Second + time.Millisecond*100)
-			messaging.SendReply(msg, core.NewStatusDuration(http.StatusOK, time.Since(start)))
+			messaging.SendReply(msg, aspect.NewStatusDuration(http.StatusOK, time.Since(start)))
 		default:
 		}
 	}
@@ -143,12 +142,12 @@ func startupDepends(c chan *messaging.Message, err error) {
 			}
 			if err != nil {
 				time.Sleep(time.Second)
-				s := core.NewStatusDuration(0, time.Since(start))
+				s := aspect.NewStatusDuration(0, time.Since(start))
 				s.Err = err
 				messaging.SendReply(msg, s)
 			} else {
 				time.Sleep(time.Second + (time.Millisecond * 900))
-				messaging.SendReply(msg, core.NewStatusDuration(http.StatusOK, time.Since(start)))
+				messaging.SendReply(msg, aspect.NewStatusDuration(http.StatusOK, time.Since(start)))
 			}
 
 		default:

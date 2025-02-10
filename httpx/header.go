@@ -1,7 +1,6 @@
 package httpx
 
 import (
-	"github.com/behavioral-ai/core/core"
 	"net/http"
 	"strings"
 )
@@ -30,11 +29,11 @@ func forwardDefaults(dest http.Header, src http.Header) http.Header {
 		return dest
 	}
 	// TODO : add other default headers
-	dest.Set(core.XRequestId, src.Get(core.XRequestId))
-	dest.Set(core.XRelatesTo, src.Get(core.XRelatesTo))
-	dest.Set(core.XFrom, src.Get(core.XFrom))
+	dest.Set(aspect.XRequestId, src.Get(aspect.XRequestId))
+	dest.Set(aspect.XRelatesTo, src.Get(aspect.XRelatesTo))
+	dest.Set(aspect.XFrom, src.Get(aspect.XFrom))
 	// Verify
-	//dest.Set(core.XTest, src.Get(core.XTest))
+	//dest.Set(aspect.XTest, src.Get(aspect.XTest))
 	return dest
 }
 

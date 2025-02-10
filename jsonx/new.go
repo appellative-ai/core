@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/iox"
 	"io"
 	"net/http"
@@ -21,16 +20,16 @@ const (
 	eofError = "EOF"
 )
 
-func decodeStatus(err error) *core.Status {
+func decodeStatus(err error) *aspect.Status {
 	if err == nil || err.Error() == "" {
-		return core.StatusOK()
+		return aspect.StatusOK()
 	}
 	// If the error is "EOF", then the body was empty. If the error is "unexpected EOF", then the body has content
 	// but the EOF was reached when more JSON content was expected.
 	if err.Error() == eofError {
-		return core.StatusNoContent()
+		return aspect.StatusNoContent()
 	}
-	return core.NewStatusError(core.StatusJsonDecodeError, err)
+	return aspect.NewStatusError(aspect.StatusJsonDecodeError, err)
 }
 
 //type NewConstraints interface {
@@ -38,11 +37,11 @@ func decodeStatus(err error) *core.Status {
 //}
 
 // New - create a new type from JSON content, supporting: string, *url.URL, []byte, io.Reader, io.ReadCloser
-func New[T any](v any, h http.Header) (t T, status *core.Status) {
+func New[T any](v any, h http.Header) (t T, status *aspect.Status) {
 	var buf []byte
 
 	if v == nil {
-		return t, core.NewStatusError(core.StatusInvalidArgument, errors.New("error: value parameter is nil"))
+		return t, aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: value parameter is nil"))
 	}
 	switch ptr := v.(type) {
 	case string:
@@ -109,7 +108,7 @@ func New[T any](v any, h http.Header) (t T, status *core.Status) {
 	case *http.Response:
 		return New[T](ptr.Body, h)
 	default:
-		return t, core.NewStatusError(core.StatusInvalidArgument, errors.New(fmt.Sprintf("error: invalid type [%v]", reflect.TypeOf(v))))
+		return t, aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New(fmt.Sprintf("error: invalid type [%v]", reflect.TypeOf(v))))
 	}
 }
 

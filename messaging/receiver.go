@@ -2,7 +2,7 @@ package messaging
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
+	"github.com/behavioral-ai/core/aspect"
 	"net/http"
 	"time"
 )
@@ -25,9 +25,9 @@ func NewReceiverReplyTo(reply chan *Message) Handler {
 
 // Receiver - receives reply messages and forwards to a function which will return true if the receiving is complete. The interval
 // bounds the time spent receiving, and result status is sent on the status channel.
-func Receiver(interval time.Duration, reply <-chan *Message, result chan<- *core.Status, done DoneFunc) {
+func Receiver(interval time.Duration, reply <-chan *Message, result chan<- *aspect.Status, done DoneFunc) {
 	tick := time.Tick(interval)
-	status := core.StatusOK()
+	status := aspect.StatusOK()
 	start := time.Now().UTC()
 
 	if interval <= 0 || reply == nil || result == nil || done == nil {
@@ -39,15 +39,15 @@ func Receiver(interval time.Duration, reply <-chan *Message, result chan<- *core
 	for {
 		select {
 		case <-tick:
-			status = core.NewStatusDuration(http.StatusGatewayTimeout, time.Since(start))
+			status = aspect.NewStatusDuration(http.StatusGatewayTimeout, time.Since(start))
 			return
 		case msg, open := <-reply:
 			if !open {
-				status = core.NewStatusDuration(http.StatusInternalServerError, time.Since(start))
+				status = aspect.NewStatusDuration(http.StatusInternalServerError, time.Since(start))
 				return
 			}
 			if done(msg) {
-				status = core.NewStatusDuration(http.StatusOK, time.Since(start))
+				status = aspect.NewStatusDuration(http.StatusOK, time.Since(start))
 				return
 			}
 		default:

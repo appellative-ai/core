@@ -1,9 +1,7 @@
 package messaging
 
-import "github.com/behavioral-ai/core/core"
-
 type Notifier interface {
-	Notify(status *core.Status) *core.Status
+	Notify(status *aspect.Status) *aspect.Status
 }
 
 var (
@@ -13,14 +11,14 @@ var (
 
 type logError struct{}
 
-func (l *logError) Notify(status *core.Status) *core.Status {
-	var h core.Log
+func (l *logError) Notify(status *aspect.Status) *aspect.Status {
+	var h aspect.Log
 	return h.Handle(status)
 }
 
 type outputError struct{}
 
-func (o *outputError) Notify(status *core.Status) *core.Status {
-	var h core.Output
+func (o *outputError) Notify(status *aspect.Status) *aspect.Status {
+	var h aspect.Output
 	return h.Handle(status)
 }

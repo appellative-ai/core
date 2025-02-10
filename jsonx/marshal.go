@@ -3,17 +3,16 @@ package jsonx
 import (
 	"encoding/json"
 	"errors"
-	"github.com/behavioral-ai/core/core"
 )
 
-func Marshal(v any) ([]byte, *core.Status) {
+func Marshal(v any) ([]byte, *aspect.Status) {
 	if v == nil {
-		return nil, core.NewStatusError(core.StatusInvalidArgument, errors.New("invalid argument: value is nil"))
+		return nil, aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("invalid argument: value is nil"))
 	}
 	buf, err := json.Marshal(v)
 	if err != nil {
-		return nil, core.NewStatusError(core.StatusJsonEncodeError, err)
+		return nil, aspect.NewStatusError(aspect.StatusJsonEncodeError, err)
 	}
-	return buf, core.StatusOK()
+	return buf, aspect.StatusOK()
 
 }

@@ -2,7 +2,6 @@ package iox
 
 import (
 	"compress/gzip"
-	"github.com/behavioral-ai/core/core"
 	"io"
 )
 
@@ -40,14 +39,14 @@ type gzipReader struct {
 	reader *gzip.Reader
 }
 
-func NewGzipReader(r io.Reader) (EncodingReader, *core.Status) {
+func NewGzipReader(r io.Reader) (EncodingReader, *aspect.Status) {
 	zr := new(gzipReader)
 	var err error
 	zr.reader, err = gzip.NewReader(r)
 	if err != nil {
-		return nil, core.NewStatusError(core.StatusGzipEncodingError, err)
+		return nil, aspect.NewStatusError(aspect.StatusGzipEncodingError, err)
 	}
-	return zr, core.StatusOK()
+	return zr, aspect.StatusOK()
 }
 
 func (g *gzipReader) Read(p []byte) (n int, err error) {

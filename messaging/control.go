@@ -2,7 +2,7 @@ package messaging
 
 import (
 	"errors"
-	"github.com/behavioral-ai/core/core"
+	"github.com/behavioral-ai/core/aspect"
 )
 
 type controlAgent struct {
@@ -102,7 +102,7 @@ func controlAgentRun(c *controlAgent) {
 			}
 			switch msg.Event() {
 			case ShutdownEvent:
-				c.handler(NewMessageWithStatus(ControlChannelType, "", "", msg.Event(), core.StatusOK()))
+				c.handler(NewMessageWithStatus(ControlChannelType, "", "", msg.Event(), aspect.StatusOK()))
 				c.shutdown()
 				return
 			default:

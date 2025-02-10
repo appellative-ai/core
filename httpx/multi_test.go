@@ -2,19 +2,18 @@ package httpx
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"net/http"
 )
 
 type exchangeResult struct {
 	Failure bool
 	Resp    *http.Response
-	Status  *core.Status
+	Status  *aspect.Status
 }
 
 var results []exchangeResult
 
-func onResponse(id string, resp *http.Response, status *core.Status) {
+func onResponse(id string, resp *http.Response, status *aspect.Status) {
 	//fmt.Printf("[req:%v]\n [resp:%v]\n [status:%v]\n", resp.Request, resp, status)
 	fmt.Printf("[id:%v] [status:%v]\n", id, status)
 	results = append(results, exchangeResult{

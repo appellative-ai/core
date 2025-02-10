@@ -3,7 +3,6 @@ package messaging
 import (
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"net/http"
 )
 
@@ -101,7 +100,7 @@ func NewLeftChannelMessage(to, from, event string, body any) *Message {
 	return m
 }
 
-func NewStatusMessage(to, from string, status *core.Status) *Message {
+func NewStatusMessage(to, from string, status *aspect.Status) *Message {
 	m := NewMessage(ChannelStatus, to, from, StatusEvent)
 	m.SetContent(ContentTypeStatus, status)
 	m.Body = status
@@ -117,7 +116,7 @@ func NewMessageWithReply(channel, to, from, event string, replyTo Handler) *Mess
 	return m
 }
 
-func NewMessageWithStatus(channel, to, from, event string, status *core.Status) *Message {
+func NewMessageWithStatus(channel, to, from, event string, status *aspect.Status) *Message {
 	m := NewMessage(channel, to, from, event, nil)
 	m.SetContent(ContentTypeStatus, status)
 	m.Body = status
@@ -168,12 +167,12 @@ func (m *Message) IsContentType(ct string) bool {
 	return m.Header.Get(ContentType) == ct
 }
 
-func (m *Message) Status() *core.Status {
+func (m *Message) Status() *aspect.Status {
 	ct := m.Header.Get(ContentType)
 	if ct != ContentTypeStatus || m.Body == nil {
 		return nil
 	}
-	if s, ok := m.Body.(*core.Status); ok {
+	if s, ok := m.Body.(*aspect.Status); ok {
 		return s
 	}
 	return nil
@@ -225,7 +224,7 @@ func (m *Message) ContentType() string {
 }
 
 // SendReply - function used by message recipient to reply with a Status
-func SendReply(msg *Message, status *core.Status) {
+func SendReply(msg *Message, status *aspect.Status) {
 	if msg == nil || msg.ReplyTo == nil {
 		return
 	}

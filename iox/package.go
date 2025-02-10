@@ -1,5 +1,5 @@
 package iox
 
 const (
-	PkgPath = "github/behavioral-ai/core/iox"
+	PkgPath = "github/behavioral-ai/aspect/iox"
 )

@@ -5,28 +5,27 @@ import (
 	"context"
 	"fmt"
 	"github.com/behavioral-ai/core/access"
-	"github.com/behavioral-ai/core/core"
 	"io"
 	"net/http"
 	"time"
 )
 
-func serviceTestExchange(_ *http.Request) (*http.Response, *core.Status) {
+func serviceTestExchange(_ *http.Request) (*http.Response, *aspect.Status) {
 	//w.WriteHeader(http.StatusOK)
 	//fmt.Fprint(w, "Service OK")
-	return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(bytes.NewReader([]byte("Service OK")))}, core.StatusOK()
+	return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(bytes.NewReader([]byte("Service OK")))}, aspect.StatusOK()
 }
 
-func authTestExchange(r *http.Request) (*http.Response, *core.Status) {
+func authTestExchange(r *http.Request) (*http.Response, *aspect.Status) {
 	if r != nil {
 		tokenString := r.Header.Get(Authorization)
 		if tokenString == "" {
 			//w.WriteHeader(http.StatusUnauthorized)
 			//fmt.Fprint(w, "Missing authorization header")
-			return &http.Response{StatusCode: http.StatusUnauthorized, Body: io.NopCloser(bytes.NewReader([]byte("Missing authorization header")))}, core.NewStatus(http.StatusUnauthorized)
+			return &http.Response{StatusCode: http.StatusUnauthorized, Body: io.NopCloser(bytes.NewReader([]byte("Missing authorization header")))}, aspect.NewStatus(http.StatusUnauthorized)
 		}
 	}
-	return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(bytes.NewReader([]byte("Authorized")))}, core.StatusOK()
+	return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(bytes.NewReader([]byte("Authorized")))}, aspect.StatusOK()
 }
 
 func ExampleConditionalIntermediary_Nil() {
@@ -89,17 +88,17 @@ func ExampleAccessLogIntermediary() {
 
 }
 
-func proxyDo(r *http.Request) (*http.Response, *core.Status) {
+func proxyDo(r *http.Request) (*http.Response, *aspect.Status) {
 	//req, _ := http.NewRequestWithContext(r.Context(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	resp, err := http.DefaultClient.Do(r)
 	if err != nil {
 	}
 	if resp == nil {
 		resp = &http.Response{StatusCode: http.StatusGatewayTimeout, Body: io.NopCloser(bytes.NewReader([]byte("Timeout [Get \"https://www.google.com/search?q=golang\": context deadline exceeded]")))}
-		return resp, core.NewStatus(http.StatusGatewayTimeout)
+		return resp, aspect.NewStatus(http.StatusGatewayTimeout)
 	} else {
 		resp.Body = io.NopCloser(bytes.NewReader([]byte("200 OK")))
-		return resp, core.NewStatus(resp.StatusCode)
+		return resp, aspect.NewStatus(resp.StatusCode)
 	}
 }
 

@@ -20,7 +20,7 @@ func ExampleNewStatus_OK() {
 	fmt.Printf("test: NewStatus() -> %v\n", str)
 
 	//Output:
-	//test: NewStatus() -> [status:OK] [type:github.com/behavioral-ai/core/core/Status]
+	//test: NewStatus() -> [status:OK] [type:github.com/behavioral-ai/aspect/aspect/Status]
 	//test: NewStatus() -> { "timestamp":"2024-03-01T18:23:50.205Z", "code":502, "status":"error: code not mapped: 502", "request-id":"1234-56-789", "errors" : [ "this is an error message" ], "trace" : [ "https://github.com/behavioral-ai/core/tree/main/core#ExampleNewStatus_OK" ] }
 
 }
@@ -47,7 +47,7 @@ func ExampleNewStatus_Location() {
 
 	//Output:
 	//test: Location() -> [out:{ "timestamp":"2024-03-01T18:23:50.205Z", "code":400, "status":"Bad Request", "request-id":"1234-5678", "errors" : [ "test bad request error" ], "trace" : [ "https://github.com/behavioral-ai/core/tree/main/core#ExampleNewStatus_Location","https://github.com/behavioral-ai/core/tree/main/core#errorFunc" ] }
-	//] [trace:[github/behavioral-ai/core/core:errorFunc github/behavioral-ai/core/core:ExampleNewStatus_Location]]
+	//] [trace:[github/behavioral-ai/aspect/aspect:errorFunc github/behavioral-ai/aspect/aspect:ExampleNewStatus_Location]]
 
 }
 
@@ -64,7 +64,7 @@ func ExampleNewStatus_GenericLocation() {
 
 	//Output:
 	//test: GenericLocation() -> [out:{ "timestamp":"2024-03-01T18:23:50.205Z", "code":400, "status":"Bad Request", "request-id":"1234-5678", "errors" : [ "test bad request error" ], "trace" : [ "https://github.com/behavioral-ai/core/tree/main/core#ExampleNewStatus_GenericLocation","https://github.com/behavioral-ai/core/tree/main/core#genericErrorFunc[...]" ] }
-	//] [trace:[github/behavioral-ai/core/core:genericErrorFunc[...] github/behavioral-ai/core/core:ExampleNewStatus_GenericLocation]]
+	//] [trace:[github/behavioral-ai/aspect/aspect:genericErrorFunc[...] github/behavioral-ai/aspect/aspect:ExampleNewStatus_GenericLocation]]
 
 }
 
@@ -96,8 +96,8 @@ func ExampleNewStatus_TeapotHandled() {
 	//fmt.Printf("test: NewStatus() -> [status:%v]\n", s)
 
 	s.Error = errors.New("this is an error message")
-	s.AddLocation("github/behavioral-ai/core/core:AddLocation")
-	s.AddLocation("github/behavioral-ai/core/core:TopOfList")
+	s.AddLocation("github/behavioral-ai/aspect/aspect:AddLocation")
+	s.AddLocation("github/behavioral-ai/aspect/aspect:TopOfList")
 
 	fmt.Printf("test: NewStatus() -> %v\n", defaultFormatter(s.Code, []error{s.Error}, s.Trace(), "1234-56-789"))
     //e.Handle()

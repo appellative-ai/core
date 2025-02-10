@@ -3,7 +3,6 @@ package httpx
 import (
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/iox"
 	"io"
 	"net/http"
@@ -15,25 +14,25 @@ const (
 	testResponse = "file://[cwd]/test/test-response.txt"
 )
 
-func readAll(body io.ReadCloser) ([]byte, *core.Status) {
+func readAll(body io.ReadCloser) ([]byte, *aspect.Status) {
 	if body == nil {
-		return nil, core.StatusOK()
+		return nil, aspect.StatusOK()
 	}
 	defer body.Close()
 	buf, err := io.ReadAll(body)
 	if err != nil {
-		return nil, core.NewStatusError(core.StatusIOError, err)
+		return nil, aspect.NewStatusError(aspect.StatusIOError, err)
 	}
-	return buf, core.StatusOK()
+	return buf, aspect.StatusOK()
 }
 
 func ExampleNewResponse_Error() {
-	status := core.NewStatus(http.StatusGatewayTimeout)
+	status := aspect.NewStatus(http.StatusGatewayTimeout)
 	resp, _ := NewResponse(status.HttpCode(), nil, status.Err)
 	buf, _ := iox.ReadAll(resp.Body, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
-	status = core.NewStatusError(http.StatusGatewayTimeout, errors.New("Deadline Exceeded"))
+	status = aspect.NewStatusError(http.StatusGatewayTimeout, errors.New("Deadline Exceeded"))
 	resp, _ = NewResponse(status.HttpCode(), nil, status.Err)
 	buf, _ = iox.ReadAll(resp.Body, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
@@ -48,7 +47,7 @@ func ExampleNewResponse() {
 	resp, _ := NewResponse(http.StatusOK, nil, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v]\n", resp.StatusCode)
 
-	resp, _ = NewResponse(core.StatusOK().HttpCode(), nil, "version 1.2.35")
+	resp, _ = NewResponse(aspect.StatusOK().HttpCode(), nil, "version 1.2.35")
 	buf, _ := iox.ReadAll(resp.Body, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
@@ -158,16 +157,16 @@ func Example_NewResponseFromUri_EOF_Error() {
 
 /*
 func ExampleNewError() {
-	status := core.StatusOK()
+	status := aspect.StatusOK()
 	//var resp *http.Response
 
 	err := NewError(nil, nil)
 	fmt.Printf("test: NewError() -> [status:%v] [resp:%v] [err:%v]\n", nil, nil, err)
 
 	err = NewError(status, nil)
-	fmt.Printf("test: NewError() -> [status:%v] [resp:%v] [err:%v]\n", core.StatusOK(), nil, err)
+	fmt.Printf("test: NewError() -> [status:%v] [resp:%v] [err:%v]\n", aspect.StatusOK(), nil, err)
 
-	status = core.NewStatusError(core.StatusInvalidContent, errors.New("error: invalid content"))
+	status = aspect.NewStatusError(aspect.StatusInvalidContent, errors.New("error: invalid content"))
 	err = NewError(status, nil)
 	fmt.Printf("test: NewError() -> [status:%v] [resp:%v] [%v]\n", status, nil, err)
 

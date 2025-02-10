@@ -2,7 +2,7 @@ package uri
 
 import (
 	"fmt"
-	//"github.com/advanced-go/stdlib/core"
+	//"github.com/advanced-go/stdlib/aspect"
 	"net/http"
 	url2 "net/url"
 )

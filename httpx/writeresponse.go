@@ -1,7 +1,6 @@
 package httpx
 
 import (
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/iox"
 	"net/http"
 )
@@ -10,7 +9,7 @@ import (
 // Content types supported: []byte, string, error, io.Reader, io.ReadCloser. Other types will be treated as JSON and serialized, if
 // the headers content type is JSON. If not JSON, then an error will be raised.
 func WriteResponse(w http.ResponseWriter, headers any, statusCode int, content any, reqHeader http.Header) (contentLength int64) {
-	var e core.Log
+	var e aspect.Log
 
 	if statusCode == 0 {
 		statusCode = http.StatusOK

@@ -1,7 +1,6 @@
 package test
 
 import (
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/messaging"
 )
 
@@ -36,8 +35,8 @@ func (t *agentT) Message(m *messaging.Message) {
 func (t *agentT) IsFinalized() bool { return t.ch.IsFinalized() }
 
 // Notify - status notifications
-func (t *agentT) Notify(status *core.Status) *core.Status {
-	var e core.Output
+func (t *agentT) Notify(status *aspect.Status) *aspect.Status {
+	var e aspect.Output
 	//fmt.Printf("test: opsAgent.Handle() -> [status:%v]\n", status)
 	//status.Handled = true
 	return e.Handle(status)

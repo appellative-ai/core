@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"io"
 	"net/http"
 	"os"
@@ -51,15 +50,15 @@ func contentEncoding(h http.Header) string {
 	return NoneEncoding
 }
 
-func newStatusContentEncodingError(ct string) *core.Status {
-	return core.NewStatusError(core.StatusContentEncodingError, errors.New(fmt.Sprintf(encodingErrorFmt, ct)))
+func newStatusContentEncodingError(ct string) *aspect.Status {
+	return aspect.NewStatusError(aspect.StatusContentEncodingError, errors.New(fmt.Sprintf(encodingErrorFmt, ct)))
 
 }
 
 // Decode - decode a []byte
-func Decode(buf []byte, h http.Header) ([]byte, *core.Status) {
+func Decode(buf []byte, h http.Header) ([]byte, *aspect.Status) {
 	if len(buf) == 0 {
-		return buf, core.StatusOK()
+		return buf, aspect.StatusOK()
 	}
 	ct := NoneEncoding
 	if h == nil {
@@ -76,30 +75,30 @@ func Decode(buf []byte, h http.Header) ([]byte, *core.Status) {
 		buf2, err1 := io.ReadAll(zr)
 		err2 := zr.Close()
 		if err1 != nil {
-			return nil, core.NewStatusError(core.StatusIOError, err1)
+			return nil, aspect.NewStatusError(aspect.StatusIOError, err1)
 		}
 		if err2 != nil {
-			//return nil, core.NewStatusError(core.StatusIOError,err1)
+			//return nil, aspect.NewStatusError(aspect.StatusIOError,err1)
 		}
-		return buf2, core.StatusOK()
+		return buf2, aspect.StatusOK()
 	case ApplicationBrotli, BrotliEncoding:
 		return buf, newStatusContentEncodingError(ct)
 	case ApplicationDeflate, DeflateEncoding:
 		return buf, newStatusContentEncodingError(ct)
 	default:
-		return buf, core.StatusOK()
+		return buf, aspect.StatusOK()
 	}
 }
 
-func ZipFile(uri string) *core.Status {
+func ZipFile(uri string) *aspect.Status {
 	if len(uri) == 0 {
-		return core.NewStatusError(core.StatusInvalidArgument, errors.New("error: file path is empty"))
+		return aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: file path is empty"))
 	}
 	path := FileName(uri)
 	content, err0 := os.ReadFile(path)
 	if err0 != nil {
 		fmt.Printf("test: os.ReadFile() -> [err:%v]\n", err0)
-		return core.NewStatusError(core.StatusIOError, err0)
+		return aspect.NewStatusError(aspect.StatusIOError, err0)
 	}
 	// write content
 	buff := new(bytes.Buffer)
@@ -107,7 +106,7 @@ func ZipFile(uri string) *core.Status {
 	cnt, err := zw.Write(content)
 	err1 := zw.Close()
 	if err != nil {
-		return core.NewStatusError(core.StatusIOError, err)
+		return aspect.NewStatusError(aspect.StatusIOError, err)
 	}
 	if cnt == 0 || err1 != nil {
 		fmt.Printf("error: count %v err %v", cnt, err1)
@@ -122,7 +121,7 @@ func ZipFile(uri string) *core.Status {
 	}
 	err = os.WriteFile(path2, buff.Bytes(), 667)
 	if err != nil {
-		return core.NewStatusError(core.StatusIOError, err)
+		return aspect.NewStatusError(aspect.StatusIOError, err)
 	}
-	return core.StatusOK()
+	return aspect.StatusOK()
 }

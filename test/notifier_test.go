@@ -2,17 +2,16 @@ package test
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 )
 
 func ExampleNewNotifier() {
 	n := NewNotifier()
 
-	n.Notify(core.StatusNotFound())
+	n.Notify(aspect.StatusNotFound())
 	fmt.Printf("test: NewNotifier() -> [status:%v]\n", n.Status())
 
 	n.Reset()
-	n.Notify(core.StatusNoContent())
+	n.Notify(aspect.StatusNoContent())
 	fmt.Printf("test: NewNotifier() -> [status:%v]\n", n.Status())
 
 	//Output:

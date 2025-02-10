@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
-	"github.com/behavioral-ai/core/core"
 	"net/http"
 	"time"
 )
@@ -47,9 +46,9 @@ func DeadlineExceededError(t any) bool {
 }
 
 // Do - process an HTTP request, checking for file:// scheme
-func Do(req *http.Request) (resp *http.Response, status *core.Status) {
+func Do(req *http.Request) (resp *http.Response, status *aspect.Status) {
 	if req == nil {
-		return &http.Response{StatusCode: http.StatusInternalServerError}, core.NewStatusError(core.StatusInvalidArgument, errors.New("invalid argument : request is nil"))
+		return &http.Response{StatusCode: http.StatusInternalServerError}, aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("invalid argument : request is nil"))
 	}
 	if req.URL.Scheme == fileScheme {
 		resp1, status1 := NewResponseFromUri(req.URL)
@@ -73,9 +72,9 @@ func Do(req *http.Request) (resp *http.Response, status *core.Status) {
 			resp.StatusCode = http.StatusGatewayTimeout
 			err = errors.New(contextDeadlineExceeded)
 		}
-		return resp, core.NewStatusError(resp.StatusCode, err)
+		return resp, aspect.NewStatusError(resp.StatusCode, err)
 	}
-	return resp, core.NewStatus(resp.StatusCode)
+	return resp, aspect.NewStatus(resp.StatusCode)
 }
 
 func serverErrorResponse() *http.Response {
@@ -85,13 +84,13 @@ func serverErrorResponse() *http.Response {
 	return resp
 }
 
-func fileSchemeStatus(resp *http.Response) *core.Status {
+func fileSchemeStatus(resp *http.Response) *aspect.Status {
 	switch resp.StatusCode {
 	case http.StatusOK:
-		return core.StatusOK()
+		return aspect.StatusOK()
 	case http.StatusNotFound:
-		return core.StatusNotFound()
+		return aspect.StatusNotFound()
 	default:
-		return core.NewStatusError(resp.StatusCode, errors.New(core.HttpStatus(resp.StatusCode)))
+		return aspect.NewStatusError(resp.StatusCode, errors.New(aspect.HttpStatus(resp.StatusCode)))
 	}
 }

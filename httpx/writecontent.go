@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/iox"
 	"io"
 	"reflect"
@@ -15,12 +14,12 @@ const (
 	jsonToken = "json"
 )
 
-func writeContent(w io.Writer, content any, contentType string) (length int64, status *core.Status) {
+func writeContent(w io.Writer, content any, contentType string) (length int64, status *aspect.Status) {
 	var err error
 	var cnt int
 
 	if content == nil {
-		return 0, core.StatusOK()
+		return 0, aspect.StatusOK()
 	}
 	switch ptr := (content).(type) {
 	case []byte:
@@ -52,18 +51,18 @@ func writeContent(w io.Writer, content any, contentType string) (length int64, s
 
 			buf, err = json.Marshal(content)
 			if err != nil {
-				status = core.NewStatusError(core.StatusJsonEncodeError, err)
+				status = aspect.NewStatusError(aspect.StatusJsonEncodeError, err)
 				if !status.OK() {
 					return
 				}
 			}
 			cnt, err = w.Write(buf)
 		} else {
-			return 0, core.NewStatusError(core.StatusInvalidContent, errors.New(fmt.Sprintf("error: content type is invalid: %v", reflect.TypeOf(ptr))))
+			return 0, aspect.NewStatusError(aspect.StatusInvalidContent, errors.New(fmt.Sprintf("error: content type is invalid: %v", reflect.TypeOf(ptr))))
 		}
 	}
 	if err != nil {
-		return 0, core.NewStatusError(core.StatusIOError, err)
+		return 0, aspect.NewStatusError(aspect.StatusIOError, err)
 	}
-	return int64(cnt), core.StatusOK()
+	return int64(cnt), aspect.StatusOK()
 }

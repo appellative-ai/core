@@ -1,5 +1,5 @@
 package host
 
 const (
-	PkgPath = "github/advanced-go/core/host"
+	PkgPath = "github/advanced-go/aspect/host"
 )

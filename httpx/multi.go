@@ -2,7 +2,6 @@ package httpx
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"net/http"
 	"sync"
 )
@@ -12,7 +11,7 @@ type RequestItem struct {
 	Request *http.Request
 }
 
-type OnResponse func(id string, resp *http.Response, status *core.Status)
+type OnResponse func(id string, resp *http.Response, status *aspect.Status)
 
 func MultiExchange(reqs []RequestItem, handler OnResponse) {
 	cnt := len(reqs)

@@ -1,7 +1,6 @@
 package iox
 
 import (
-	"github.com/behavioral-ai/core/core"
 	"io"
 	"net/http"
 	"strings"
@@ -12,13 +11,13 @@ type EncodingWriter interface {
 	ContentEncoding() string
 }
 
-func NewEncodingWriter(w io.Writer, h http.Header) (EncodingWriter, *core.Status) {
+func NewEncodingWriter(w io.Writer, h http.Header) (EncodingWriter, *aspect.Status) {
 	encoding := acceptEncoding(h)
 	if strings.Contains(encoding, GzipEncoding) {
-		return NewGzipWriter(w), core.StatusOK()
+		return NewGzipWriter(w), aspect.StatusOK()
 	}
 	// TODO : implement additional encoding support
-	return NewIdentityWriter(w), core.StatusOK()
+	return NewIdentityWriter(w), aspect.StatusOK()
 }
 
 type identityWriter struct {

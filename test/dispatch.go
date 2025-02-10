@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/messaging"
 	"reflect"
 )
@@ -38,7 +37,7 @@ func DispatchName(t any) string {
 		return ptr.Name()
 	case *messaging.Message:
 		return ptr.Event()
-	case *core.Status:
+	case *aspect.Status:
 		return ptr.String()
 	default:
 		return fmt.Sprintf("%v", reflect.TypeOf(t))

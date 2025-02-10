@@ -3,7 +3,6 @@ package test
 import (
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"net/http"
 	"time"
 )
@@ -14,7 +13,7 @@ import (
 
 func Example_FormatTraceTest() {
 
-	s := formatTrace(core.TraceName, []string{"https://github.com/advanced-go/customer/tree/main/address1#get[...]",
+	s := formatTrace(aspect.TraceName, []string{"https://github.com/advanced-go/customer/tree/main/address1#get[...]",
 		"https://github.com/advanced-go/stdlib/tree/main/httpx#Do",
 	})
 
@@ -26,7 +25,7 @@ func Example_FormatTraceTest() {
 func Example_FormatErrorsTest() {
 	err := errors.New("Get \"http://localhost:8082/storage/address\": dial tcp [::1]:8082: connectex: No connection could be made because the target machine actively refused it.")
 
-	s := formatErrors(core.ErrorsName, []error{err})
+	s := formatErrors(aspect.ErrorsName, []error{err})
 
 	fmt.Printf("test: formatErrorsTest() -> %v\n", s)
 	//Output:

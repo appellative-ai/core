@@ -2,7 +2,6 @@ package messaging
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 )
 
 const (
@@ -13,11 +12,11 @@ const (
 func ExampleCache_Add() {
 	resp := NewCache()
 
-	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-0", StartupEvent, core.NewStatus(StatusNotProvided)))
-	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-1", StartupEvent, core.StatusOK()))
-	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-2", PingEvent, core.NewStatus(StatusNotProvided)))
-	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-3", PingEvent, core.NewStatus(StatusNotProvided)))
-	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-4", PingEvent, core.StatusOK()))
+	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-0", StartupEvent, aspect.NewStatus(StatusNotProvided)))
+	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-1", StartupEvent, aspect.StatusOK()))
+	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-2", PingEvent, aspect.NewStatus(StatusNotProvided)))
+	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-3", PingEvent, aspect.NewStatus(StatusNotProvided)))
+	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-4", PingEvent, aspect.StatusOK()))
 
 	fmt.Printf("test: count() -> : %v\n", resp.Count())
 
@@ -52,11 +51,11 @@ func ExampleCache_Add() {
 func ExampleCache_Uri() {
 	resp := NewCache()
 
-	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-0", StartupEvent, core.NewStatus(StatusNotProvided)))
-	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-1", StartupEvent, core.StatusOK()))
-	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-2", PingEvent, core.NewStatus(StatusNotProvided)))
-	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-3", PingEvent, core.NewStatus(StatusNotProvided)))
-	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-4", PingEvent, core.StatusOK()))
+	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-0", StartupEvent, aspect.NewStatus(StatusNotProvided)))
+	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-1", StartupEvent, aspect.StatusOK()))
+	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-2", PingEvent, aspect.NewStatus(StatusNotProvided)))
+	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-3", PingEvent, aspect.NewStatus(StatusNotProvided)))
+	resp.Add(NewMessageWithStatus(channelNone, "to-uri", "from-uri-4", PingEvent, aspect.StatusOK()))
 
 	fmt.Printf("test: count() -> : %v\n", resp.Count())
 

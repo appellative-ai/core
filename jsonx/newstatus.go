@@ -3,7 +3,6 @@ package jsonx
 import (
 	"encoding/json"
 	"errors"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/iox"
 	"net/http"
 	"strings"
@@ -35,7 +34,7 @@ func isStatusURL(url string) bool {
 }
 
 // NewStatusFrom - create a new Status from a URI
-func NewStatusFrom(uri string) *core.Status {
+func NewStatusFrom(uri string) *aspect.Status {
 	status := statusFromConst(uri)
 	if status != nil {
 		return status
@@ -46,30 +45,30 @@ func NewStatusFrom(uri string) *core.Status {
 	//}
 	buf, status1 := iox.ReadFile(uri) //iox.FileName(uri))
 	if !status1.OK() {
-		return status1 //core.NewStatusError(core.StatusIOError, err1)
+		return status1 //aspect.NewStatusError(aspect.StatusIOError, err1)
 	}
 	var status2 serializedStatusState
 	err := json.Unmarshal(buf, &status2)
 	if err != nil {
-		return core.NewStatusError(core.StatusJsonDecodeError, err)
+		return aspect.NewStatusError(aspect.StatusJsonDecodeError, err)
 	}
 	if len(status2.Err) > 0 {
-		return core.NewStatusError(status2.Code, errors.New(status2.Err))
+		return aspect.NewStatusError(status2.Code, errors.New(status2.Err))
 	}
-	return core.NewStatus(status2.Code).AddLocation()
+	return aspect.NewStatus(status2.Code).AddLocation()
 }
 
-func statusFromConst(url string) *core.Status {
+func statusFromConst(url string) *aspect.Status {
 	if len(url) == 0 {
-		return core.StatusOK()
+		return aspect.StatusOK()
 	}
 	switch url {
 	case StatusOKUri:
-		return core.StatusOK()
+		return aspect.StatusOK()
 	case StatusNotFoundUri:
-		return core.NewStatus(http.StatusNotFound)
+		return aspect.NewStatus(http.StatusNotFound)
 	case StatusTimeoutUri:
-		return core.NewStatus(http.StatusGatewayTimeout)
+		return aspect.NewStatus(http.StatusGatewayTimeout)
 	}
 	return nil
 }

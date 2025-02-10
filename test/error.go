@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	//fmt2 "github.com/advanced-go/stdlib/fmt"
 	"strconv"
 	"strings"
@@ -21,24 +20,24 @@ const (
 
 // ErrorHandler - error handler interface
 type ErrorHandler interface {
-	Handle(s *core.Status, t *testing.T, target string) *core.Status
+	Handle(s *aspect.Status, t *testing.T, target string) *aspect.Status
 }
 
 // Output - standard output error handler
 type Output struct{}
 
 // Handle - output error handler
-func (h Output) Handle(s *core.Status, t *testing.T, target string) *core.Status {
+func (h Output) Handle(s *aspect.Status, t *testing.T, target string) *aspect.Status {
 	if s == nil {
-		return core.StatusOK()
+		return aspect.StatusOK()
 	}
 	if s.OK() {
 		return s
 	}
 	if s.Err != nil && !s.Handled {
 		s.AddParentLocation()
-		//fmt.Printf("%v", defaultFormatter(time.Now().UTC(), s.Code, core.HttpStatus(s.Code), s.RequestId, []error{s.Err}, s.Trace()))
-		t.Errorf("%v", defaultFormatter(time.Now().UTC(), target, s.Code, core.HttpStatus(s.Code), s.RequestId, []error{s.Err}, s.Trace()))
+		//fmt.Printf("%v", defaultFormatter(time.Now().UTC(), s.Code, aspect.HttpStatus(s.Code), s.RequestId, []error{s.Err}, s.Trace()))
+		t.Errorf("%v", defaultFormatter(time.Now().UTC(), target, s.Code, aspect.HttpStatus(s.Code), s.RequestId, []error{s.Err}, s.Trace()))
 		s.Handled = true
 	}
 	return s
@@ -47,13 +46,13 @@ func (h Output) Handle(s *core.Status, t *testing.T, target string) *core.Status
 func defaultFormatter(ts time.Time, target string, code int, status, requestId string, errs []error, trace []string) string {
 	str := strconv.Itoa(code)
 	return fmt.Sprintf("{ %v, %v %v, %v, %v, \n%v, \n%v }\n",
-		core.JsonMarkup(core.TimestampName, core.FmtRFC3339Millis(ts), true),
-		core.JsonMarkup(targetName, target, true),
-		core.JsonMarkup(core.CodeName, str, false),
-		core.JsonMarkup(core.StatusName, status, true),
-		core.JsonMarkup(core.RequestIdName, requestId, true),
-		formatErrors(core.ErrorsName, errs),
-		formatTrace(core.TraceName, trace))
+		aspect.JsonMarkup(aspect.TimestampName, aspect.FmtRFC3339Millis(ts), true),
+		aspect.JsonMarkup(targetName, target, true),
+		aspect.JsonMarkup(aspect.CodeName, str, false),
+		aspect.JsonMarkup(aspect.StatusName, status, true),
+		aspect.JsonMarkup(aspect.RequestIdName, requestId, true),
+		formatErrors(aspect.ErrorsName, errs),
+		formatTrace(aspect.TraceName, trace))
 }
 
 func formatErrors(name string, errs []error) string {

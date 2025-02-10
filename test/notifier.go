@@ -1,26 +1,25 @@
 package test
 
 import (
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/messaging"
 )
 
 type Notifier interface {
 	messaging.Notifier
-	Status() *core.Status
+	Status() *aspect.Status
 	Reset()
 }
 
 type statusT struct {
-	status *core.Status
+	status *aspect.Status
 }
 
-func (s *statusT) Notify(status *core.Status) *core.Status {
+func (s *statusT) Notify(status *aspect.Status) *aspect.Status {
 	s.status = status
 	return status
 }
 
-func (s *statusT) Status() *core.Status {
+func (s *statusT) Status() *aspect.Status {
 	return s.status
 }
 

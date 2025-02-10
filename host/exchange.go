@@ -1,16 +1,15 @@
 package host
 
 import (
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/uri"
 	"net/http"
 	"time"
 )
 
 var (
-	exchangeProxy = core.NewExchangeProxy()
+	exchangeProxy = aspect.NewExchangeProxy()
 	hostDuration  time.Duration
-	authExchange  core.HttpExchange
+	authExchange  aspect.HttpExchange
 	okFunc        = func(code int) bool { return code == http.StatusOK }
 )
 
@@ -18,7 +17,7 @@ func SetHostTimeout(d time.Duration) {
 	hostDuration = d
 }
 
-func SetAuthExchange(h core.HttpExchange, ok func(int) bool) {
+func SetAuthExchange(h aspect.HttpExchange, ok func(int) bool) {
 	if h != nil {
 		authExchange = h
 		if ok != nil {
@@ -28,7 +27,7 @@ func SetAuthExchange(h core.HttpExchange, ok func(int) bool) {
 }
 
 // RegisterExchange - add a domain and Http Exchange handler to the proxy
-func RegisterExchange(domain string, handler core.HttpExchange) error {
+func RegisterExchange(domain string, handler aspect.HttpExchange) error {
 	h := handler
 	if authExchange != nil {
 		h = NewConditionalIntermediary(authExchange, handler, okFunc)

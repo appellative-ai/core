@@ -1,7 +1,6 @@
 package access
 
 import (
-	"github.com/behavioral-ai/core/core"
 	"time"
 )
 
@@ -25,17 +24,17 @@ const (
 )
 
 var (
-	origin = core.Origin{}
+	origin = aspect.Origin{}
 	logger = defaultLog
 )
 
 // SetOrigin - initialize the origin
-func SetOrigin(o core.Origin) {
+func SetOrigin(o aspect.Origin) {
 	origin = o
 }
 
 // LogFn - log function
-type LogFn func(o core.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller)
+type LogFn func(o aspect.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller)
 
 // SetLogFn - override logging
 func SetLogFn(fn LogFn) {
@@ -51,7 +50,7 @@ func SetLogFn(fn LogFn) {
 
 // ResponseConstraints - Response constraints
 //type ResponseConstraints interface {
-//	*http.Response | *core.Status | int
+//	*http.Response | *aspect.Status | int
 //}
 
 // Log - access logging.
@@ -67,7 +66,7 @@ func Log(traffic string, start time.Time, duration time.Duration, req any, resp 
 
 /*
 // FormatFunc - formatting
-type FormatFunc func(o core.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) string
+type FormatFunc func(o aspect.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) string
 
 // SetFormatFunc - override formatting
 func SetFormatFunc(fn FormatFunc) {
@@ -78,7 +77,7 @@ func SetFormatFunc(fn FormatFunc) {
 func DisableLogging(v bool) {
 	disabled = v
 }
-origin    = core.Origin{}
+origin    = aspect.Origin{}
 	//formatter = DefaultFormat
 	logger    = defaultLog
 	disabled  = false

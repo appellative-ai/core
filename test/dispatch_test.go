@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/messaging"
 	"net/http"
 )
@@ -22,7 +21,7 @@ func ExampleDispatchName() {
 	m := messaging.NewControlMessage("", "", "event-test")
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(m))
 
-	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(core.StatusNotFound()))
+	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(aspect.StatusNotFound()))
 
 	r := new(http.Response)
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(r))

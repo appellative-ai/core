@@ -4,17 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/iox"
 	"io"
 	"net/http"
 )
 
-func Indent(body io.ReadCloser, h http.Header, prefix, indent string) (io.ReadCloser, *core.Status) {
+func Indent(body io.ReadCloser, h http.Header, prefix, indent string) (io.ReadCloser, *aspect.Status) {
 	var buf bytes.Buffer
 
 	if body == nil {
-		return nil, core.NewStatusError(core.StatusInvalidArgument, errors.New("error: body is nil"))
+		return nil, aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: body is nil"))
 	}
 	buf2, status := iox.ReadAll(body, h)
 	if !status.OK() {
@@ -22,7 +21,7 @@ func Indent(body io.ReadCloser, h http.Header, prefix, indent string) (io.ReadCl
 	}
 	err := json.Indent(&buf, buf2, prefix, indent)
 	if err != nil {
-		return nil, core.NewStatusError(core.StatusJsonDecodeError, err)
+		return nil, aspect.NewStatusError(aspect.StatusJsonDecodeError, err)
 	}
-	return io.NopCloser(bytes.NewReader(buf.Bytes())), core.StatusOK()
+	return io.NopCloser(bytes.NewReader(buf.Bytes())), aspect.StatusOK()
 }

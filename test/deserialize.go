@@ -1,7 +1,6 @@
 package test
 
 import (
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/httpx"
 	"io"
 	"testing"
@@ -10,7 +9,7 @@ import (
 func Deserialize[E ErrorHandler, T any](gotBody, wantBody io.Reader, t *testing.T) (gotT, wantT T, success bool) {
 	var e E
 
-	gotStatus := core.StatusOK()
+	gotStatus := aspect.StatusOK()
 	gotT, gotStatus = httpx.Content[T](gotBody)
 	if !gotStatus.OK() && !gotStatus.NoContent() {
 		//t.Errorf("Deserialize() %v err = %v", "got", gotStatus.Err)
@@ -18,7 +17,7 @@ func Deserialize[E ErrorHandler, T any](gotBody, wantBody io.Reader, t *testing.
 		return
 	}
 
-	wantStatus := core.StatusOK()
+	wantStatus := aspect.StatusOK()
 	wantT, wantStatus = httpx.Content[T](wantBody)
 	if !wantStatus.OK() && !wantStatus.NoContent() {
 		//t.Errorf("Deserialize() %v err = %v", "want", wantStatus.Err)

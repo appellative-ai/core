@@ -2,7 +2,6 @@ package access
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	//fmt2 "github.com/advanced-go/stdlib/fmt"
 	"github.com/behavioral-ai/core/uri"
 	"log"
@@ -12,12 +11,12 @@ import (
 	"time"
 )
 
-var defaultLog = func(o core.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) {
+var defaultLog = func(o aspect.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) {
 	s := DefaultFormat(o, traffic, start, duration, req, resp, routing, controller)
 	log.Default().Printf("%v\n", s)
 }
 
-func DefaultFormat(o core.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) string {
+func DefaultFormat(o aspect.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) string {
 	newReq := BuildRequest(req)
 	newResp := BuildResponse(resp)
 	url, parsed := uri.ParseURL(newReq.Host, newReq.URL)
@@ -65,7 +64,7 @@ func DefaultFormat(o core.Origin, traffic string, start time.Time, duration time
 		JsonString(o.SubZone),
 		JsonString(o.InstanceId),
 		traffic,
-		core.FmtRFC3339Millis(start),
+		aspect.FmtRFC3339Millis(start),
 		strconv.Itoa(Milliseconds(duration)),
 
 		// Request
@@ -140,7 +139,7 @@ func BuildResponse(r any) *http.Response {
 	if sc, ok := r.(int); ok {
 		return &http.Response{StatusCode: sc}
 	}
-	if status, ok := r.(*core.Status); ok {
+	if status, ok := r.(*aspect.Status); ok {
 		return &http.Response{StatusCode: status.HttpCode()}
 	}
 	newResp := &http.Response{StatusCode: http.StatusOK}
@@ -195,7 +194,7 @@ func CreateTo(req *http.Request) string {
 	if req == nil {
 		return ""
 	}
-	to := req.Header.Get(core.XTo)
+	to := req.Header.Get(aspect.XTo)
 	if to != "" {
 		return to
 	}

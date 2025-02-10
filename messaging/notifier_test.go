@@ -3,12 +3,11 @@ package messaging
 import (
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"net/http"
 )
 
 func ExampleLogError_Notify() {
-	fmt.Printf("test: LogErrorNotifier() -> [status:%v]\n", LogErrorNotifier.Notify(core.StatusNotFound()))
+	fmt.Printf("test: LogErrorNotifier() -> [status:%v]\n", LogErrorNotifier.Notify(aspect.StatusNotFound()))
 
 	//Output:
 	//test: LogErrorNotifier() -> [status:Not Found]
@@ -16,7 +15,7 @@ func ExampleLogError_Notify() {
 }
 
 func ExampleOutputError_Notify() {
-	status := core.NewStatusError(http.StatusTeapot, errors.New("kettle on the boil"))
+	status := aspect.NewStatusError(http.StatusTeapot, errors.New("kettle on the boil"))
 	fmt.Printf("test: OutputErrorNotifier() -> [status:%v]\n", LogErrorNotifier.Notify(status))
 
 	//Output:

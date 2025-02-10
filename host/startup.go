@@ -3,7 +3,6 @@ package host
 import (
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/messaging"
 	"net/http"
 	"time"
@@ -19,7 +18,7 @@ var Exchange = messaging.NewExchange()
 // ContentMap - slice of any content to be included in a message
 type ContentMap map[string]map[string]string
 
-type ResourceMap map[string]core.HttpExchange
+type ResourceMap map[string]aspect.HttpExchange
 
 func RegisterControlAgent(uri string, handler messaging.Handler) (messaging.Agent, error) {
 	a, err := messaging.NewControlAgent(uri, handler)

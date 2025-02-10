@@ -3,7 +3,6 @@ package httpx
 import (
 	"encoding/json"
 	"errors"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/iox"
 	"io"
 )
@@ -12,11 +11,11 @@ const (
 	eofError = "EOF"
 )
 
-func Content[T any](body io.Reader) (t T, status *core.Status) {
+func Content[T any](body io.Reader) (t T, status *aspect.Status) {
 	if body == nil {
-		return t, core.NewStatusError(core.StatusInvalidArgument, errors.New("error: body is nil"))
+		return t, aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: body is nil"))
 	}
-	status = core.StatusOK()
+	status = aspect.StatusOK()
 	switch p := any(&t).(type) {
 	case *[]byte:
 		var buf []byte
@@ -25,7 +24,7 @@ func Content[T any](body io.Reader) (t T, status *core.Status) {
 			return
 		}
 		if len(buf) == 0 {
-			return t, core.StatusNotFound()
+			return t, aspect.StatusNotFound()
 		}
 		*p = buf
 	case *string:
@@ -35,7 +34,7 @@ func Content[T any](body io.Reader) (t T, status *core.Status) {
 			return
 		}
 		if len(buf) == 0 {
-			return t, core.StatusNotFound()
+			return t, aspect.StatusNotFound()
 		}
 		*p = string(buf)
 	default:
@@ -44,9 +43,9 @@ func Content[T any](body io.Reader) (t T, status *core.Status) {
 			// If the error is "EOF", then the body was empty. If the error is "unexpected EOF", then the body has content
 			// but the EOF was reached when more JSON content was expected.
 			if err.Error() == eofError {
-				status = core.StatusNoContent()
+				status = aspect.StatusNoContent()
 			} else {
-				status = core.NewStatusError(core.StatusJsonDecodeError, err)
+				status = aspect.NewStatusError(aspect.StatusJsonDecodeError, err)
 			}
 		}
 	}

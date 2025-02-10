@@ -158,8 +158,8 @@ func (s *Status) AddLocation() *Status {
 	return s
 }
 
-func (s *Status) WithRequestId(id any) *Status {
-	s.RequestId = RequestId(id)
+func (s *Status) WithRequestId(t any) *Status {
+	s.RequestId = RequestId(t)
 	return s
 }
 

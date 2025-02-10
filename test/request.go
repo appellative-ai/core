@@ -4,16 +4,15 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
-	"github.com/behavioral-ai/core/core"
 	"github.com/behavioral-ai/core/iox"
 	"io"
 	"net/http"
 	"testing"
 )
 
-func NewRequest(uri any) (*http.Request, *core.Status) {
+func NewRequest(uri any) (*http.Request, *aspect.Status) {
 	if uri == nil {
-		return nil, core.NewStatusError(core.StatusInvalidArgument, errors.New("error: URL is nil"))
+		return nil, aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: URL is nil"))
 	}
 	//if u.Scheme != fileScheme {
 	//	return nil, errors.New(fmt.Sprintf("error: invalid URL scheme : %v", u.Scheme))
@@ -26,11 +25,11 @@ func NewRequest(uri any) (*http.Request, *core.Status) {
 	reader := bufio.NewReader(byteReader)
 	req, err1 := http.ReadRequest(reader)
 	if err1 != nil {
-		return nil, core.NewStatusError(core.StatusInvalidArgument, err1)
+		return nil, aspect.NewStatusError(aspect.StatusInvalidArgument, err1)
 	}
 	bytes1, err2 := ReadContent(buf)
 	if err2 != nil {
-		return req, core.NewStatusError(core.StatusIOError, err2)
+		return req, aspect.NewStatusError(aspect.StatusIOError, err2)
 	}
 	if bytes1 != nil {
 		req.Body = io.NopCloser(bytes1)
@@ -38,17 +37,17 @@ func NewRequest(uri any) (*http.Request, *core.Status) {
 	/*
 		ex := createExchange(req.Header)
 		if ex != nil {
-			ctx := core.NewExchangeOverrideContext(nil, ex)
+			ctx := aspect.NewExchangeOverrideContext(nil, ex)
 			req2, err3 := http.NewRequestWithContext(ctx, req.Method, req.URL.String(), req.Body)
 			if err3 != nil {
-				return nil, core.NewStatusError(core.StatusInvalidArgument, err3)
+				return nil, aspect.NewStatusError(aspect.StatusInvalidArgument, err3)
 			}
 			req2.Header = req.Header
-			return req2, core.StatusOK()
+			return req2, aspect.StatusOK()
 		}
 
 	*/
-	return req, core.StatusOK()
+	return req, aspect.StatusOK()
 }
 
 func NewRequestTest(uri any, t *testing.T) *http.Request {
@@ -62,11 +61,11 @@ func NewRequestTest(uri any, t *testing.T) *http.Request {
 }
 
 /*
-func createExchange(h http.Header) *core.ExchangeOverride {
+func createExchange(h http.Header) *aspect.ExchangeOverride {
 	if h == nil {
 		return nil
 	}
-	var ex *core.ExchangeOverride
+	var ex *aspect.ExchangeOverride
 
 	if str, ok := h[httpx.ExchangeOverride]; ok && str[0] != "" {
 		for _, s := range str {
@@ -74,19 +73,19 @@ func createExchange(h http.Header) *core.ExchangeOverride {
 				continue
 			}
 			if ex == nil {
-				ex = core.NewExchangeOverrideEmpty()
+				ex = aspect.NewExchangeOverrideEmpty()
 			}
-			prefix := core.ExchangeRequestKey + httpx.ResolverSeparator
+			prefix := aspect.ExchangeRequestKey + httpx.ResolverSeparator
 			if strings.HasPrefix(s, prefix) {
 				ex.SetRequest(s[len(prefix):])
 				continue
 			}
-			prefix = core.ExchangeResponseKey + httpx.ResolverSeparator
+			prefix = aspect.ExchangeResponseKey + httpx.ResolverSeparator
 			if strings.HasPrefix(s, prefix) {
 				ex.SetResponse(s[len(prefix):])
 				continue
 			}
-			prefix = core.ExchangeStatusKey + httpx.ResolverSeparator
+			prefix = aspect.ExchangeStatusKey + httpx.ResolverSeparator
 			if strings.HasPrefix(s, prefix) {
 				ex.SetStatus(s[len(prefix):])
 			}

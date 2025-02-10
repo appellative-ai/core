@@ -2,7 +2,6 @@ package httpx
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/core"
 	"io"
 	"net/http"
 )
@@ -13,16 +12,16 @@ func Example_ResponseWriter() {
 	content := "this is response write content"
 	w := NewResponseWriter()
 
-	w.Header().Add(core.XRequestId, requestId2)
-	w.Header().Add(core.XRelatesTo, relatesTo2)
+	w.Header().Add(aspect.XRequestId, requestId2)
+	w.Header().Add(aspect.XRelatesTo, relatesTo2)
 	w.WriteHeader(http.StatusAccepted)
 	cnt, err := w.Write([]byte(content))
 	fmt.Printf("test: responseWriter() -> [cnt:%v] [error:%v]\n", cnt, err)
 
 	resp := w.Response()
 
-	fmt.Printf("test: responseWriter() -> [write-requestId:%v] [response-requestId:%v]\n", requestId, resp.Header.Get(core.XRequestId))
-	fmt.Printf("test: responseWriter() -> [write-relatesTo:%v] [response-relatesTo:%v]\n", relatesTo, resp.Header.Get(core.XRelatesTo))
+	fmt.Printf("test: responseWriter() -> [write-requestId:%v] [response-requestId:%v]\n", requestId, resp.Header.Get(aspect.XRequestId))
+	fmt.Printf("test: responseWriter() -> [write-relatesTo:%v] [response-relatesTo:%v]\n", relatesTo, resp.Header.Get(aspect.XRelatesTo))
 	fmt.Printf("test: responseWriter() -> [write-statusCode:%v] [response-statusCode:%v]\n", http.StatusAccepted, resp.StatusCode)
 
 	buf, _ := io.ReadAll(resp.Body)

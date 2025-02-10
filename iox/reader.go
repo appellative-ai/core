@@ -1,7 +1,6 @@
 package iox
 
 import (
-	"github.com/behavioral-ai/core/core"
 	"io"
 	"net/http"
 )
@@ -10,7 +9,7 @@ type EncodingReader interface {
 	io.ReadCloser
 }
 
-func NewEncodingReader(r io.Reader, h http.Header) (EncodingReader, *core.Status) {
+func NewEncodingReader(r io.Reader, h http.Header) (EncodingReader, *aspect.Status) {
 	encoding := contentEncoding(h)
 	switch encoding {
 	case GzipEncoding:
@@ -18,7 +17,7 @@ func NewEncodingReader(r io.Reader, h http.Header) (EncodingReader, *core.Status
 	case BrotliEncoding, DeflateEncoding, CompressEncoding:
 		return nil, newStatusContentEncodingError(encoding)
 	default:
-		return NewIdentityReader(r), core.StatusOK()
+		return NewIdentityReader(r), aspect.StatusOK()
 	}
 }
 
