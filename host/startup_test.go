@@ -3,6 +3,7 @@ package host
 import (
 	"errors"
 	"fmt"
+	"github.com/behavioral-ai/core/aspect"
 	"github.com/behavioral-ai/core/messaging"
 	msg2 "github.com/behavioral-ai/core/test"
 	"net/http"

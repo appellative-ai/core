@@ -2,6 +2,7 @@ package host
 
 import (
 	"fmt"
+	"github.com/behavioral-ai/core/aspect"
 	"net/http"
 	"net/http/httptest"
 )

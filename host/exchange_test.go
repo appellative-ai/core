@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/behavioral-ai/core/access"
+	"github.com/behavioral-ai/core/aspect"
 	"io"
 	"net/http"
 	"net/http/httptest"
