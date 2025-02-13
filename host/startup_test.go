@@ -4,15 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"github.com/behavioral-ai/core/aspect"
-	"github.com/behavioral-ai/core/messaging"
+	"github.com/behavioral-ai/core/messagingx"
 	msg2 "github.com/behavioral-ai/core/test"
 	"net/http"
 	"time"
 )
 
-func emptyRun(uri string, ctrl, data <-chan *messaging.Message, state any) {
+func emptyRun(uri string, ctrl, data <-chan *messagingx.Message, state any) {
 }
-func testRegister(ex *messaging.Exchange, uri string, cmd chan *messaging.Message) error {
+func testRegister(ex *messagingx.Exchange, uri string, cmd chan *messagingx.Message) error {
 	a := msg2.NewAgent(uri)
 	ex.Register(a) //.NewMailboxWithCtrl(uri, false, cmd, data))
 	return nil
@@ -23,7 +23,7 @@ var start time.Time
 func ExampleCreateToSend() {
 	uriNone := "startup/none"
 	uriOne := "startup/one"
-	ex := messaging.NewExchange()
+	ex := messagingx.NewExchange()
 
 	a := msg2.NewAgent(uriNone)
 	err := ex.Register(a)
@@ -50,18 +50,18 @@ func ExampleStartup_Success() {
 	uri2 := "github/startup/bad"
 	uri3 := "github/startup/depends"
 
-	ex := messaging.NewExchange()
+	ex := messagingx.NewExchange()
 	start = time.Now()
 
-	c := make(chan *messaging.Message, 16)
+	c := make(chan *messagingx.Message, 16)
 	testRegister(ex, uri1, c)
 	go startupGood(c)
 
-	c = make(chan *messaging.Message, 16)
+	c = make(chan *messagingx.Message, 16)
 	testRegister(ex, uri2, c)
 	go startupBad(c)
 
-	c = make(chan *messaging.Message, 16)
+	c = make(chan *messagingx.Message, 16)
 	testRegister(ex, uri3, c)
 	go startupDepends(c, nil)
 
@@ -81,19 +81,19 @@ func ExampleStartup_Failure() {
 	uri1 := "github/startup/good"
 	uri2 := "github/startup/bad"
 	uri3 := "github/startup/depends"
-	ex := messaging.NewExchange()
+	ex := messagingx.NewExchange()
 
 	start = time.Now()
 
-	c := make(chan *messaging.Message, 16)
+	c := make(chan *messagingx.Message, 16)
 	testRegister(ex, uri1, c)
 	go startupGood(c)
 
-	c = make(chan *messaging.Message, 16)
+	c = make(chan *messagingx.Message, 16)
 	testRegister(ex, uri2, c)
 	go startupBad(c)
 
-	c = make(chan *messaging.Message, 16)
+	c = make(chan *messagingx.Message, 16)
 	testRegister(ex, uri3, c)
 	go startupDepends(c, errors.New("startup failure error message"))
 
@@ -107,20 +107,20 @@ func ExampleStartup_Failure() {
 
 }
 
-func startupGood(c chan *messaging.Message) {
+func startupGood(c chan *messagingx.Message) {
 	for {
 		select {
 		case msg, open := <-c:
 			if !open {
 				return
 			}
-			messaging.SendReply(msg, aspect.NewStatusDuration(http.StatusOK, time.Since(start)))
+			messagingx.SendReply(msg, aspect.NewStatusDuration(http.StatusOK, time.Since(start)))
 		default:
 		}
 	}
 }
 
-func startupBad(c chan *messaging.Message) {
+func startupBad(c chan *messagingx.Message) {
 	for {
 		select {
 		case msg, open := <-c:
@@ -128,13 +128,13 @@ func startupBad(c chan *messaging.Message) {
 				return
 			}
 			time.Sleep(time.Second + time.Millisecond*100)
-			messaging.SendReply(msg, aspect.NewStatusDuration(http.StatusOK, time.Since(start)))
+			messagingx.SendReply(msg, aspect.NewStatusDuration(http.StatusOK, time.Since(start)))
 		default:
 		}
 	}
 }
 
-func startupDepends(c chan *messaging.Message, err error) {
+func startupDepends(c chan *messagingx.Message, err error) {
 	for {
 		select {
 		case msg, open := <-c:
@@ -145,10 +145,10 @@ func startupDepends(c chan *messaging.Message, err error) {
 				time.Sleep(time.Second)
 				s := aspect.NewStatusDuration(0, time.Since(start))
 				s.Err = err
-				messaging.SendReply(msg, s)
+				messagingx.SendReply(msg, s)
 			} else {
 				time.Sleep(time.Second + (time.Millisecond * 900))
-				messaging.SendReply(msg, aspect.NewStatusDuration(http.StatusOK, time.Since(start)))
+				messagingx.SendReply(msg, aspect.NewStatusDuration(http.StatusOK, time.Since(start)))
 			}
 
 		default:

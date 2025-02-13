@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/behavioral-ai/core/aspect"
-	"github.com/behavioral-ai/core/messaging"
+	"github.com/behavioral-ai/core/messagingx"
 	"net/http"
 	"time"
 )
@@ -14,15 +14,15 @@ const (
 )
 
 // Exchange - host package controller2
-var Exchange = messaging.NewExchange()
+var Exchange = messagingx.NewExchange()
 
 // ContentMap - slice of any content to be included in a message
 type ContentMap map[string]map[string]string
 
 type ResourceMap map[string]aspect.HttpExchange
 
-func RegisterControlAgent(uri string, handler messaging.Handler) (messaging.Agent, error) {
-	a, err := messaging.NewControlAgent(uri, handler)
+func RegisterControlAgent(uri string, handler messagingx.Handler) (messagingx.Agent, error) {
+	a, err := messagingx.NewControlAgent(uri, handler)
 	if err != nil {
 		return a, err
 	}
@@ -34,15 +34,15 @@ func Startup(duration time.Duration, resources ResourceMap) bool {
 	return startup(Exchange, duration, resources)
 }
 
-func startup(ex *messaging.Exchange, duration time.Duration, resources ResourceMap) bool {
+func startup(ex *messagingx.Exchange, duration time.Duration, resources ResourceMap) bool {
 	var failures []string
 	var count = ex.Count()
 
 	if count == 0 {
 		return true
 	}
-	cache := messaging.NewCache()
-	toSend := createToSend(ex, resources, messaging.NewCacheHandler(cache))
+	cache := messagingx.NewCache()
+	toSend := createToSend(ex, resources, messagingx.NewCacheHandler(cache))
 	sendMessages(ex, toSend)
 	for wait := time.Duration(float64(duration) * 0.25); duration >= 0; duration -= wait {
 		time.Sleep(wait)
@@ -51,14 +51,14 @@ func startup(ex *messaging.Exchange, duration time.Duration, resources ResourceM
 			continue
 		}
 		// Check for failed resources
-		failures = cache.Exclude(messaging.StartupEvent, http.StatusOK)
+		failures = cache.Exclude(messagingx.StartupEvent, http.StatusOK)
 		if len(failures) == 0 {
 			handleStatus(cache)
 			return true
 		}
 		break
 	}
-	shutdownHost(messaging.NewMessage(messaging.ControlChannelType, "", "", messaging.ShutdownEvent, nil))
+	shutdownHost(messagingx.NewMessage(messagingx.ControlChannelType, "", "", messagingx.ShutdownEvent, nil))
 	if len(failures) > 0 {
 		handleErrors(failures, cache)
 		return false
@@ -67,14 +67,14 @@ func startup(ex *messaging.Exchange, duration time.Duration, resources ResourceM
 	return false
 }
 
-func createToSend(ex *messaging.Exchange, resources ResourceMap, fn messaging.Handler) messaging.Map {
-	m := make(messaging.Map)
+func createToSend(ex *messagingx.Exchange, resources ResourceMap, fn messagingx.Handler) messagingx.Map {
+	m := make(messagingx.Map)
 	for _, k := range ex.List() {
-		msg := messaging.NewMessage(messaging.ControlChannelType, k, startupLocation, messaging.StartupEvent, nil)
+		msg := messagingx.NewMessage(messagingx.ControlChannelType, k, startupLocation, messagingx.StartupEvent, nil)
 		msg.ReplyTo = fn
 		if resources != nil {
 			if ex, ok := resources[k]; ok {
-				msg.SetContent(messaging.ContentTypeConfig, ex)
+				msg.SetContent(messagingx.ContentTypeConfig, ex)
 			}
 		}
 		m[k] = msg
@@ -82,13 +82,13 @@ func createToSend(ex *messaging.Exchange, resources ResourceMap, fn messaging.Ha
 	return m
 }
 
-func sendMessages(ex *messaging.Exchange, msgs messaging.Map) {
+func sendMessages(ex *messagingx.Exchange, msgs messagingx.Map) {
 	for k := range msgs {
 		ex.Send(msgs[k])
 	}
 }
 
-func handleErrors(failures []string, cache *messaging.Cache) {
+func handleErrors(failures []string, cache *messagingx.Cache) {
 	for _, uri := range failures {
 		msg, ok := cache.Get(uri)
 		if !ok {
@@ -100,7 +100,7 @@ func handleErrors(failures []string, cache *messaging.Cache) {
 	}
 }
 
-func handleStatus(cache *messaging.Cache) {
+func handleStatus(cache *messagingx.Cache) {
 	for _, uri := range cache.Uri() {
 		msg, ok := cache.Get(uri)
 		if !ok {
@@ -112,6 +112,6 @@ func handleStatus(cache *messaging.Cache) {
 	}
 }
 
-func shutdownHost(m *messaging.Message) {
+func shutdownHost(m *messagingx.Message) {
 
 }

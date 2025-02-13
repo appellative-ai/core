@@ -1,5 +1,5 @@
 package messagingx
 
 const (
-	PkgPath = "github/advanced-go/stdlib/messaging"
+	PkgPath = "github/advanced-go/core/messagingx"
 )

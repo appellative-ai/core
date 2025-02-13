@@ -2,9 +2,9 @@ package host
 
 import (
 	"github.com/behavioral-ai/core/aspect"
-	"github.com/behavioral-ai/core/messaging"
+	"github.com/behavioral-ai/core/messagingx"
 )
 
 func Ping(uri any) *aspect.Status {
-	return messaging.Ping(Exchange, uri)
+	return messagingx.Ping(Exchange, uri)
 }
