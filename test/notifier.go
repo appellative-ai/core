@@ -2,11 +2,11 @@ package test
 
 import (
 	"github.com/behavioral-ai/core/aspect"
-	"github.com/behavioral-ai/core/messaging"
+	"github.com/behavioral-ai/core/messagingx"
 )
 
 type Notifier interface {
-	messaging.Notifier
+	messagingx.Notifier
 	Status() *aspect.Status
 	Reset()
 }

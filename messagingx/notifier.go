@@ -1,4 +1,4 @@
-package messaging
+package messagingx
 
 import "github.com/behavioral-ai/core/aspect"
 

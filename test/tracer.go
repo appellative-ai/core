@@ -3,7 +3,7 @@ package test
 import (
 	"fmt"
 	"github.com/behavioral-ai/core/aspect"
-	"github.com/behavioral-ai/core/messaging"
+	"github.com/behavioral-ai/core/messagingx"
 	"time"
 )
 
@@ -13,11 +13,11 @@ var (
 
 type defaultTracer struct{}
 
-func (d *defaultTracer) Trace(agent messaging.Agent, channel, event, activity string) {
+func (d *defaultTracer) Trace(agent messagingx.Agent, channel, event, activity string) {
 	trace(agent, channel, event, activity)
 }
 
-func trace(agent messaging.Agent, channel, event, activity string) {
+func trace(agent messagingx.Agent, channel, event, activity string) {
 	id := "<nil>"
 	if agent != nil {
 		id = agent.Uri()

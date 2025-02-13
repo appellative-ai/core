@@ -1,13 +1,13 @@
 package test
 
-import "github.com/behavioral-ai/core/messaging"
+import "github.com/behavioral-ai/core/messagingx"
 
 func ExampleDefaultTracer_Trace() {
 	a := NewAgent("agent:test")
-	DefaultTracer.Trace(nil, messaging.MasterChannel, "event:shutdown", "agent shutdown")
+	DefaultTracer.Trace(nil, messagingx.MasterChannel, "event:shutdown", "agent shutdown")
 	//fmt.Printf("\n")
 
-	DefaultTracer.Trace(a, messaging.EmissaryChannel, "event:shutdown", "")
+	DefaultTracer.Trace(a, messagingx.EmissaryChannel, "event:shutdown", "")
 	//fmt.Printf("\n")
 
 	//Output:

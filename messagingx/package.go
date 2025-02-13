@@ -1,4 +1,4 @@
-package messaging
+package messagingx
 
 const (
 	PkgPath = "github/advanced-go/stdlib/messaging"

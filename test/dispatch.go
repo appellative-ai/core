@@ -3,7 +3,7 @@ package test
 import (
 	"fmt"
 	"github.com/behavioral-ai/core/aspect"
-	"github.com/behavioral-ai/core/messaging"
+	"github.com/behavioral-ai/core/messagingx"
 	"reflect"
 )
 
@@ -13,11 +13,11 @@ var (
 
 type testDispatch struct{}
 
-func (t *testDispatch) OnTick(agent any, src *messaging.Ticker) {
+func (t *testDispatch) OnTick(agent any, src *messagingx.Ticker) {
 	fmt.Printf("OnTick()  -> %v : ticker:%v\n", DispatchName(agent), DispatchName(src))
 }
 
-func (t *testDispatch) OnMessage(agent any, msg *messaging.Message, src *messaging.Channel) {
+func (t *testDispatch) OnMessage(agent any, msg *messagingx.Message, src *messagingx.Channel) {
 	fmt.Printf("OnMsg()   -> %v : %v channel:%v\n", DispatchName(agent), DispatchName(msg), DispatchName(src))
 }
 
@@ -30,13 +30,13 @@ func DispatchName(t any) string {
 		return "<nil>"
 	}
 	switch ptr := t.(type) {
-	case messaging.Agent:
+	case messagingx.Agent:
 		return ptr.Uri()
-	case *messaging.Ticker:
+	case *messagingx.Ticker:
 		return ptr.Name()
-	case *messaging.Channel:
+	case *messagingx.Channel:
 		return ptr.Name()
-	case *messaging.Message:
+	case *messagingx.Message:
 		return ptr.Event()
 	case *aspect.Status:
 		return ptr.String()

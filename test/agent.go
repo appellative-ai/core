@@ -2,23 +2,23 @@ package test
 
 import (
 	"github.com/behavioral-ai/core/aspect"
-	"github.com/behavioral-ai/core/messaging"
+	"github.com/behavioral-ai/core/messagingx"
 )
 
 type agentT struct {
 	agentId string
-	ch      *messaging.Channel
+	ch      *messagingx.Channel
 	//shutdownFunc func()
 }
 
-func NewAgent(uri string) messaging.OpsAgent {
+func NewAgent(uri string) messagingx.OpsAgent {
 	a := new(agentT)
 	a.agentId = uri
-	a.ch = messaging.NewEmissaryChannel(true)
+	a.ch = messagingx.NewEmissaryChannel(true)
 	return a
 }
 
-func NewAgentWithChannel(uri string, ch *messaging.Channel) messaging.OpsAgent {
+func NewAgentWithChannel(uri string, ch *messagingx.Channel) messagingx.OpsAgent {
 	a := new(agentT)
 	a.agentId = uri
 	a.ch = ch
@@ -26,7 +26,7 @@ func NewAgentWithChannel(uri string, ch *messaging.Channel) messaging.OpsAgent {
 }
 
 func (t *agentT) Uri() string { return t.agentId }
-func (t *agentT) Message(m *messaging.Message) {
+func (t *agentT) Message(m *messagingx.Message) {
 	if m == nil {
 		return
 	}
@@ -44,12 +44,12 @@ func (t *agentT) Notify(status *aspect.Status) *aspect.Status {
 }
 
 // Trace - activity tracing
-func (t *agentT) Trace(agent messaging.Agent, channel, event, activity string) {
+func (t *agentT) Trace(agent messagingx.Agent, channel, event, activity string) {
 	trace(agent, channel, event, activity)
 }
 
 // Add - add a shutdown function
-//func (t *agentT) Add(f func()) { t.shutdownFunc = messaging.AddShutdown(t.shutdownFunc, f) }
+//func (t *agentT) Add(f func()) { t.shutdownFunc = messagingx.AddShutdown(t.shutdownFunc, f) }
 
 func (t *agentT) Run() {
 	go func() {
@@ -57,7 +57,7 @@ func (t *agentT) Run() {
 			select {
 			case msg := <-t.ch.C:
 				switch msg.Event() {
-				case messaging.ShutdownEvent:
+				case messagingx.ShutdownEvent:
 					t.finalize()
 					return
 				default:
@@ -72,7 +72,7 @@ func (t *agentT) Shutdown() {
 	//if t.shutdownFunc != nil {
 	//	t.shutdownFunc()
 	//}
-	msg := messaging.NewControlMessage(t.Uri(), t.Uri(), messaging.ShutdownEvent)
+	msg := messagingx.NewControlMessage(t.Uri(), t.Uri(), messagingx.ShutdownEvent)
 	t.ch.Enable()
 	t.ch.C <- msg
 }
