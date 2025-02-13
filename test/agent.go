@@ -50,7 +50,7 @@ func (t *agentT) Trace(agent messaging.Agent, channel, event, activity string) {
 }
 
 // Add - add a shutdown function
-//func (t *agentT) Add(f func()) { t.shutdownFunc = messagingx.AddShutdown(t.shutdownFunc, f) }
+//func (t *agentT) Add(f func()) { t.shutdownFunc = messaging.AddShutdown(t.shutdownFunc, f) }
 
 func (t *agentT) Run() {
 	go func() {
