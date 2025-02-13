@@ -72,6 +72,11 @@ func (t *testAgent) Shutdown() {
 	t.Message(NewControlMessage(t.agentId, t.agentId, ShutdownEvent))
 }
 
+// Add - add a shutdown function
+func (t *testAgent) Add(f func()) {
+	t.shutdownFn = AddShutdown(t.shutdownFn, f)
+}
+
 func testAgentRun(t *testAgent) {
 	for {
 		select {
@@ -147,5 +152,28 @@ func ExampleAgentRun() {
 	//Output:
 	//test: AgentRun() -> [chan:CTRL] [from:ExampleAgentRun()] [to:urn:agent007] [event:startup]
 	//test: AgentRun() -> [chan:CTRL] [from:urn:agent007] [to:urn:agent007] [event:shutdown]
+
+}
+
+func ExampleOnShutdown() {
+	uri := "urn:agent007"
+
+	a := newTestAgent(uri, nil, nil)
+	a.running = true
+	a.Shutdown()
+
+	a1 := newTestAgent(uri, nil, nil)
+	if sd, ok := any(a1).(OnShutdown); ok {
+		sd.Add(func() { fmt.Printf("test: OnShutdown() -> func-1()\n") })
+		sd.Add(func() { fmt.Printf("test: OnShutdown() -> func-2()\n") })
+		sd.Add(func() { fmt.Printf("test: OnShutdown() -> func-3()\n") })
+	}
+	a1.running = true
+	a1.Shutdown()
+
+	//Output:
+	//test: OnShutdown() -> func-1()
+	//test: OnShutdown() -> func-2()
+	//test: OnShutdown() -> func-3()
 
 }

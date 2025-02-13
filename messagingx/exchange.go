@@ -13,13 +13,12 @@ const (
 	exchangeFinalizeAttempts = 3
 )
 
-// Mailbox - mailbox functionality
 type Mailbox interface {
 	Uri() string
 	Message(m *Message)
 }
 
-// Exchange - exchange directory
+// Exchange - controller2 directory
 type Exchange struct {
 	m *sync.Map
 }
@@ -102,14 +101,11 @@ func (e *Exchange) RegisterMailbox(m Mailbox) error {
 		return errors.New(fmt.Sprintf("error: controller2.Register() agent already exists: [%v]", m.Uri()))
 	}
 	e.m.Store(m.Uri(), m)
-	/*
-		if sd, ok1 := m.(OnShutdown); ok1 {
-			sd.Add(func() {
-				e.m.Delete(m.Uri())
-			})
-		}
-
-	*/
+	if sd, ok1 := m.(OnShutdown); ok1 {
+		sd.Add(func() {
+			e.m.Delete(m.Uri())
+		})
+	}
 	return nil
 }
 
@@ -192,3 +188,27 @@ func (e *Exchange) IsFinalized() bool {
 	}
 	return false
 }
+
+/*
+func (d *controller2) shutdown(uri string) runtime.Status {
+	//d.mu.RLock()
+	//defer d.mu.RUnlock()
+	//for _, e := range d.m {
+	//	if e.ctrl != nil {
+	//		e.ctrl <- Message{To: e.uri, Event: aspect.ShutdownEvent}
+	//	}
+	//}
+	m, status := d.get(uri)
+	if !status.OK() {
+		return status
+	}
+	if m.data != nil {
+		close(m.data)
+	}
+	if m.ctrl != nil {
+		close(m.ctrl)
+	}
+	d.m.Delete(uri)
+	return runtime.StatusOK()
+}
+*/

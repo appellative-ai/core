@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"fmt"
+	"github.com/behavioral-ai/core/aspect"
 	"time"
 )
 
@@ -41,9 +42,9 @@ func (t *traceDispatch) Dispatch(agent Agent, channel, event, activity string) {
 		id = agent.Uri()
 	}
 	if activity == "" {
-		fmt.Printf("trace -> %v [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), channel, event, id)
+		fmt.Printf("trace -> %v [%v] [%v] [%v]\n", aspect.FmtRFC3339Millis(time.Now().UTC()), channel, event, id)
 	} else {
-		fmt.Printf("trace -> %v [%v] [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), channel, event, id, activity)
+		fmt.Printf("trace -> %v [%v] [%v] [%v] [%v]\n", aspect.FmtRFC3339Millis(time.Now().UTC()), channel, event, id, activity)
 	}
 }
 
