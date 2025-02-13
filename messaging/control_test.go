@@ -5,6 +5,11 @@ import (
 	"time"
 )
 
+const (
+	PingEvent        = "event:ping"
+	ReconfigureEvent = "event:reconfigure"
+)
+
 func newAgentCtrlHandler(msg *Message) {
 	fmt.Printf(fmt.Sprintf("test: NewControlAgent_CtrlHandler() -> %v\n", msg.Event()))
 }

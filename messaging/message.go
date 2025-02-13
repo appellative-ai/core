@@ -1,6 +1,7 @@
 package messaging
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -26,12 +27,15 @@ const (
 	//ContentTypeConfig  = "application/config"
 	DataChannelType    = "DATA"
 	ControlChannelType = "CTRL"
+
 	//ChannelRight      = "RIGHT"
 	//ChannelLeft       = "LEFT"
 	//ChannelNone = "NONE"
 	//TickEvent        = "event:tick"
 
-	ContentType = "Content-Type"
+	ContentType      = "Content-Type"
+	ContentTypeError = "application/error"
+
 	//XRelatesTo         = "x-relates-to"
 	//XMessageId         = "x-message-id"
 )
@@ -47,6 +51,13 @@ type Message struct {
 
 func NewControlMessage(to, from, event string) *Message {
 	return NewMessage(ControlChannelType, to, from, event)
+}
+
+func NewMessageWithError(channel, to, from, event string, err error) *Message {
+	m := NewMessage(channel, to, from, event)
+	m.SetContent(ContentTypeError, err)
+	m.Body = err
+	return m
 }
 
 func NewMessage(channel, to, from, event string) *Message {
@@ -96,4 +107,16 @@ func (m *Message) SetContentType(contentType string) {
 
 func (m *Message) ContentType() string {
 	return m.Header.Get(ContentType)
+}
+
+func (m *Message) SetContent(contentType string, content any) error {
+	if len(contentType) == 0 {
+		return errors.New("error: content type is empty")
+	}
+	if content == nil {
+		return errors.New("error: content is nil")
+	}
+	m.Body = content
+	m.Header.Add(ContentType, contentType)
+	return nil
 }

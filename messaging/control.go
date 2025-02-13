@@ -2,7 +2,6 @@ package messaging
 
 import (
 	"errors"
-	"github.com/behavioral-ai/core/aspect"
 )
 
 type controlAgent struct {
@@ -74,11 +73,6 @@ func (c *controlAgent) Shutdown() {
 	c.Message(NewControlMessage(c.agentId, c.agentId, ShutdownEvent))
 }
 
-// Add - add a shutdown function
-func (c *controlAgent) Add(f func()) {
-	c.shutdownFn = AddShutdown(c.shutdownFn, f)
-}
-
 func (c *controlAgent) shutdown() {
 	close(c.ch)
 }
@@ -102,7 +96,7 @@ func controlAgentRun(c *controlAgent) {
 			}
 			switch msg.Event() {
 			case ShutdownEvent:
-				c.handler(NewMessageWithStatus(ControlChannelType, "", "", msg.Event(), aspect.StatusOK()))
+				c.handler(NewMessageWithError(ControlChannelType, "", "", msg.Event(), nil))
 				c.shutdown()
 				return
 			default:
