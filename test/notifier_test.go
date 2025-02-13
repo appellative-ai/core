@@ -1,19 +1,19 @@
 package test
 
 import (
+	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/aspect"
 )
 
 func ExampleNewNotifier() {
 	n := NewNotifier()
 
-	n.Notify(aspect.StatusNotFound())
-	fmt.Printf("test: NewNotifier() -> [status:%v]\n", n.Status())
+	n.Notify(errors.New("error: not found"))
+	fmt.Printf("test: NewNotifier() -> [status:%v]\n", n.Error())
 
 	n.Reset()
-	n.Notify(aspect.StatusNoContent())
-	fmt.Printf("test: NewNotifier() -> [status:%v]\n", n.Status())
+	n.Notify(errors.New("error: no content"))
+	fmt.Printf("test: NewNotifier() -> [status:%v]\n", n.Error())
 
 	//Output:
 	//test: NewNotifier() -> [status:Not Found]

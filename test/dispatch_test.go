@@ -3,7 +3,7 @@ package test
 import (
 	"fmt"
 	"github.com/behavioral-ai/core/aspect"
-	"github.com/behavioral-ai/core/messagingx"
+	"github.com/behavioral-ai/core/messaging"
 	"net/http"
 )
 
@@ -13,13 +13,13 @@ func ExampleDispatchName() {
 	a := NewAgent("agent-test")
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(a))
 
-	t := messagingx.NewTicker("ticker-test", 100)
+	t := messaging.NewTicker("ticker-test", 100)
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(t))
 
-	c := messagingx.NewChannel("channel-test", false)
+	c := messaging.NewChannel("channel-test", false)
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(c))
 
-	m := messagingx.NewControlMessage("", "", "event-test")
+	m := messaging.NewControlMessage("", "", "event-test")
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(m))
 
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(aspect.StatusNotFound()))

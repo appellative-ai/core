@@ -1,24 +1,24 @@
 package test
 
 import (
-	"github.com/behavioral-ai/core/aspect"
-	"github.com/behavioral-ai/core/messagingx"
+	"fmt"
+	"github.com/behavioral-ai/core/messaging"
 )
 
 type agentT struct {
 	agentId string
-	ch      *messagingx.Channel
+	ch      *messaging.Channel
 	//shutdownFunc func()
 }
 
-func NewAgent(uri string) messagingx.OpsAgent {
+func NewAgent(uri string) messaging.OpsAgent {
 	a := new(agentT)
 	a.agentId = uri
-	a.ch = messagingx.NewEmissaryChannel(true)
+	a.ch = messaging.NewEmissaryChannel(true)
 	return a
 }
 
-func NewAgentWithChannel(uri string, ch *messagingx.Channel) messagingx.OpsAgent {
+func NewAgentWithChannel(uri string, ch *messaging.Channel) messaging.OpsAgent {
 	a := new(agentT)
 	a.agentId = uri
 	a.ch = ch
@@ -26,7 +26,7 @@ func NewAgentWithChannel(uri string, ch *messagingx.Channel) messagingx.OpsAgent
 }
 
 func (t *agentT) Uri() string { return t.agentId }
-func (t *agentT) Message(m *messagingx.Message) {
+func (t *agentT) Message(m *messaging.Message) {
 	if m == nil {
 		return
 	}
@@ -36,15 +36,16 @@ func (t *agentT) Message(m *messagingx.Message) {
 func (t *agentT) IsFinalized() bool { return t.ch.IsFinalized() }
 
 // Notify - status notifications
-func (t *agentT) Notify(status *aspect.Status) *aspect.Status {
-	var e aspect.Output
-	//fmt.Printf("test: opsAgent.Handle() -> [status:%v]\n", status)
+func (t *agentT) Notify(status error) {
+	//var e aspect.Output
+	fmt.Printf("test: opsAgent.Handle() -> [status:%v]\n", status)
 	//status.Handled = true
-	return e.Handle(status)
+	//e.Handle(status)
+	return
 }
 
 // Trace - activity tracing
-func (t *agentT) Trace(agent messagingx.Agent, channel, event, activity string) {
+func (t *agentT) Trace(agent messaging.Agent, channel, event, activity string) {
 	trace(agent, channel, event, activity)
 }
 
@@ -57,7 +58,7 @@ func (t *agentT) Run() {
 			select {
 			case msg := <-t.ch.C:
 				switch msg.Event() {
-				case messagingx.ShutdownEvent:
+				case messaging.ShutdownEvent:
 					t.finalize()
 					return
 				default:
@@ -72,7 +73,7 @@ func (t *agentT) Shutdown() {
 	//if t.shutdownFunc != nil {
 	//	t.shutdownFunc()
 	//}
-	msg := messagingx.NewControlMessage(t.Uri(), t.Uri(), messagingx.ShutdownEvent)
+	msg := messaging.NewControlMessage(t.Uri(), t.Uri(), messaging.ShutdownEvent)
 	t.ch.Enable()
 	t.ch.C <- msg
 }
