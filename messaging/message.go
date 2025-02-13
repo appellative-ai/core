@@ -15,6 +15,8 @@ const (
 	ResumeEvent   = "event:resume" // enable data channel receive
 
 	ObservationEvent = "event:observation"
+	TickEvent        = "event:tick"
+	DataChangeEvent  = "event:data-change"
 
 	XTo      = "x-to"
 	XFrom    = "x-from"
@@ -31,7 +33,6 @@ const (
 	//ChannelRight      = "RIGHT"
 	//ChannelLeft       = "LEFT"
 	//ChannelNone = "NONE"
-	//TickEvent        = "event:tick"
 
 	ContentType      = "Content-Type"
 	ContentTypeError = "application/error"
