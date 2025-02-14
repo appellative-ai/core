@@ -15,13 +15,13 @@ func ExampleIndent() {
 	buf, status := iox.ReadFile(customerAddr)
 	fmt.Printf("test: iox.ReadFile() -> [status:%v] %v\n", status, string(buf))
 
-	if status.OK() {
+	if status == nil {
 		//fmt.Printf("test:")
 		c := io.NopCloser(bytes.NewReader(buf))
 		c2, status1 := Indent(c, nil, "", "  ")
-		if status1.OK() {
-			buf2, status := iox.ReadAll(c2, nil)
-			fmt.Printf("test: Indent() -> [status:%v] %v\n", status, string(buf2))
+		if status1 == nil {
+			buf2, status2 := iox.ReadAll(c2, nil)
+			fmt.Printf("test: Indent() -> [status:%v] %v\n", status2, string(buf2))
 		}
 	}
 

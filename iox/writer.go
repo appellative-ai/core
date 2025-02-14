@@ -1,7 +1,6 @@
 package iox
 
 import (
-	"github.com/behavioral-ai/core/aspect"
 	"io"
 	"net/http"
 	"strings"
@@ -12,13 +11,13 @@ type EncodingWriter interface {
 	ContentEncoding() string
 }
 
-func NewEncodingWriter(w io.Writer, h http.Header) (EncodingWriter, *aspect.Status) {
+func NewEncodingWriter(w io.Writer, h http.Header) (EncodingWriter, error) {
 	encoding := acceptEncoding(h)
 	if strings.Contains(encoding, GzipEncoding) {
-		return NewGzipWriter(w), aspect.StatusOK()
+		return NewGzipWriter(w), nil
 	}
 	// TODO : implement additional encoding support
-	return NewIdentityWriter(w), aspect.StatusOK()
+	return NewIdentityWriter(w), nil
 }
 
 type identityWriter struct {

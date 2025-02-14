@@ -4,19 +4,19 @@ import "fmt"
 
 func ExampleNewStatusFrom_Const() {
 	status := NewStatusFrom("")
-	fmt.Printf("test: NewStatusFrom(nil) -> [code:%v]\n", status.Code)
+	fmt.Printf("test: NewStatusFrom(nil) -> [code:%v]\n", status)
 
 	uri := StatusOKUri
 	status = NewStatusFrom(uri)
-	fmt.Printf("test: NewStatusFrom(\"%v\") -> [code:%v]\n", uri, status.Code)
+	fmt.Printf("test: NewStatusFrom(\"%v\") -> [code:%v]\n", uri, status)
 
 	uri = StatusNotFoundUri
 	status = NewStatusFrom(uri)
-	fmt.Printf("test: NewStatusFrom(\"%v\") -> [code:%v] [status:%v]\n", uri, status.Code, status)
+	fmt.Printf("test: NewStatusFrom(\"%v\") -> [code:%v] [status:%v]\n", uri, status, status)
 
 	uri = StatusTimeoutUri
 	status = NewStatusFrom(uri)
-	fmt.Printf("test: NewStatusFrom(\"%v\") -> [code:%v] [status:%v]\n", uri, status.Code, status)
+	fmt.Printf("test: NewStatusFrom(\"%v\") -> [code:%v] [status:%v]\n", uri, status, status)
 
 	//Output:
 	//test: NewStatusFrom(nil) -> [code:200]

@@ -3,7 +3,6 @@ package iox
 import (
 	"embed"
 	"fmt"
-	"github.com/behavioral-ai/core/aspect"
 	"net/http"
 	"net/url"
 	"os"
@@ -75,7 +74,7 @@ func fileName(u *url.URL) string {
 }
 
 // ReadFile - read a file with a Status
-func ReadFile(uri any) ([]byte, *aspect.Status) {
+func ReadFile(uri any) ([]byte, error) {
 	rawUri := ""
 	if s, ok := uri.(string); ok {
 		rawUri = s
@@ -89,21 +88,21 @@ func ReadFile(uri any) ([]byte, *aspect.Status) {
 		rawUri = rawUri[len(embeddedFS):]
 		buf, err := f.ReadFile(rawUri)
 		if err == nil {
-			return buf, aspect.StatusOK()
+			return buf, nil
 		}
-		return nil, aspect.NewStatusError(aspect.StatusIOError, err)
+		return nil, err //aspect.NewStatusError(aspect.StatusIOError, err)
 	}
 	buf, err := os.ReadFile(FileName(uri))
 	if err != nil {
-		return nil, aspect.NewStatusError(aspect.StatusIOError, err)
+		return nil, err //aspect.NewStatusError(aspect.StatusIOError, err)
 	}
-	return buf, aspect.StatusOK()
+	return buf, nil //aspect.StatusOK()
 }
 
 // ReadFileWithEncoding - read a file with a possible encoding and a Status
-func ReadFileWithEncoding(uri string, h http.Header) ([]byte, *aspect.Status) {
+func ReadFileWithEncoding(uri string, h http.Header) ([]byte, error) {
 	buf, status := ReadFile(uri)
-	if !status.OK() {
+	if status != nil {
 		return nil, status
 	}
 	return Decode(buf, h)

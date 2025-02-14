@@ -3,9 +3,8 @@ package jsonx
 import (
 	"encoding/json"
 	"errors"
-	"github.com/behavioral-ai/core/aspect"
+	"fmt"
 	"github.com/behavioral-ai/core/iox"
-	"net/http"
 	"strings"
 )
 
@@ -17,9 +16,9 @@ const (
 )
 
 type serializedStatusState struct {
-	Code     int    `jsonx:"code"`
-	Location string `jsonx:"location"`
-	Err      string `jsonx:"err"`
+	Code     int    `json:"code"`
+	Location string `json:"location"`
+	Err      string `json:"err"`
 }
 
 // isStatusURL - determine if the file name of the URL contains the text 'status'
@@ -35,7 +34,7 @@ func isStatusURL(url string) bool {
 }
 
 // NewStatusFrom - create a new Status from a URI
-func NewStatusFrom(uri string) *aspect.Status {
+func NewStatusFrom(uri string) error {
 	status := statusFromConst(uri)
 	if status != nil {
 		return status
@@ -45,31 +44,31 @@ func NewStatusFrom(uri string) *aspect.Status {
 	//	return status
 	//}
 	buf, status1 := iox.ReadFile(uri) //iox.FileName(uri))
-	if !status1.OK() {
+	if status1 != nil {
 		return status1 //aspect.NewStatusError(aspect.StatusIOError, err1)
 	}
 	var status2 serializedStatusState
 	err := json.Unmarshal(buf, &status2)
 	if err != nil {
-		return aspect.NewStatusError(aspect.StatusJsonDecodeError, err)
+		return err //aspect.NewStatusError(aspect.StatusJsonDecodeError, err)
 	}
 	if len(status2.Err) > 0 {
-		return aspect.NewStatusError(status2.Code, errors.New(status2.Err))
+		return errors.New(status2.Err) //aspect.NewStatusError(status2.Code, errors.New(status2.Err))
 	}
-	return aspect.NewStatus(status2.Code).AddLocation()
+	return errors.New(fmt.Sprintf("code : %v", status2.Code)) //aspect.NewStatus(status2.Code).AddLocation()
 }
 
-func statusFromConst(url string) *aspect.Status {
+func statusFromConst(url string) error {
 	if len(url) == 0 {
-		return aspect.StatusOK()
+		return nil
 	}
 	switch url {
 	case StatusOKUri:
-		return aspect.StatusOK()
+		return nil //aspect.StatusOK()
 	case StatusNotFoundUri:
-		return aspect.NewStatus(http.StatusNotFound)
+		return errors.New("not found") //aspect.NewStatus(http.StatusNotFound)
 	case StatusTimeoutUri:
-		return aspect.NewStatus(http.StatusGatewayTimeout)
+		return errors.New("gatewar timeout") //aspect.NewStatus(http.StatusGatewayTimeout)
 	}
 	return nil
 }

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/aspect"
 	"github.com/behavioral-ai/core/iox"
 	"io"
 	"net/http"
@@ -21,16 +20,16 @@ const (
 	eofError = "EOF"
 )
 
-func decodeStatus(err error) *aspect.Status {
+func decodeStatus(err error) error {
 	if err == nil || err.Error() == "" {
-		return aspect.StatusOK()
+		return nil
 	}
 	// If the error is "EOF", then the body was empty. If the error is "unexpected EOF", then the body has content
 	// but the EOF was reached when more JSON content was expected.
 	if err.Error() == eofError {
-		return aspect.StatusNoContent()
+		return errors.New("error: no content") //aspect.StatusNoContent()
 	}
-	return aspect.NewStatusError(aspect.StatusJsonDecodeError, err)
+	return err //aspect.NewStatusError(aspect.StatusJsonDecodeError, err)
 }
 
 //type NewConstraints interface {
@@ -38,19 +37,19 @@ func decodeStatus(err error) *aspect.Status {
 //}
 
 // New - create a new type from JSON content, supporting: string, *url.URL, []byte, io.Reader, io.ReadCloser
-func New[T any](v any, h http.Header) (t T, status *aspect.Status) {
+func New[T any](v any, h http.Header) (t T, status error) {
 	var buf []byte
 
 	if v == nil {
-		return t, aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: value parameter is nil"))
+		return t, errors.New("error: value parameter is nil") //aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: value parameter is nil"))
 	}
 	switch ptr := v.(type) {
 	case string:
-		if isStatusURL(ptr) {
-			return t, NewStatusFrom(ptr)
-		}
+		//if isStatusURL(ptr) {
+		//	return t, NewStatusFrom(ptr)
+		//}
 		buf, status = iox.ReadFileWithEncoding(ptr, h)
-		if !status.OK() {
+		if status != nil {
 			return
 		}
 		err := json.Unmarshal(buf, &t)
@@ -59,11 +58,11 @@ func New[T any](v any, h http.Header) (t T, status *aspect.Status) {
 		//}
 		return t, decodeStatus(err)
 	case *url.URL:
-		if isStatusURL(ptr.String()) {
-			return t, NewStatusFrom(ptr.String())
-		}
+		//if isStatusURL(ptr.String()) {
+		//	return t, NewStatusFrom(ptr.String())
+		//}
 		buf, status = iox.ReadFileWithEncoding(ptr.String(), h)
-		if !status.OK() {
+		if status != nil {
 			return
 		}
 		err := json.Unmarshal(buf, &t)
@@ -73,7 +72,7 @@ func New[T any](v any, h http.Header) (t T, status *aspect.Status) {
 		return t, decodeStatus(err)
 	case []byte:
 		buf, status = iox.Decode(ptr, h)
-		if !status.OK() {
+		if status != nil {
 			return
 		}
 		err := json.Unmarshal(buf, &t)
@@ -83,8 +82,8 @@ func New[T any](v any, h http.Header) (t T, status *aspect.Status) {
 		return t, decodeStatus(err)
 	case io.Reader:
 		reader, status0 := iox.NewEncodingReader(ptr, h)
-		if !status0.OK() {
-			return t, status0.AddLocation()
+		if status0 != nil {
+			return t, status0 //status0.AddLocation()
 		}
 		err := json.NewDecoder(reader).Decode(&t)
 		_ = reader.Close()
@@ -94,8 +93,8 @@ func New[T any](v any, h http.Header) (t T, status *aspect.Status) {
 		return t, decodeStatus(err)
 	case io.ReadCloser:
 		reader, status0 := iox.NewEncodingReader(ptr, h)
-		if !status0.OK() {
-			return t, status0.AddLocation()
+		if status0 != nil {
+			return t, status0 //status0.AddLocation()
 		}
 		err := json.NewDecoder(reader).Decode(&t)
 		_ = reader.Close()
@@ -109,7 +108,7 @@ func New[T any](v any, h http.Header) (t T, status *aspect.Status) {
 	case *http.Response:
 		return New[T](ptr.Body, h)
 	default:
-		return t, aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New(fmt.Sprintf("error: invalid type [%v]", reflect.TypeOf(v))))
+		return t, errors.New(fmt.Sprintf("error: invalid type [%v]", reflect.TypeOf(v))) //}aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New(fmt.Sprintf("error: invalid type [%v]", reflect.TypeOf(v))))
 	}
 }
 
