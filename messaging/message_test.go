@@ -8,5 +8,6 @@ func ExampleNewMessage() {
 	fmt.Printf("test: NewMessage() -> [%v]\n", m)
 
 	//Output:
-	//fail
+	//test: NewMessage() -> [[chan:channel] [from:from] [to:to] [event:startup]]
+
 }

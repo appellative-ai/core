@@ -2,7 +2,6 @@ package access
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/aspect"
 	"github.com/behavioral-ai/core/uri"
 	"net/http"
 	"net/url"
@@ -40,7 +39,7 @@ func ExampleDefault_Domain() {
 	req, _ := http.NewRequest("select", "https://github.com/advanced-go/example-domain/activity:v1/entry?"+uri.BuildQuery(values), nil)
 	req.Header.Add(XRequestId, "123-456")
 	req.Header.Add(XRelatesTo, "fmtlog testing")
-	req.Header.Add(aspect.XDomain, "github/advanced-go/auth-from")
+	req.Header.Add(XDomain, "github/advanced-go/auth-from")
 	//fmt.Printf("test: NewRequest() -> [err:%v] [req:%v]\n", err, req != nil)
 	resp := http.Response{StatusCode: http.StatusOK}
 	logTest(InternalTraffic, start, time.Since(start), req, &resp, Routing{Route: "route", To: Primary, Percent: -1}, Controller{Timeout: -1})
@@ -60,7 +59,7 @@ func ExampleDefault_Access_Request_Status() {
 	start := time.Now().UTC()
 	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
-	resp := aspect.StatusNotFound()
+	resp := http.StatusNotFound
 	time.Sleep(time.Millisecond * 500)
 	logTest(EgressTraffic, start, time.Since(start), req, resp, Routing{Route: "google-search", To: Secondary, Percent: -1}, Controller{Timeout: -1})
 

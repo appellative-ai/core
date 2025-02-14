@@ -25,7 +25,7 @@ func ExampleGzipReader() {
 	fmt.Printf("test: DetectContent -> [input:%v] [output:%v] [out-len:%v]\n", http.DetectContentType(content), http.DetectContentType(buff), len(buff))
 
 	//Output:
-	//test: NewGzipReader() -> [status:OK]
+	//test: NewGzipReader() -> [status:<nil>]
 	//test: ReadAll(gzip.Reader()) -> [read-err:<nil>] [close-err:<nil>]
 	//test: DetectContent -> [input:application/x-gzip] [output:text/plain; charset=utf-8] [out-len:188]
 

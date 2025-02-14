@@ -80,8 +80,8 @@ func Example_FileName() {
 
 	//Output:
 	//test: url.Parse(file://[cwd]/test/test-response.txt) -> [err:<nil>]
-	//test: FileName(file://[cwd]/test/test-response.txt) -> [type:string] [url:C:\Users\markb\GitHub\common\iox\test\test-response.txt]
-	//test: FileName(file://[cwd]/test/test-response.txt) -> [type:*url.URL] [url:C:\Users\markb\GitHub\common\iox\test\test-response.txt]
+	//test: FileName(file://[cwd]/test/test-response.txt) -> [type:string] [url:C:\Users\markb\GitHub\core\iox\test\test-response.txt]
+	//test: FileName(file://[cwd]/test/test-response.txt) -> [type:*url.URL] [url:C:\Users\markb\GitHub\core\iox\test\test-response.txt]
 	//test: FileName(file:///c:/Users/markb/GitHub/stdlib/iox/test/test-response.txt) -> [type:string] [url:c:\Users\markb\GitHub\stdlib\iox\test\test-response.txt]
 	//test: FileName(file:///c:/Users/markb/GitHub/stdlib/iox/test/test-response.txt) -> [type:*url.URL] [url:c:\Users\markb\GitHub\stdlib\iox\test\test-response.txt]
 
@@ -124,10 +124,10 @@ func ExampleReadFile() {
 	fmt.Printf("test: ReadFile(%v) -> [type:%v] [buf:%v] [status:%v]\n", s, reflect.TypeOf(u), len(buf), status)
 
 	//Output:
-	//test: ReadFile(file://[cwd]/test/status-504.json) -> [type:string] [buf:82] [status:OK]
-	//test: ReadFile(file://[cwd]/test/address1.json) -> [type:string] [buf:68] [status:OK]
-	//test: ReadFile(file://[cwd]/test/status-504.json) -> [type:*url.URL] [buf:82] [status:OK]
-	//test: ReadFile(file://[cwd]/test/address1.json) -> [type:*url.URL] [buf:68] [status:OK]
+	//test: ReadFile(file://[cwd]/test/status-504.json) -> [type:string] [buf:82] [status:<nil>]
+	//test: ReadFile(file://[cwd]/test/address1.json) -> [type:string] [buf:68] [status:<nil>]
+	//test: ReadFile(file://[cwd]/test/status-504.json) -> [type:*url.URL] [buf:82] [status:<nil>]
+	//test: ReadFile(file://[cwd]/test/address1.json) -> [type:*url.URL] [buf:68] [status:<nil>]
 
 }
 
@@ -144,9 +144,9 @@ func ExampleReadFileWithEncoding() {
 	fmt.Printf("test: ReadFileWithEncoding(\"%v\",nil) -> [buf:%v] [status:%v]\n", helloWorldTxt, string(buf), status)
 
 	//Output:
-	//test: ReadFileWithEncoding("file://[cwd]/test/hello-world.gz",nil) -> [buf:Hello World!!] [status:OK]
-	//test: ReadFileWithEncoding("file://[cwd]/test/hello-world.gz",h) -> [buf:Hello World!!] [status:OK]
-	//test: ReadFileWithEncoding("file://[cwd]/test/hello-world.txt",nil) -> [buf:Hello World!!] [status:OK]
+	//test: ReadFileWithEncoding("file://[cwd]/test/hello-world.gz",nil) -> [buf:Hello World!!] [status:<nil>]
+	//test: ReadFileWithEncoding("file://[cwd]/test/hello-world.gz",h) -> [buf:Hello World!!] [status:<nil>]
+	//test: ReadFileWithEncoding("file://[cwd]/test/hello-world.txt",nil) -> [buf:Hello World!!] [status:<nil>]
 
 }
 
@@ -166,8 +166,8 @@ func ExampleReadFileEmbedded() {
 	fmt.Printf("test: ReadFileEmbedded(\"%v\") -> [buf:%v] [status:%v]\n", name, string(bytes), status)
 
 	//Output:
-	//test: ReadFileEmbedded("file:///f:/test/hello-world.txt") -> [buf:] [status:I/O Failure [open test/hello-world.txt: file does not exist]]
-	//test: ReadFileEmbedded("file:///f:/test/invalid-file-name") -> [buf:] [status:I/O Failure [open test/invalid-file-name: file does not exist]]
-	//test: ReadFileEmbedded("file:///f:/test/hello-world.txt") -> [buf:Hello World!!] [status:OK]
+	//test: ReadFileEmbedded("file:///f:/test/hello-world.txt") -> [buf:] [status:open test/hello-world.txt: file does not exist]
+	//test: ReadFileEmbedded("file:///f:/test/invalid-file-name") -> [buf:] [status:open test/invalid-file-name: file does not exist]
+	//test: ReadFileEmbedded("file:///f:/test/hello-world.txt") -> [buf:Hello World!!] [status:<nil>]
 
 }

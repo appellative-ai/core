@@ -26,8 +26,8 @@ func ExampleIndent() {
 	}
 
 	//Output:
-	//test: iox.ReadFile() -> [status:OK] [{"customer-id":"C001","created-ts":"0001-01-01T00:00:00Z","address-1":"1514 Cedar Ridge Road","address-2":"","city":"Vinton","state":"IA","postal-code":"52349","email":"before-email@hotmail.com"}]
-	//test: Indent() -> [status:OK] [
+	//test: iox.ReadFile() -> [status:<nil>] [{"customer-id":"C001","created-ts":"0001-01-01T00:00:00Z","address-1":"1514 Cedar Ridge Road","address-2":"","city":"Vinton","state":"IA","postal-code":"52349","email":"before-email@hotmail.com"}]
+	//test: Indent() -> [status:<nil>] [
 	//  {
 	//    "customer-id": "C001",
 	//    "created-ts": "0001-01-01T00:00:00Z",

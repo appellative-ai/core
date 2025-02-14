@@ -17,7 +17,7 @@ func ExampleIdentityWriter() {
 	fmt.Printf("test: Write() -> [cnt:%v] [err:%v] [content:\"%v\"]\n", cnt, err, string(buf.Bytes()))
 
 	//Output:
-	//test: NewEncodingWriter(none) -> [ew:*iox.identityWriter] [status:OK]
+	//test: NewEncodingWriter(none) -> [ew:*iox.identityWriter] [status:<nil>]
 	//test: Write() -> [cnt:17] [err:<nil>] [content:"identity encoding"]
 
 }

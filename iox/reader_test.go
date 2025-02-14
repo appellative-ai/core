@@ -24,7 +24,7 @@ func ExampleIdentityReader() {
 	//fmt.Printf("test: NewEncodingReader(gzip) -> [er:%v] [status:%v]\n", reflect.TypeOf(er).String(), status)
 
 	//Output:
-	//test: NewEncodingReader(none) -> [er:*iox.identityReader] [status:OK]
+	//test: NewEncodingReader(none) -> [er:*iox.identityReader] [status:<nil>]
 	//test: Read() -> [err:<nil>] [content:"identity encoding"]
 
 }

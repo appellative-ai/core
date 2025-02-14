@@ -2,6 +2,7 @@ package jsonx
 
 import (
 	"bytes"
+	"encoding/json"
 	"io"
 )
 
@@ -10,7 +11,7 @@ func NewReadCloser(v any) (io.ReadCloser, int64, error) {
 	if v == nil {
 		return io.NopCloser(bytes.NewReader([]byte{})), 0, nil
 	}
-	buf, status := Marshal(v)
+	buf, status := json.Marshal(v)
 	if status != nil {
 		return nil, 0, status
 	}

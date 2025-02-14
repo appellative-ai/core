@@ -2,13 +2,17 @@ package access
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/aspect"
 	"github.com/behavioral-ai/core/uri"
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+)
+
+const (
+	XTo     = "X-To"
+	XDomain = "X-Domain"
 )
 
 var defaultLog = func(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) {
@@ -64,7 +68,7 @@ func DefaultFormat(o Origin, traffic string, start time.Time, duration time.Dura
 		JsonString(o.SubZone),
 		JsonString(o.InstanceId),
 		traffic,
-		aspect.FmtRFC3339Millis(start),
+		FmtRFC3339Millis(start),
 		strconv.Itoa(Milliseconds(duration)),
 
 		// Request
@@ -139,8 +143,8 @@ func BuildResponse(r any) *http.Response {
 	if sc, ok := r.(int); ok {
 		return &http.Response{StatusCode: sc}
 	}
-	if status, ok := r.(*aspect.Status); ok {
-		return &http.Response{StatusCode: status.HttpCode()}
+	if status, ok := r.(int); ok {
+		return &http.Response{StatusCode: status}
 	}
 	newResp := &http.Response{StatusCode: http.StatusOK}
 	return newResp
@@ -194,7 +198,7 @@ func CreateTo(req *http.Request) string {
 	if req == nil {
 		return ""
 	}
-	to := req.Header.Get(aspect.XTo)
+	to := req.Header.Get(XTo)
 	if to != "" {
 		return to
 	}

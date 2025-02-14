@@ -39,7 +39,7 @@ func ExampleNewReader() {
 	fmt.Printf("test: NewReader(nil) -> [status:%v] [reader:%v] [length:%v]\n", status, string(buf), length)
 
 	//Output:
-	//test: NewReader(nil) -> [status:OK] [reader:]
-	//test: NewReader(nil) -> [status:OK] [reader:{"status":"Status","CreatedTS":"2024-05-24","updated-ts":"2024-05-25","cost-function":"Testing","primary-route":"www.google.com","secondary-route":"www.search.yahoo.com","secondary-pct":"45"}] [length:191]
+	//test: NewReader(nil) -> [status:<nil>] [reader:]
+	//test: NewReader(nil) -> [status:<nil>] [reader:{"status":"Status","CreatedTS":"2024-05-24","updated-ts":"2024-05-25","cost-function":"Testing","primary-route":"www.google.com","secondary-route":"www.search.yahoo.com","secondary-pct":"45"}] [length:191]
 
 }
