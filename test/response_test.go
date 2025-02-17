@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	testInputResponse  = "file://[cwd]/test/test-response.txt"
-	testOutputResponse = "file://[cwd]/test/test-response-2.txt"
+	testInputResponse  = "file://[cwd]/resource/test-response.txt"
+	testOutputResponse = "file://[cwd]/resource/test-response-2.txt"
 )
 
 func _ExampleWriteStatusLine() {
@@ -29,6 +29,6 @@ func ExampleWriteResponse() {
 
 	//Output:
 	//test: NewResponseFromUri() [status:OK] [HTTP/1.1 200 OK]
-	//test: WriteResponse("file://[cwd]/test/test-response.txt") -> [status:OK]
+	//test: WriteResponse("file://[cwd]/resource/test-response.txt") -> [status:OK]
 
 }
