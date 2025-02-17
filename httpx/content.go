@@ -20,9 +20,11 @@ func Content[T any](body io.Reader) (t T, status *aspect.Status) {
 	switch p := any(&t).(type) {
 	case *[]byte:
 		var buf []byte
-		buf, status = iox.ReadAll(body, nil)
-		if !status.OK() {
-			return
+		var err error
+
+		buf, err = iox.ReadAll(body, nil)
+		if status != nil {
+			return t, aspect.NewStatusError(aspect.StatusIOError, err)
 		}
 		if len(buf) == 0 {
 			return t, aspect.StatusNotFound()
@@ -30,9 +32,13 @@ func Content[T any](body io.Reader) (t T, status *aspect.Status) {
 		*p = buf
 	case *string:
 		var buf []byte
-		buf, status = iox.ReadAll(body, nil)
-		if !status.OK() {
-			return
+		var err error
+
+		buf, err = iox.ReadAll(body, nil)
+		if err != nil {
+			return t, aspect.NewStatusError(aspect.StatusIOError, err)
+		} else {
+			return t, aspect.StatusOK()
 		}
 		if len(buf) == 0 {
 			return t, aspect.StatusNotFound()

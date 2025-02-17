@@ -31,20 +31,26 @@ func writeContent(w io.Writer, content any, contentType string) (length int64, s
 		cnt, err = w.Write([]byte(ptr.Error()))
 	case io.Reader:
 		var buf []byte
+		var err1 error
 
-		buf, status = iox.ReadAll(ptr, nil)
-		if !status.OK() {
+		buf, err1 = iox.ReadAll(ptr, nil)
+		if err1 != nil {
+			status = aspect.NewStatusError(aspect.StatusIOError, err)
 			return 0, status.AddLocation()
 		}
+		status = aspect.StatusOK()
 		cnt, err = w.Write(buf)
 	case io.ReadCloser:
 		var buf []byte
+		var err1 error
 
-		buf, status = iox.ReadAll(ptr, nil)
+		buf, err1 = iox.ReadAll(ptr, nil)
 		_ = ptr.Close()
-		if !status.OK() {
+		if err1 != nil {
+			status = aspect.NewStatusError(aspect.StatusIOError, err)
 			return 0, status.AddLocation()
 		}
+		status = aspect.StatusOK()
 		cnt, err = w.Write(buf)
 	default:
 		if strings.Contains(contentType, jsonToken) {

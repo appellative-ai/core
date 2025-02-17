@@ -45,11 +45,11 @@ func ExampleWriteContent_Buffer() {
 	fmt.Printf("test: writeContent(error) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, string(buf), status0)
 
 	//Output:
-	//test: writeContent(nil) -> [cnt:0] [write-status:OK] [body:] [read-status:OK]
-	//test: writeContent([]byte) -> [cnt:22] [write-status:OK] [body:<h1>Hello, World!</h1>] [read-status:OK]
-	//test: writeContent("") -> [cnt:0] [write-status:OK] [body:] [read-status:OK]
-	//test: writeContent(string) -> [cnt:22] [write-status:OK] [body:<h1>Hello, World!</h1>] [read-status:OK]
-	//test: writeContent(error) -> [cnt:34] [write-status:OK] [body:This is example error message text] [read-status:OK]
+	//test: writeContent(nil) -> [cnt:0] [write-status:OK] [body:] [read-status:<nil>]
+	//test: writeContent([]byte) -> [cnt:22] [write-status:OK] [body:<h1>Hello, World!</h1>] [read-status:<nil>]
+	//test: writeContent("") -> [cnt:0] [write-status:OK] [body:] [read-status:<nil>]
+	//test: writeContent(string) -> [cnt:22] [write-status:OK] [body:<h1>Hello, World!</h1>] [read-status:<nil>]
+	//test: writeContent(error) -> [cnt:34] [write-status:OK] [body:This is example error message text] [read-status:<nil>]
 
 }
 
@@ -76,8 +76,8 @@ func ExampleWriteContent_Reader() {
 	fmt.Printf("test: writeContent(io.ReadCloser) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, len(buf), status0)
 
 	//Output:
-	//test: writeContent(io.Reader) -> [cnt:188] [write-status:OK] [body:188] [read-status:OK]
-	//test: writeContent(io.ReadCloser) -> [cnt:188] [write-status:OK] [body:188] [read-status:OK]
+	//test: writeContent(io.Reader) -> [cnt:188] [write-status:OK] [body:188] [read-status:<nil>]
+	//test: writeContent(io.ReadCloser) -> [cnt:188] [write-status:OK] [body:188] [read-status:<nil>]
 
 }
 
@@ -107,7 +107,7 @@ func ExampleWriteContent_Json() {
 	fmt.Printf("test: writeContent(httpx.testActivity) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, string(buf), status0)
 
 	//Output:
-	//test: writeContent(httpx.testActivity) -> [cnt:0] [write-status:Invalid Content [error: content type is invalid: httpx.activity]] [body:] [read-status:OK]
-	//test: writeContent(httpx.testActivity) -> [cnt:204] [write-status:OK] [body:{"ActivityID":"123456","ActivityType":"action","Agent":"Controller","AgentUri":"https://somehost.com/id","Assignment":"case #","Controller":"egress","Behavior":"timeout","Description":"decreased timeout"}] [read-status:OK]
+	//test: writeContent(httpx.testActivity) -> [cnt:0] [write-status:Invalid Content [error: content type is invalid: httpx.activity]] [body:] [read-status:<nil>]
+	//test: writeContent(httpx.testActivity) -> [cnt:204] [write-status:OK] [body:{"ActivityID":"123456","ActivityType":"action","Agent":"Controller","AgentUri":"https://somehost.com/id","Assignment":"case #","Controller":"egress","Behavior":"timeout","Description":"decreased timeout"}] [read-status:<nil>]
 
 }

@@ -62,12 +62,12 @@ func NewResponseFromUri(uri any) (*http.Response, *aspect.Status) {
 	//if u.Scheme != fileScheme {
 	//	return serverErr, aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New(fmt.Sprintf("error: Invalid URL scheme : %v", u.Scheme)))
 	//}
-	buf, status := iox.ReadFile(uri)
-	if !status.OK() {
-		if strings.Contains(status.Err.Error(), fileExistsError) {
-			return &http.Response{StatusCode: http.StatusNotFound, Status: "Not Found", Header: make(http.Header)}, aspect.NewStatusError(aspect.StatusInvalidArgument, status.Err)
+	buf, err := iox.ReadFile(uri)
+	if err != nil {
+		if strings.Contains(err.Error(), fileExistsError) {
+			return &http.Response{StatusCode: http.StatusNotFound, Status: "Not Found", Header: make(http.Header)}, aspect.NewStatusError(aspect.StatusInvalidArgument, err)
 		}
-		return serverErr, aspect.NewStatusError(aspect.StatusIOError, status.Err)
+		return serverErr, aspect.NewStatusError(aspect.StatusIOError, err)
 	}
 	resp1, err2 := http.ReadResponse(bufio.NewReader(bytes.NewReader(buf)), nil)
 	if err2 != nil {

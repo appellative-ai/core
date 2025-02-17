@@ -23,8 +23,9 @@ func WriteResponse(w http.ResponseWriter, headers any, statusCode int, content a
 	if len(w.Header().Get(ContentEncoding)) != 0 {
 		reqHeader.Set(AcceptEncoding, "")
 	}
-	writer, status0 := iox.NewEncodingWriter(w, reqHeader)
-	if !status0.OK() {
+	writer, err := iox.NewEncodingWriter(w, reqHeader)
+	if err != nil {
+		status0 := aspect.NewStatusError(aspect.StatusIOError, err)
 		e.Handle(status0.WithRequestId(w.Header()))
 		w.WriteHeader(status0.HttpCode())
 		return 0
@@ -33,6 +34,7 @@ func WriteResponse(w http.ResponseWriter, headers any, statusCode int, content a
 		w.Header().Add(ContentEncoding, writer.ContentEncoding())
 	}
 	w.WriteHeader(statusCode)
+	var status0 *aspect.Status
 	contentLength, status0 = writeContent(writer, content, w.Header().Get(ContentType))
 	_ = writer.Close()
 	if !status0.OK() {

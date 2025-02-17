@@ -127,8 +127,8 @@ func ExampleWriteResponse_JSON() {
 	fmt.Printf("test: WriteResponse(w,http.Header,OK,io.Reader) -> [read-all:%v] [in:%v] [out:%v]\n", status0, len(activityJson), len(buf))
 
 	//Output:
-	//test: WriteResponse(w,http.Header,OK,[]activity) -> [read-all:OK] [in:395] [out:395]
-	//test: WriteResponse(w,http.Header,OK,io.Reader) -> [read-all:OK] [in:395] [out:395]
+	//test: WriteResponse(w,http.Header,OK,[]activity) -> [read-all:<nil>] [in:395] [out:395]
+	//test: WriteResponse(w,http.Header,OK,io.Reader) -> [read-all:<nil>] [in:395] [out:395]
 
 }
 
@@ -154,7 +154,7 @@ func ExampleWriteResponse_Encoding() {
 	fmt.Printf("test: WriteResponse(w,http.Header,0,[]activity) -> [read-all:%v] [buf:%v][header:%v]\n", status0, http.DetectContentType(buf), rec.Result().Header)
 
 	//Output:
-	//test: WriteResponse(w,http.Header,0,[]activity) -> [read-all:OK] [buf:application/x-gzip][header:map[Content-Encoding:[gzip] Content-Type:[application/json]]]
-	//test: WriteResponse(w,http.Header,0,[]activity) -> [read-all:OK] [buf:text/plain; charset=utf-8][header:map[Content-Encoding:[none] Content-Type:[application/json]]]
+	//test: WriteResponse(w,http.Header,0,[]activity) -> [read-all:<nil>] [buf:application/x-gzip][header:map[Content-Encoding:[gzip] Content-Type:[application/json]]]
+	//test: WriteResponse(w,http.Header,0,[]activity) -> [read-all:<nil>] [buf:text/plain; charset=utf-8][header:map[Content-Encoding:[none] Content-Type:[application/json]]]
 
 }
