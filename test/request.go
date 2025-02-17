@@ -18,10 +18,11 @@ func NewRequest(uri any) (*http.Request, *aspect.Status) {
 	//if u.Scheme != fileScheme {
 	//	return nil, errors.New(fmt.Sprintf("error: invalid URL scheme : %v", u.Scheme))
 	//}
-	buf, status := iox.ReadFile(uri)
-	if !status.OK() {
-		return nil, status
+	buf, err := iox.ReadFile(uri)
+	if err != nil {
+		return nil, aspect.NewStatusError(aspect.StatusIOError, err)
 	}
+	//status := aspect.StatusOK()
 	byteReader := bytes.NewReader(buf)
 	reader := bufio.NewReader(byteReader)
 	req, err1 := http.ReadRequest(reader)
@@ -35,19 +36,6 @@ func NewRequest(uri any) (*http.Request, *aspect.Status) {
 	if bytes1 != nil {
 		req.Body = io.NopCloser(bytes1)
 	}
-	/*
-		ex := createExchange(req.Header)
-		if ex != nil {
-			ctx := aspect.NewExchangeOverrideContext(nil, ex)
-			req2, err3 := http.NewRequestWithContext(ctx, req.Method, req.URL.String(), req.Body)
-			if err3 != nil {
-				return nil, aspect.NewStatusError(aspect.StatusInvalidArgument, err3)
-			}
-			req2.Header = req.Header
-			return req2, aspect.StatusOK()
-		}
-
-	*/
 	return req, aspect.StatusOK()
 }
 

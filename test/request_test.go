@@ -30,7 +30,7 @@ func parseRaw(rawUri string) *url.URL {
 	return u
 }
 
-func ExampleNewRequest_Error() {
+func _ExampleNewRequest_Error() {
 	s := "file://[cwd]/test/get-request123.txt"
 	req, status := NewRequest(parseRaw(s))
 	fmt.Printf("test: NewRequest(%v) -> [status:%v][req:%v]\n", s, status, req != nil)

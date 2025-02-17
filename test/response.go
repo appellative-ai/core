@@ -80,9 +80,9 @@ func WriteResponse(url string, resp *http.Response) *aspect.Status {
 	buf.WriteString("\n")
 
 	// Write content
-	buf1, status := iox.ReadAll(resp.Body, nil)
-	if !status.OK() {
-		return status
+	buf1, err1 := iox.ReadAll(resp.Body, nil)
+	if err1 != nil {
+		return aspect.NewStatusError(aspect.StatusIOError, err1)
 	}
 	count, err := buf.Write(buf1)
 	if err != nil {
