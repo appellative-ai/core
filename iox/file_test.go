@@ -3,6 +3,8 @@ package iox
 import (
 	"embed"
 	"fmt"
+	"io/fs"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -16,6 +18,34 @@ var tf embed.FS
 func parseRaw(rawUri string) *url.URL {
 	u, _ := url.Parse(rawUri)
 	return u
+}
+
+func ExampleDirFS() {
+	dir := "file:///c:/Users/markb/GitHub/core/iox/test"
+	fileSystem := DirFS(dir)
+	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			log.Fatal(err)
+		}
+		if path != "." {
+
+			buf, err1 := fs.ReadFile(fileSystem, path)
+			fmt.Printf("test: fs.ReadFile() -> [err:%v] [%v] %v\n", err1, path, buf != nil)
+		}
+		return nil
+	})
+
+	//Output:
+	//test: fs.ReadFile() -> [err:<nil>] [address1.json] true
+	//test: fs.ReadFile() -> [err:<nil>] [address2.json] true
+	//test: fs.ReadFile() -> [err:<nil>] [address3.json] true
+	//test: fs.ReadFile() -> [err:<nil>] [hello-world.gz] true
+	//test: fs.ReadFile() -> [err:<nil>] [hello-world.txt] true
+	//test: fs.ReadFile() -> [err:<nil>] [status-504.json] true
+	//test: fs.ReadFile() -> [err:<nil>] [test-response.gz] true
+	//test: fs.ReadFile() -> [err:<nil>] [test-response.txt] true
+	//test: fs.ReadFile() -> [err:<nil>] [test-response2.gz] true
+
 }
 
 func Example_FileNameError() {

@@ -3,6 +3,7 @@ package iox
 import (
 	"embed"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"net/url"
 	"os"
@@ -33,6 +34,10 @@ func init() {
 		win = true
 	}
 	basePath = cwd
+}
+
+func DirFS(dir string) fs.FS {
+	return os.DirFS(FileName(dir))
 }
 
 func Mount(fs embed.FS) {
