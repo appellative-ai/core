@@ -48,6 +48,26 @@ func ExampleDirFS() {
 
 }
 
+func ExampleDirFS_Failure() {
+	dir := "file:///c:/Users/markb/GitHub/core/iox/invalid"
+	fileSystem := DirFS(dir)
+	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			log.Fatal(err)
+		}
+		if path != "." {
+
+			buf, err1 := fs.ReadFile(fileSystem, path)
+			fmt.Printf("test: fs.ReadFile() -> [err:%v] [%v] %v\n", err1, path, buf != nil)
+		}
+		return nil
+	})
+
+	//Output:
+	//2025/02/18 10:15:08 CreateFile .: The system cannot find the file specified.
+
+}
+
 func Example_FileNameError() {
 	//s := "file://[cwd]/test/test-response.txt"
 	//u, err := url.Parse(s)
