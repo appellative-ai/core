@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"errors"
+	"fmt"
 )
 
 type controlAgent struct {
@@ -51,6 +52,8 @@ func (c *controlAgent) Message(msg *Message) {
 	default:
 	}
 }
+
+func (c *controlAgent) Notify(status *Status) { fmt.Printf("%v", status) }
 
 // Run - run the agent
 func (c *controlAgent) Run() {

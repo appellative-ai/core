@@ -11,14 +11,14 @@ type agentT struct {
 	//shutdownFunc func()
 }
 
-func NewAgent(uri string) messaging.OpsAgent {
+func NewAgent(uri string) messaging.Agent {
 	a := new(agentT)
 	a.agentId = uri
 	a.ch = messaging.NewEmissaryChannel(true)
 	return a
 }
 
-func NewAgentWithChannel(uri string, ch *messaging.Channel) messaging.OpsAgent {
+func NewAgentWithChannel(uri string, ch *messaging.Channel) messaging.Agent {
 	a := new(agentT)
 	a.agentId = uri
 	a.ch = ch
@@ -36,9 +36,9 @@ func (t *agentT) Message(m *messaging.Message) {
 func (t *agentT) IsFinalized() bool { return t.ch.IsFinalized() }
 
 // Notify - status notifications
-func (t *agentT) Notify(status error) {
+func (t *agentT) Notify(status *messaging.Status) {
 	//var e aspect.Output
-	fmt.Printf("test: opsAgent.Handle() -> [status:%v]\n", status)
+	fmt.Printf("test: opsAgent() -> [status:%v]\n", status)
 	//status.Handled = true
 	//e.Handle(status)
 	return

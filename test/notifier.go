@@ -14,8 +14,8 @@ type statusT struct {
 	status error
 }
 
-func (s *statusT) Notify(err error) {
-	s.status = err
+func (s *statusT) Notify(status *messaging.Status) {
+	s.status = status.Err
 }
 
 func (s *statusT) Error() error {

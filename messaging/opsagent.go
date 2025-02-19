@@ -1,21 +1,19 @@
 package messaging
 
 // NewNotifierAgent - create an agent for notifications and dispatch
-func NewNotifierAgent(uri string, notify Notifier, tracer Tracer) OpsAgent {
-	return newNotifierAgent(uri, notify, tracer)
+func NewNotifierAgent(uri string, notify Notifier) OpsAgent {
+	return newNotifierAgent(uri, notify)
 }
 
 type notifierAgent struct {
 	agentId string
 	notify  Notifier
-	tracer  Tracer
 }
 
-func newNotifierAgent(uri string, notify Notifier, tracer Tracer) *notifierAgent {
+func newNotifierAgent(uri string, notify Notifier) *notifierAgent {
 	n := new(notifierAgent)
 	n.agentId = uri
 	n.notify = notify
-	n.tracer = tracer
 	return n
 }
 
@@ -38,11 +36,6 @@ func (c *notifierAgent) Run() {}
 func (c *notifierAgent) Shutdown() {}
 
 // Notify -
-func (c *notifierAgent) Notify(err error) {
-	c.notify.Notify(err)
-}
-
-// Trace -
-func (c *notifierAgent) Trace(agent Agent, channel, event, activity string) {
-	c.tracer.Trace(agent, channel, event, activity)
+func (c *notifierAgent) Notify(status *Status) {
+	c.notify.Notify(status)
 }

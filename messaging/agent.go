@@ -8,6 +8,7 @@ const (
 type Agent interface {
 	Mailbox
 	Finalizer
+	Notifier
 	Run()
 	Shutdown()
 }
@@ -15,7 +16,7 @@ type Agent interface {
 type OpsAgent interface {
 	Agent
 	Notifier
-	Tracer
+	//Tracer
 }
 
 func OpsAgentCast(agent any) OpsAgent {
