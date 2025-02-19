@@ -62,6 +62,10 @@ func (s *Status) NotFound() bool {
 	return s.Code == http.StatusNotFound
 }
 
+func (s *Status) BadRequest() bool {
+	return s.Code == http.StatusBadRequest
+}
+
 func (s *Status) String() string {
 	if s.Err != nil {
 		return fmt.Sprintf("%v [%v]", HttpStatus(s.Code), s.Err)
