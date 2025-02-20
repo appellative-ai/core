@@ -6,7 +6,7 @@ import (
 )
 
 type Dispatcher interface {
-	Dispatch(agent Agent, channel, event, activity string)
+	Dispatch(agent Agent, channel, event string)
 }
 
 type traceDispatch struct {
@@ -32,7 +32,7 @@ func (t *traceDispatch) validChannel(channel string) bool {
 	return t.channel == channel
 }
 
-func (t *traceDispatch) Dispatch(agent Agent, channel, event, activity string) {
+func (t *traceDispatch) Dispatch(agent Agent, channel, event string) {
 	if !t.validEvent(event) || !t.validChannel(channel) {
 		return
 	}
@@ -40,11 +40,10 @@ func (t *traceDispatch) Dispatch(agent Agent, channel, event, activity string) {
 	if agent != nil {
 		id = agent.Uri()
 	}
-	if activity == "" {
-		fmt.Printf("trace -> %v [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), channel, event, id)
-	} else {
-		fmt.Printf("trace -> %v [%v] [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), channel, event, id, activity)
-	}
+	fmt.Printf("trace -> %v [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), channel, event, id)
+	//} else {
+	//	fmt.Printf("trace -> %v [%v] [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), channel, event, id, activity)
+	//}
 }
 
 func NewTraceDispatcher(events []string, channel string) Dispatcher {

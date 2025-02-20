@@ -7,11 +7,11 @@ func ExampleTraceDispatch_Channel() {
 	channel := ""
 	event := ""
 
-	d.Dispatch(nil, channel, event, "")
+	d.Dispatch(nil, channel, event)
 	fmt.Printf("test: Dispatch() -> [channel:%v]\n", channel)
 
 	channel = EmissaryChannel
-	d.Dispatch(nil, channel, event, "")
+	d.Dispatch(nil, channel, event)
 	fmt.Printf("test: Dispatch() -> [channel:%v]\n", channel)
 
 	//Output:
@@ -26,15 +26,15 @@ func ExampleTraceDispatch_Event() {
 	channel := ""
 	event := ""
 
-	d.Dispatch(nil, channel, event, "")
+	d.Dispatch(nil, channel, event)
 	fmt.Printf("test: Dispatch() -> [%v]\n", event)
 
 	event = ShutdownEvent
-	d.Dispatch(nil, channel, event, "")
+	d.Dispatch(nil, channel, event)
 	fmt.Printf("test: Dispatch() -> [%v]\n", event)
 
 	event = ObservationEvent
-	d.Dispatch(nil, channel, event, "")
+	d.Dispatch(nil, channel, event)
 	fmt.Printf("test: Dispatch() -> [channel:%v] [%v]\n", channel, event)
 
 	//Output:
