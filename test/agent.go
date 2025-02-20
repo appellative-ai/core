@@ -6,26 +6,27 @@ import (
 )
 
 type agentT struct {
-	agentId string
-	ch      *messaging.Channel
+	uri string
+	ch  *messaging.Channel
 	//shutdownFunc func()
 }
 
 func NewAgent(uri string) messaging.Agent {
 	a := new(agentT)
-	a.agentId = uri
+	a.uri = uri
 	a.ch = messaging.NewEmissaryChannel(true)
 	return a
 }
 
 func NewAgentWithChannel(uri string, ch *messaging.Channel) messaging.Agent {
 	a := new(agentT)
-	a.agentId = uri
+	a.uri = uri
 	a.ch = ch
 	return a
 }
 
-func (t *agentT) Uri() string { return t.agentId }
+func (t *agentT) Uri() string  { return t.uri }
+func (t *agentT) Name() string { return t.Uri() }
 func (t *agentT) Message(m *messaging.Message) {
 	if m == nil {
 		return
@@ -37,17 +38,14 @@ func (t *agentT) IsFinalized() bool { return t.ch.IsFinalized() }
 
 // Notify - status notifications
 func (t *agentT) Notify(status *messaging.Status) {
-	//var e aspect.Output
-	fmt.Printf("test: opsAgent() -> [status:%v]\n", status)
-	//status.Handled = true
-	//e.Handle(status)
+	fmt.Printf("test: Agent() -> [status:%v]\n", status)
 	return
 }
 
 // Trace - activity tracing
-func (t *agentT) Trace(agent messaging.Agent, channel, event, activity string) {
-	trace(agent, channel, event, activity)
-}
+//func (t *agentT) Trace(agent messaging.Agent, channel, event, activity string) {
+//	trace(agent, channel, event, activity)
+//}
 
 // Add - add a shutdown function
 //func (t *agentT) Add(f func()) { t.shutdownFunc = messaging.AddShutdown(t.shutdownFunc, f) }
