@@ -17,6 +17,7 @@ func NewAgent(uri string, ch *Channel) Agent {
 }
 
 func (t *agent) Uri() string           { return t.agentId }
+func (t *agent) Name() string          { return t.agentId }
 func (t *agent) Message(m *Message)    { fmt.Printf("test: opsAgent.Message() -> %v\n", m) }
 func (t *agent) Notify(status *Status) { fmt.Printf("%v", status) }
 func (t *agent) IsFinalized() bool     { return t.ch.IsFinalized() }

@@ -8,6 +8,7 @@ import (
 type controlAgent struct {
 	running    bool
 	agentId    string
+	name       string
 	ch         chan *Message
 	handler    Handler
 	shutdownFn func()
@@ -38,6 +39,9 @@ func (c *controlAgent) Uri() string { return c.agentId }
 
 // String - identity
 func (c *controlAgent) String() string { return c.Uri() }
+
+// Name - class name
+func (c *controlAgent) Name() string { return c.name }
 
 // Message - message an agent
 func (c *controlAgent) Message(msg *Message) {

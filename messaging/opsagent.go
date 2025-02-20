@@ -26,6 +26,9 @@ func (c *notifierAgent) Uri() string { return c.agentId }
 // String - identity
 func (c *notifierAgent) String() string { return c.Uri() }
 
+// Name - class identity
+func (c *notifierAgent) Name() string { return c.Uri() }
+
 // Message - message an agent
 func (c *notifierAgent) Message(_ *Message) {}
 

@@ -8,6 +8,7 @@ import (
 type testAgent struct {
 	running    bool
 	agentId    string
+	name       string
 	ctrl       *Channel
 	data       *Channel
 	handler    Handler
@@ -36,6 +37,7 @@ func newTestAgent(uri string, ctrl, data *Channel) *testAgent {
 func (t *testAgent) IsFinalized() bool { return t.data.IsFinalized() && t.ctrl.IsFinalized() }
 func (t *testAgent) Uri() string       { return t.agentId }
 func (t *testAgent) String() string    { return t.Uri() }
+func (t *testAgent) Name() string      { return t.name }
 func (t *testAgent) Message(msg *Message) {
 	if msg == nil {
 		return
