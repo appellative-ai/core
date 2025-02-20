@@ -7,7 +7,7 @@ import (
 
 type controlAgent struct {
 	running    bool
-	agentId    string
+	uri        string
 	name       string
 	ch         chan *Message
 	handler    Handler
@@ -25,7 +25,7 @@ func NewControlAgent(uri string, handler Handler) (Agent, error) {
 
 func newControlAgent(uri string, ch chan *Message, handler Handler) *controlAgent {
 	c := new(controlAgent)
-	c.agentId = uri
+	c.uri = uri
 	c.ch = ch
 	c.handler = handler
 	return c
@@ -35,7 +35,7 @@ func newControlAgent(uri string, ch chan *Message, handler Handler) *controlAgen
 func (c *controlAgent) IsFinalized() bool { return true }
 
 // Uri - identity
-func (c *controlAgent) Uri() string { return c.agentId }
+func (c *controlAgent) Uri() string { return c.uri }
 
 // String - identity
 func (c *controlAgent) String() string { return c.Uri() }
@@ -77,7 +77,7 @@ func (c *controlAgent) Shutdown() {
 	if c.shutdownFn != nil {
 		c.shutdownFn()
 	}
-	c.Message(NewControlMessage(c.agentId, c.agentId, ShutdownEvent))
+	c.Message(NewControlMessage(c.uri, c.uri, ShutdownEvent))
 }
 
 func (c *controlAgent) shutdown() {
