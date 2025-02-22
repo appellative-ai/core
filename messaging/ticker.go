@@ -3,9 +3,7 @@ package messaging
 import "time"
 
 const (
-	PrimaryTicker          = "PRIMARY"
-	tickerFinalizeAttempts = 3
-	tickerFinalizeDuration = time.Second * 5
+	PrimaryTicker = "primary"
 )
 
 type Ticker struct {
