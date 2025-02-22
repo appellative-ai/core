@@ -14,11 +14,11 @@ func Dispatch(agent Agent, dispatcher Dispatcher, channel any, event string) {
 		return
 	}
 	if ch, ok := channel.(*Channel); ok {
-		dispatcher.Dispatch(agent, ch.Name(), event)
+		dispatcher.Dispatch(agent, "channel:"+ch.Name(), event)
 		return
 	}
 	if t, ok := channel.(*Ticker); ok {
-		dispatcher.Dispatch(agent, t.Name(), event)
+		dispatcher.Dispatch(agent, "ticker:"+t.Name(), event)
 	}
 }
 
