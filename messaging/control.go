@@ -101,7 +101,7 @@ func controlAgentRun(c *controlAgent) {
 			}
 			switch msg.Event() {
 			case ShutdownEvent:
-				c.handler(NewMessageWithError(ControlChannelType, "", "", msg.Event(), nil))
+				c.handler(NewMessageWithError(ControlChannelType, msg.Event(), nil))
 				c.shutdown()
 				return
 			default:

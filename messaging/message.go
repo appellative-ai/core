@@ -51,17 +51,25 @@ type Message struct {
 }
 
 func NewControlMessage(to, from, event string) *Message {
-	return NewMessage(ControlChannelType, to, from, event)
+	return NewAddressableMessage(ControlChannelType, to, from, event)
 }
 
-func NewMessageWithError(channel, to, from, event string, err error) *Message {
-	m := NewMessage(channel, to, from, event)
+func NewMessageWithError(channel, event string, err error) *Message {
+	m := NewMessage(channel, event)
 	m.SetContent(ContentTypeError, err)
 	m.Body = err
 	return m
 }
 
-func NewMessage(channel, to, from, event string) *Message {
+func NewMessage(channel, event string) *Message {
+	m := new(Message)
+	m.Header = make(http.Header)
+	m.Header.Add(XChannel, channel)
+	m.Header.Add(XEvent, event)
+	return m
+}
+
+func NewAddressableMessage(channel, to, from, event string) *Message {
 	m := new(Message)
 	m.Header = make(http.Header)
 	m.Header.Add(XChannel, channel)
