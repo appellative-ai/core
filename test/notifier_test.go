@@ -27,6 +27,6 @@ func ExampleNotify() {
 	Notify(messaging.NewStatusError(http.StatusNotFound, errors.New("error: not found")))
 
 	//Output:
-	//Not Found [error: not found]
+	//test: -> [status:Not Found [error: not found]]
 
 }
