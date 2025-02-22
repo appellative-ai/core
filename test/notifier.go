@@ -1,8 +1,14 @@
 package test
 
 import (
+	"fmt"
 	"github.com/behavioral-ai/core/messaging"
 )
+
+func Notify(status *messaging.Status) *messaging.Status {
+	fmt.Printf("%v\n", status)
+	return status
+}
 
 type Notifier interface {
 	messaging.Notifier

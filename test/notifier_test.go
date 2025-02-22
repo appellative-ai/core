@@ -22,3 +22,11 @@ func ExampleNewNotifier() {
 	//test: NewNotifier() -> [status:No Content]
 
 }
+
+func ExampleNotify() {
+	Notify(messaging.NewStatusError(http.StatusNotFound, errors.New("error: not found")))
+
+	//Output:
+	//Not Found [error: not found]
+
+}
