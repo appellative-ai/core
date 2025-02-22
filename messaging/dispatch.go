@@ -9,6 +9,19 @@ type Dispatcher interface {
 	Dispatch(agent Agent, channel, event string)
 }
 
+func Dispatch(agent Agent, dispatcher Dispatcher, channel any, event string) {
+	if dispatcher == nil || agent == nil || channel == nil {
+		return
+	}
+	if ch, ok := channel.(*Channel); ok {
+		dispatcher.Dispatch(agent, ch.Name(), event)
+		return
+	}
+	if t, ok := channel.(*Ticker); ok {
+		dispatcher.Dispatch(agent, t.Name(), event)
+	}
+}
+
 type traceDispatch struct {
 	allEvents bool
 	channel   string
