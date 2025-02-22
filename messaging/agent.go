@@ -7,20 +7,21 @@ const (
 // Agent - agent
 type Agent interface {
 	Mailbox
-	//Finalizer
-	//Notifier
 	Name() string
 	Run()
 	Shutdown()
 }
 
+/*
+//Finalizer
+	//Notifier
 type OpsAgent interface {
 	Agent
 	Notifier
-	//Tracer
+	Tracer
 }
 
-func OpsAgentCast(agent any) OpsAgent {
+ func OpsAgentCast(agent any) OpsAgent {
 	if agent == nil {
 		return nil
 	}
@@ -30,7 +31,6 @@ func OpsAgentCast(agent any) OpsAgent {
 	return nil
 }
 
-/*
 func AgentCast(agent any) Agent {
 	if agent == nil {
 		return nil

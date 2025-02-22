@@ -34,10 +34,11 @@ func newTestAgent(uri string, ctrl, data *Channel) *testAgent {
 	}
 	return t
 }
-func (t *testAgent) IsFinalized() bool { return t.data.IsFinalized() && t.ctrl.IsFinalized() }
-func (t *testAgent) Uri() string       { return t.agentId }
-func (t *testAgent) String() string    { return t.Uri() }
-func (t *testAgent) Name() string      { return t.name }
+
+// func (t *testAgent) IsFinalized() bool { return t.data.IsFinalized() && t.ctrl.IsFinalized() }
+func (t *testAgent) Uri() string    { return t.agentId }
+func (t *testAgent) String() string { return t.Uri() }
+func (t *testAgent) Name() string   { return t.name }
 func (t *testAgent) Message(msg *Message) {
 	if msg == nil {
 		return

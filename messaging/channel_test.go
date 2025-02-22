@@ -46,6 +46,7 @@ func ExampleNewChannel_Send() {
 
 }
 
+/*
 func ExampleChannel_IsFinalized_True() {
 	c := NewPrimaryChannel(true)
 	go func() {
@@ -77,3 +78,6 @@ func _ExampleChannel_IsFinalized_False() {
 	//test: Closed() -> false
 
 }
+
+
+*/

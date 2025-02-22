@@ -46,7 +46,11 @@ func (t *traceDispatch) Dispatch(agent Agent, channel, event string) {
 	//}
 }
 
-func NewTraceDispatcher(events []string, channel string) Dispatcher {
+func NewTraceDispatcher() Dispatcher {
+	return NewTraceFilteredDispatcher(nil, "")
+}
+
+func NewTraceFilteredDispatcher(events []string, channel string) Dispatcher {
 	t := new(traceDispatch)
 	if len(events) == 0 {
 		t.allEvents = true

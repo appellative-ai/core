@@ -50,6 +50,7 @@ func tickerRun(ctrl <-chan *Message, t *Ticker) {
 	}
 }
 
+/*
 func ExampleTicker_IsFinalized_True() {
 	t := NewPrimaryTicker(time.Second * 5)
 	go func() {
@@ -81,3 +82,6 @@ func ExampleTicker_IsFinalized_False() {
 	//test: IsFinalized() -> [finalized:false]
 	//test: Stopped() -> false
 }
+
+
+*/

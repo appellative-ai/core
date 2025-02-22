@@ -3,7 +3,7 @@ package messaging
 import "fmt"
 
 func ExampleTraceDispatch_Channel() {
-	d := NewTraceDispatcher(nil, EmissaryChannel)
+	d := NewTraceFilteredDispatcher(nil, EmissaryChannel)
 	channel := ""
 	event := ""
 
@@ -22,7 +22,7 @@ func ExampleTraceDispatch_Channel() {
 }
 
 func ExampleTraceDispatch_Event() {
-	d := NewTraceDispatcher([]string{ShutdownEvent, StartupEvent}, "")
+	d := NewTraceFilteredDispatcher([]string{ShutdownEvent, StartupEvent}, "")
 	channel := ""
 	event := ""
 

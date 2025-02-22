@@ -6,18 +6,17 @@ import (
 )
 
 type controlAgent struct {
-	running    bool
-	uri        string
-	name       string
-	ch         chan *Message
-	handler    Handler
-	shutdownFn func()
+	running bool
+	uri     string
+	name    string
+	ch      chan *Message
+	handler Handler
 }
 
 // NewControlAgent - create an agent that only listens on a control channel, and has a default AgentRun func
 func NewControlAgent(uri string, handler Handler) (Agent, error) {
 	if handler == nil {
-		return nil, errors.New("error: control agent message handler is nil")
+		return nil, errors.New("error: control agent handler is nil")
 	}
 	return newControlAgent(uri, make(chan *Message, ChannelSize), handler), nil
 	//return NewAgentWithChannels(uri, nil, nil, controlAgentRun, ctrlHandler)
@@ -32,7 +31,7 @@ func newControlAgent(uri string, ch chan *Message, handler Handler) *controlAgen
 }
 
 // IsFinalized - finalized
-func (c *controlAgent) IsFinalized() bool { return true }
+//func (c *controlAgent) IsFinalized() bool { return true }
 
 // Uri - identity
 func (c *controlAgent) Uri() string { return c.uri }
@@ -57,7 +56,9 @@ func (c *controlAgent) Message(msg *Message) {
 	}
 }
 
-func (c *controlAgent) Notify(status *Status) { fmt.Printf("%v", status) }
+func (c *controlAgent) Notify(status *Status) {
+	fmt.Printf("%v", status)
+}
 
 // Run - run the agent
 func (c *controlAgent) Run() {
@@ -74,9 +75,6 @@ func (c *controlAgent) Shutdown() {
 		return
 	}
 	c.running = false
-	if c.shutdownFn != nil {
-		c.shutdownFn()
-	}
 	c.Message(NewControlMessage(c.uri, c.uri, ShutdownEvent))
 }
 
