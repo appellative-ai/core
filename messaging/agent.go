@@ -7,8 +7,8 @@ const (
 // Agent - agent
 type Agent interface {
 	Mailbox
-	Finalizer
-	Notifier
+	//Finalizer
+	//Notifier
 	Name() string
 	Run()
 	Shutdown()
