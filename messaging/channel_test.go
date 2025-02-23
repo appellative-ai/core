@@ -32,7 +32,7 @@ func ExampleNewChannel() {
 
 func ExampleNewChannel_Send() {
 	c := NewChannel("test-send", false)
-	msg := NewControlMessage("", "", StartupEvent)
+	msg := NewMessage(ControlChannel, StartupEvent)
 
 	c.Enable()
 	c.Send(msg)

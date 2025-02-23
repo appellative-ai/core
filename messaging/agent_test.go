@@ -73,7 +73,7 @@ func (t *testAgent) Shutdown() {
 	if t.shutdownFn != nil {
 		t.shutdownFn()
 	}
-	t.Message(NewControlMessage(t.agentId, t.agentId, ShutdownEvent))
+	t.Message(NewMessage(ControlChannel, ShutdownEvent))
 }
 
 func testAgentRun(t *testAgent) {
@@ -142,7 +142,7 @@ func ExampleAgentRun() {
 	uri := "urn:agent007"
 	a := newTestAgent(uri, nil, nil)
 	a.Run()
-	a.Message(NewControlMessage(uri, "ExampleAgentRun()", StartupEvent))
+	a.Message(NewAddressableMessage(ControlChannel, uri, "ExampleAgentRun()", StartupEvent))
 	//a.Message(NewDataMessage(uri, "ExampleAgentRun()", DataEvent))
 	time.Sleep(time.Second)
 	a.Shutdown()
@@ -150,6 +150,6 @@ func ExampleAgentRun() {
 
 	//Output:
 	//test: AgentRun() -> [chan:ctrl] [from:ExampleAgentRun()] [to:urn:agent007] [event:startup]
-	//test: AgentRun() -> [chan:ctrl] [from:urn:agent007] [to:urn:agent007] [event:shutdown]
+	//test: AgentRun() -> [chan:ctrl] [from:] [to:] [event:shutdown]
 
 }

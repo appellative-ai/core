@@ -75,7 +75,7 @@ func (c *controlAgent) Shutdown() {
 		return
 	}
 	c.running = false
-	c.Message(NewControlMessage(c.uri, c.uri, ShutdownEvent))
+	c.Message(NewMessage(ControlChannel, ShutdownEvent))
 }
 
 func (c *controlAgent) shutdown() {

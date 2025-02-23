@@ -52,9 +52,11 @@ func NewMessage(channel, event string) *Message {
 	return m
 }
 
+/*
 func NewControlMessage(to, from, event string) *Message {
 	return NewAddressableMessage(ControlChannel, to, from, event)
 }
+*/
 
 func NewMessageWithError(channel, event string, err error) *Message {
 	m := NewMessage(channel, event)

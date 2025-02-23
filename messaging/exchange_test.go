@@ -72,13 +72,13 @@ func ExampleSendError() {
 	ex := NewExchange()
 
 	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(nil))
-	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(NewControlMessage("", "", "")))
-	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(NewControlMessage(uri, "", "")))
+	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(NewMessage(ControlChannel, "")))
+	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(NewMessage(ControlChannel, "")))
 
 	//Output:
 	//test: Send(urn:test) -> : error: controller2.Send() failed as message is nil
 	//test: Send(urn:test) -> : error: controller2.Send() failed as the message To is empty or invalid : []
-	//test: Send(urn:test) -> : error: controller2.Send() failed as the message To is empty or invalid : [urn:test]
+	//test: Send(urn:test) -> : error: controller2.Send() failed as the message To is empty or invalid : []
 
 }
 
@@ -96,9 +96,9 @@ func ExampleSend() {
 	a3 := newTestAgent(uri3, c, nil)
 	ex.Register(a3)
 
-	ex.Send(NewControlMessage(uri1, PkgPath, StartupEvent))
-	ex.Send(NewControlMessage(uri2, PkgPath, StartupEvent))
-	ex.Send(NewControlMessage(uri3, PkgPath, StartupEvent))
+	ex.Send(NewAddressableMessage(ControlChannel, uri1, PkgPath, StartupEvent))
+	ex.Send(NewAddressableMessage(ControlChannel, uri2, PkgPath, StartupEvent))
+	ex.Send(NewAddressableMessage(ControlChannel, uri3, PkgPath, StartupEvent))
 
 	time.Sleep(time.Second * 1)
 	resp1 := <-c.C
