@@ -49,7 +49,7 @@ func NewStatus(code int) *Status {
 	return s
 }
 
-func NewStatusError(code int, err error, agentId, source string) *Status {
+func NewStatusError(code int, err error, source, agentId string) *Status {
 	s := new(Status)
 	s.Code = code
 	s.Err = err
@@ -71,10 +71,13 @@ func (s *Status) BadRequest() bool {
 }
 
 func (s *Status) String() string {
-	if s.Err != nil {
-		return fmt.Sprintf("%v [%v] [%v] [%v]", HttpStatus(s.Code), s.Err, s.AgentId, s.Source)
-	} else {
+	if s.Err == nil {
 		return fmt.Sprintf("%v", HttpStatus(s.Code))
+	}
+	if s.AgentId != "" {
+		return fmt.Sprintf("%v [err:%v] [src:%v] [agent:%v]", HttpStatus(s.Code), s.Err, s.Source, s.AgentId)
+	} else {
+		return fmt.Sprintf("%v [err:%v] [src:%v]", HttpStatus(s.Code), s.Err, s.Source)
 	}
 }
 

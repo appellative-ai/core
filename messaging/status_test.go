@@ -29,10 +29,14 @@ func ExampleNewStatus_Teapot() {
 }
 
 func ExampleNewStatusError() {
-	s := NewStatusError(http.StatusGatewayTimeout, errors.New("rate limited"), "resiliency:agent/operative/agent1", EmissaryChannel)
+	s := NewStatusError(http.StatusGatewayTimeout, errors.New("rate limited"), EmissaryChannel, "resiliency:agent/operative/agent1#us-west")
+	fmt.Printf("test: NewStatusError() -> [%v]\n", s)
+
+	s = NewStatusError(http.StatusGatewayTimeout, errors.New("rate limited"), EmissaryChannel, "")
 	fmt.Printf("test: NewStatusError() -> [%v]\n", s)
 
 	//Output:
-	//test: NewStatusError() -> [status:I'm A Teapot]
+	//test: NewStatusError() -> [Timeout [err:rate limited] [src:emissary] [agent:resiliency:agent/operative/agent1#us-west]]
+	//test: NewStatusError() -> [Timeout [err:rate limited] [src:emissary]]
 
 }
