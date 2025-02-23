@@ -10,11 +10,11 @@ import (
 func ExampleNewNotifier() {
 	n := NewNotifier()
 
-	n.Notify(messaging.NewStatusError(http.StatusNotFound, errors.New("error: not found")))
+	n.Notify(messaging.NewStatusError(http.StatusNotFound, errors.New("error: not found"), "", nil))
 	fmt.Printf("test: NewNotifier() -> [status:%v]\n", n.Error())
 
 	n.Reset()
-	n.Notify(messaging.NewStatusError(http.StatusNoContent, errors.New("error: no content")))
+	n.Notify(messaging.NewStatusError(http.StatusNoContent, errors.New("error: no content"), "", nil))
 	fmt.Printf("test: NewNotifier() -> [status:%v]\n", n.Error())
 
 	//Output:
@@ -24,9 +24,9 @@ func ExampleNewNotifier() {
 }
 
 func ExampleNotify() {
-	Notify(messaging.NewStatusError(http.StatusNotFound, errors.New("error: not found")))
+	Notify(messaging.NewStatusError(http.StatusNotFound, errors.New("error: not found"), "", nil))
 
 	//Output:
-	//notify-> [status:Not Found [error: not found]]
+	//notify-> [event:messaging:status] [msg:Not Found - error: not found] [src:] [agent:]
 
 }

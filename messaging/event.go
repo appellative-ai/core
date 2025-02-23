@@ -2,7 +2,7 @@ package messaging
 
 type Event interface {
 	Name() string
-	Message() string
+	Content() string
 	Source() string
 	AgentId() string
 }

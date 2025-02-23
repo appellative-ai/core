@@ -5,9 +5,10 @@ import (
 	"github.com/behavioral-ai/core/messaging"
 )
 
-func Notify(status *messaging.Status) *messaging.Status {
-	fmt.Printf("notify-> [status:%v]\n", status)
-	return status
+func Notify(e messaging.Event) {
+	fmt.Printf("notify-> [event:%v] [msg:%v] [src:%v] [agent:%v]", e.Name(), e.Content(), e.Source(), e.AgentId())
+	//fmt.Printf("notify-> [status:%v]\n", status)
+	//return status
 }
 
 type Notifier interface {
