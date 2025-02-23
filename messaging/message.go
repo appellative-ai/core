@@ -35,6 +35,10 @@ const (
 	//XMessageId         = "x-message-id"
 )
 
+var (
+	Shutdown = NewMessage(ControlChannel, ShutdownEvent)
+)
+
 // Handler - uniform interface for message handling
 type Handler func(msg *Message)
 
