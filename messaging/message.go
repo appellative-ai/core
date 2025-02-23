@@ -36,7 +36,9 @@ const (
 )
 
 var (
-	Shutdown = NewMessage(ControlChannel, ShutdownEvent)
+	Shutdown         = NewMessage(ControlChannel, ShutdownEvent)
+	EmissaryShutdown = NewMessage(EmissaryChannel, ShutdownEvent)
+	MasterShutdown   = NewMessage(MasterChannel, ShutdownEvent)
 )
 
 // Handler - uniform interface for message handling
