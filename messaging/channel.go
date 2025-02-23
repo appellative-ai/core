@@ -1,15 +1,11 @@
 package messaging
 
-import (
-	"time"
-)
-
 const (
-	EmissaryChannel         = "emissary"
-	MasterChannel           = "master"
-	PrimaryChannel          = "primary"
-	channelFinalizeAttempts = 3
-	channelFinalizeDuration = time.Second * 5
+	EmissaryChannel = "emissary"
+	MasterChannel   = "master"
+	PrimaryChannel  = "primary"
+	ControlChannel  = "ctrl"
+	DataChannel     = "data"
 )
 
 type Channel struct {
@@ -45,18 +41,11 @@ func (c *Channel) Enable()         { c.enabled = true }
 func (c *Channel) Disable()        { c.enabled = false }
 
 /*
-	func (c *Channel) IsFinalized() bool {
-		return IsFinalized(channelFinalizeAttempts, channelFinalizeDuration, c.IsClosed)
-		//() bool {
-		//	//fmt.Printf("test: Closed() -> %v\n", c.C == nil)
-		//	return c.C == nil
-		//})
-	}
-
 	func (c *Channel) IsClosed() bool {
 		return c.C == nil
 	}
 */
+
 func (c *Channel) Close() {
 	if c.C != nil {
 		close(c.C)

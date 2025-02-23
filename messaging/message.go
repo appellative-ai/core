@@ -27,12 +27,6 @@ const (
 	//XForwardTo         = "x-forward-to"
 	//ContentTypeStatus  = "application/status"
 	//ContentTypeConfig  = "application/config"
-	DataChannelType    = "DATA"
-	ControlChannelType = "CTRL"
-
-	//ChannelRight      = "RIGHT"
-	//ChannelLeft       = "LEFT"
-	//ChannelNone = "NONE"
 
 	ContentType      = "Content-Type"
 	ContentTypeError = "application/error"
@@ -50,22 +44,22 @@ type Message struct {
 	Body   any
 }
 
+func NewMessage(channel, event string) *Message {
+	m := new(Message)
+	m.Header = make(http.Header)
+	m.Header.Add(XChannel, channel)
+	m.Header.Add(XEvent, event)
+	return m
+}
+
 func NewControlMessage(to, from, event string) *Message {
-	return NewAddressableMessage(ControlChannelType, to, from, event)
+	return NewAddressableMessage(ControlChannel, to, from, event)
 }
 
 func NewMessageWithError(channel, event string, err error) *Message {
 	m := NewMessage(channel, event)
 	m.SetContent(ContentTypeError, err)
 	m.Body = err
-	return m
-}
-
-func NewMessage(channel, event string) *Message {
-	m := new(Message)
-	m.Header = make(http.Header)
-	m.Header.Add(XChannel, channel)
-	m.Header.Add(XEvent, event)
 	return m
 }
 
