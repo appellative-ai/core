@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/aspect"
 	"github.com/behavioral-ai/core/messaging"
 	"net/http"
 )
@@ -19,10 +18,10 @@ func ExampleDispatchName() {
 	c := messaging.NewChannel("channel-test", false)
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(c))
 
-	m := messaging.NewControlMessage("", "", "event-test")
+	m := messaging.NewMessage(messaging.ControlChannel, "event-test")
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(m))
 
-	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(aspect.StatusNotFound()))
+	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(messaging.StatusNotFound()))
 
 	r := new(http.Response)
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(r))
@@ -33,7 +32,7 @@ func ExampleDispatchName() {
 	//test: DispatchName() -> ticker-test
 	//test: DispatchName() -> channel-test
 	//test: DispatchName() -> event-test
-	//test: DispatchName() -> Not Found
+	//test: DispatchName() -> *messaging.Status
 	//test: DispatchName() -> *http.Response
 
 }

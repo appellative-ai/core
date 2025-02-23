@@ -49,9 +49,9 @@ func (t *agentT) Run() {
 }
 
 func (t *agentT) Shutdown() {
-	msg := messaging.NewControlMessage(t.Uri(), t.Uri(), messaging.ShutdownEvent)
+	//msg := messaging.NewControlMessage(t.Uri(), t.Uri(), messaging.ShutdownEvent)
 	t.ch.Enable()
-	t.ch.C <- msg
+	t.ch.C <- messaging.Shutdown
 }
 
 /*
