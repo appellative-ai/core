@@ -6,7 +6,7 @@ import (
 )
 
 func Notify(status *messaging.Status) *messaging.Status {
-	fmt.Printf("test: -> [status:%v]\n", status)
+	fmt.Printf("notify-> [status:%v]\n", status)
 	return status
 }
 
