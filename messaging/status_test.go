@@ -1,6 +1,7 @@
 package messaging
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -24,5 +25,14 @@ func ExampleNewStatus_Teapot() {
 
 	//Output:
 	//test: NewStatus() -> [status:I'm A Teapot]
+
+}
+
+func ExampleNewStatusError() {
+	s := NewStatusError(http.StatusGatewayTimeout, errors.New("rate limited"), "resiliency:agent/operative/agent1", EmissaryChannel)
+	fmt.Printf("test: NewStatusError() -> [%v]\n", s)
+
+	//Output:
+	//test: NewStatusError() -> [status:I'm A Teapot]
 
 }

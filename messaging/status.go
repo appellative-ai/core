@@ -25,8 +25,10 @@ const (
 )
 
 type Status struct {
-	Code int   `json:"code"`
-	Err  error `json:"err"`
+	Code    int    `json:"code"`
+	Err     error  `json:"err"`
+	Source  string `json:"source"`
+	AgentId string `json:"agent-id"`
 }
 
 func StatusOK() *Status {
@@ -47,10 +49,12 @@ func NewStatus(code int) *Status {
 	return s
 }
 
-func NewStatusError(code int, err error) *Status {
+func NewStatusError(code int, err error, agentId, source string) *Status {
 	s := new(Status)
 	s.Code = code
 	s.Err = err
+	s.AgentId = agentId
+	s.Source = source
 	return s
 }
 
@@ -68,7 +72,7 @@ func (s *Status) BadRequest() bool {
 
 func (s *Status) String() string {
 	if s.Err != nil {
-		return fmt.Sprintf("%v [%v]", HttpStatus(s.Code), s.Err)
+		return fmt.Sprintf("%v [%v] [%v] [%v]", HttpStatus(s.Code), s.Err, s.AgentId, s.Source)
 	} else {
 		return fmt.Sprintf("%v", HttpStatus(s.Code))
 	}
