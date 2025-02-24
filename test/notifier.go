@@ -6,7 +6,7 @@ import (
 )
 
 func Notify(e messaging.Event) {
-	fmt.Printf("notify-> [%v] [%v] [%v] [%v]\n", e.Name(), e.Content(), e.Source(), e.AgentId())
+	fmt.Printf("notify-> [%v] [%v] [%v] [%v]\n", e.AgentId(), e.Name(), e.Source(), e.Content())
 	//fmt.Printf("notify-> [status:%v]\n", status)
 	//return status
 }
