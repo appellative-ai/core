@@ -83,7 +83,7 @@ func (s *Status) String() string {
 	}
 }
 
-func (s *Status) Name() string    { return "messaging:status" }
+func (s *Status) Name() string    { return "core:messaging.status" }
 func (s *Status) Source() string  { return s.source }
 func (s *Status) AgentId() string { return s.agentId }
 func (s *Status) Content() string {
