@@ -38,7 +38,7 @@ func ExampleNewStatusError() {
 	}
 
 	//Output:
-	//test: NewStatusError() -> [Timeout [err:rate limited] [src:emissary]]
+	//test: NewStatusError() -> [Timeout [err:rate limited] [msg:emissary]]
 	//test: Event() -> [true]
 
 }

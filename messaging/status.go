@@ -85,12 +85,20 @@ func (s *Status) String() string {
 
 func (s *Status) Type() string    { return "core:messaging.status" }
 func (s *Status) AgentId() string { return s.AgentUri }
+func (s *Status) SetAgent(agent Agent) *Status {
+	s.AgentUri = agent.Uri()
+	return s
+}
 func (s *Status) Message() string {
 	if s.Err != nil {
 		return fmt.Sprintf("%v - %v", HttpStatus(s.Code), s.Err)
 	} else {
 		return fmt.Sprintf("%v", HttpStatus(s.Code))
 	}
+}
+func (s *Status) SetMessage(msg string) *Status {
+	s.Msg = msg
+	return s
 }
 
 var okStatus = func() *Status {
