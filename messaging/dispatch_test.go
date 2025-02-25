@@ -16,8 +16,8 @@ func ExampleTraceDispatch_Channel() {
 
 	//Output:
 	//test: Dispatch() -> [channel:]
-	//trace -> 2024-11-24T18:40:08.606Z [emissary] [] [<nil>]
-	//test: Dispatch() -> [channel:emissary] []
+	//trace -> 2024-11-24T18:40:08.606Z [<nil>] [emissary] []
+	//test: Dispatch() -> [channel:emissary]
 
 }
 
@@ -39,8 +39,8 @@ func ExampleTraceDispatch_Event() {
 
 	//Output:
 	//test: Dispatch() -> []
-	//trace -> 2024-11-24T18:46:04.697Z [] [event:shutdown] [<nil>]
-	//test: Dispatch() -> [event:shutdown]
-	//test: Dispatch() -> [channel:] [event:observation]
+	//trace -> 2024-11-24T18:46:04.697Z [<nil>] [] [messaging:event.shutdown]
+	//test: Dispatch() -> [messaging.event.shutdown]
+	//test: Dispatch() -> [channel:] [messaging.event.observation]
 
 }

@@ -53,7 +53,7 @@ func (t *traceDispatch) Dispatch(agent Agent, channel, event string) {
 	if agent != nil {
 		id = agent.Uri()
 	}
-	fmt.Printf("trace -> %v [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), channel, event, id)
+	fmt.Printf("trace -> %v [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), id, channel, event)
 	//} else {
 	//	fmt.Printf("trace -> %v [%v] [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), channel, event, id, activity)
 	//}
