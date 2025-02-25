@@ -6,12 +6,12 @@ import (
 )
 
 func ExampleNotify() {
-	s := NewStatusError(http.StatusGatewayTimeout, errors.New("rate limiting"), "message", nil)
+	s := NewStatusError(http.StatusGatewayTimeout, errors.New("rate limiting"), "message", "test:agent")
 	s.AgentUri = "resiliency:agent/operative"
 
 	Notify(s)
 
 	//Output:
-	//notify-> [] [core:messaging.status] [] [Not Found - error: not found]
+	//notify-> 2025-02-25T17:31:33.515Z [resiliency:agent/operative] [core:messaging.status] [Timeout - rate limiting]
 
 }

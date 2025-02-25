@@ -49,13 +49,11 @@ func NewStatus(code int) *Status {
 	return s
 }
 
-func NewStatusError(code int, err error, msg string, agent Agent) *Status {
+func NewStatusError(code int, err error, msg, agentUri string) *Status {
 	s := new(Status)
 	s.Code = code
 	s.Err = err
-	if agent != nil {
-		s.AgentUri = agent.Uri()
-	}
+	s.AgentUri = agentUri
 	s.Msg = msg
 	return s
 }
@@ -85,8 +83,8 @@ func (s *Status) String() string {
 
 func (s *Status) Type() string    { return "core:messaging.status" }
 func (s *Status) AgentId() string { return s.AgentUri }
-func (s *Status) SetAgent(agent Agent) *Status {
-	s.AgentUri = agent.Uri()
+func (s *Status) SetAgent(agentUri string) *Status {
+	s.AgentUri = agentUri
 	return s
 }
 func (s *Status) Message() string {
