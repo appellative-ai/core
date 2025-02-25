@@ -27,7 +27,7 @@ const (
 type Status struct {
 	Code     int    `json:"code"`
 	Err      error  `json:"err"`
-	Src      string `json:"source"`
+	Msg      string `json:"message"`
 	AgentUri string `json:"agent-uri"`
 }
 
@@ -49,14 +49,14 @@ func NewStatus(code int) *Status {
 	return s
 }
 
-func NewStatusError(code int, err error, source string, agent Agent) *Status {
+func NewStatusError(code int, err error, msg string, agent Agent) *Status {
 	s := new(Status)
 	s.Code = code
 	s.Err = err
 	if agent != nil {
 		s.AgentUri = agent.Uri()
 	}
-	s.Src = source
+	s.Msg = msg
 	return s
 }
 
@@ -77,16 +77,15 @@ func (s *Status) String() string {
 		return fmt.Sprintf("%v", HttpStatus(s.Code))
 	}
 	if s.AgentUri != "" {
-		return fmt.Sprintf("%v [err:%v] [src:%v] [agent:%v]", HttpStatus(s.Code), s.Err, s.Src, s.AgentUri)
+		return fmt.Sprintf("%v [err:%v] [msg:%v] [agent:%v]", HttpStatus(s.Code), s.Err, s.Msg, s.AgentUri)
 	} else {
-		return fmt.Sprintf("%v [err:%v] [src:%v]", HttpStatus(s.Code), s.Err, s.Src)
+		return fmt.Sprintf("%v [err:%v] [msg:%v]", HttpStatus(s.Code), s.Err, s.Msg)
 	}
 }
 
-func (s *Status) Name() string    { return "core:messaging.status" }
-func (s *Status) Source() string  { return s.Src }
+func (s *Status) Type() string    { return "core:messaging.status" }
 func (s *Status) AgentId() string { return s.AgentUri }
-func (s *Status) Content() string {
+func (s *Status) Message() string {
 	if s.Err != nil {
 		return fmt.Sprintf("%v - %v", HttpStatus(s.Code), s.Err)
 	} else {

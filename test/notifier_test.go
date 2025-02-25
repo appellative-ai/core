@@ -18,15 +18,7 @@ func ExampleNewNotifier() {
 	fmt.Printf("test: NewNotifier() -> [status:%v]\n", n.Error())
 
 	//Output:
-	//test: NewNotifier() -> [status:Not Found]
-	//test: NewNotifier() -> [status:No Content]
-
-}
-
-func ExampleNotify() {
-	Notify(messaging.NewStatusError(http.StatusNotFound, errors.New("error: not found"), "", nil))
-
-	//Output:
-	//notify-> [] [core:messaging.status] [] [Not Found - error: not found]
+	//test: NewNotifier() -> [status:error: not found]
+	//test: NewNotifier() -> [status:error: no content]
 
 }

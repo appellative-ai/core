@@ -1,15 +1,8 @@
 package test
 
 import (
-	"fmt"
 	"github.com/behavioral-ai/core/messaging"
 )
-
-func Notify(e messaging.Event) {
-	fmt.Printf("notify-> [%v] [%v] [%v] [%v]\n", e.AgentId(), e.Name(), e.Source(), e.Content())
-	//fmt.Printf("notify-> [status:%v]\n", status)
-	//return status
-}
 
 type Notifier interface {
 	messaging.Notifier
