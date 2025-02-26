@@ -12,14 +12,16 @@ type Agent interface {
 	Shutdown()
 }
 
+// OpsAgent - agent with host information
+type OpsAgent interface {
+	Agent
+	Host() string
+}
+
 /*
 //Finalizer
 	//Notifier
-type OpsAgent interface {
-	Agent
-	Notifier
-	Tracer
-}
+
 
  func OpsAgentCast(agent any) OpsAgent {
 	if agent == nil {
