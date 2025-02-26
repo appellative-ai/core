@@ -42,7 +42,7 @@ func ExampleNewChannel_Send() {
 	fmt.Printf("test: NewChannel_Send() -> [enabled:%v] [msg:%v]\n", c.enabled, msg2)
 
 	//Output:
-	//test: NewChannel_Send() -> [enabled:true] [msg:[chan:ctrl] [from:] [to:] [event:startup]]
+	//test: NewChannel_Send() -> [enabled:true] [msg:[chan:ctrl] [from:] [to:] [messaging:event.startup]]
 
 }
 
