@@ -11,6 +11,8 @@ import (
 const (
 	StartupEvent  = "messaging:event.startup"
 	ShutdownEvent = "messaging:event.shutdown"
+	StartEvent    = "messaging:event.start"
+	StopEvent     = "messaging:event.stop"
 	PauseEvent    = "messaging:event.pause"  // disable data channel receive
 	ResumeEvent   = "messaging:event.resume" // enable data channel receive
 
@@ -23,16 +25,15 @@ const (
 	XEvent   = "x-event"
 	XChannel = "x-channel"
 
-	//XAgentId           = "x-agent-id"
-	//XForwardTo         = "x-forward-to"
-	//ContentTypeStatus  = "application/status"
-	//ContentTypeConfig  = "application/config"
-
 	ContentType      = "Content-Type"
 	ContentTypeError = "application/error"
 
 	//XRelatesTo         = "x-relates-to"
 	//XMessageId         = "x-message-id"
+	//XAgentId           = "x-agent-id"
+	//XForwardTo         = "x-forward-to"
+	//ContentTypeStatus  = "application/status"
+	//ContentTypeConfig  = "application/config"
 )
 
 var (
