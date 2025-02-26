@@ -62,11 +62,11 @@ func ExampleNewControlAgent() {
 	//c <- Message{}
 
 	//Output:
-	//test: NewControlAgent_CtrlHandler() -> event:startup
-	//test: NewControlAgent_CtrlHandler() -> event:pause
-	//test: NewControlAgent_CtrlHandler() -> event:resume
+	//test: NewControlAgent_CtrlHandler() -> messaging:event.startup
+	//test: NewControlAgent_CtrlHandler() -> messaging:event.pause
+	//test: NewControlAgent_CtrlHandler() -> messaging:event.resume
 	//test: NewControlAgent_CtrlHandler() -> event:ping
 	//test: NewControlAgent_CtrlHandler() -> event:reconfigure
-	//test: NewControlAgent_CtrlHandler() -> event:shutdown
+	//test: NewControlAgent_CtrlHandler() -> messaging:event.shutdown
 
 }

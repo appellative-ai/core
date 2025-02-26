@@ -86,7 +86,7 @@ func ExampleSend() {
 	uri1 := "urn:agent-1"
 	uri2 := "urn:agent-2"
 	uri3 := "urn:agent-3"
-	c := NewChannel("test", true) //make(chan *Message, 16)
+	c := NewChannel("test") //make(chan *Message, 16)
 	ex := NewExchange()
 
 	a1 := newTestAgent(uri1, c, nil)

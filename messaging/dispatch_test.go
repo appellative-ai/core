@@ -41,6 +41,6 @@ func ExampleTraceDispatch_Event() {
 	//test: Dispatch() -> []
 	//trace -> 2024-11-24T18:46:04.697Z [<nil>] [] [messaging:event.shutdown]
 	//test: Dispatch() -> [messaging.event.shutdown]
-	//test: Dispatch() -> [channel:] [messaging.event.observation]
+	//test: Dispatch() -> [channel:] [messaging:event.observation]
 
 }

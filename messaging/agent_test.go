@@ -23,12 +23,12 @@ func newTestAgent(uri string, ctrl, data *Channel) *testAgent {
 	t := new(testAgent)
 	t.agentId = uri
 	if ctrl == nil {
-		t.ctrl = NewChannel(DataChannel, true) //make(chan *Message, ChannelSize)
+		t.ctrl = NewChannel(DataChannel) //make(chan *Message, ChannelSize)
 	} else {
 		t.ctrl = ctrl
 	}
 	if data == nil {
-		t.data = NewChannel(ControlChannel, true) //make(chan *Message, ChannelSize)
+		t.data = NewChannel(ControlChannel) //make(chan *Message, ChannelSize)
 	} else {
 		t.data = data
 	}
@@ -149,7 +149,7 @@ func ExampleAgentRun() {
 	time.Sleep(time.Second)
 
 	//Output:
-	//test: AgentRun() -> [chan:ctrl] [from:ExampleAgentRun()] [to:urn:agent007] [event:startup]
-	//test: AgentRun() -> [chan:ctrl] [from:] [to:] [event:shutdown]
+	//test: AgentRun() -> [chan:ctrl] [from:ExampleAgentRun()] [to:urn:agent007] [messaging:event.startup]
+	//test: AgentRun() -> [chan:ctrl] [from:] [to:] [messaging:event.shutdown]
 
 }

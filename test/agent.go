@@ -12,7 +12,7 @@ type agentT struct {
 func NewAgent(uri string) messaging.Agent {
 	a := new(agentT)
 	a.uri = uri
-	a.ch = messaging.NewEmissaryChannel(true)
+	a.ch = messaging.NewEmissaryChannel()
 	return a
 }
 
@@ -50,7 +50,7 @@ func (t *agentT) Run() {
 
 func (t *agentT) Shutdown() {
 	//msg := messaging.NewControlMessage(t.Uri(), t.Uri(), messaging.ShutdownEvent)
-	t.ch.Enable()
+	//t.ch.Enable()
 	t.ch.C <- messaging.Shutdown
 }
 

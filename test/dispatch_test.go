@@ -15,7 +15,7 @@ func ExampleDispatchName() {
 	t := messaging.NewTicker("ticker-test", 100)
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(t))
 
-	c := messaging.NewChannel("channel-test", false)
+	c := messaging.NewChannel("channel-test")
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(c))
 
 	m := messaging.NewMessage(messaging.ControlChannel, "event-test")
