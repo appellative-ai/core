@@ -12,6 +12,6 @@ func ExampleNotify() {
 	Notify(s)
 
 	//Output:
-	//notify-> 2025-02-25T17:31:33.515Z [resiliency:agent/operative] [core:messaging.status] [Timeout - rate limiting]
+	//notify-> 2025-02-26T15:34:45.784Z [resiliency:agent/operative] [core:messaging.status] [Timeout] [rate limiting]
 
 }

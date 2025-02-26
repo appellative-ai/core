@@ -82,6 +82,7 @@ func (s *Status) String() string {
 }
 
 func (s *Status) Type() string    { return "core:messaging.status" }
+func (s *Status) Status() string  { return HttpStatus(s.Code) }
 func (s *Status) AgentId() string { return s.AgentUri }
 func (s *Status) SetAgent(agentUri string) *Status {
 	s.AgentUri = agentUri
@@ -89,10 +90,12 @@ func (s *Status) SetAgent(agentUri string) *Status {
 }
 func (s *Status) Message() string {
 	if s.Err != nil {
-		return fmt.Sprintf("%v - %v", HttpStatus(s.Code), s.Err)
-	} else {
-		return fmt.Sprintf("%v", HttpStatus(s.Code))
+		return s.Err.Error() //fs.mt.Sprintf("%v - %v", HttpStatus(s.Code), s.Err)
 	}
+	//else {
+	//	return fmt.Sprintf("%v", HttpStatus(s.Code))
+	//}
+	return ""
 }
 func (s *Status) SetMessage(msg string) *Status {
 	s.Msg = msg
