@@ -37,6 +37,8 @@ const (
 
 var (
 	Shutdown         = NewMessage(ControlChannel, ShutdownEvent)
+	Pause            = NewMessage(ControlChannel, PauseEvent)
+	Resume           = NewMessage(ControlChannel, ResumeEvent)
 	EmissaryShutdown = NewMessage(EmissaryChannel, ShutdownEvent)
 	MasterShutdown   = NewMessage(MasterChannel, ShutdownEvent)
 )
