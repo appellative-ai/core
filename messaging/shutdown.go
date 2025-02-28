@@ -21,3 +21,12 @@ func AddShutdown(curr, next func()) func() {
 	}
 	return curr
 }
+
+/*
+defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("recovered in agent.Shutdown() : %v\n", r)
+		}
+	}()
+
+*/

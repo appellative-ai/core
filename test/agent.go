@@ -49,31 +49,5 @@ func (t *agentT) Run() {
 }
 
 func (t *agentT) Shutdown() {
-	//msg := messaging.NewControlMessage(t.Uri(), t.Uri(), messaging.ShutdownEvent)
-	//t.ch.Enable()
 	t.ch.C <- messaging.Shutdown
 }
-
-/*
-// Notify - status notifications
-func (t *agentT) Notify(status *messaging.Status) {
-	fmt.Printf("test: Agent() -> [status:%v]\n", status)
-	return
-}
-
-// Trace - activity tracing
-//func (t *agentT) Trace(agent messaging.Agent, channel, event, activity string) {
-//	trace(agent, channel, event, activity)
-//}
-
-// Add - add a shutdown function
-//func (t *agentT) Add(f func()) { t.shutdownFunc = messaging.AddShutdown(t.shutdownFunc, f) }
-
-
-func (t *agentT) finalize() {
-	t.ch.Close()
-	t.ch = nil
-}
-
-
-*/
