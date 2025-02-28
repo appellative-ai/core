@@ -6,7 +6,7 @@ import (
 )
 
 func ExampleNotify() {
-	s := NewStatusError(http.StatusGatewayTimeout, errors.New("rate limiting"), "message", "test:agent")
+	s := NewStatusError(http.StatusGatewayTimeout, errors.New("rate limiting"), "test:agent")
 	s.AgentUri = "resiliency:agent/operative"
 
 	Notify(s)

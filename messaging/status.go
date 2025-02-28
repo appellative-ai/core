@@ -49,12 +49,11 @@ func NewStatus(code int) *Status {
 	return s
 }
 
-func NewStatusError(code int, err error, msg, agentUri string) *Status {
+func NewStatusError(code int, err error, agentUri string) *Status {
 	s := new(Status)
 	s.Code = code
 	s.Err = err
 	s.AgentUri = agentUri
-	s.Msg = msg
 	return s
 }
 
@@ -75,9 +74,9 @@ func (s *Status) String() string {
 		return fmt.Sprintf("%v", HttpStatus(s.Code))
 	}
 	if s.AgentUri != "" {
-		return fmt.Sprintf("%v [err:%v] [msg:%v] [agent:%v]", HttpStatus(s.Code), s.Err, s.Msg, s.AgentUri)
+		return fmt.Sprintf("%v [err:%v] [agent:%v]", HttpStatus(s.Code), s.Err, s.AgentUri)
 	} else {
-		return fmt.Sprintf("%v [err:%v] [msg:%v]", HttpStatus(s.Code), s.Err, s.Msg)
+		return fmt.Sprintf("%v [err:%v]", HttpStatus(s.Code), s.Err)
 	}
 }
 
