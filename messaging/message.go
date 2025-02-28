@@ -9,16 +9,16 @@ import (
 // TODO : add support for control messages or restart, apply-changes, rollback-changes
 
 const (
-	StartupEvent  = "messaging:event.startup"
-	ShutdownEvent = "messaging:event.shutdown"
-	StartEvent    = "messaging:event.start"
-	StopEvent     = "messaging:event.stop"
-	PauseEvent    = "messaging:event.pause"  // disable data channel receive
-	ResumeEvent   = "messaging:event.resume" // enable data channel receive
+	StartupEvent  = "event:startup"
+	ShutdownEvent = "event:shutdown"
+	StartEvent    = "event:start"
+	StopEvent     = "event:stop"
+	PauseEvent    = "event:pause"  // disable data channel receive
+	ResumeEvent   = "event:resume" // enable data channel receive
 
-	ObservationEvent = "messaging:event.observation"
-	TickEvent        = "messaging:event.tick"
-	DataChangeEvent  = "messaging:event.data-change"
+	ObservationEvent = "event:observation"
+	TickEvent        = "event:tick"
+	DataChangeEvent  = "event:data-change"
 
 	XTo      = "x-to"
 	XFrom    = "x-from"

@@ -149,7 +149,7 @@ func ExampleAgentRun() {
 	time.Sleep(time.Second)
 
 	//Output:
-	//test: AgentRun() -> [chan:ctrl] [from:ExampleAgentRun()] [to:urn:agent007] [messaging:event.startup]
-	//test: AgentRun() -> [chan:ctrl] [from:] [to:] [messaging:event.shutdown]
+	//test: AgentRun() -> [chan:ctrl] [from:ExampleAgentRun()] [to:urn:agent007] [event:startup]
+	//test: AgentRun() -> [chan:ctrl] [from:] [to:] [event:shutdown]
 
 }
