@@ -3,14 +3,14 @@ package messaging
 import "fmt"
 
 func ExampleTraceDispatch_Channel() {
-	d := NewFilteredTraceDispatcher(nil, EmissaryChannel)
+	d := NewFilteredTraceDispatcher(nil, Emissary)
 	channel := ""
 	event := ""
 
 	d.Dispatch(nil, channel, event)
 	fmt.Printf("test: Dispatch() -> [channel:%v]\n", channel)
 
-	channel = EmissaryChannel
+	channel = Emissary
 	d.Dispatch(nil, channel, event)
 	fmt.Printf("test: Dispatch() -> [channel:%v]\n", channel)
 

@@ -32,10 +32,10 @@ func (t *agent) Shutdown() {
 
 func _ExampleDefaultTracer_Trace() {
 	a := NewAgent("agent:test", NewEmissaryChannel())
-	DefaultTracer.Trace(nil, EmissaryChannel, "event:shutdown", "agent shutdown")
+	DefaultTracer.Trace(nil, Emissary, "event:shutdown", "agent shutdown")
 	fmt.Printf("\n")
 
-	DefaultTracer.Trace(a, MasterChannel, "event:shutdown", "agent shutdown")
+	DefaultTracer.Trace(a, Master, "event:shutdown", "agent shutdown")
 	fmt.Printf("\n")
 
 	//Output:
@@ -64,15 +64,15 @@ func ExampleAccess_No_Filter() {
 }
 
 func ExampleAccess_Channel() {
-	filter := NewTraceFilter(EmissaryChannel, "")
+	filter := NewTraceFilter(Emissary, "")
 	channel := ""
 	event := ""
 
 	fmt.Printf("test: Access(%v,%v) -> [channel:%v] [event:%v] [access:%v]\n", filter.Channel, filter.Event, channel, event, filter.Access(channel, event))
-	channel = EmissaryChannel
+	channel = Emissary
 	fmt.Printf("test: Access(%v,%v) -> [channel:%v] [event:%v] [access:%v]\n", filter.Channel, filter.Event, channel, event, filter.Access(channel, event))
 
-	channel = MasterChannel
+	channel = Master
 	fmt.Printf("test: Access(%v,%v) -> [channel:%v] [event:%v] [access:%v]\n", filter.Channel, filter.Event, channel, event, filter.Access(channel, event))
 
 	channel = ""
@@ -98,7 +98,7 @@ func ExampleAccess_Event() {
 	event = StartupEvent
 	fmt.Printf("test: Access(%v,%v) -> [channel:%v] [event:%v] [access:%v]\n", filter.Channel, filter.Event, channel, event, filter.Access(channel, event))
 
-	channel = EmissaryChannel
+	channel = Emissary
 	event = StartupEvent
 	fmt.Printf("test: Access(%v,%v) -> [channel:%v] [event:%v] [access:%v]\n", filter.Channel, filter.Event, channel, event, filter.Access(channel, event))
 
@@ -115,7 +115,7 @@ func ExampleAccess_Event() {
 }
 
 func ExampleAccess() {
-	filter := NewTraceFilter(EmissaryChannel, ShutdownEvent)
+	filter := NewTraceFilter(Emissary, ShutdownEvent)
 	channel := ""
 	event := ""
 
@@ -125,11 +125,11 @@ func ExampleAccess() {
 	event = StartupEvent
 	fmt.Printf("test: Access(%v,%v) -> [channel:%v] [event:%v] [access:%v]\n", filter.Channel, filter.Event, channel, event, filter.Access(channel, event))
 
-	channel = EmissaryChannel
+	channel = Emissary
 	event = StartupEvent
 	fmt.Printf("test: Access(%v,%v) -> [channel:%v] [event:%v] [access:%v]\n", filter.Channel, filter.Event, channel, event, filter.Access(channel, event))
 
-	channel = EmissaryChannel
+	channel = Emissary
 	event = ShutdownEvent
 	fmt.Printf("test: Access(%v,%v) -> [channel:%v] [event:%v] [access:%v]\n", filter.Channel, filter.Event, channel, event, filter.Access(channel, event))
 

@@ -6,10 +6,10 @@ import (
 
 func ExampleDefaultTracer_Trace() {
 	a := NewAgent("agent:test")
-	DefaultTracer.Trace(nil, messaging.MasterChannel, "event:shutdown", "agent shutdown")
+	DefaultTracer.Trace(nil, messaging.Master, "event:shutdown", "agent shutdown")
 	//fmt.Printf("\n")
 
-	DefaultTracer.Trace(a, messaging.EmissaryChannel, "event:shutdown", "")
+	DefaultTracer.Trace(a, messaging.Emissary, "event:shutdown", "")
 	//fmt.Printf("\n")
 
 	//Output:

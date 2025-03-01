@@ -48,7 +48,7 @@ func (c *controlAgent) Message(msg *Message) {
 		return
 	}
 	switch msg.Channel() {
-	case ControlChannel:
+	case Control:
 		if c.ch != nil {
 			c.ch <- msg
 		}
@@ -101,7 +101,7 @@ func controlAgentRun(c *controlAgent) {
 			}
 			switch msg.Event() {
 			case ShutdownEvent:
-				c.handler(NewMessageWithError(ControlChannel, msg.Event(), nil))
+				c.handler(NewMessageWithError(Control, msg.Event(), nil))
 				c.shutdown()
 				return
 			default:

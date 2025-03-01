@@ -22,6 +22,8 @@ const (
 
 	Master   = "master"
 	Emissary = "emissary"
+	Control  = "ctrl"
+	Data     = "data"
 
 	XTo      = "x-to"
 	XFrom    = "x-from"
@@ -40,15 +42,15 @@ const (
 )
 
 var (
-	Startup  = NewMessage(ControlChannel, StartupEvent)
-	Shutdown = NewMessage(ControlChannel, ShutdownEvent)
-	Pause    = NewMessage(ControlChannel, PauseEvent)
-	Resume   = NewMessage(ControlChannel, ResumeEvent)
-	Start    = NewMessage(ControlChannel, StartEvent)
-	Stop     = NewMessage(ControlChannel, StopEvent)
+	Startup  = NewMessage(Control, StartupEvent)
+	Shutdown = NewMessage(Control, ShutdownEvent)
+	Pause    = NewMessage(Control, PauseEvent)
+	Resume   = NewMessage(Control, ResumeEvent)
+	Start    = NewMessage(Control, StartEvent)
+	Stop     = NewMessage(Control, StopEvent)
 
-	EmissaryShutdown = NewMessage(EmissaryChannel, ShutdownEvent)
-	MasterShutdown   = NewMessage(MasterChannel, ShutdownEvent)
+	EmissaryShutdown = NewMessage(Emissary, ShutdownEvent)
+	MasterShutdown   = NewMessage(Master, ShutdownEvent)
 )
 
 // Handler - uniform interface for message handling
@@ -70,7 +72,7 @@ func NewMessage(channel, event string) *Message {
 
 /*
 func NewControlMessage(to, from, event string) *Message {
-	return NewAddressableMessage(ControlChannel, to, from, event)
+	return NewAddressableMessage(Control, to, from, event)
 }
 */
 

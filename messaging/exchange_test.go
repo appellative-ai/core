@@ -72,8 +72,8 @@ func ExampleSendError() {
 	ex := NewExchange()
 
 	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(nil))
-	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(NewMessage(ControlChannel, "")))
-	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(NewMessage(ControlChannel, "")))
+	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(NewMessage(Control, "")))
+	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(NewMessage(Control, "")))
 
 	//Output:
 	//test: Send(urn:test) -> : error: controller2.Send() failed as message is nil
@@ -96,9 +96,9 @@ func ExampleSend() {
 	a3 := newTestAgent(uri3, c, nil)
 	ex.Register(a3)
 
-	ex.Send(NewAddressableMessage(ControlChannel, uri1, PkgPath, StartupEvent))
-	ex.Send(NewAddressableMessage(ControlChannel, uri2, PkgPath, StartupEvent))
-	ex.Send(NewAddressableMessage(ControlChannel, uri3, PkgPath, StartupEvent))
+	ex.Send(NewAddressableMessage(Control, uri1, PkgPath, StartupEvent))
+	ex.Send(NewAddressableMessage(Control, uri2, PkgPath, StartupEvent))
+	ex.Send(NewAddressableMessage(Control, uri3, PkgPath, StartupEvent))
 
 	time.Sleep(time.Second * 1)
 	resp1 := <-c.C

@@ -18,7 +18,7 @@ func ExampleDispatchName() {
 	c := messaging.NewChannel("channel-test")
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(c))
 
-	m := messaging.NewMessage(messaging.ControlChannel, "event-test")
+	m := messaging.NewMessage(messaging.Control, "event-test")
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(m))
 
 	fmt.Printf("test: DispatchName() -> %v\n", DispatchName(messaging.StatusNotFound()))

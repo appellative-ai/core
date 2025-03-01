@@ -2,14 +2,6 @@ package messaging
 
 //PrimaryChannel  = "primary"
 
-const (
-	EmissaryChannel = Emissary
-	MasterChannel   = Master
-
-	ControlChannel = "ctrl"
-	DataChannel    = "data"
-)
-
 type Channel struct {
 	name string
 	C    chan *Message
@@ -23,11 +15,11 @@ func NewChannel(name string) *Channel {
 }
 
 func NewEmissaryChannel() *Channel {
-	return NewChannel(EmissaryChannel)
+	return NewChannel(Emissary)
 }
 
 func NewMasterChannel() *Channel {
-	return NewChannel(MasterChannel)
+	return NewChannel(Master)
 }
 
 /*

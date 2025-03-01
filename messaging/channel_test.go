@@ -29,7 +29,7 @@ func ExampleNewChannel() {
 
 func ExampleNewChannel_Send() {
 	c := NewChannel("test-send")
-	msg := NewMessage(ControlChannel, StartupEvent)
+	msg := NewMessage(Control, StartupEvent)
 
 	//c.Enable()
 	c.Send(msg)
