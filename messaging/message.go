@@ -20,6 +20,9 @@ const (
 	TickEvent        = "event:tick"
 	DataChangeEvent  = "event:data-change"
 
+	Master   = "master"
+	Emissary = "emissary"
+
 	XTo      = "x-to"
 	XFrom    = "x-from"
 	XEvent   = "x-event"

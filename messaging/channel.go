@@ -1,11 +1,13 @@
 package messaging
 
+//PrimaryChannel  = "primary"
+
 const (
-	EmissaryChannel = "emissary"
-	MasterChannel   = "master"
-	PrimaryChannel  = "primary"
-	ControlChannel  = "ctrl"
-	DataChannel     = "data"
+	EmissaryChannel = Emissary
+	MasterChannel   = Master
+
+	ControlChannel = "ctrl"
+	DataChannel    = "data"
 )
 
 type Channel struct {
