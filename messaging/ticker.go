@@ -22,9 +22,9 @@ func NewTicker(name string, duration time.Duration) *Ticker {
 	return t
 }
 
-func NewPrimaryTicker(duration time.Duration) *Ticker {
-	return NewTicker(PrimaryTicker, duration)
-}
+//func NewPrimaryTicker(duration time.Duration) *Ticker {
+//	return NewTicker(PrimaryTicker, duration)
+//}
 
 func (t *Ticker) String() string          { return t.Name() }
 func (t *Ticker) Name() string            { return t.name }
