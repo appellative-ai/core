@@ -3,7 +3,7 @@ package messaging
 import "time"
 
 type Spanner interface {
-	Duration() time.Duration
+	Span() time.Duration
 }
 
 type Ticker struct {

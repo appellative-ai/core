@@ -17,7 +17,7 @@ func NewTestSpanner(min, max time.Duration) messaging.Spanner {
 	return s
 }
 
-func (t *testSpanner) Duration() time.Duration {
+func (t *testSpanner) Span() time.Duration {
 	if t.maxSpan {
 		t.maxSpan = false
 		return t.max
