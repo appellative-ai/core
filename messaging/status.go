@@ -49,6 +49,14 @@ func NewStatus(code int) *Status {
 	return s
 }
 
+func NewStatusMessage(code int, msg, agentUri string) *Status {
+	s := new(Status)
+	s.Code = code
+	s.AgentUri = agentUri
+	s.Msg = msg
+	return s
+}
+
 func NewStatusError(code int, err error, agentUri string) *Status {
 	s := new(Status)
 	s.Code = code
@@ -70,6 +78,13 @@ func (s *Status) BadRequest() bool {
 }
 
 func (s *Status) String() string {
+	if s.Msg != "" {
+		if s.AgentUri != "" {
+			return fmt.Sprintf("%v [msg:%v] [agent:%v]", HttpStatus(s.Code), s.Msg, s.AgentUri)
+		} else {
+			return fmt.Sprintf("%v [msg:%v]", HttpStatus(s.Code), s.Msg)
+		}
+	}
 	if s.Err == nil {
 		return fmt.Sprintf("%v", HttpStatus(s.Code))
 	}
@@ -89,11 +104,11 @@ func (s *Status) SetAgent(agentUri string) *Status {
 }
 func (s *Status) Message() string {
 	if s.Err != nil {
-		return s.Err.Error() //fs.mt.Sprintf("%v - %v", HttpStatus(s.Code), s.Err)
+		return s.Err.Error()
 	}
-	//else {
-	//	return fmt.Sprintf("%v", HttpStatus(s.Code))
-	//}
+	if s.Msg != "" {
+		return s.Msg
+	}
 	return ""
 }
 func (s *Status) SetMessage(msg string) *Status {

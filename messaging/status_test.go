@@ -42,3 +42,18 @@ func ExampleNewStatusError() {
 	//test: Event() -> [true]
 
 }
+
+func ExampleNewStatusMessage() {
+	s := NewStatusMessage(http.StatusOK, "successfully change ticker duration", "test:agent")
+	fmt.Printf("test: NewStatusMessage() -> [%v]\n", s)
+
+	if _, ok := any(s).(Event); ok {
+		fmt.Printf("test: Event() -> [%v]\n", ok)
+
+	}
+
+	//Output:
+	//test: NewStatusMessage() -> [OK [msg:successfully change ticker duration] [agent:test:agent]]
+	//test: Event() -> [true]
+
+}
