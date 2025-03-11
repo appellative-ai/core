@@ -2,9 +2,9 @@ package messaging
 
 import "time"
 
-const (
-	PrimaryTicker = "primary"
-)
+type Spanner interface {
+	Duration() time.Duration
+}
 
 type Ticker struct {
 	name     string
