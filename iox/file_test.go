@@ -45,6 +45,7 @@ func ExampleDirFS() {
 	//test: fs.ReadFile() -> [err:<nil>] [test-response.gz] true
 	//test: fs.ReadFile() -> [err:<nil>] [test-response.txt] true
 	//test: fs.ReadFile() -> [err:<nil>] [test-response2.gz] true
+	//test: fs.ReadFile() -> [err:<nil>] [test-response2.txt] true
 
 }
 
@@ -53,7 +54,7 @@ func ExampleDirFS_Failure() {
 	fileSystem := DirFS(dir)
 	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
-			log.Fatal(err)
+			fmt.Printf("test: DirFS_Failure() -> [err:%v]\n", err) //log.Fatal(err)
 		}
 		if path != "." {
 
@@ -64,7 +65,7 @@ func ExampleDirFS_Failure() {
 	})
 
 	//Output:
-	//2025/02/18 10:15:08 CreateFile .: The system cannot find the file specified.
+	//test: DirFS_Failure() -> [err:CreateFile .: The system cannot find the file specified.]
 
 }
 
@@ -207,6 +208,7 @@ func ExampleReadFileEmbedded() {
 	fmt.Printf("test: ReadFileEmbedded(\"%v\") -> [buf:%v] [status:%v]\n", name, string(bytes), status)
 
 	Mount(tf)
+	Mount(tf)
 
 	name2 := "file:///f:/test/invalid-file-name"
 	bytes, status = ReadFile(name2)
@@ -217,6 +219,7 @@ func ExampleReadFileEmbedded() {
 
 	//Output:
 	//test: ReadFileEmbedded("file:///f:/test/hello-world.txt") -> [buf:] [status:open test/hello-world.txt: file does not exist]
+	//error: file system is already mounted
 	//test: ReadFileEmbedded("file:///f:/test/invalid-file-name") -> [buf:] [status:open test/invalid-file-name: file does not exist]
 	//test: ReadFileEmbedded("file:///f:/test/hello-world.txt") -> [buf:Hello World!!] [status:<nil>]
 

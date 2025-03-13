@@ -22,6 +22,7 @@ var (
 	basePath = ""
 	win      = false
 	f        embed.FS
+	mounted  = false
 )
 
 // init - set the base path and windows flag
@@ -41,7 +42,12 @@ func DirFS(dir string) fs.FS {
 }
 
 func Mount(fs embed.FS) {
+	if mounted {
+		fmt.Printf("error: file system is already mounted\n")
+		return
+	}
 	f = fs
+	mounted = true
 }
 
 // FileName - return the OS correct file name from a URI
