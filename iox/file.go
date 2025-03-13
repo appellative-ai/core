@@ -88,20 +88,19 @@ func ReadFile(uri any) ([]byte, error) {
 			rawUri = u.String()
 		}
 	}
-	//name := FileName(uri)
 	if strings.HasPrefix(rawUri, embeddedFS) {
 		rawUri = rawUri[len(embeddedFS):]
 		buf, err := f.ReadFile(rawUri)
 		if err == nil {
 			return buf, nil
 		}
-		return nil, err //aspect.NewStatusError(aspect.StatusIOError, err)
+		return nil, err
 	}
 	buf, err := os.ReadFile(FileName(uri))
 	if err != nil {
 		return nil, err //aspect.NewStatusError(aspect.StatusIOError, err)
 	}
-	return buf, nil //aspect.StatusOK()
+	return buf, nil
 }
 
 // ReadFileWithEncoding - read a file with a possible encoding and a Status
