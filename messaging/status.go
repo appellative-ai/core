@@ -77,6 +77,10 @@ func (s *Status) BadRequest() bool {
 	return s.Code == http.StatusBadRequest
 }
 
+func (s *Status) HttpCode() int {
+	return HttpCode(s.Code)
+}
+
 func (s *Status) String() string {
 	if s.Msg != "" {
 		if s.AgentUri != "" {
@@ -133,6 +137,23 @@ var notFoundStatus = func() *Status {
 	s.Code = http.StatusNotFound
 	return s
 }()
+
+// HttpCode - conversion of a code to HTTP status code
+func HttpCode(code int) int {
+	// Catch all valid http status codes
+	if code >= http.StatusContinue {
+		return code
+	}
+	// map known
+	switch code {
+	case StatusInvalidArgument:
+		return http.StatusInternalServerError
+	case StatusDeadlineExceeded:
+		return http.StatusGatewayTimeout
+	}
+	// all others
+	return http.StatusInternalServerError
+}
 
 // HttpStatus - string representation of status code
 func HttpStatus(code int) string {
