@@ -3,7 +3,6 @@ package http
 import (
 	"context"
 	"fmt"
-	"github.com/behavioral-ai/core/aspect"
 	"github.com/behavioral-ai/core/messaging"
 	"io"
 	"net/http"
@@ -15,6 +14,8 @@ const (
 	requestId   = "123-request-id"
 	relatesTo   = "test-relates-to"
 	statusCode  = http.StatusAccepted
+	XRequestId  = "X-Request-Id"
+	XRelatesTo  = "X-Relates-To"
 )
 
 // dial tcp [2607:f8b0:4023:1009::68]:443: i/o timeout]
@@ -66,8 +67,8 @@ func ExampleDo_Service_Unavailable() {
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add(aspect.XRequestId, requestId)
-	w.Header().Add(aspect.XRelatesTo, relatesTo)
+	w.Header().Add(XRequestId, requestId)
+	w.Header().Add(XRelatesTo, relatesTo)
 	w.WriteHeader(statusCode)
 	w.Write([]byte(testContent))
 }

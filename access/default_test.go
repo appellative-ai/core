@@ -2,7 +2,6 @@ package access
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/uri"
 	"net/http"
 	"net/url"
 	"time"
@@ -34,9 +33,8 @@ func ExampleDefault_Domain() {
 	values := make(url.Values)
 	values.Add("region", "*")
 	values.Add("zone", "texas")
-	//u := uri.BuildURL()
 
-	req, _ := http.NewRequest("select", "https://github.com/advanced-go/example-domain/activity:v1/entry?"+uri.BuildQuery(values), nil)
+	req, _ := http.NewRequest("select", "https://github.com/advanced-go/example-domain/activity:v1/entry?"+BuildQuery(values), nil)
 	req.Header.Add(XRequestId, "123-456")
 	req.Header.Add(XRelatesTo, "fmtlog testing")
 	req.Header.Add(XDomain, "github/advanced-go/auth-from")

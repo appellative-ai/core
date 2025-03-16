@@ -2,7 +2,6 @@ package access
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/uri"
 	"log"
 	"net/http"
 	"strconv"
@@ -23,7 +22,7 @@ var defaultLog = func(o Origin, traffic string, start time.Time, duration time.D
 func DefaultFormat(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) string {
 	newReq := BuildRequest(req)
 	newResp := BuildResponse(resp)
-	url, parsed := uri.ParseURL(newReq.Host, newReq.URL)
+	url, parsed := ParseURL(newReq.Host, newReq.URL)
 	o.Host = Conditional(o.Host, parsed.Host)
 	if controller.RateLimit == 0 {
 		controller.RateLimit = -1
@@ -195,12 +194,12 @@ func threshold(threshold any) int {
 */
 
 func CreateTo(req *http.Request) string {
-	if req == nil {
-		return ""
-	}
-	to := req.Header.Get(XTo)
-	if to != "" {
-		return to
-	}
-	return uri.UprootDomain(req.URL)
+	//if req == nil {
+	//	return ""
+	//}
+	//to := req.Header.Get(XTo)
+	//if to != "" {
+	//	return to
+	//}
+	return "" //uri.UprootDomain(req.URL)
 }
