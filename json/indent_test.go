@@ -1,14 +1,14 @@
-package jsonx
+package json
 
 import (
 	"bytes"
 	"fmt"
-	"github.com/behavioral-ai/core/iox"
+	iox "github.com/behavioral-ai/core/io"
 	"io"
 )
 
 const (
-	customerAddr = "file://[cwd]/test/customer-address.txt"
+	customerAddr = "file://[cwd]/jsontest/customer-address.txt"
 )
 
 func ExampleIndent() {

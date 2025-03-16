@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"io/fs"
+	"net/http"
 	"net/url"
 	"os"
 	"reflect"
@@ -108,7 +109,6 @@ func ReadFile(uri any) ([]byte, error) {
 	return buf, nil
 }
 
-/* WAIT
 // ReadFileWithEncoding - read a file with a possible encoding and a Status
 func ReadFileWithEncoding(uri string, h http.Header) ([]byte, error) {
 	buf, status := ReadFile(uri)
@@ -117,6 +117,3 @@ func ReadFileWithEncoding(uri string, h http.Header) ([]byte, error) {
 	}
 	return Decode(buf, h)
 }
-
-
-*/

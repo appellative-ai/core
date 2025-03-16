@@ -1,8 +1,8 @@
-package jsonx
+package json
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/iox"
+	iox "github.com/behavioral-ai/core/io"
 	"io"
 	"net/url"
 	"os"
@@ -10,10 +10,10 @@ import (
 )
 
 const (
-	address1Url     = "file://[cwd]/test/address1.json"
-	address2Url     = "file://[cwd]/test/address2.json"
-	address2UrlGzip = "file://[cwd]/test/address2.gz"
-	address3Url     = "file://[cwd]/test/address3.json"
+	address1Url     = "file://[cwd]/jsontest/address1.json"
+	address2Url     = "file://[cwd]/jsontest/address2.json"
+	address2UrlGzip = "file://[cwd]/jsontest/address2.gz"
+	address3Url     = "file://[cwd]/jsontest/address3.json"
 )
 
 type newAddress struct {
@@ -36,14 +36,14 @@ func ExampleNew_String_Error() {
 	_, status = New[newAddress](s, nil)
 	fmt.Printf("test: New(%v) -> [status:%v]\n", s, status)
 
-	s = "file://[cwd]/test/address.txt"
+	s = "file://[cwd]/jsontest/address.txt"
 	_, status = New[newAddress](s, nil)
 	fmt.Printf("test: New(%v) -> [status:%v]\n", s, status)
 
 	//Output:
 	//test: New("") -> [status:open error: URL is empty: The system cannot find the file specified.]
 	//test: New(https://www.google.com/search) -> [status:open error: scheme is invalid [https]: The system cannot find the file specified.]
-	//test: New(file://[cwd]/test/address.txt) -> [status:open C:\Users\markb\GitHub\core\jsonx\test\address.txt: The system cannot find the file specified.]
+	//test: New(file://[cwd]/jsontest/address.txt) -> [status:open C:\Users\markb\GitHub\core\json\jsontest\address.txt: The system cannot find the file specified.]
 
 }
 
@@ -59,7 +59,7 @@ func ExampleNew_String_URI() {
 	fmt.Printf("test: New(%v) -> [addr:%v] [status:%v]\n", s, addr, status1)
 
 	//Output:
-	//test: New(file://[cwd]/test/address1.json) -> [addr:{frisco texas 75034}] [status:<nil>]
+	//test: New(file://[cwd]/jsontest/address1.json) -> [addr:{frisco texas 75034}] [status:<nil>]
 
 }
 
@@ -71,14 +71,14 @@ func ExampleNew_URL_Error() {
 	_, status = New[newAddress](parseRaw(s), nil)
 	fmt.Printf("test: New(%v) -> [status:%v]\n", s, status)
 
-	s = "file://[cwd]/test/address.txt"
+	s = "file://[cwd]/jsontest/address.txt"
 	_, status = New[newAddress](parseRaw(s), nil)
 	fmt.Printf("test: New(%v) -> [status:%v]\n", s, status)
 
 	//Output:
 	//test: New("") -> [status:error: value parameter is nil]
 	//test: New(https://www.google.com/search) -> [status:open error: scheme is invalid [https]: The system cannot find the file specified.]
-	//test: New(file://[cwd]/test/address.txt) -> [status:open C:\Users\markb\GitHub\core\jsonx\test\address.txt: The system cannot find the file specified.]
+	//test: New(file://[cwd]/jsontest/address.txt) -> [status:open C:\Users\markb\GitHub\core\json\jsontest\address.txt: The system cannot find the file specified.]
 
 }
 
@@ -89,7 +89,7 @@ func ExampleNew_URL() {
 	fmt.Printf("test: New(%v) -> [addr:%v] [status:%v]\n", s, addr, status1)
 
 	//Output:
-	//test: New(file://[cwd]/test/address1.json) -> [addr:{frisco texas 75034}] [status:<nil>]
+	//test: New(file://[cwd]/jsontest/address1.json) -> [addr:{frisco texas 75034}] [status:<nil>]
 
 }
 
@@ -120,8 +120,8 @@ func ExampleNew_Bytes() {
 	fmt.Printf("test: New(%v) -> [addr:%v] [status:%v]\n", s, addr, status)
 
 	//Output:
-	//test: New(file://[cwd]/test/address2.json) -> [addr:{vinton iowa 52349}] [status:<nil>]
-	//test: New(file://[cwd]/test/address2.gz) -> [addr:{vinton iowa 52349}] [status:<nil>]
+	//test: New(file://[cwd]/jsontest/address2.json) -> [addr:{vinton iowa 52349}] [status:<nil>]
+	//test: New(file://[cwd]/jsontest/address2.gz) -> [addr:{vinton iowa 52349}] [status:<nil>]
 
 }
 
@@ -137,7 +137,7 @@ func ExampleNew_Reader() {
 	fmt.Printf("test: New(%v) -> [addr:%v] [status:%v]\n", s, addr, status1)
 
 	//Output:
-	//test: New(file://[cwd]/test/address2.json) -> [addr:{vinton iowa 52349}] [status:<nil>]
+	//test: New(file://[cwd]/jsontest/address2.json) -> [addr:{vinton iowa 52349}] [status:<nil>]
 
 }
 
@@ -153,6 +153,6 @@ func ExampleNew_ReadCloser() {
 	fmt.Printf("test: New(%v) -> [addr:%v] [status:%v]\n", s, addr, status1)
 
 	//Output:
-	//test: New(file://[cwd]/test/address3.json) -> [addr:{forest city iowa 50436}] [status:<nil>]
+	//test: New(file://[cwd]/jsontest/address3.json) -> [addr:{forest city iowa 50436}] [status:<nil>]
 
 }

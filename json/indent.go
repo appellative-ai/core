@@ -1,10 +1,10 @@
-package jsonx
+package json
 
 import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/behavioral-ai/core/iox"
+	iox "github.com/behavioral-ai/core/io"
 	"io"
 	"net/http"
 )

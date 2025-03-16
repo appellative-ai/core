@@ -1,10 +1,10 @@
-package jsonx
+package json
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/iox"
+	iox "github.com/behavioral-ai/core/io"
 	"io"
 	"net/http"
 	"net/url"
@@ -122,7 +122,7 @@ func New[T any](v any, h http.Header) (t T, status error) {
 			*ptr1 = buf
 			return t, StatusOK()
 		}
-		err := jsonx.NewDecoder(ptr.Body).Decode(&t)
+		err := json.NewDecoder(ptr.Body).Decode(&t)
 		_ = ptr.Body.Close()
 		if err != nil {
 			return t, NewStatusError(StatusJsonDecodeError, newLoc, err)
@@ -137,7 +137,7 @@ func New[T any](v any, h http.Header) (t T, status error) {
 			*ptr1 = buf
 			return t, StatusOK()
 		}
-		err := jsonx.NewDecoder(ptr.Body).Decode(&t)
+		err := json.NewDecoder(ptr.Body).Decode(&t)
 		_ = ptr.Body.Close()
 		if err != nil {
 			return t, NewStatusError(StatusJsonDecodeError, newLoc, err)

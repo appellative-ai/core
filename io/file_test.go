@@ -197,8 +197,6 @@ func ExampleReadFile() {
 
 }
 
-/* WAIT
-
 func ExampleReadFileWithEncoding() {
 	buf, status := ReadFileWithEncoding(helloWorldGzip, nil)
 	fmt.Printf("test: ReadFileWithEncoding(\"%v\",nil) -> [buf:%v] [status:%v]\n", helloWorldGzip, string(buf), status)
@@ -212,14 +210,11 @@ func ExampleReadFileWithEncoding() {
 	fmt.Printf("test: ReadFileWithEncoding(\"%v\",nil) -> [buf:%v] [status:%v]\n", helloWorldTxt, string(buf), status)
 
 	//Output:
-	//test: ReadFileWithEncoding("file://[cwd]/test/hello-world.gz",nil) -> [buf:Hello World!!] [status:<nil>]
-	//test: ReadFileWithEncoding("file://[cwd]/test/hello-world.gz",h) -> [buf:Hello World!!] [status:<nil>]
-	//test: ReadFileWithEncoding("file://[cwd]/test/hello-world.txt",nil) -> [buf:Hello World!!] [status:<nil>]
+	//test: ReadFileWithEncoding("file://[cwd]/iotest/hello-world.gz",nil) -> [buf:Hello World!!] [status:<nil>]
+	//test: ReadFileWithEncoding("file://[cwd]/iotest/hello-world.gz",h) -> [buf:Hello World!!] [status:<nil>]
+	//test: ReadFileWithEncoding("file://[cwd]/iotest/hello-world.txt",nil) -> [buf:Hello World!!] [status:<nil>]
 
 }
-
-
-*/
 
 func ExampleReadFileEmbedded() {
 	name := "file:///f:/iotest/hello-world.txt"
