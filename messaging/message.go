@@ -16,6 +16,7 @@ const (
 	PauseEvent    = "event:pause"  // disable data channel receive
 	ResumeEvent   = "event:resume" // enable data channel receive
 	NotifyEvent   = "event:notify"
+	ActivityEvent = "event:activity"
 
 	ObservationEvent = "event:observation"
 	TickEvent        = "event:tick"
@@ -31,9 +32,10 @@ const (
 	XEvent   = "x-event"
 	XChannel = "x-channel"
 
-	ContentType      = "Content-Type"
-	ContentTypeError = "application/error"
-	ContentTypeEvent = "application/event"
+	ContentType         = "Content-Type"
+	ContentTypeError    = "application/error"
+	ContentTypeNotify   = "application/notify"
+	ContentTypeActivity = "application/activity"
 
 	//XRelatesTo         = "x-relates-to"
 	//XMessageId         = "x-message-id"
@@ -78,9 +80,15 @@ func NewControlMessage(to, from, event string) *Message {
 }
 */
 
-func NewNotifyMessage(e Event) *Message {
+func NewNotifyMessage(e NotifyItem) *Message {
 	m := NewMessage(Control, NotifyEvent)
-	m.SetContent(ContentTypeEvent, e)
+	m.SetContent(ContentTypeNotify, e)
+	return m
+}
+
+func NewActivityMessage(e ActivityItem) *Message {
+	m := NewMessage(Control, ActivityEvent)
+	m.SetContent(ContentTypeActivity, &e)
 	return m
 }
 
@@ -152,11 +160,21 @@ func (m *Message) SetContent(contentType string, content any) error {
 	return nil
 }
 
-func EventContent(msg *Message) Event {
-	if msg == nil || msg.ContentType() != ContentTypeEvent || msg.Body == nil {
+func NotifyContent(msg *Message) NotifyItem {
+	if msg == nil || msg.ContentType() != ContentTypeNotify || msg.Body == nil {
 		return nil
 	}
-	if e, ok := msg.Body.(Event); ok {
+	if e, ok := msg.Body.(NotifyItem); ok {
+		return e
+	}
+	return nil
+}
+
+func ActivityContent(msg *Message) *ActivityItem {
+	if msg == nil || msg.ContentType() != ContentTypeActivity || msg.Body == nil {
+		return nil
+	}
+	if e, ok := msg.Body.(*ActivityItem); ok {
 		return e
 	}
 	return nil

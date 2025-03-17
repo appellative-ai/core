@@ -32,7 +32,7 @@ func ExampleNewStatusError() {
 	s := NewStatusError(http.StatusGatewayTimeout, errors.New("rate limited"), "test:agent") //"resiliency:agent/operative/agent1#us-west")
 	fmt.Printf("test: NewStatusError() -> [%v]\n", s)
 
-	if _, ok := any(s).(Event); ok {
+	if _, ok := any(s).(NotifyItem); ok {
 		fmt.Printf("test: Event() -> [%v]\n", ok)
 
 	}
@@ -47,7 +47,7 @@ func ExampleNewStatusMessage() {
 	s := NewStatusMessage(http.StatusOK, "successfully change ticker duration", "test:agent")
 	fmt.Printf("test: NewStatusMessage() -> [%v]\n", s)
 
-	if _, ok := any(s).(Event); ok {
+	if _, ok := any(s).(NotifyItem); ok {
 		fmt.Printf("test: Event() -> [%v]\n", ok)
 
 	}
