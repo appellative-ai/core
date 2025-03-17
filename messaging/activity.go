@@ -12,6 +12,10 @@ type ActivityItem struct {
 	Content any
 }
 
+func (a ActivityItem) IsEmpty() bool {
+	return a.Agent == nil
+}
+
 type ActivityFunc func(a ActivityItem)
 
 func Activity(a ActivityItem) {

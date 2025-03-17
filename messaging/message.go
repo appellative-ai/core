@@ -170,12 +170,12 @@ func NotifyContent(msg *Message) NotifyItem {
 	return nil
 }
 
-func ActivityContent(msg *Message) *ActivityItem {
+func ActivityContent(msg *Message) ActivityItem {
 	if msg == nil || msg.ContentType() != ContentTypeActivity || msg.Body == nil {
-		return nil
+		return ActivityItem{}
 	}
-	if e, ok := msg.Body.(*ActivityItem); ok {
+	if e, ok := msg.Body.(ActivityItem); ok {
 		return e
 	}
-	return nil
+	return ActivityItem{}
 }
