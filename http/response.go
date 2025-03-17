@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	io2 "github.com/behavioral-ai/core/io"
-	"github.com/behavioral-ai/core/messaging"
 	"io"
 	"net/http"
 	"reflect"
@@ -22,13 +21,13 @@ var (
 	//healthLength = int64(len(healthOK))
 )
 
-func NewResponse(statusCode int, h http.Header, content any) (resp *http.Response, status *messaging.Status) {
+func NewResponse(statusCode int, h http.Header, content any) (resp *http.Response, err error) {
 	resp = &http.Response{StatusCode: statusCode, ContentLength: -1, Header: h, Body: io.NopCloser(bytes.NewReader([]byte{}))}
 	if h == nil {
 		resp.Header = make(http.Header)
 	}
 	if content == nil {
-		return resp, messaging.NewStatus(statusCode)
+		return resp, nil
 	}
 	switch ptr := (content).(type) {
 	case []byte:
@@ -47,33 +46,30 @@ func NewResponse(statusCode int, h http.Header, content any) (resp *http.Respons
 			resp.Body = io.NopCloser(bytes.NewReader([]byte(ptr.Error())))
 		}
 	default:
-		status = messaging.NewStatusError(messaging.StatusInvalidContent, errors.New(fmt.Sprintf("error: content type is invalid: %v", reflect.TypeOf(ptr))), "")
-		return &http.Response{StatusCode: http.StatusInternalServerError, Header: SetHeader(nil, ContentType, ContentTypeText), ContentLength: int64(len(status.Err.Error())), Body: io.NopCloser(bytes.NewReader([]byte(status.Err.Error())))}, status
+		err = errors.New(fmt.Sprintf("error: content type is invalid: %v", reflect.TypeOf(ptr)))
+		return &http.Response{StatusCode: http.StatusInternalServerError, Header: SetHeader(nil, ContentType, ContentTypeText), ContentLength: int64(len(err.Error())), Body: io.NopCloser(bytes.NewReader([]byte(err.Error())))}, err
 	}
-	return resp, messaging.NewStatus(statusCode)
+	return resp, nil
 }
 
 // NewResponseFromUri - read a Http response given a URL
-func NewResponseFromUri(uri any) (*http.Response, *messaging.Status) {
+func NewResponseFromUri(uri any) (*http.Response, error) {
 	serverErr := &http.Response{StatusCode: http.StatusInternalServerError, Status: internalError, Header: make(http.Header)}
 	if uri == nil {
-		return serverErr, messaging.NewStatusError(messaging.StatusInvalidArgument, errors.New("error: URL is nil"), "")
+		return serverErr, errors.New("error: URL is nil")
 	}
-	//if u.Scheme != fileScheme {
-	//	return serverErr, messaging.NewStatusError(messaging.StatusInvalidArgument, errors.New(fmt.Sprintf("error: Invalid URL scheme : %v", u.Scheme)))
-	//}
 	buf, err := io2.ReadFile(uri)
 	if err != nil {
 		if strings.Contains(err.Error(), fileExistsError) {
-			return &http.Response{StatusCode: http.StatusNotFound, Status: "Not Found", Header: make(http.Header)}, messaging.NewStatusError(messaging.StatusInvalidArgument, err, "")
+			return &http.Response{StatusCode: http.StatusNotFound, Status: "Not Found", Header: make(http.Header)}, err
 		}
-		return serverErr, messaging.NewStatusError(messaging.StatusIOError, err, "")
+		return serverErr, err
 	}
 	resp1, err2 := http.ReadResponse(bufio.NewReader(bytes.NewReader(buf)), nil)
 	if err2 != nil {
-		return serverErr, messaging.NewStatusError(messaging.StatusIOError, err2, "")
+		return serverErr, err2
 	}
-	return resp1, messaging.StatusOK()
+	return resp1, nil
 
 }
 
@@ -83,6 +79,6 @@ func NewHealthResponseOK() *http.Response {
 }
 
 func NewNotFoundResponse() *http.Response {
-	resp, _ := NewResponse(http.StatusNotFound, SetHeader(nil, ContentType, ContentTypeText), messaging.StatusNotFound().String())
+	resp, _ := NewResponse(http.StatusNotFound, SetHeader(nil, ContentType, ContentTypeText), "Not Found")
 	return resp
 }

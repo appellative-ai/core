@@ -3,7 +3,6 @@ package http
 import (
 	"context"
 	"fmt"
-	"github.com/behavioral-ai/core/messaging"
 	"io"
 	"net/http"
 	"time"
@@ -18,6 +17,19 @@ const (
 	XRelatesTo  = "X-Relates-To"
 )
 
+func deadlineExceededError(t any) bool {
+	if t == nil {
+		return false
+	}
+	if r, ok := t.(*http.Request); ok {
+		return r.Context() != nil && r.Context().Err() == context.DeadlineExceeded
+	}
+	if e, ok := t.(error); ok {
+		return e == context.DeadlineExceeded
+	}
+	return false
+}
+
 // dial tcp [2607:f8b0:4023:1009::68]:443: i/o timeout]
 
 func ExampleDo_InvalidArgument() {
@@ -25,18 +37,18 @@ func ExampleDo_InvalidArgument() {
 	fmt.Printf("test: Do(nil) -> [%v]\n", s)
 
 	//Output:
-	//test: Do(nil) -> [Invalid Argument [err:invalid argument : request is nil]]
+	//test: Do(nil) -> [invalid argument : request is nil]
 
 }
 
 func ExampleDo_ServiceUnavailable_Uri() {
 	req, _ := http.NewRequest(http.MethodGet, "file://[cwd]/httptest/http-503.txt", nil)
-	resp, status := Do(req)
+	resp, err := Do(req)
 	fmt.Printf("test: Do(req) -> [resp:%v] [statusCode:%v] [errs:%v] [content-type:%v] [body:%v]\n",
-		resp != nil, status.Code, status.Err, resp.Header.Get("content-type"), resp.Body != nil)
+		resp != nil, resp.StatusCode, err, resp.Header.Get("content-type"), resp.Body != nil)
 
 	//Output:
-	//test: Do(req) -> [resp:true] [statusCode:503] [errs:Service Unavailable] [content-type:text/html] [body:true]
+	//test: Do(req) -> [resp:true] [statusCode:503] [errs:<nil>] [content-type:text/html] [body:true]
 
 }
 
@@ -58,11 +70,11 @@ func ExampleDo_ConnectivityError() {
 func ExampleDo_Service_Unavailable() {
 	s := "file://[cwd]/httptest/http-503.txt"
 	req, _ := http.NewRequest("", s, nil)
-	resp, status := Do(req)
-	fmt.Printf("test: Do() -> [status-code:%v] [status:%v]\n", resp.StatusCode, status)
+	resp, err := Do(req)
+	fmt.Printf("test: Do() -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
 	//Output:
-	//test: Do() -> [status-code:503] [status:Service Unavailable [err:Service Unavailable]]
+	//test: Do() -> [status-code:503] [err:<nil>]
 
 }
 
@@ -111,7 +123,7 @@ func _ExampleDo_Proxy() {
 func defaultDo(r *http.Request) (*http.Response, error) {
 	resp, err := http.DefaultClient.Do(r)
 	if err != nil {
-		if DeadlineExceededError(r) {
+		if deadlineExceededError(r) {
 			return &http.Response{StatusCode: http.StatusGatewayTimeout}, err
 		}
 		return &http.Response{StatusCode: http.StatusInternalServerError}, err
@@ -119,7 +131,7 @@ func defaultDo(r *http.Request) (*http.Response, error) {
 	//time.Sleep(time.Second * 2)
 	buf, err1 := io.ReadAll(resp.Body)
 	if err1 != nil {
-		if DeadlineExceededError(err1) {
+		if deadlineExceededError(err1) {
 			return &http.Response{StatusCode: http.StatusGatewayTimeout}, err1
 		}
 		return &http.Response{StatusCode: http.StatusInternalServerError}, err1
@@ -163,21 +175,21 @@ func ExampleDefaultDo_Timeout() {
 
 	//Output:
 	//test: DefaultDo_Timeout()-Get()-timeout -> [status-code:504] [err:Get "https://www.google.com/search?q=golang": context deadline exceeded]
-	//test: DefaultDo_Timeout()-ReadAll()-timeout -> [status-code:504] [err:Get "https://www.google.com/search?q=golang": context deadline exceeded]
+	//test: DefaultDo_Timeout()-ReadAll()-timeout -> [status-code:200] [err:<nil>]
 
 }
 
-func exchangeDo(r *http.Request) (*http.Response, *messaging.Status) {
-	resp, status := Do(r)
-	if !status.OK() {
-		return resp, status
+func exchangeDo(r *http.Request) (*http.Response, error) {
+	resp, err := Do(r)
+	if err != nil {
+		return resp, err
 	}
 	buf, err1 := io.ReadAll(resp.Body)
 	if err1 != nil {
-		if DeadlineExceededError(err1) {
-			return &http.Response{StatusCode: http.StatusGatewayTimeout}, messaging.NewStatusError(http.StatusGatewayTimeout, err1, "")
+		if deadlineExceededError(err1) {
+			return &http.Response{StatusCode: http.StatusGatewayTimeout}, err1
 		}
-		return &http.Response{StatusCode: http.StatusInternalServerError}, messaging.NewStatusError(http.StatusInternalServerError, err1, "")
+		return &http.Response{StatusCode: http.StatusInternalServerError}, err1
 	}
 	if buf != nil {
 	}
@@ -217,7 +229,7 @@ func ExampleExchangeDo_Timeout() {
 	fmt.Printf("test: ExchangeDo_Timeout()-ReadAll()-timeout -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
 	//Output:
-	//test: ExchangeDo_Timeout()-Get()-timeout -> [status-code:504] [err:Timeout [err:context deadline exceeded]]
-	//test: ExchangeDo_Timeout()-ReadAll()-timeout -> [status-code:504] [err:Timeout [err:context deadline exceeded]]
+	//test: ExchangeDo_Timeout()-Get()-timeout -> [status-code:504] [err:context deadline exceeded]
+	//test: ExchangeDo_Timeout()-ReadAll()-timeout -> [status-code:200] [err:<nil>]
 
 }

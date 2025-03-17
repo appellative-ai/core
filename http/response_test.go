@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	io2 "github.com/behavioral-ai/core/io"
-	"github.com/behavioral-ai/core/messaging"
 	"io"
 	"net/http"
 	"net/url"
@@ -15,26 +14,24 @@ const (
 	testResponse = "file://[cwd]/httptest/test-response.txt"
 )
 
-func readAll(body io.ReadCloser) ([]byte, *messaging.Status) {
+func readAll(body io.ReadCloser) ([]byte, error) {
 	if body == nil {
-		return nil, messaging.StatusOK()
+		return nil, nil
 	}
 	defer body.Close()
 	buf, err := io.ReadAll(body)
 	if err != nil {
-		return nil, messaging.NewStatusError(messaging.StatusIOError, err, "")
+		return nil, err
 	}
-	return buf, messaging.StatusOK()
+	return buf, nil
 }
 
 func ExampleNewResponse_Error() {
-	status := messaging.NewStatus(http.StatusGatewayTimeout)
-	resp, _ := NewResponse(status.HttpCode(), nil, status.Err)
+	resp, _ := NewResponse(http.StatusGatewayTimeout, nil, nil)
 	buf, _ := io2.ReadAll(resp.Body, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
-	status = messaging.NewStatusError(http.StatusGatewayTimeout, errors.New("Deadline Exceeded"), "")
-	resp, _ = NewResponse(status.HttpCode(), nil, status.Err)
+	resp, _ = NewResponse(http.StatusGatewayTimeout, nil, errors.New("Deadline Exceeded"))
 	buf, _ = io2.ReadAll(resp.Body, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
@@ -48,7 +45,7 @@ func ExampleNewResponse() {
 	resp, _ := NewResponse(http.StatusOK, nil, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v]\n", resp.StatusCode)
 
-	resp, _ = NewResponse(messaging.StatusOK().HttpCode(), nil, "version 1.2.35")
+	resp, _ = NewResponse(http.StatusOK, nil, "version 1.2.35")
 	buf, _ := io2.ReadAll(resp.Body, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
@@ -90,17 +87,17 @@ func Example_NewResponseFromUri() {
 	fmt.Printf("test: readAll() -> [status:%v] [content-length:%v]\n", status, len(buf)) //string(buf))
 
 	//Output:
-	//test: NewResponseFromUri(file://[cwd]/httptest/test-response.txt) -> [status:OK] [statusCode:200]
-	//test: readAll() -> [status:OK] [content-length:56]
+	//test: NewResponseFromUri(file://[cwd]/httptest/test-response.txt) -> [status:<nil>] [statusCode:200]
+	//test: readAll() -> [status:<nil>] [content-length:56]
 
 }
 
 func Example_NewResponseFromUri_URL_Nil() {
 	resp, status0 := NewResponseFromUri(nil)
-	fmt.Printf("test: NewResponseFromUri(nil) -> [error:[%v]] [statusCode:%v]\n", status0.Err, resp.StatusCode)
+	fmt.Printf("test: NewResponseFromUri(nil) -> [%v] [statusCode:%v]\n", status0, resp.StatusCode)
 
 	//Output:
-	//test: NewResponseFromUri(nil) -> [error:[error: URL is nil]] [statusCode:500]
+	//test: NewResponseFromUri(nil) -> [error: URL is nil] [statusCode:500]
 
 }
 
@@ -109,7 +106,7 @@ func _Example_NewResponseFromUri_Invalid_Scheme() {
 	u, _ := url.Parse(s)
 
 	resp, status0 := NewResponseFromUri(u)
-	fmt.Printf("test: NewResponseFromUri(%vl) -> [error:[%v]] [statusCode:%v]\n", s, status0.Err, resp.StatusCode)
+	fmt.Printf("test: NewResponseFromUri(%vl) -> [error:%v] [statusCode:%v]\n", s, status0, resp.StatusCode)
 
 	//Output:
 	//test: NewResponseFromUri(https://www.google.com/search?q=golangl) -> [error:[error: Invalid URL scheme : https]] [statusCode:500]
@@ -121,10 +118,10 @@ func Example_NewResponseFromUri_HTTP_Error() {
 	u, _ := url.Parse(s)
 
 	resp, status0 := NewResponseFromUri(u)
-	fmt.Printf("test: NewResponseFromUri(%v) -> [error:[%v]] [statusCode:%v]\n", s, status0.Err, resp.StatusCode)
+	fmt.Printf("test: NewResponseFromUri(%v) -> [%v] [statusCode:%v]\n", s, status0, resp.StatusCode)
 
 	//Output:
-	//test: NewResponseFromUri(file://[cwd]/httptest/message.txt) -> [error:[malformed HTTP status code "text"]] [statusCode:500]
+	//test: NewResponseFromUri(file://[cwd]/httptest/message.txt) -> [malformed HTTP status code "text"] [statusCode:500]
 
 }
 
@@ -133,14 +130,14 @@ func Example_NewResponseFromUri_504() {
 	u, _ := url.Parse(s)
 
 	resp, status0 := NewResponseFromUri(u)
-	fmt.Printf("test: NewResponseFromUri(%v) -> [error:[%v]] [statusCode:%v]\n", s, status0.Err, resp.StatusCode)
+	fmt.Printf("test: NewResponseFromUri(%v) -> [%v] [statusCode:%v]\n", s, status0, resp.StatusCode)
 
 	buf, status := readAll(resp.Body)
 	fmt.Printf("test: readAll() -> [status:%v] [content-length:%v]\n", status, len(buf)) //string(buf))
 
 	//Output:
-	//test: NewResponseFromUri(file://[cwd]/httptest/http-504.txt) -> [error:[<nil>]] [statusCode:504]
-	//test: readAll() -> [status:OK] [content-length:0]
+	//test: NewResponseFromUri(file://[cwd]/httptest/http-504.txt) -> [<nil>] [statusCode:504]
+	//test: readAll() -> [status:<nil>] [content-length:0]
 
 }
 
@@ -149,10 +146,10 @@ func Example_NewResponseFromUri_EOF_Error() {
 	u, _ := url.Parse(s)
 
 	resp, status0 := NewResponseFromUri(u)
-	fmt.Printf("test: NewResponseFromUri(%v) -> [error:[%v]] [statusCode:%v]\n", s, status0.Err, resp.StatusCode)
+	fmt.Printf("test: NewResponseFromUri(%v) -> [%v] [statusCode:%v]\n", s, status0, resp.StatusCode)
 
 	//Output:
-	//test: NewResponseFromUri(file://[cwd]/httptest/http-503-error.txt) -> [error:[unexpected EOF]] [statusCode:500]
+	//test: NewResponseFromUri(file://[cwd]/httptest/http-503-error.txt) -> [unexpected EOF] [statusCode:500]
 
 }
 
