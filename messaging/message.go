@@ -15,6 +15,7 @@ const (
 	StopEvent     = "event:stop"
 	PauseEvent    = "event:pause"  // disable data channel receive
 	ResumeEvent   = "event:resume" // enable data channel receive
+	NotifyEvent   = "event:notify"
 
 	ObservationEvent = "event:observation"
 	TickEvent        = "event:tick"
@@ -32,6 +33,7 @@ const (
 
 	ContentType      = "Content-Type"
 	ContentTypeError = "application/error"
+	ContentTypeEvent = "application/event"
 
 	//XRelatesTo         = "x-relates-to"
 	//XMessageId         = "x-message-id"
@@ -75,6 +77,12 @@ func NewControlMessage(to, from, event string) *Message {
 	return NewAddressableMessage(Control, to, from, event)
 }
 */
+
+func NewNotifyMessage(e Event) *Message {
+	m := NewMessage(Control, NotifyEvent)
+	m.SetContent(ContentTypeEvent, e)
+	return m
+}
 
 func NewMessageWithError(channel, event string, err error) *Message {
 	m := NewMessage(channel, event)
@@ -141,5 +149,15 @@ func (m *Message) SetContent(contentType string, content any) error {
 	}
 	m.Body = content
 	m.Header.Add(ContentType, contentType)
+	return nil
+}
+
+func EventContent(msg *Message) Event {
+	if msg == nil || msg.ContentType() != ContentTypeEvent || msg.Body == nil {
+		return nil
+	}
+	if e, ok := msg.Body.(Event); ok {
+		return e
+	}
 	return nil
 }
