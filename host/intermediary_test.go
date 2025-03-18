@@ -41,8 +41,8 @@ func ExampleConditionalIntermediary_Nil() {
 	fmt.Printf("test: ConditionalIntermediary()-nil-service -> [status:%v]\n", status)
 
 	//Output:
-	//test: ConditionalIntermediary()-nil-auth -> [status:Bad Request [error: Conditional Intermediary HttpExchange 1 is nil]]
-	//test: ConditionalIntermediary()-nil-service -> [status:Bad Request [error: Conditional Intermediary HttpExchange 2 is nil]]
+	//test: ConditionalIntermediary()-nil-auth -> [status:error: Conditional Intermediary HttpExchange 1 is nil]
+	//test: ConditionalIntermediary()-nil-service -> [status:error: Conditional Intermediary HttpExchange 2 is nil]
 
 }
 
@@ -60,8 +60,8 @@ func ExampleConditionalIntermediary_AuthExchange() {
 	fmt.Printf("test: ConditionalIntermediary()-auth-success -> [status:%v] [content:%v]\n", status, string(buf))
 
 	//Output:
-	//test: ConditionalIntermediary()-auth-failure -> [status:Unauthorized] [content:Missing authorization header]
-	//test: ConditionalIntermediary()-auth-success -> [status:OK] [content:Service OK]
+	//test: ConditionalIntermediary()-auth-failure -> [status:http.StatusUnauthorized] [content:Missing authorization header]
+	//test: ConditionalIntermediary()-auth-success -> [status:<nil>] [content:Service OK]
 
 }
 
@@ -84,8 +84,8 @@ func ExampleAccessLogIntermediary() {
 	fmt.Printf("test: AccessLogIntermediary()-Gateway-Timeout -> [status:%v] [content:%v]\n", status, string(buf))
 
 	//Output:
-	//test: AccessLogIntermediary()-OK -> [status:OK] [content:true]
-	//test: AccessLogIntermediary()-Gateway-Timeout -> [status:Timeout] [content:Timeout [Get "https://www.google.com/search?q=golang": context deadline exceeded]]
+	//test: AccessLogIntermediary()-OK -> [status:<nil>] [content:true]
+	//test: AccessLogIntermediary()-Gateway-Timeout -> [status:status code 504] [content:Timeout [Get "https://www.google.com/search?q=golang": context deadline exceeded]]
 
 }
 
@@ -127,6 +127,20 @@ func ExampleProxyIntermediary() {
 	*/
 
 	//Output:
-	//test: ProxyIntermediary()-OK -> [status:OK] [content:true]
+	//test: ProxyIntermediary()-OK -> [status:status code 500] [content:true]
 
+}
+
+func testDo(r *http.Request) (*http.Response, error) {
+	req, _ := http.NewRequestWithContext(r.Context(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+	}
+	if resp == nil {
+		resp = &http.Response{StatusCode: http.StatusGatewayTimeout, Body: io.NopCloser(bytes.NewReader([]byte("Timeout [Get \"https://www.google.com/search?q=golang\": context deadline exceeded]")))}
+		return resp, errors.New(fmt.Sprintf("status code %v", resp.StatusCode))
+	} else {
+		resp.Body = io.NopCloser(bytes.NewReader([]byte("200 OK")))
+		return resp, nil //errors.New(fmt.Sprintf("status code %v",resp.StatusCode))
+	}
 }

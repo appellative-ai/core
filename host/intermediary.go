@@ -3,7 +3,6 @@ package host
 import (
 	"errors"
 	"github.com/behavioral-ai/core/access"
-	"github.com/behavioral-ai/core/aspect"
 	httpx "github.com/behavioral-ai/core/http"
 	"net/http"
 	"time"
@@ -42,7 +41,7 @@ func NewAccessLogIntermediary(traffic string, c2 httpx.Exchange) httpx.Exchange 
 			return badRequest("error: AccessLog Intermediary HttpExchange is nil")
 		}
 		reasonCode := ""
-		from := r.Header.Get(aspect.XFrom)
+		from := r.Header.Get(XFrom)
 
 		var dur time.Duration
 		if ct, ok := r.Context().Deadline(); ok {
@@ -53,7 +52,7 @@ func NewAccessLogIntermediary(traffic string, c2 httpx.Exchange) httpx.Exchange 
 		if resp.StatusCode == http.StatusGatewayTimeout {
 			reasonCode = access.ControllerTimeout
 		}
-		route := resp.Header.Get(aspect.XRoute)
+		route := resp.Header.Get(XRoute)
 		if route == "" {
 			route = EtcRoute
 		}

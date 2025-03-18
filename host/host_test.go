@@ -10,13 +10,13 @@ func ExampleHost() {
 	r := httptest.NewRecorder()
 	req, _ := http.NewRequest("", "http://localhost:8081/github/advanced-go/search:google?q=golang", nil)
 
-	hostExchange(r, req, 0, func(r *http.Request) (*http.Response, error) {
+	Exchange(r, req, func(r *http.Request) (*http.Response, error) {
 		return &http.Response{StatusCode: http.StatusOK}, nil
 	})
 
-	fmt.Printf("test: hostExchange() -> [resp:%v]\n", r.Result().StatusCode)
+	fmt.Printf("test: Exchange() -> [resp:%v]\n", r.Result().StatusCode)
 
 	//Output:
-	//test: hostExchange() -> [resp:200]
+	//test: Exchange() -> [resp:200]
 
 }
