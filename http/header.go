@@ -2,6 +2,7 @@ package http
 
 import (
 	"net/http"
+	"strings"
 )
 
 const (
@@ -26,4 +27,23 @@ func SetHeader(h http.Header, name, value string) http.Header {
 	}
 	h.Set(name, value)
 	return h
+}
+
+func SetHeaders(w http.ResponseWriter, headers any) {
+	if headers == nil {
+		return
+	}
+	if pairs, ok := headers.([]Attr); ok {
+		for _, pair := range pairs {
+			w.Header().Set(strings.ToLower(pair.Key), pair.Value)
+		}
+		return
+	}
+	if h, ok := headers.(http.Header); ok {
+		for k, v := range h {
+			if len(v) > 0 {
+				w.Header().Set(strings.ToLower(k), v[0])
+			}
+		}
+	}
 }
