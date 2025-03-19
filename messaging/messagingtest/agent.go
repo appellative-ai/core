@@ -47,7 +47,3 @@ func (t *agentT) Run() {
 		}
 	}()
 }
-
-func (t *agentT) Shutdown() {
-	t.ch.C <- messaging.Shutdown
-}
