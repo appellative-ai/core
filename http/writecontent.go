@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/aspect"
 	iox "github.com/behavioral-ai/core/io"
+	"github.com/behavioral-ai/core/messaging"
 	"io"
 	"reflect"
 	"strings"
@@ -15,12 +15,12 @@ const (
 	jsonToken = "json"
 )
 
-func writeContent(w io.Writer, content any, contentType string) (length int64, status *aspect.Status) {
+func writeContent(w io.Writer, content any, contentType string) (length int64, status *messaging.Status) {
 	var err error
 	var cnt int
 
 	if content == nil {
-		return 0, aspect.StatusOK()
+		return 0, messaging.StatusOK()
 	}
 	switch ptr := (content).(type) {
 	case []byte:
@@ -35,10 +35,10 @@ func writeContent(w io.Writer, content any, contentType string) (length int64, s
 
 		buf, err1 = iox.ReadAll(ptr, nil)
 		if err1 != nil {
-			status = aspect.NewStatusError(aspect.StatusIOError, err)
-			return 0, status.AddLocation()
+			status = messaging.NewStatusError(messaging.StatusIOError, err, "")
+			return 0, status
 		}
-		status = aspect.StatusOK()
+		status = messaging.StatusOK()
 		cnt, err = w.Write(buf)
 	case io.ReadCloser:
 		var buf []byte
@@ -47,10 +47,10 @@ func writeContent(w io.Writer, content any, contentType string) (length int64, s
 		buf, err1 = iox.ReadAll(ptr, nil)
 		_ = ptr.Close()
 		if err1 != nil {
-			status = aspect.NewStatusError(aspect.StatusIOError, err)
-			return 0, status.AddLocation()
+			status = messaging.NewStatusError(messaging.StatusIOError, err, "")
+			return 0, status
 		}
-		status = aspect.StatusOK()
+		status = messaging.StatusOK()
 		cnt, err = w.Write(buf)
 	default:
 		if strings.Contains(contentType, jsonToken) {
@@ -58,18 +58,18 @@ func writeContent(w io.Writer, content any, contentType string) (length int64, s
 
 			buf, err = json.Marshal(content)
 			if err != nil {
-				status = aspect.NewStatusError(aspect.StatusJsonEncodeError, err)
+				status = messaging.NewStatusError(messaging.StatusJsonEncodeError, err, "")
 				if !status.OK() {
 					return
 				}
 			}
 			cnt, err = w.Write(buf)
 		} else {
-			return 0, aspect.NewStatusError(aspect.StatusInvalidContent, errors.New(fmt.Sprintf("error: content type is invalid: %v", reflect.TypeOf(ptr))))
+			return 0, messaging.NewStatusError(messaging.StatusInvalidContent, errors.New(fmt.Sprintf("error: content type is invalid: %v", reflect.TypeOf(ptr))), "")
 		}
 	}
 	if err != nil {
-		return 0, aspect.NewStatusError(aspect.StatusIOError, err)
+		return 0, messaging.NewStatusError(messaging.StatusIOError, err, "")
 	}
-	return int64(cnt), aspect.StatusOK()
+	return int64(cnt), messaging.StatusOK()
 }

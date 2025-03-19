@@ -1,8 +1,8 @@
 package http
 
 import (
-	"github.com/behavioral-ai/core/aspect"
 	iox "github.com/behavioral-ai/core/io"
+	"github.com/behavioral-ai/core/messaging"
 	"net/http"
 )
 
@@ -10,8 +10,6 @@ import (
 // Content types supported: []byte, string, error, io.Reader, io.ReadCloser. Other types will be treated as JSON and serialized, if
 // the headers content type is JSON. If not JSON, then an error will be raised.
 func WriteResponse(w http.ResponseWriter, headers any, statusCode int, content any, reqHeader http.Header) (contentLength int64) {
-	var e aspect.Log
-
 	if statusCode == 0 {
 		statusCode = http.StatusOK
 	}
@@ -25,8 +23,8 @@ func WriteResponse(w http.ResponseWriter, headers any, statusCode int, content a
 	}
 	writer, err := iox.NewEncodingWriter(w, reqHeader)
 	if err != nil {
-		status0 := aspect.NewStatusError(aspect.StatusIOError, err)
-		e.Handle(status0.WithRequestId(w.Header()))
+		status0 := messaging.NewStatusError(messaging.StatusIOError, err, "")
+		//e.Handle(status0.WithRequestId(w.Header()))
 		w.WriteHeader(status0.HttpCode())
 		return 0
 	}
@@ -34,11 +32,11 @@ func WriteResponse(w http.ResponseWriter, headers any, statusCode int, content a
 		w.Header().Add(ContentEncoding, writer.ContentEncoding())
 	}
 	w.WriteHeader(statusCode)
-	var status0 *aspect.Status
+	var status0 *messaging.Status
 	contentLength, status0 = writeContent(writer, content, w.Header().Get(ContentType))
 	_ = writer.Close()
 	if !status0.OK() {
-		e.Handle(status0.WithRequestId(w.Header()))
+		//	e.Handle(status0.WithRequestId(w.Header()))
 	}
 	return contentLength
 }

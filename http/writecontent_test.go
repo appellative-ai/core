@@ -98,16 +98,16 @@ func ExampleWriteContent_Json() {
 	rec := httptest.NewRecorder()
 	cnt, status := writeContent(rec, content, ct)
 	buf, status0 := iox.ReadAll(rec.Result().Body, nil)
-	fmt.Printf("test: writeContent(httpx.testActivity) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, string(buf), status0)
+	fmt.Printf("test: writeContent(http.testActivity) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, string(buf), status0)
 
 	// JSON
 	rec = httptest.NewRecorder()
 	cnt, status = writeContent(rec, content, jsonContentType)
 	buf, status0 = iox.ReadAll(rec.Result().Body, nil)
-	fmt.Printf("test: writeContent(httpx.testActivity) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, string(buf), status0)
+	fmt.Printf("test: writeContent(http.testActivity) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, string(buf), status0)
 
 	//Output:
-	//test: writeContent(httpx.testActivity) -> [cnt:0] [write-status:Invalid Content [error: content type is invalid: httpx.activity]] [body:] [read-status:<nil>]
-	//test: writeContent(httpx.testActivity) -> [cnt:204] [write-status:OK] [body:{"ActivityID":"123456","ActivityType":"action","Agent":"Controller","AgentUri":"https://somehost.com/id","Assignment":"case #","Controller":"egress","Behavior":"timeout","Description":"decreased timeout"}] [read-status:<nil>]
+	//test: writeContent(http.testActivity) -> [cnt:0] [write-status:Invalid Content [err:error: content type is invalid: http.activity]] [body:] [read-status:<nil>]
+	//test: writeContent(http.testActivity) -> [cnt:204] [write-status:OK] [body:{"ActivityID":"123456","ActivityType":"action","Agent":"Controller","AgentUri":"https://somehost.com/id","Assignment":"case #","Controller":"egress","Behavior":"timeout","Description":"decreased timeout"}] [read-status:<nil>]
 
 }

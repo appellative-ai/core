@@ -13,7 +13,6 @@ const (
 	requestId   = "123-request-id"
 	relatesTo   = "test-relates-to"
 	statusCode  = http.StatusAccepted
-	XRequestId  = "X-Request-Id"
 	XRelatesTo  = "X-Relates-To"
 )
 

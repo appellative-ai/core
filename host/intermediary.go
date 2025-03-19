@@ -78,3 +78,19 @@ func NewProxyIntermediary(host string, c2 httpx.Exchange) httpx.Exchange {
 		return c2(r2)
 	}
 }
+
+/*
+func NewIntermediary(e1 httpx.Exchange) httpx.Exchange {
+	return func(r *http.Request) (resp *http.Response, err error) {
+		if e1 == nil {
+			return badRequest("error: intermediary Exchange is nil")
+		}
+		resp,err := e1(r)
+
+
+		return c2(r2)
+	}
+}
+
+
+*/
