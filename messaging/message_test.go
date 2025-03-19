@@ -25,19 +25,3 @@ func ExampleNotifyMessage() {
 	//test: NotifyContent() -> [I'm A Teapot [msg:test message] [agent:agent/test]]
 
 }
-
-func ExampleActivityMessage() {
-	//status := NewStatusMessage(http.StatusTeapot, "test message", "agent/test")
-	m := NewActivityMessage(ActivityItem{
-		Agent:   nil,
-		Event:   "event",
-		Source:  "source",
-		Content: nil,
-	})
-	e := ActivityContent(m)
-	fmt.Printf("test: ActivityContent() -> [%v]\n", e)
-
-	//Output:
-	//test: ActivityContent() -> [&{<nil> event source <nil>}]
-
-}
