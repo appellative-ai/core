@@ -153,3 +153,7 @@ func ExampleAgentRun() {
 	//test: AgentRun() -> [chan:ctrl] [from:] [to:] [event:shutdown]
 
 }
+
+func ExampleName() {
+
+}

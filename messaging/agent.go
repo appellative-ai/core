@@ -3,12 +3,9 @@ package messaging
 import "strings"
 
 const (
-	ChannelSize       = 16
-	SegmentIdentifier = "#"
+	ChannelSize          = 16
+	AssignmentIdentifier = "#"
 )
-
-//Name() string
-//Shutdown()
 
 // Agent - agent
 type Agent interface {
@@ -27,7 +24,7 @@ func Name(agent Agent) string {
 		return ""
 	}
 	uri := agent.Uri()
-	i := strings.Index(uri, SegmentIdentifier)
+	i := strings.Index(uri, AssignmentIdentifier)
 	if i == -1 {
 		return uri
 	}
