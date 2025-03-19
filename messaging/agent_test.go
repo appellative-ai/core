@@ -155,5 +155,16 @@ func ExampleAgentRun() {
 }
 
 func ExampleName() {
+	uri := "resiliency:agent/core/test"
+	n := name(uri)
+	fmt.Printf("test: name(\"%v\") -> [%v]\n", uri, n)
+
+	uri = "resiliency:agent/core/test#west1.zone1.host"
+	n = name(uri)
+	fmt.Printf("test: name(\"%v\") -> [%v]\n", uri, n)
+
+	//Output:
+	//test: name("resiliency:agent/core/test") -> [resiliency:agent/core/test]
+	//test: name("resiliency:agent/core/test#west1.zone1.host") -> [resiliency:agent/core/test]
 
 }
