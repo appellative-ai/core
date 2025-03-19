@@ -2,7 +2,6 @@ package http
 
 import (
 	iox "github.com/behavioral-ai/core/io"
-	"github.com/behavioral-ai/core/messaging"
 	"net/http"
 )
 
@@ -23,20 +22,19 @@ func WriteResponse(w http.ResponseWriter, headers any, statusCode int, content a
 	}
 	writer, err := iox.NewEncodingWriter(w, reqHeader)
 	if err != nil {
-		status0 := messaging.NewStatusError(messaging.StatusIOError, err, "")
-		//e.Handle(status0.WithRequestId(w.Header()))
-		w.WriteHeader(status0.HttpCode())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
 		return 0
 	}
 	if writer.ContentEncoding() != iox.NoneEncoding {
 		w.Header().Add(ContentEncoding, writer.ContentEncoding())
 	}
 	w.WriteHeader(statusCode)
-	var status0 *messaging.Status
-	contentLength, status0 = writeContent(writer, content, w.Header().Get(ContentType))
+	contentLength, err = writeContent(writer, content, w.Header().Get(ContentType))
 	_ = writer.Close()
-	if !status0.OK() {
-		//	e.Handle(status0.WithRequestId(w.Header()))
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
 	}
 	return contentLength
 }

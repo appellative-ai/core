@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	iox "github.com/behavioral-ai/core/io"
-	"github.com/behavioral-ai/core/messaging"
 	"io"
 	"reflect"
 	"strings"
@@ -15,12 +14,11 @@ const (
 	jsonToken = "json"
 )
 
-func writeContent(w io.Writer, content any, contentType string) (length int64, status *messaging.Status) {
-	var err error
+func writeContent(w io.Writer, content any, contentType string) (length int64, err error) {
 	var cnt int
 
 	if content == nil {
-		return 0, messaging.StatusOK()
+		return 0, nil
 	}
 	switch ptr := (content).(type) {
 	case []byte:
@@ -35,10 +33,8 @@ func writeContent(w io.Writer, content any, contentType string) (length int64, s
 
 		buf, err1 = iox.ReadAll(ptr, nil)
 		if err1 != nil {
-			status = messaging.NewStatusError(messaging.StatusIOError, err, "")
-			return 0, status
+			return 0, err1
 		}
-		status = messaging.StatusOK()
 		cnt, err = w.Write(buf)
 	case io.ReadCloser:
 		var buf []byte
@@ -47,10 +43,8 @@ func writeContent(w io.Writer, content any, contentType string) (length int64, s
 		buf, err1 = iox.ReadAll(ptr, nil)
 		_ = ptr.Close()
 		if err1 != nil {
-			status = messaging.NewStatusError(messaging.StatusIOError, err, "")
-			return 0, status
+			return 0, err1
 		}
-		status = messaging.StatusOK()
 		cnt, err = w.Write(buf)
 	default:
 		if strings.Contains(contentType, jsonToken) {
@@ -58,18 +52,12 @@ func writeContent(w io.Writer, content any, contentType string) (length int64, s
 
 			buf, err = json.Marshal(content)
 			if err != nil {
-				status = messaging.NewStatusError(messaging.StatusJsonEncodeError, err, "")
-				if !status.OK() {
-					return
-				}
+				return //status = messaging.NewStatusError(messaging.StatusJsonEncodeError, err, "")
 			}
 			cnt, err = w.Write(buf)
 		} else {
-			return 0, messaging.NewStatusError(messaging.StatusInvalidContent, errors.New(fmt.Sprintf("error: content type is invalid: %v", reflect.TypeOf(ptr))), "")
+			return 0, errors.New(fmt.Sprintf("error: content type is invalid: %v", reflect.TypeOf(ptr)))
 		}
 	}
-	if err != nil {
-		return 0, messaging.NewStatusError(messaging.StatusIOError, err, "")
-	}
-	return int64(cnt), messaging.StatusOK()
+	return int64(cnt), err
 }
