@@ -1,7 +1,6 @@
 package messaging
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -25,35 +24,5 @@ func ExampleNewStatus_Teapot() {
 
 	//Output:
 	//test: NewStatus() -> [status:I'm A Teapot]
-
-}
-
-func ExampleNewStatusError() {
-	s := NewStatusError(http.StatusGatewayTimeout, errors.New("rate limited"), "test:agent") //"resiliency:agent/operative/agent1#us-west")
-	fmt.Printf("test: NewStatusError() -> [%v]\n", s)
-
-	if _, ok := any(s).(NotifyItem); ok {
-		fmt.Printf("test: Event() -> [%v]\n", ok)
-
-	}
-
-	//Output:
-	//test: NewStatusError() -> [Timeout [err:rate limited] [agent:test:agent]]
-	//test: Event() -> [true]
-
-}
-
-func ExampleNewStatusMessage() {
-	s := NewStatusMessage(http.StatusOK, "successfully change ticker duration", "test:agent")
-	fmt.Printf("test: NewStatusMessage() -> [%v]\n", s)
-
-	if _, ok := any(s).(NotifyItem); ok {
-		fmt.Printf("test: Event() -> [%v]\n", ok)
-
-	}
-
-	//Output:
-	//test: NewStatusMessage() -> [OK [msg:successfully change ticker duration] [agent:test:agent]]
-	//test: Event() -> [true]
 
 }

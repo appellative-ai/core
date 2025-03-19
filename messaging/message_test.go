@@ -2,7 +2,6 @@ package messaging
 
 import (
 	"fmt"
-	"net/http"
 )
 
 func ExampleNewMessage() {
@@ -12,16 +11,5 @@ func ExampleNewMessage() {
 
 	//Output:
 	//test: NewMessage() -> [[chan:channel] [from:] [to:] [event:startup]]
-
-}
-
-func ExampleNotifyMessage() {
-	status := NewStatusMessage(http.StatusTeapot, "test message", "agent/test")
-	m := NewNotifyMessage(status)
-	e := NotifyContent(m)
-	fmt.Printf("test: NotifyContent() -> [%v]\n", e)
-
-	//Output:
-	//test: NotifyContent() -> [I'm A Teapot [msg:test message] [agent:agent/test]]
 
 }

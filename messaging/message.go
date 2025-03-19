@@ -15,7 +15,7 @@ const (
 	StopEvent     = "event:stop"
 	PauseEvent    = "event:pause"  // disable data channel receive
 	ResumeEvent   = "event:resume" // enable data channel receive
-	NotifyEvent   = "event:notify"
+	//NotifyEvent   = "event:notify"
 
 	ObservationEvent = "event:observation"
 	TickEvent        = "event:tick"
@@ -31,9 +31,9 @@ const (
 	XEvent   = "x-event"
 	XChannel = "x-channel"
 
-	ContentType       = "Content-Type"
-	ContentTypeError  = "application/error"
-	ContentTypeNotify = "application/notify"
+	ContentType      = "Content-Type"
+	ContentTypeError = "application/error"
+	//ContentTypeNotify = "application/notify"
 
 	//XRelatesTo         = "x-relates-to"
 	//XMessageId         = "x-message-id"
@@ -69,18 +69,6 @@ func NewMessage(channel, event string) *Message {
 	m.Header = make(http.Header)
 	m.Header.Add(XChannel, channel)
 	m.Header.Add(XEvent, event)
-	return m
-}
-
-/*
-func NewControlMessage(to, from, event string) *Message {
-	return NewAddressableMessage(Control, to, from, event)
-}
-*/
-
-func NewNotifyMessage(e NotifyItem) *Message {
-	m := NewMessage(Control, NotifyEvent)
-	m.SetContent(ContentTypeNotify, e)
 	return m
 }
 
@@ -149,15 +137,5 @@ func (m *Message) SetContent(contentType string, content any) error {
 	}
 	m.Body = content
 	m.Header.Add(ContentType, contentType)
-	return nil
-}
-
-func NotifyContent(msg *Message) NotifyItem {
-	if msg == nil || msg.ContentType() != ContentTypeNotify || msg.Body == nil {
-		return nil
-	}
-	if e, ok := msg.Body.(NotifyItem); ok {
-		return e
-	}
 	return nil
 }
