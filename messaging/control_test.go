@@ -53,20 +53,21 @@ func ExampleNewControlAgent() {
 	a.Message(NewMessage(Control, ReconfigureEvent))
 	//c <- Message{To: "", From: "", Event: aspect.ReconfigureEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
-	a.Shutdown() //.SendCtrl(Message{To: uri, From: "", Event: aspect.ShutdownEvent})
+	a.Message(ShutdownMessage) //.SendCtrl(Message{To: uri, From: "", Event: aspect.ShutdownEvent})
 	//c <- Message{To: "", From: "", Event: aspect.ShutdownEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(time.Millisecond * 100)
 
-	a.Shutdown()
+	a.Message(ShutdownMessage)
 	// will panic
 	//c <- Message{}
 
 	//Output:
-	//test: NewControlAgent_CtrlHandler() -> messaging:event.startup
-	//test: NewControlAgent_CtrlHandler() -> messaging:event.pause
-	//test: NewControlAgent_CtrlHandler() -> messaging:event.resume
+	//test: NewControlAgent_CtrlHandler() -> event:startup
+	//test: NewControlAgent_CtrlHandler() -> event:pause
+	//test: NewControlAgent_CtrlHandler() -> event:resume
 	//test: NewControlAgent_CtrlHandler() -> event:ping
 	//test: NewControlAgent_CtrlHandler() -> event:reconfigure
-	//test: NewControlAgent_CtrlHandler() -> messaging:event.shutdown
+	//test: NewControlAgent_CtrlHandler() -> event:shutdown
+	//test: NewControlAgent() -> [recovered:send on closed channel]
 
 }

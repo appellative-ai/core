@@ -46,15 +46,15 @@ const (
 )
 
 var (
-	Startup  = NewMessage(Control, StartupEvent)
-	Shutdown = NewMessage(Control, ShutdownEvent)
-	Pause    = NewMessage(Control, PauseEvent)
-	Resume   = NewMessage(Control, ResumeEvent)
-	Start    = NewMessage(Control, StartEvent)
-	Stop     = NewMessage(Control, StopEvent)
+	StartupMessage  = NewMessage(Control, StartupEvent)
+	ShutdownMessage = NewMessage(Control, ShutdownEvent)
+	PauseMessage    = NewMessage(Control, PauseEvent)
+	ResumeMessage   = NewMessage(Control, ResumeEvent)
+	//Start    = NewMessage(Control, StartEvent)
+	//Stop     = NewMessage(Control, StopEvent)
 
-	EmissaryShutdown = NewMessage(Emissary, ShutdownEvent)
-	MasterShutdown   = NewMessage(Master, ShutdownEvent)
+	EmissaryShutdownMessage = NewMessage(Emissary, ShutdownEvent)
+	MasterShutdownMessage   = NewMessage(Master, ShutdownEvent)
 )
 
 // Handler - uniform interface for message handling

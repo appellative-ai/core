@@ -2,7 +2,6 @@ package messaging
 
 import (
 	"errors"
-	"fmt"
 )
 
 type controlAgent struct {
@@ -30,21 +29,15 @@ func newControlAgent(uri string, ch chan *Message, handler Handler) *controlAgen
 	return c
 }
 
-// IsFinalized - finalized
-//func (c *controlAgent) IsFinalized() bool { return true }
-
 // Uri - identity
 func (c *controlAgent) Uri() string { return c.uri }
 
 // String - identity
 func (c *controlAgent) String() string { return c.Uri() }
 
-// Name - class name
-func (c *controlAgent) Name() string { return c.name }
-
 // Message - message an agent
 func (c *controlAgent) Message(msg *Message) {
-	if msg == nil {
+	if msg == nil || !c.running {
 		return
 	}
 	switch msg.Channel() {
@@ -54,10 +47,6 @@ func (c *controlAgent) Message(msg *Message) {
 		}
 	default:
 	}
-}
-
-func (c *controlAgent) Notify(status *Status) {
-	fmt.Printf("%v", status)
 }
 
 // Run - run the agent
@@ -70,6 +59,7 @@ func (c *controlAgent) Run() {
 }
 
 // Shutdown - shutdown the agent
+/*
 func (c *controlAgent) Shutdown() {
 	if !c.running {
 		return
@@ -77,6 +67,14 @@ func (c *controlAgent) Shutdown() {
 	c.running = false
 	c.Message(Shutdown)
 }
+*/
+
+/*
+func (c *controlAgent) Notify(status *Status) {
+	fmt.Printf("%v", status)
+}
+
+*/
 
 func (c *controlAgent) shutdown() {
 	close(c.ch)

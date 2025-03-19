@@ -73,7 +73,7 @@ func (t *testAgent) Shutdown() {
 	if t.shutdownFn != nil {
 		t.shutdownFn()
 	}
-	t.Message(Shutdown)
+	t.Message(ShutdownMessage)
 }
 
 func testAgentRun(t *testAgent) {

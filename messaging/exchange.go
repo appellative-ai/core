@@ -175,7 +175,7 @@ func (e *Exchange) Shutdown() {
 		if a == nil {
 			continue
 		}
-		a.Shutdown()
+		a.Message(ShutdownMessage)
 		// TODO: verify
 		e.m.Delete(uri)
 	}

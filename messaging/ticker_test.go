@@ -12,7 +12,7 @@ func _ExampleTicker() {
 	go tickerRun(ctrl, t)
 	time.Sleep(time.Second * 20)
 
-	ctrl <- Shutdown
+	ctrl <- ShutdownMessage
 	time.Sleep(time.Second * 2)
 
 	//Output:
