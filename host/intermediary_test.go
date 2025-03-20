@@ -150,39 +150,6 @@ type node struct {
 	n2 func() *node
 }
 
-func do1(req *http.Request, next *node) (*http.Response, error) {
-	fmt.Printf("test: do1() -> request\n")
-	if next != nil {
-		next.ex(req, next.n2())
-
-	}
-	fmt.Printf("test: do1() -> response\n")
-	return &http.Response{StatusCode: http.StatusOK}, nil
-}
-
-func do2(req *http.Request, next *node) (*http.Response, error) {
-	fmt.Printf("test: do2() -> request\n")
-	if next != nil {
-		next.ex(req, next.n2())
-	}
-	fmt.Printf("test: do2() -> response\n")
-	return &http.Response{StatusCode: http.StatusOK}, nil
-}
-
-func do3(req *http.Request, next *node) (*http.Response, error) {
-	fmt.Printf("test: do3() -> request\n")
-	if next != nil {
-		next.ex(req, next.n2())
-	}
-	fmt.Printf("test: do3() -> response\n")
-	return &http.Response{StatusCode: http.StatusBadRequest}, nil
-}
-
-func do4(req *http.Request) (*http.Response, error) {
-	fmt.Printf("test: do4()\n")
-	return &http.Response{StatusCode: http.StatusOK}, nil
-}
-
 func do5(req *http.Request) (*http.Response, error) {
 	fmt.Printf("test: do5()\n")
 	return &http.Response{StatusCode: http.StatusOK}, nil
@@ -190,9 +157,9 @@ func do5(req *http.Request) (*http.Response, error) {
 
 func ExampleLinkedExchange() {
 	//fn := func(code int) bool { return code == http.StatusOK }
-	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	//req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 
-	do1(req, &node{ex: do2, n2: func() *node { return &node{ex: do3, n2: func() *node { return nil }} }})
+	//do1(req, &node{ex: do2, n2: func() *node { return &node{ex: do3, n2: func() *node { return nil }} }})
 	//}do2)
 	//do2(req, nil)
 

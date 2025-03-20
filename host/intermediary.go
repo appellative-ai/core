@@ -76,11 +76,11 @@ func NewProxyIntermediary(host string, c2 httpx.Exchange) httpx.Exchange {
 	}
 }
 
-type LinkedExchange func(req *http.Request, next httpx.Exchange) (*http.Response, error)
+type LinkedExchange1 func(req *http.Request, next httpx.Exchange) (*http.Response, error)
 
 type LinkedExchange2 func() httpx.Exchange
 
-func AddLink(curr LinkedExchange, next LinkedExchange) LinkedExchange {
+func AddLink(curr LinkedExchange1, next LinkedExchange1) LinkedExchange1 {
 	if next == nil {
 		return nil
 	}
