@@ -17,18 +17,15 @@ func badRequest(msg string) (*http.Response, error) {
 }
 
 func NewConditionalIntermediary(c1 httpx.Exchange, c2 httpx.Exchange, ok func(int) bool) httpx.Exchange {
+	if ok == nil {
+		ok = func(code int) bool { return code == http.StatusOK }
+	}
 	return func(r *http.Request) (resp *http.Response, err error) {
-		if c1 == nil {
-			return badRequest("error: Conditional Intermediary HttpExchange 1 is nil")
-		}
-		if c2 == nil {
-			return badRequest("error: Conditional Intermediary HttpExchange 2 is nil")
-		}
 		resp, err = c1(r)
 		if resp == nil {
-			return badRequest("error: Conditional Intermediary HttpExchange 1 response is nil")
+			return &http.Response{StatusCode: http.StatusBadRequest}, err
 		}
-		if (ok == nil && resp.StatusCode == http.StatusOK) || (ok != nil && ok(resp.StatusCode)) {
+		if ok(resp.StatusCode) {
 			resp, err = c2(r)
 		}
 		return
@@ -79,6 +76,54 @@ func NewProxyIntermediary(host string, c2 httpx.Exchange) httpx.Exchange {
 	}
 }
 
+type LinkedExchange func(req *http.Request, next httpx.Exchange) (*http.Response, error)
+
+type LinkedExchange2 func() httpx.Exchange
+
+func AddLink(curr LinkedExchange, next LinkedExchange) LinkedExchange {
+	if next == nil {
+		return nil
+	}
+	if curr == nil {
+		curr = next
+	} else {
+		// !panic
+		prev := curr
+		curr = func(req *http.Request, next httpx.Exchange) (resp *http.Response, err error) {
+			resp, err = prev(req, next)
+
+			return next(req)
+		}
+	}
+	return curr
+	return curr
+
+}
+
+func AppendExchange(curr httpx.Exchange, next httpx.Exchange) httpx.Exchange {
+	if next == nil {
+		return nil
+	}
+	if curr == nil {
+		curr = next
+	} else {
+		// !panic
+		prev := curr
+		curr = func(req *http.Request) (resp *http.Response, err error) {
+			resp, err = prev(req)
+			if resp.StatusCode != http.StatusOK {
+				return resp, err
+			}
+			return next(req)
+		}
+	}
+	return curr
+
+}
+
+//return func(r *http.Request) (resp *http.Response, err error) {
+//	return
+//}
 /*
 func NewIntermediary(e1 httpx.Exchange) httpx.Exchange {
 	return func(r *http.Request) (resp *http.Response, err error) {
