@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
-	"net/http"
+	http2 "net/http"
 	"time"
 )
 
@@ -14,30 +14,30 @@ const (
 	contextDeadlineExceeded = "context deadline exceeded"
 )
 
-type Exchange func(r *http.Request) (*http.Response, error)
+type Exchange func(r *http2.Request) (*http2.Response, error)
 
 var (
-	Client = http.DefaultClient
+	Client = http2.DefaultClient
 )
 
 func init() {
-	t, ok := http.DefaultTransport.(*http.Transport)
+	t, ok := http2.DefaultTransport.(*http2.Transport)
 	if ok {
 		// Used clone instead of assignment due to presence of sync.Mutex fields
 		var transport = t.Clone()
 		transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 		transport.MaxIdleConns = 200
 		transport.MaxIdleConnsPerHost = 100
-		Client = &http.Client{Transport: transport, Timeout: time.Second * 5}
+		Client = &http2.Client{Transport: transport, Timeout: time.Second * 5}
 	} else {
-		Client = &http.Client{Transport: http.DefaultTransport, Timeout: time.Second * 5}
+		Client = &http2.Client{Transport: http2.DefaultTransport, Timeout: time.Second * 5}
 	}
 }
 
 // Do - process an HTTP request, checking for file:// scheme
-func Do(req *http.Request) (resp *http.Response, err error) {
+func Do(req *http2.Request) (resp *http2.Response, err error) {
 	if req == nil {
-		return &http.Response{StatusCode: http.StatusInternalServerError}, errors.New("invalid argument : request is nil")
+		return &http2.Response{StatusCode: http2.StatusInternalServerError}, errors.New("invalid argument : request is nil")
 	}
 	if req.URL.Scheme == fileScheme {
 		return NewResponseFromUri(req.URL)
@@ -52,16 +52,16 @@ func Do(req *http.Request) (resp *http.Response, err error) {
 		}
 		// check for an error of deadline exceeded
 		if req.Context() != nil && req.Context().Err() == context.DeadlineExceeded {
-			resp.StatusCode = http.StatusGatewayTimeout
+			resp.StatusCode = http2.StatusGatewayTimeout
 			err = errors.New(contextDeadlineExceeded)
 		}
 	}
 	return
 }
 
-func serverErrorResponse() *http.Response {
-	resp := new(http.Response)
-	resp.StatusCode = http.StatusInternalServerError
+func serverErrorResponse() *http2.Response {
+	resp := new(http2.Response)
+	resp.StatusCode = http2.StatusInternalServerError
 	resp.Status = internalError
 	return resp
 }

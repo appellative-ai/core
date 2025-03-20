@@ -7,5 +7,5 @@ import (
 
 type Agent interface {
 	messaging.Agent
-	Exchange(r *http2.Request) (*http2.Response, error)
+	Exchange(r *http2.Request, next *Frame) (*http2.Response, error)
 }
