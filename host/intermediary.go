@@ -21,6 +21,12 @@ func NewConditionalIntermediary(c1 httpx.Exchange, c2 httpx.Exchange, ok func(in
 		ok = func(code int) bool { return code == http.StatusOK }
 	}
 	return func(r *http.Request) (resp *http.Response, err error) {
+		if c1 == nil {
+			return badRequest("c1 is nil")
+		}
+		if c2 == nil {
+			return badRequest("c2 is nil")
+		}
 		resp, err = c1(r)
 		if resp == nil {
 			return &http.Response{StatusCode: http.StatusBadRequest}, err
@@ -74,30 +80,6 @@ func NewProxyIntermediary(host string, c2 httpx.Exchange) httpx.Exchange {
 		}
 		return c2(r2)
 	}
-}
-
-type LinkedExchange1 func(req *http.Request, next httpx.Exchange) (*http.Response, error)
-
-type LinkedExchange2 func() httpx.Exchange
-
-func AddLink(curr LinkedExchange1, next LinkedExchange1) LinkedExchange1 {
-	if next == nil {
-		return nil
-	}
-	if curr == nil {
-		curr = next
-	} else {
-		// !panic
-		prev := curr
-		curr = func(req *http.Request, next httpx.Exchange) (resp *http.Response, err error) {
-			resp, err = prev(req, next)
-
-			return next(req)
-		}
-	}
-	return curr
-	return curr
-
 }
 
 func AppendExchange(curr httpx.Exchange, next httpx.Exchange) httpx.Exchange {

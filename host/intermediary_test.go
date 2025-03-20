@@ -29,7 +29,7 @@ func authTestExchange(r *http.Request) (*http.Response, error) {
 	return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(bytes.NewReader([]byte("Authorized")))}, nil
 }
 
-func _ExampleConditionalIntermediary_Nil() {
+func ExampleConditionalIntermediary_Nil() {
 	ic := NewConditionalIntermediary(nil, nil, nil)
 	r, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q-golang", nil)
 
@@ -41,12 +41,12 @@ func _ExampleConditionalIntermediary_Nil() {
 	fmt.Printf("test: ConditionalIntermediary()-nil-service -> [status:%v]\n", status)
 
 	//Output:
-	//test: ConditionalIntermediary()-nil-auth -> [status:error: Conditional Intermediary HttpExchange 1 is nil]
-	//test: ConditionalIntermediary()-nil-service -> [status:error: Conditional Intermediary HttpExchange 2 is nil]
+	//test: ConditionalIntermediary()-nil-auth -> [status:c1 is nil]
+	//test: ConditionalIntermediary()-nil-service -> [status:c2 is nil]
 
 }
 
-func _ExampleConditionalIntermediary_AuthExchange() {
+func ExampleConditionalIntermediary_AuthExchange() {
 	ic := NewConditionalIntermediary(authTestExchange, serviceTestExchange, nil)
 	r, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q-golang", nil)
 
@@ -65,7 +65,7 @@ func _ExampleConditionalIntermediary_AuthExchange() {
 
 }
 
-func _ExampleAccessLogIntermediary() {
+func ExampleAccessLogIntermediary() {
 	ic := NewAccessLogIntermediary(access.InternalTraffic, testDo)
 
 	r, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q-golang", nil)
@@ -103,7 +103,7 @@ func proxyDo(r *http.Request) (*http.Response, error) {
 	}
 }
 
-func _ExampleProxyIntermediary() {
+func ExampleProxyIntermediary() {
 	host := "www.search.yahoo.com"
 	proxy := NewProxyIntermediary(host, proxyDo)
 
@@ -143,41 +143,4 @@ func testDo(r *http.Request) (*http.Response, error) {
 		resp.Body = io.NopCloser(bytes.NewReader([]byte("200 OK")))
 		return resp, nil //errors.New(fmt.Sprintf("status code %v",resp.StatusCode))
 	}
-}
-
-type node struct {
-	ex func(req *http.Request, next *node) (*http.Response, error)
-	n2 func() *node
-}
-
-func do5(req *http.Request) (*http.Response, error) {
-	fmt.Printf("test: do5()\n")
-	return &http.Response{StatusCode: http.StatusOK}, nil
-}
-
-func ExampleLinkedExchange() {
-	//fn := func(code int) bool { return code == http.StatusOK }
-	//req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-
-	//do1(req, &node{ex: do2, n2: func() *node { return &node{ex: do3, n2: func() *node { return nil }} }})
-	//}do2)
-	//do2(req, nil)
-
-	//Output:
-	//fail
-}
-
-func _ExampleIntermediary_Cond() {
-	//fn := func(code int) bool { return code == http.StatusOK }
-	//req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-
-	//ex := NewConditionalIntermediary(do1, do2, fn)
-	//ex = NewConditionalIntermediary(ex, do3, fn)
-	//ex = NewConditionalIntermediary(ex, do4, fn)
-	//ex = NewConditionalIntermediary(ex, do5, fn)
-
-	//ex(req)
-
-	//Output:
-	//fail
 }

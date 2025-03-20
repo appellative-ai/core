@@ -19,8 +19,7 @@ func (f *Frame) String() string {
 }
 
 type ExchangePipeline struct {
-	frames []*Frame
-	head   *Frame
+	head *Frame
 }
 
 func NewExchangePipeline(fn ...FramedExchange) *ExchangePipeline {
