@@ -144,3 +144,13 @@ func (m *Message) SetContent(contentType string, content any) error {
 	m.Header.Add(ContentType, contentType)
 	return nil
 }
+
+func ConfigMapContent(m *Message) map[string]string {
+	if m.Event() != ConfigEvent || m.ContentType() != ContentTypeMap {
+		return nil
+	}
+	if cfg, ok := m.Body.(map[string]string); ok {
+		return cfg
+	}
+	return nil
+}
