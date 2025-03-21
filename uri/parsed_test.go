@@ -23,9 +23,9 @@ func ExampleURLParse_Raw() {
 	fmt.Printf("test: ParseRaw(\"%v\") -> [scheme:%v] [path:%v] [frag:%v] [query:%v] [err:%v]\n", u, uri.Scheme, uri.Path, uri.Fragment, uri.RawQuery, err)
 
 	//Output:
-	//test: ParseRaw("http://localhost:8080/github/advanced-go/stdlib/uri.Uproot?q=golang") -> [scheme:http] [host:localhost:8080] [path:/github/advanced-go/stdlib/uri.Uproot] [frag:] [query:q=golang] [err:<nil>]
-	//test: ParseRaw("http://localhost:8080/github/advanced-go/stdlib/uri:Uproot?q=golang") -> [scheme:http] [path:/github/advanced-go/stdlib/uri:Uproot] [frag:] [query:q=golang] [err:<nil>]
-	//test: ParseRaw("http://localhost:8080/github/advanced-go/stdlib/uri?q=golang#Uproot") -> [scheme:http] [path:/github/advanced-go/stdlib/uri] [frag:Uproot] [query:q=golang] [err:<nil>]
+	//test: ParseRaw("http://localhost:8080/github/advanced-go/stdlib/uri.Uproot?q=golang") -> [scheme:httpx] [host:localhost:8080] [path:/github/advanced-go/stdlib/uri.Uproot] [frag:] [query:q=golang] [err:<nil>]
+	//test: ParseRaw("http://localhost:8080/github/advanced-go/stdlib/uri:Uproot?q=golang") -> [scheme:httpx] [path:/github/advanced-go/stdlib/uri:Uproot] [frag:] [query:q=golang] [err:<nil>]
+	//test: ParseRaw("http://localhost:8080/github/advanced-go/stdlib/uri?q=golang#Uproot") -> [scheme:httpx] [path:/github/advanced-go/stdlib/uri] [frag:Uproot] [query:q=golang] [err:<nil>]
 	//test: ParseRaw("/github/advanced-go/stdlib/uri") -> [scheme:] [path:/github/advanced-go/stdlib/uri] [frag:] [query:] [err:<nil>]
 
 }

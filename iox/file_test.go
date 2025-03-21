@@ -1,4 +1,4 @@
-package io
+package iox
 
 import (
 	"embed"
@@ -11,22 +11,22 @@ import (
 	"reflect"
 )
 
-//go:embed iotest
+//go:embed ioxtest
 var tf embed.FS
 
 const (
-	testResponseTxt  = "file://[cwd]/iotest/test-response.txt"
-	testResponse2Txt = "file://[cwd]/iotest/test-response2.txt"
+	testResponseTxt  = "file://[cwd]/ioxtest/test-response.txt"
+	testResponse2Txt = "file://[cwd]/ioxtest/test-response2.txt"
 
-	helloWorldTxt  = "file://[cwd]/iotest/hello-world.txt"
-	helloWorldGzip = "file://[cwd]/iotest/hello-world.gz"
+	helloWorldTxt  = "file://[cwd]/ioxtest/hello-world.txt"
+	helloWorldGzip = "file://[cwd]/ioxtest/hello-world.gz"
 
-	testResponseGzip = "file://[cwd]/iotest/test-response.gz"
+	testResponseGzip = "file://[cwd]/ioxtest/test-response.gz"
 
-	address1Url = "file://[cwd]/iotest/address1.json"
-	address2Url = "file://[cwd]/iotest/address2.json"
-	address3Url = "file://[cwd]/iotest/address3.json"
-	status504   = "file://[cwd]/iotest/status-504.json"
+	address1Url = "file://[cwd]/ioxtest/address1.json"
+	address2Url = "file://[cwd]/ioxtest/address2.json"
+	address3Url = "file://[cwd]/ioxtest/address3.json"
+	status504   = "file://[cwd]/ioxtest/status-504.json"
 )
 
 // parseRaw - parse a raw Uri without error
@@ -36,7 +36,7 @@ func parseRaw(rawUri string) *url.URL {
 }
 
 func ExampleDirFS() {
-	dir := "file:///c:/Users/markb/GitHub/core/io/iotest"
+	dir := "file:///c:/Users/markb/GitHub/core/iox/ioxtest"
 	fileSystem := DirFS(dir)
 	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -65,7 +65,7 @@ func ExampleDirFS() {
 }
 
 func ExampleDirFS_Failure() {
-	dir := "file:///c:/Users/markb/GitHub/core/io/invalid"
+	dir := "file:///c:/Users/markb/GitHub/core/iox/invalid"
 	fileSystem := DirFS(dir)
 	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -110,7 +110,7 @@ func Example_FileNameError() {
 	name = FileName(req)
 	fmt.Printf("test: FileName(%v) -> [type:%v] [url:%v]\n", s, reflect.TypeOf(req), name)
 
-	s = "file://[cwd]/iotest/test-response.txt"
+	s = "file://[cwd]/ioxtest/test-response.txt"
 	req, _ = http.NewRequest("", s, nil)
 	name = FileName(req)
 	fmt.Printf("test: FileName(%v) -> [type:%v] [url:%v]\n", s, reflect.TypeOf(req), name)
@@ -121,12 +121,12 @@ func Example_FileNameError() {
 	//test: FileName(https://www.google.com/search?q=golang) -> [type:string] [url:error: scheme is invalid [https]]
 	//test: FileName(https://www.google.com/search?q=golang) -> [type:*url.URL] [url:error: scheme is invalid [https]]
 	//test: FileName(https://www.google.com/search?q=golang) -> [type:*http.Request] [url:error: invalid URL type: *http.Request]
-	//test: FileName(file://[cwd]/iotest/test-response.txt) -> [type:*http.Request] [url:error: invalid URL type: *http.Request]
+	//test: FileName(file://[cwd]/ioxtest/test-response.txt) -> [type:*http.Request] [url:error: invalid URL type: *http.Request]
 
 }
 
 func Example_FileName() {
-	s := "file://[cwd]/iotest/test-response.txt"
+	s := "file://[cwd]/ioxtest/test-response.txt"
 	u, err := url.Parse(s)
 	fmt.Printf("test: url.Parse(%v) -> [err:%v]\n", s, err)
 
@@ -136,7 +136,7 @@ func Example_FileName() {
 	name = FileName(u)
 	fmt.Printf("test: FileName(%v) -> [type:%v] [url:%v]\n", s, reflect.TypeOf(u), name)
 
-	s = "file:///c:/Users/markb/GitHub/core/io/iotest/test-response.txt"
+	s = "file:///c:/Users/markb/GitHub/core/iox/ioxtest/test-response.txt"
 	name = FileName(s)
 	fmt.Printf("test: FileName(%v) -> [type:%v] [url:%v]\n", s, reflect.TypeOf(s), name)
 
@@ -145,28 +145,28 @@ func Example_FileName() {
 	fmt.Printf("test: FileName(%v) -> [type:%v] [url:%v]\n", s, reflect.TypeOf(u), name)
 
 	//Output:
-	//test: url.Parse(file://[cwd]/iotest/test-response.txt) -> [err:<nil>]
-	//test: FileName(file://[cwd]/iotest/test-response.txt) -> [type:string] [url:C:\Users\markb\GitHub\core\io\iotest\test-response.txt]
-	//test: FileName(file://[cwd]/iotest/test-response.txt) -> [type:*url.URL] [url:C:\Users\markb\GitHub\core\io\iotest\test-response.txt]
-	//test: FileName(file:///c:/Users/markb/GitHub/core/io/iotest/test-response.txt) -> [type:string] [url:c:\Users\markb\GitHub\core\io\iotest\test-response.txt]
-	//test: FileName(file:///c:/Users/markb/GitHub/core/io/iotest/test-response.txt) -> [type:*url.URL] [url:c:\Users\markb\GitHub\core\io\iotest\test-response.txt]
+	//test: url.Parse(file://[cwd]/ioxtest/test-response.txt) -> [err:<nil>]
+	//test: FileName(file://[cwd]/ioxtest/test-response.txt) -> [type:string] [url:C:\Users\markb\GitHub\core\iox\ioxtest\test-response.txt]
+	//test: FileName(file://[cwd]/ioxtest/test-response.txt) -> [type:*url.URL] [url:C:\Users\markb\GitHub\core\iox\ioxtest\test-response.txt]
+	//test: FileName(file:///c:/Users/markb/GitHub/core/iox/ioxtest/test-response.txt) -> [type:string] [url:c:\Users\markb\GitHub\core\iox\ioxtest\test-response.txt]
+	//test: FileName(file:///c:/Users/markb/GitHub/core/iox/ioxtest/test-response.txt) -> [type:*url.URL] [url:c:\Users\markb\GitHub\core\iox\ioxtest\test-response.txt]
 
 }
 
 func Example_OSReadFile() {
-	s := "file://[cwd]/iotest/test-response.txt"
+	s := "file://[cwd]/ioxtest/test-response.txt"
 	u, _ := url.Parse(s)
 	buf, err := os.ReadFile(FileName(u))
 	fmt.Printf("test: os.ReadFile(%v) -> [err:%v] [buf:%v]\n", s, err, len(buf))
 
-	s = "file:///c:/Users/markb/GitHub/core/io/iotest/test-response.txt"
+	s = "file:///c:/Users/markb/GitHub/core/iox/ioxtest/test-response.txt"
 	u, _ = url.Parse(s)
 	buf, err = os.ReadFile(FileName(u))
 	fmt.Printf("test: os.ReadFile(%v) -> [err:%v] [buf:%v]\n", s, err, len(buf))
 
 	//Output:
-	//test: os.ReadFile(file://[cwd]/iotest/test-response.txt) -> [err:<nil>] [buf:188]
-	//test: os.ReadFile(file:///c:/Users/markb/GitHub/core/io/iotest/test-response.txt) -> [err:<nil>] [buf:188]
+	//test: os.ReadFile(file://[cwd]/ioxtest/test-response.txt) -> [err:<nil>] [buf:188]
+	//test: os.ReadFile(file:///c:/Users/markb/GitHub/core/iox/ioxtest/test-response.txt) -> [err:<nil>] [buf:188]
 
 }
 
@@ -190,10 +190,10 @@ func ExampleReadFile() {
 	fmt.Printf("test: ReadFile(%v) -> [type:%v] [buf:%v] [status:%v]\n", s, reflect.TypeOf(u), len(buf), status)
 
 	//Output:
-	//test: ReadFile(file://[cwd]/iotest/status-504.json) -> [type:string] [buf:82] [status:<nil>]
-	//test: ReadFile(file://[cwd]/iotest/address1.json) -> [type:string] [buf:68] [status:<nil>]
-	//test: ReadFile(file://[cwd]/iotest/status-504.json) -> [type:*url.URL] [buf:82] [status:<nil>]
-	//test: ReadFile(file://[cwd]/iotest/address1.json) -> [type:*url.URL] [buf:68] [status:<nil>]
+	//test: ReadFile(file://[cwd]/ioxtest/status-504.json) -> [type:string] [buf:82] [status:<nil>]
+	//test: ReadFile(file://[cwd]/ioxtest/address1.json) -> [type:string] [buf:68] [status:<nil>]
+	//test: ReadFile(file://[cwd]/ioxtest/status-504.json) -> [type:*url.URL] [buf:82] [status:<nil>]
+	//test: ReadFile(file://[cwd]/ioxtest/address1.json) -> [type:*url.URL] [buf:68] [status:<nil>]
 
 }
 
@@ -210,14 +210,14 @@ func ExampleReadFileWithEncoding() {
 	fmt.Printf("test: ReadFileWithEncoding(\"%v\",nil) -> [buf:%v] [status:%v]\n", helloWorldTxt, string(buf), status)
 
 	//Output:
-	//test: ReadFileWithEncoding("file://[cwd]/iotest/hello-world.gz",nil) -> [buf:Hello World!!] [status:<nil>]
-	//test: ReadFileWithEncoding("file://[cwd]/iotest/hello-world.gz",h) -> [buf:Hello World!!] [status:<nil>]
-	//test: ReadFileWithEncoding("file://[cwd]/iotest/hello-world.txt",nil) -> [buf:Hello World!!] [status:<nil>]
+	//test: ReadFileWithEncoding("file://[cwd]/ioxtest/hello-world.gz",nil) -> [buf:Hello World!!] [status:<nil>]
+	//test: ReadFileWithEncoding("file://[cwd]/ioxtest/hello-world.gz",h) -> [buf:Hello World!!] [status:<nil>]
+	//test: ReadFileWithEncoding("file://[cwd]/ioxtest/hello-world.txt",nil) -> [buf:Hello World!!] [status:<nil>]
 
 }
 
 func ExampleReadFileEmbedded() {
-	name := "file:///f:/iotest/hello-world.txt"
+	name := "file:///f:/ioxtest/hello-world.txt"
 
 	bytes, status := ReadFile(name)
 	fmt.Printf("test: ReadFileEmbedded(\"%v\") -> [buf:%v] [status:%v]\n", name, string(bytes), status)
@@ -225,7 +225,7 @@ func ExampleReadFileEmbedded() {
 	Mount(tf)
 	Mount(tf)
 
-	name2 := "file:///f:/iotest/invalid-file-name"
+	name2 := "file:///f:/ioxtest/invalid-file-name"
 	bytes, status = ReadFile(name2)
 	fmt.Printf("test: ReadFileEmbedded(\"%v\") -> [buf:%v] [status:%v]\n", name2, string(bytes), status)
 
@@ -233,9 +233,9 @@ func ExampleReadFileEmbedded() {
 	fmt.Printf("test: ReadFileEmbedded(\"%v\") -> [buf:%v] [status:%v]\n", name, string(bytes), status)
 
 	//Output:
-	//test: ReadFileEmbedded("file:///f:/iotest/hello-world.txt") -> [buf:] [status:open iotest/hello-world.txt: file does not exist]
+	//test: ReadFileEmbedded("file:///f:/ioxtest/hello-world.txt") -> [buf:] [status:open ioxtest/hello-world.txt: file does not exist]
 	//error: file system is already mounted
-	//test: ReadFileEmbedded("file:///f:/iotest/invalid-file-name") -> [buf:] [status:open iotest/invalid-file-name: file does not exist]
-	//test: ReadFileEmbedded("file:///f:/iotest/hello-world.txt") -> [buf:Hello World!!] [status:<nil>]
+	//test: ReadFileEmbedded("file:///f:/ioxtest/invalid-file-name") -> [buf:] [status:open ioxtest/invalid-file-name: file does not exist]
+	//test: ReadFileEmbedded("file:///f:/ioxtest/hello-world.txt") -> [buf:Hello World!!] [status:<nil>]
 
 }

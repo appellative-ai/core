@@ -1,4 +1,4 @@
-package io
+package iox
 
 import (
 	"fmt"
@@ -25,8 +25,8 @@ func ExampleReadAll_Reader() {
 	fmt.Printf("test: ReadAll(%v) -> [type:%v] [buf:%v] [status:%v]\n", s, reflect.TypeOf(body), len(buf), status)
 
 	//Output:
-	//test: ReadAll(file://[cwd]/iotest/address3.json) -> [type:*strings.Reader] [buf:72] [status:<nil>]
-	//test: ReadAll(file://[cwd]/iotest/address3.json) -> [type:io.nopCloserWriterTo] [buf:72] [status:<nil>]
+	//test: ReadAll(file://[cwd]/ioxtest/address3.json) -> [type:*strings.Reader] [buf:72] [status:<nil>]
+	//test: ReadAll(file://[cwd]/ioxtest/address3.json) -> [type:io.nopCloserWriterTo] [buf:72] [status:<nil>]
 
 }
 

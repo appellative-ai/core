@@ -1,4 +1,4 @@
-package io
+package iox
 
 import (
 	"bytes"
@@ -17,7 +17,7 @@ func ExampleIdentityWriter() {
 	fmt.Printf("test: Write() -> [cnt:%v] [err:%v] [content:\"%v\"]\n", cnt, err, string(buf.Bytes()))
 
 	//Output:
-	//test: NewEncodingWriter(none) -> [ew:*io.identityWriter] [status:<nil>]
+	//test: NewEncodingWriter(none) -> [ew:*iox.identityWriter] [status:<nil>]
 	//test: Write() -> [cnt:17] [err:<nil>] [content:"identity encoding"]
 
 }
@@ -30,7 +30,7 @@ func ExampleEncodingWriter_Gzip() {
 		return
 	}
 	buff := new(bytes.Buffer)
-	h := make(http.Header)
+	h := make(httpx.Header)
 	h.Set(AcceptEncoding, GzipEncoding)
 
 	// write, flush and close
@@ -42,7 +42,7 @@ func ExampleEncodingWriter_Gzip() {
 
 	// encoding results
 	buff2 := bytes.Clone(buff.Bytes())
-	fmt.Printf("test: DetectContent -> [input:%v] [output:%v] [in-len:%v]\n", http.DetectContentType(content), http.DetectContentType(buff2), len(content))
+	fmt.Printf("test: DetectContent -> [input:%v] [output:%v] [in-len:%v]\n", httpx.DetectContentType(content), httpx.DetectContentType(buff2), len(content))
 
 	// decode the content
 	r := bytes.NewReader(buff2)
@@ -51,7 +51,7 @@ func ExampleEncodingWriter_Gzip() {
 	cerr = zr.Close()
 	fmt.Printf("test: gzip.Reader() -> [new-err:%v] [read-err:%v] [close-err:%v]\n", rerr, err1, cerr)
 
-	fmt.Printf("test: DetectContent -> [input:%v] [output:%v] [out-len:%v]\n", http.DetectContentType(buff2), http.DetectContentType(buff1), len(buff1))
+	fmt.Printf("test: DetectContent -> [input:%v] [output:%v] [out-len:%v]\n", httpx.DetectContentType(buff2), httpx.DetectContentType(buff1), len(buff1))
 
 	//Output:
 	//test: gzip.Writer() -> [input:text/plain; charset=utf-8] [output:application/x-gzip]

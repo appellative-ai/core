@@ -103,12 +103,12 @@ func AppendExchange(curr httpx.Exchange, next httpx.Exchange) httpx.Exchange {
 
 }
 
-//return func(r *http.Request) (resp *http.Response, err error) {
+//return func(r *httpx.Request) (resp *httpx.Response, err error) {
 //	return
 //}
 /*
 func NewIntermediary(e1 httpx.Exchange) httpx.Exchange {
-	return func(r *http.Request) (resp *http.Response, err error) {
+	return func(r *httpx.Request) (resp *httpx.Response, err error) {
 		if e1 == nil {
 			return badRequest("error: intermediary Exchange is nil")
 		}

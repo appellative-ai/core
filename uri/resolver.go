@@ -145,7 +145,7 @@ func createUrl(h http.Header, path string) string {
 
 /*
 
-func (r *Resolver) Url(host, path string, query any, h http.Header) string {
+func (r *Resolver) Url(host, path string, query any, h httpx.Header) string {
 	path1 := BuildPath("",path, query)
 	if h != nil && h.Get(XResolver) != "" {
 		p2 := createUrl(h, path1) //h.Get(path1)
@@ -159,7 +159,7 @@ func (r *Resolver) Url(host, path string, query any, h http.Header) string {
 	return Cat(r.defaultHost, path1)
 }
 
-func (r *Resolver) UrlWithDomain(host, domain, version, test string, query any, h http.Header) string {
+func (r *Resolver) UrlWithDomain(host, domain, version, test string, query any, h httpx.Header) string {
 	path := BuildPath(domain, version, test, query)
 	if h != nil && h.Get(XResolver) != "" {
 		p2 := createUrl(h, path) //h.Get(path)

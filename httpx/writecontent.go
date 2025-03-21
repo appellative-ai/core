@@ -1,10 +1,10 @@
-package http
+package httpx
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	iox "github.com/behavioral-ai/core/io"
+	"github.com/behavioral-ai/core/iox"
 	"io"
 	"reflect"
 	"strings"

@@ -31,20 +31,20 @@ func Example_FormatUri() {
 func Example_FormatUri_Test() {
 	s := "http://localhost:8080/github.com/behavioral-ai/core/core/testFunc"
 	req, err := http.NewRequest("", s, nil)
-	fmt.Printf("test: http.URL -> [req:%v] [url:%v] [err:%v]\n", req != nil, req.URL, err)
+	fmt.Printf("test: httpx.URL -> [req:%v] [url:%v] [err:%v]\n", req != nil, req.URL, err)
 
 	s = "http://localhost:8080/github.com/behavioral-ai/core/core:testFunc"
 	req, err = http.NewRequest("", s, nil)
-	fmt.Printf("test: http.URL -> [req:%v] [url:%v] [err:%v]\n", req != nil, req.URL, err)
+	fmt.Printf("test: httpx.URL -> [req:%v] [url:%v] [err:%v]\n", req != nil, req.URL, err)
 
 	s = "http://localhost:8080/github.com:behavioral-ai/core/core.testFunc"
 	req, err = http.NewRequest("", s, nil)
-	fmt.Printf("test: http.URL -> [req:%v] [url:%v] [err:%v]\n", req != nil, req.URL, err)
+	fmt.Printf("test: httpx.URL -> [req:%v] [url:%v] [err:%v]\n", req != nil, req.URL, err)
 
 	//Output:
-	//test: http.URL -> [req:true] [url:http://localhost:8080/github.com/behavioral-ai/core/core/testFunc] [err:<nil>]
-	//test: http.URL -> [req:true] [url:http://localhost:8080/github.com/behavioral-ai/core/core:testFunc] [err:<nil>]
-	//test: http.URL -> [req:true] [url:http://localhost:8080/github.com:behavioral-ai/core/core.testFunc] [err:<nil>]
+	//test: httpx.URL -> [req:true] [url:http://localhost:8080/github.com/behavioral-ai/core/core/testFunc] [err:<nil>]
+	//test: httpx.URL -> [req:true] [url:http://localhost:8080/github.com/behavioral-ai/core/core:testFunc] [err:<nil>]
+	//test: httpx.URL -> [req:true] [url:http://localhost:8080/github.com:behavioral-ai/core/core.testFunc] [err:<nil>]
 
 }
 

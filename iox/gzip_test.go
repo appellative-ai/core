@@ -1,4 +1,4 @@
-package io
+package iox
 
 import (
 	"bytes"
@@ -54,6 +54,6 @@ func ExampleGzipWriter() {
 	//Output:
 	//test: gzip.Writer() -> [cnt:188] [write-err:<nil>] [close-err:<nil>]
 	//test: DetectContent -> [input:text/plain; charset=utf-8] [output:application/x-gzip]
-	//test: os.WriteFile("file://[cwd]/iotest/test-response.gz") -> [err:<nil>]
+	//test: os.WriteFile("file://[cwd]/ioxtest/test-response.gz") -> [err:<nil>]
 
 }

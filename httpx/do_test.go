@@ -1,4 +1,4 @@
-package http
+package httpx
 
 import (
 	"context"
@@ -41,7 +41,7 @@ func ExampleDo_InvalidArgument() {
 }
 
 func ExampleDo_ServiceUnavailable_Uri() {
-	req, _ := http.NewRequest(http.MethodGet, "file://[cwd]/httptest/http-503.txt", nil)
+	req, _ := http.NewRequest(http.MethodGet, "file://[cwd]/httpxtest/http-503.txt", nil)
 	resp, err := Do(req)
 	fmt.Printf("test: Do(req) -> [resp:%v] [statusCode:%v] [errs:%v] [content-type:%v] [body:%v]\n",
 		resp != nil, resp.StatusCode, err, resp.Header.Get("content-type"), resp.Body != nil)
@@ -53,7 +53,7 @@ func ExampleDo_ServiceUnavailable_Uri() {
 
 /*
 func ExampleDo_ConnectivityError() {
-	req, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	req, _ := httpx.NewRequest(httpx.MethodGet, "https://www.google.com/search?q=golang", nil)
 	resp, status := Do(req)
 	fmt.Printf("test: Do(req) -> [resp:%v] [statusCode:%v] [errs:%v] [content-type:%v] [body:%v]\n",
 		resp != nil, status.Code(), status.Errors(), resp.Header.Get("content-type"), resp.Body != nil)
@@ -67,7 +67,7 @@ func ExampleDo_ConnectivityError() {
 */
 
 func ExampleDo_Service_Unavailable() {
-	s := "file://[cwd]/httptest/http-503.txt"
+	s := "file://[cwd]/httpxtest/http-503.txt"
 	req, _ := http.NewRequest("", s, nil)
 	resp, err := Do(req)
 	fmt.Printf("test: Do() -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
@@ -87,7 +87,7 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 /*
 func _ExampleDo_Proxy() {
 	uri := "http://localhost:8080/github.com/advanced-go/core/exchange:Do"
-	req, _ := http.NewRequest("", uri, nil)
+	req, _ := httpx.NewRequest("", uri, nil)
 
 	resp, status := Do(req)
 	fmt.Printf("test: Do() -> [resp:%v] [status:%v]\n", resp != nil, status)

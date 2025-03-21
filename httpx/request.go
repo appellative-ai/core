@@ -1,4 +1,4 @@
-package http
+package httpx
 
 import (
 	"github.com/google/uuid"
@@ -9,7 +9,7 @@ const (
 	XRequestId = "X-Request-ID"
 )
 
-// AddRequestId - add a request to an http.Request or an http.Header
+// AddRequestId - add a request to an httpx.Request or an httpx.Header
 func AddRequestId(t any) http.Header {
 	if t == nil {
 		h := make(http.Header)

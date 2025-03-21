@@ -1,11 +1,11 @@
-package http
+package httpx
 
 import (
 	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
-	io2 "github.com/behavioral-ai/core/io"
+	"github.com/behavioral-ai/core/iox"
 	"io"
 	"net/http"
 	"reflect"
@@ -58,7 +58,7 @@ func NewResponseFromUri(uri any) (*http.Response, error) {
 	if uri == nil {
 		return serverErr, errors.New("error: URL is nil")
 	}
-	buf, err := io2.ReadFile(uri)
+	buf, err := iox.ReadFile(uri)
 	if err != nil {
 		if strings.Contains(err.Error(), fileExistsError) {
 			return &http.Response{StatusCode: http.StatusNotFound, Status: "Not Found", Header: make(http.Header)}, err

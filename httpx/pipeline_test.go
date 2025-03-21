@@ -1,4 +1,4 @@
-package http
+package httpx
 
 import (
 	"context"
@@ -27,7 +27,7 @@ func do2(req *http.Request, next *Frame) (*http.Response, error) {
 
 func do3(req *http.Request, next *Frame) (*http.Response, error) {
 	fmt.Printf("test: do3() -> request\n")
-	//return &http.Response{StatusCode: http.StatusOK}, nil
+	//return &httpx.Response{StatusCode: httpx.StatusOK}, nil
 	if next != nil {
 		next.Fn(req, next.Next)
 	}

@@ -164,14 +164,14 @@ func _ExampleTransformURL_Domain() {
 	/*
 		// localhost
 		rsc = NewPrimaryResource("localhost:8080", "", 0, "/health/liveness", httpCall)
-		req, _ = http.NewRequest(http.MethodGet, uri, nil)
+		req, _ = httpx.NewRequest(httpx.MethodGet, uri, nil)
 		url = rsc.BuildUri(req.URL)
 		fmt.Printf("test: BuildUri(\"%v\") [host:%v] [auth:%v] [url:%v]\n", uri, rsc.Host, rsc.domain, url)
 
 		// non-localhost
 		uri = "/update"
 		rsc = NewPrimaryResource("www.google.com", "", 0, "/health/liveness", httpCall)
-		req, _ = http.NewRequest(http.MethodGet, uri, nil)
+		req, _ = httpx.NewRequest(httpx.MethodGet, uri, nil)
 		url = rsc.BuildUri(req.URL)
 		fmt.Printf("test: BuildUri(\"%v\") [host:%v] [auth:%v] [url:%v]\n", uri, rsc.Host, rsc.domain, url
 

@@ -1,4 +1,4 @@
-package io
+package iox
 
 import (
 	"bytes"
@@ -18,13 +18,13 @@ func ExampleIdentityReader() {
 	buf, err := io.ReadAll(er)
 	fmt.Printf("test: Read() -> [err:%v] [content:\"%v\"]\n", err, string(buf))
 
-	//h := make(http.Header)
+	//h := make(httpx.Header)
 	//h.Add(ContentEncoding, GzipEncoding)
 	//er, status = NewEncodingReader(br, h)
 	//fmt.Printf("test: NewEncodingReader(gzip) -> [er:%v] [status:%v]\n", reflect.TypeOf(er).String(), status)
 
 	//Output:
-	//test: NewEncodingReader(none) -> [er:*io.identityReader] [status:<nil>]
+	//test: NewEncodingReader(none) -> [er:*iox.identityReader] [status:<nil>]
 	//test: Read() -> [err:<nil>] [content:"identity encoding"]
 
 }
@@ -38,7 +38,7 @@ func ExampleEncodingReader_Error() {
 	}
 	r := strings.NewReader(string(buf0))
 
-	h := make(http.Header)
+	h := make(httpx.Header)
 	h.Set(ContentEncoding, BrotliEncoding)
 	reader, status := EncodingReader(r, h)
 	fmt.Printf("test: EncodingReader() -> [reader:%v] [status:%v]\n", reader, status)
@@ -71,11 +71,11 @@ func ExampleEncodingReader_Gzip() {
 	}
 	r := bytes.NewReader(buf0)
 
-	h := make(http.Header)
+	h := make(httpx.Header)
 	h.Set(ContentEncoding, GzipEncoding)
 	zr, _ := EncodingReader(r, h)
 	buf, err := iox.ReadAll(zr)
-	fmt.Printf("test: iox.ReadAll() -> [input:%v] [output:%v] [err:%v]\n", http.DetectContentType(buf0), http.DetectContentType(buf), err)
+	fmt.Printf("test: iox.ReadAll() -> [input:%v] [output:%v] [err:%v]\n", httpx.DetectContentType(buf0), httpx.DetectContentType(buf), err)
 
 	//Output:
 	//test: iox.ReadAll() -> [input:application/x-gzip] [output:text/html; charset=utf-8] [err:<nil>]

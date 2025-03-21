@@ -35,7 +35,7 @@ func ParseURL(hostOverride string, u *url.URL) (uri string, parsed *Parsed) {
 	// Set scheme
 	scheme := u.Scheme
 	if scheme == "" {
-		scheme = "http"
+		scheme = "httpx"
 	}
 	// Set host
 	host := hostOverride

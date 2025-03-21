@@ -1,4 +1,4 @@
-package http
+package httpx
 
 type Attr struct {
 	Key   string

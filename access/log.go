@@ -45,12 +45,12 @@ func SetLogFn(fn LogFn) {
 
 // RequestConstraints - Request constraints
 //type RequestConstraints interface {
-//	*http.Request | Request
+//	*httpx.Request | Request
 //}
 
 // ResponseConstraints - Response constraints
 //type ResponseConstraints interface {
-//	*http.Response | *aspect.Status | int
+//	*httpx.Response | *aspect.Status | int
 //}
 
 // Log - access logging.

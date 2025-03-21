@@ -71,7 +71,7 @@ func Exchange(w http.ResponseWriter, r *http.Request, handler http2.Exchange) {
 		resp, err = handler(r)
 	}
 	resp.Header.Del(XRoute)
-	if err != nil && err.Error() == "http.StatusGatewayTimeout" {
+	if err != nil && err.Error() == "httpx.StatusGatewayTimeout" {
 		controllerCode = access.ControllerTimeout
 	}
 	resp.ContentLength = http2.WriteResponse(w, resp.Header, resp.StatusCode, resp.Body, r.Header)

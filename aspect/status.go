@@ -219,7 +219,7 @@ func runtimeNameToUri(uri string) string {
 
 // HttpCode - conversion of a code to HTTP status code
 func HttpCode(code int) int {
-	// Catch all valid http status codes
+	// Catch all valid httpx status codes
 	if code >= http.StatusContinue {
 		return code
 	}

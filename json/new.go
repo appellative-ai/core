@@ -33,7 +33,7 @@ func decodeStatus(err error) error {
 }
 
 //type NewConstraints interface {
-//	string | []byte | *url.URL | *http.Request | *http.Response | interface{ io.Reader } | interface{ io.ReadCloser }
+//	string | []byte | *url.URL | *httpx.Request | *httpx.Response | interface{ iox.Reader } | interface{ iox.ReadCloser }
 //}
 
 // New - create a new type from JSON content, supporting: string, *url.URL, []byte, io.Reader, io.ReadCloser
@@ -113,7 +113,7 @@ func New[T any](v any, h http.Header) (t T, status error) {
 }
 
 /*
-	case *http.Response:
+	case *httpx.Response:
 		if ptr1, ok := any(&t).(*[]byte); ok {
 			buf, status = ReadAll(ptr.Body,h)
 			if !status.OK() {
@@ -128,7 +128,7 @@ func New[T any](v any, h http.Header) (t T, status error) {
 			return t, NewStatusError(StatusJsonDecodeError, newLoc, err)
 		}
 		return t, StatusOK()
-	case *http.Request:
+	case *httpx.Request:
 		if ptr1, ok := any(&t).(*[]byte); ok {
 			buf, status = ReadAll(ptr.Body)
 			if !status.OK() {

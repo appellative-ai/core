@@ -91,7 +91,7 @@ func ExampleStatus_WithRequestId() {
 /*
 func ExampleNewStatus_TeapotHandled() {
 	var e Output
-	s := NewStatus(http.StatusTeapot)
+	s := NewStatus(httpx.StatusTeapot)
 
 	//fmt.Printf("test: NewStatus() -> [status:%v]\n", s)
 

@@ -1,10 +1,10 @@
-package http
+package httpx
 
 import (
 	"bytes"
 	"errors"
 	"fmt"
-	iox "github.com/behavioral-ai/core/io"
+	"github.com/behavioral-ai/core/iox"
 	"io"
 	"net/http/httptest"
 	"os"
@@ -61,23 +61,23 @@ func ExampleWriteContent_Reader() {
 	}
 	ct := ""
 
-	// io.Reader
+	// iox.Reader
 	rec := httptest.NewRecorder()
 	reader := bytes.NewReader(content)
 	cnt, status := writeContent(rec, reader, ct)
 	buf, status0 := iox.ReadAll(rec.Result().Body, nil)
-	fmt.Printf("test: writeContent(io.Reader) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, len(buf), status0)
+	fmt.Printf("test: writeContent(iox.Reader) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, len(buf), status0)
 
-	// io.ReadCloser
+	// iox.ReadCloser
 	rec = httptest.NewRecorder()
 	reader = bytes.NewReader(content)
 	cnt, status = writeContent(rec, io.NopCloser(reader), ct)
 	buf, status0 = iox.ReadAll(rec.Result().Body, nil)
-	fmt.Printf("test: writeContent(io.ReadCloser) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, len(buf), status0)
+	fmt.Printf("test: writeContent(iox.ReadCloser) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, len(buf), status0)
 
 	//Output:
-	//test: writeContent(io.Reader) -> [cnt:188] [write-status:<nil>] [body:188] [read-status:<nil>]
-	//test: writeContent(io.ReadCloser) -> [cnt:188] [write-status:<nil>] [body:188] [read-status:<nil>]
+	//test: writeContent(iox.Reader) -> [cnt:188] [write-status:<nil>] [body:188] [read-status:<nil>]
+	//test: writeContent(iox.ReadCloser) -> [cnt:188] [write-status:<nil>] [body:188] [read-status:<nil>]
 
 }
 
@@ -98,16 +98,16 @@ func ExampleWriteContent_Json() {
 	rec := httptest.NewRecorder()
 	cnt, status := writeContent(rec, content, ct)
 	buf, status0 := iox.ReadAll(rec.Result().Body, nil)
-	fmt.Printf("test: writeContent(http.testActivity) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, string(buf), status0)
+	fmt.Printf("test: writeContent(httpx.testActivity) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, string(buf), status0)
 
 	// JSON
 	rec = httptest.NewRecorder()
 	cnt, status = writeContent(rec, content, jsonContentType)
 	buf, status0 = iox.ReadAll(rec.Result().Body, nil)
-	fmt.Printf("test: writeContent(http.testActivity) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, string(buf), status0)
+	fmt.Printf("test: writeContent(httpx.testActivity) -> [cnt:%v] [write-status:%v] [body:%v] [read-status:%v]\n", cnt, status, string(buf), status0)
 
 	//Output:
-	//test: writeContent(http.testActivity) -> [cnt:0] [write-status:error: content type is invalid: http.activity] [body:] [read-status:<nil>]
-	//test: writeContent(http.testActivity) -> [cnt:204] [write-status:<nil>] [body:{"ActivityID":"123456","ActivityType":"action","Agent":"Controller","AgentUri":"https://somehost.com/id","Assignment":"case #","Controller":"egress","Behavior":"timeout","Description":"decreased timeout"}] [read-status:<nil>]
+	//test: writeContent(httpx.testActivity) -> [cnt:0] [write-status:error: content type is invalid: httpx.activity] [body:] [read-status:<nil>]
+	//test: writeContent(httpx.testActivity) -> [cnt:204] [write-status:<nil>] [body:{"ActivityID":"123456","ActivityType":"action","Agent":"Controller","AgentUri":"https://somehost.com/id","Assignment":"case #","Controller":"egress","Behavior":"timeout","Description":"decreased timeout"}] [read-status:<nil>]
 
 }

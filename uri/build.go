@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	HttpScheme   = "http"
+	HttpScheme   = "httpx"
 	HttpsScheme  = "https"
 	Localhost    = "localhost"
 	InternalHost = "internalhost"
