@@ -185,10 +185,11 @@ func StatusContent(m *Message) (*Status, string) {
 }
 
 // Reply - function used by message recipient to reply with a Status
-func Reply(msg *Message, status *Status) {
+func Reply(msg *Message, status *Status, from string) {
 	if msg == nil || status == nil || msg.Reply == nil {
 		return
 	}
 	m := NewStatusMessage(status, msg.Event())
+	m.Header.Set(XFrom, from)
 	msg.Reply(m)
 }
