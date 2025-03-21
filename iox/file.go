@@ -104,7 +104,7 @@ func ReadFile(uri any) ([]byte, error) {
 	}
 	buf, err := os.ReadFile(FileName(uri))
 	if err != nil {
-		return nil, err //aspect.NewStatusError(aspect.StatusIOError, err)
+		return nil, err
 	}
 	return buf, nil
 }

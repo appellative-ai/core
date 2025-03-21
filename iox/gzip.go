@@ -44,9 +44,9 @@ func NewGzipReader(r io.Reader) (EncodingReader, error) {
 	var err error
 	zr.reader, err = gzip.NewReader(r)
 	if err != nil {
-		return nil, err //aspect.NewStatusError(aspect.StatusGzipEncodingError, err)
+		return nil, err
 	}
-	return zr, nil //aspect.StatusOK()
+	return zr, nil
 }
 
 func (g *gzipReader) Read(p []byte) (n int, err error) {

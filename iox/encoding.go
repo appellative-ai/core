@@ -51,7 +51,6 @@ func contentEncoding(h http.Header) string {
 }
 
 func newStatusContentEncodingError(ct string) error {
-	// aspect.StatusEncodingError
 	return errors.New(fmt.Sprintf(encodingErrorFmt, ct))
 
 }
@@ -59,7 +58,7 @@ func newStatusContentEncodingError(ct string) error {
 // Decode - decode a []byte
 func Decode(buf []byte, h http.Header) ([]byte, error) {
 	if len(buf) == 0 {
-		return buf, nil //aspect.StatusOK()
+		return buf, nil
 	}
 	ct := NoneEncoding
 	if h == nil {
@@ -76,30 +75,30 @@ func Decode(buf []byte, h http.Header) ([]byte, error) {
 		buf2, err1 := io.ReadAll(zr)
 		err2 := zr.Close()
 		if err1 != nil {
-			return nil, err1 //aspect.NewStatusError(aspect.StatusIOError, err1)
+			return nil, err1
 		}
 		if err2 != nil {
-			//return nil, aspect.NewStatusError(aspect.StatusIOError,err1)
+			return nil, err2
 		}
-		return buf2, nil //aspect.StatusOK()
+		return buf2, nil
 	case ApplicationBrotli, BrotliEncoding:
 		return buf, newStatusContentEncodingError(ct)
 	case ApplicationDeflate, DeflateEncoding:
 		return buf, newStatusContentEncodingError(ct)
 	default:
-		return buf, nil //aspect.StatusOK()
+		return buf, nil
 	}
 }
 
 func ZipFile(uri string) error {
 	if len(uri) == 0 {
-		return errors.New("error: file path is empty") //aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: file path is empty"))
+		return errors.New("error: file path is empty")
 	}
 	path := FileName(uri)
 	content, err0 := os.ReadFile(path)
 	if err0 != nil {
 		fmt.Printf("test: os.ReadFile() -> [err:%v]\n", err0)
-		return err0 //aspect.NewStatusError(aspect.StatusIOError, err0)
+		return err0
 	}
 	// write content
 	buff := new(bytes.Buffer)
@@ -107,7 +106,7 @@ func ZipFile(uri string) error {
 	cnt, err := zw.Write(content)
 	err1 := zw.Close()
 	if err != nil {
-		return err //aspect.NewStatusError(aspect.StatusIOError, err)
+		return err
 	}
 	if cnt == 0 || err1 != nil {
 		fmt.Printf("error: count %v err %v", cnt, err1)
@@ -122,7 +121,7 @@ func ZipFile(uri string) error {
 	}
 	err = os.WriteFile(path2, buff.Bytes(), 667)
 	if err != nil {
-		return err //aspect.NewStatusError(aspect.StatusIOError, err)
+		return err
 	}
-	return nil //aspect.StatusOK()
+	return nil
 }

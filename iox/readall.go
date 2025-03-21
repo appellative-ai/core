@@ -11,7 +11,7 @@ import (
 // ReadAll - read the body with a Status
 func ReadAll(body io.Reader, h http.Header) ([]byte, error) {
 	if body == nil {
-		return nil, nil //aspect.StatusOK()
+		return nil, nil
 	}
 	if rc, ok := any(body).(io.ReadCloser); ok {
 		defer func() {
@@ -28,20 +28,20 @@ func ReadAll(body io.Reader, h http.Header) ([]byte, error) {
 	buf, err := io.ReadAll(reader)
 	_ = reader.Close()
 	if err != nil {
-		return nil, err //aspect.NewStatusError(aspect.StatusIOError, err)
+		return nil, err
 	}
 	return buf, nil
 }
 
 func ValidateUri(uri string) error {
 	if len(uri) == 0 {
-		return errors.New("error: URI is empty") //aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: URI is empty"))
+		return errors.New("error: URI is empty")
 	}
 	if !strings.HasPrefix(uri, fileScheme) {
-		return errors.New(fmt.Sprintf("error: URI is not of scheme file: %v", uri)) //aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New(fmt.Sprintf("error: URI is not of scheme file: %v", uri)))
+		return errors.New(fmt.Sprintf("error: URI is not of scheme file: %v", uri))
 	}
 	////if !isJsonURL(uri) {
-	//	return aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: URI is not a JSON file"))
+	//	errors.New("error: URI is not a JSON file"))
 	//}
 	return nil
 }
