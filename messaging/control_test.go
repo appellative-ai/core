@@ -37,7 +37,7 @@ func ExampleNewControlAgent() {
 	// Needed time.Nanoseconds * 50 for directory send with mutex
 	// Needed time.Nanoseconds * 1 for directory send via sync.Map
 	d := time.Nanosecond * 1
-	a.Run()
+	//Startup(a)
 	a.Message(NewMessage(Control, StartupEvent))
 	//c <- Message{To: "", From: "", Event: aspect.StartupEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
@@ -62,7 +62,6 @@ func ExampleNewControlAgent() {
 	//c <- Message{}
 
 	//Output:
-	//test: NewControlAgent_CtrlHandler() -> event:startup
 	//test: NewControlAgent_CtrlHandler() -> event:pause
 	//test: NewControlAgent_CtrlHandler() -> event:resume
 	//test: NewControlAgent_CtrlHandler() -> event:ping

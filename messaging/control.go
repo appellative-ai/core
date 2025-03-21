@@ -37,7 +37,14 @@ func (c *controlAgent) String() string { return c.Uri() }
 
 // Message - message an agent
 func (c *controlAgent) Message(msg *Message) {
-	if msg == nil || !c.running {
+	if msg == nil {
+		return
+	}
+	if msg.Event() == StartupEvent {
+		c.run()
+		return
+	}
+	if !c.running {
 		return
 	}
 	switch msg.Channel() {
@@ -50,7 +57,7 @@ func (c *controlAgent) Message(msg *Message) {
 }
 
 // Run - run the agent
-func (c *controlAgent) Run() {
+func (c *controlAgent) run() {
 	if c.running {
 		return
 	}
@@ -67,13 +74,6 @@ func (c *controlAgent) Shutdown() {
 	c.running = false
 	c.Message(Shutdown)
 }
-*/
-
-/*
-func (c *controlAgent) Notify(status *Status) {
-	fmt.Printf("%v", status)
-}
-
 */
 
 func (c *controlAgent) shutdown() {

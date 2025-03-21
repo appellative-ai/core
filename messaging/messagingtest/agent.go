@@ -23,15 +23,18 @@ func NewAgentWithChannel(uri string, ch *messaging.Channel) messaging.Agent {
 	return a
 }
 
-func (t *agentT) Uri() string  { return t.uri }
-func (t *agentT) Name() string { return t.Uri() }
+func (t *agentT) Uri() string { return t.uri }
 func (t *agentT) Message(m *messaging.Message) {
 	if m == nil {
 		return
 	}
+	if m.Event() == messaging.StartupEvent {
+		t.run()
+		return
+	}
 	t.ch.C <- m
 }
-func (t *agentT) Run() {
+func (t *agentT) run() {
 	go func() {
 		for {
 			select {

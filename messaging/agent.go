@@ -7,15 +7,22 @@ const (
 	AssignmentIdentifier = "#"
 )
 
+//Run()
+
 // Agent - agent
 type Agent interface {
 	Mailbox
-	Run()
 }
 
 func Shutdown(agent Agent) {
 	if agent != nil {
 		agent.Message(ShutdownMessage)
+	}
+}
+
+func Startup(agent Agent) {
+	if agent != nil {
+		agent.Message(StartupMessage)
 	}
 }
 
