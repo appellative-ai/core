@@ -7,11 +7,10 @@ const (
 	AssignmentIdentifier = "#"
 )
 
-//Run()
-
 // Agent - agent
 type Agent interface {
-	Mailbox
+	Uri() string
+	Message(m *Message)
 }
 
 func Shutdown(agent Agent) {
