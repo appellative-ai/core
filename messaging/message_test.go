@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"fmt"
+	"net/http"
 )
 
 func ExampleNewMessage() {
@@ -28,5 +29,16 @@ func ExampleConfigMessage() {
 	//Output:
 	//test: NewConfigMessage() -> [map[]]
 	//test: NewConfigMessage() -> [map[key1:value1 key2:value2]]
+
+}
+
+func ExampleStatusMessage() {
+	m := NewStatusMessage(NewStatus(http.StatusTeapot), ConfigEvent)
+
+	status, event := StatusContent(m)
+	fmt.Printf("test: NewStatusMessage() -> [%v] [%v]\n", status, event)
+
+	//Output:
+	//test: NewStatusMessage() -> [I'm A Teapot] [event:config]
 
 }

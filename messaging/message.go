@@ -6,16 +6,16 @@ import (
 	"net/http"
 )
 
-// TODO : add support for control messages or restart, apply-changes, rollback-changes
+//StartEvent    = "event:start"
+//StopEvent     = "event:stop"
 
 const (
 	StartupEvent  = "event:startup"
 	ShutdownEvent = "event:shutdown"
-	StartEvent    = "event:start"
-	StopEvent     = "event:stop"
 	PauseEvent    = "event:pause"  // disable data channel receive
 	ResumeEvent   = "event:resume" // enable data channel receive
 	ConfigEvent   = "event:config"
+	StatusEvent   = "event:status"
 
 	ObservationEvent = "event:observation"
 	TickEvent        = "event:tick"
@@ -26,21 +26,16 @@ const (
 	Control  = "ctrl"
 	Data     = "data"
 
-	XTo      = "x-to"
-	XFrom    = "x-from"
-	XEvent   = "x-event"
-	XChannel = "x-channel"
+	XTo        = "x-to"
+	XFrom      = "x-from"
+	XEvent     = "x-event"
+	XChannel   = "x-channel"
+	XRelatesTo = "x-relates-to"
 
-	ContentType      = "Content-Type"
-	ContentTypeError = "application/error"
-	ContentTypeMap   = "application/map"
-
-	//XRelatesTo         = "x-relates-to"
-	//XMessageId         = "x-message-id"
-	//XAgentId           = "x-agent-id"
-	//XForwardTo         = "x-forward-to"
-	//ContentTypeStatus  = "application/status"
-	//ContentTypeConfig  = "application/config"
+	ContentType       = "Content-Type"
+	ContentTypeError  = "application/error"
+	ContentTypeMap    = "application/map"
+	ContentTypeStatus = "application/status"
 )
 
 var (
@@ -48,8 +43,6 @@ var (
 	ShutdownMessage = NewMessage(Control, ShutdownEvent)
 	PauseMessage    = NewMessage(Control, PauseEvent)
 	ResumeMessage   = NewMessage(Control, ResumeEvent)
-	//Start    = NewMessage(Control, StartEvent)
-	//Stop     = NewMessage(Control, StopEvent)
 
 	EmissaryShutdownMessage = NewMessage(Emissary, ShutdownEvent)
 	MasterShutdownMessage   = NewMessage(Master, ShutdownEvent)
@@ -62,6 +55,7 @@ type Handler func(msg *Message)
 type Message struct {
 	Header http.Header
 	Body   any
+	Reply  Handler
 }
 
 func NewMessage(channel, event string) *Message {
@@ -72,17 +66,35 @@ func NewMessage(channel, event string) *Message {
 	return m
 }
 
+func NewConfigMessage(cfg map[string]string) *Message {
+	m := NewMessage(Control, ConfigEvent)
+	m.SetContent(ContentTypeMap, cfg)
+	return m
+}
+
+func NewStatusMessage(status *Status, relatesTo string) *Message {
+	m := NewMessage(Control, StatusEvent)
+	m.SetContent(ContentTypeStatus, status)
+	if relatesTo != "" {
+		m.Header.Add(XRelatesTo, relatesTo)
+	}
+	return m
+}
+
 func NewMessageWithError(channel, event string, err error) *Message {
 	m := NewMessage(channel, event)
 	m.SetContent(ContentTypeError, err)
 	return m
 }
 
-func NewConfigMessage(cfg map[string]string) *Message {
-	m := NewMessage(Control, ConfigEvent)
-	m.SetContent(ContentTypeMap, cfg)
+/*
+func NewMessageWithReply(channel, event string, replyTo Handler) *Message {
+	m := NewMessage(channel, event)
+	m.ReplyTo = replyTo
 	return m
 }
+
+*/
 
 func NewAddressableMessage(channel, to, from, event string) *Message {
 	m := new(Message)
@@ -96,23 +108,30 @@ func NewAddressableMessage(channel, to, from, event string) *Message {
 
 func (m *Message) String() string {
 	return fmt.Sprintf("[chan:%v] [from:%v] [to:%v] [%v]", m.Channel(), m.From(), m.To(), m.Event())
+	//return fmt.Sprintf("[chan:%v] [%v]", m.Channel(), m.Event())
+}
+
+func (m *Message) RelatesTo() string {
+	return m.Header.Get(XRelatesTo)
 }
 
 func (m *Message) To() string {
 	return m.Header.Get(XTo)
 }
 
-func (m *Message) SetTo(uri string) {
-	m.Header.Set(XTo, uri)
-}
-
 func (m *Message) From() string {
 	return m.Header.Get(XFrom)
 }
 
+/*
 func (m *Message) SetFrom(uri string) {
 	m.Header.Set(XFrom, uri)
 }
+func (m *Message) SetTo(uri string) {
+	m.Header.Set(XTo, uri)
+}
+
+*/
 
 func (m *Message) Event() string {
 	return m.Header.Get(XEvent)
@@ -153,4 +172,23 @@ func ConfigMapContent(m *Message) map[string]string {
 		return cfg
 	}
 	return nil
+}
+
+func StatusContent(m *Message) (*Status, string) {
+	if m.Event() != StatusEvent || m.ContentType() != ContentTypeStatus {
+		return nil, ""
+	}
+	if s, ok := m.Body.(*Status); ok {
+		return s, m.RelatesTo()
+	}
+	return nil, ""
+}
+
+// Reply - function used by message recipient to reply with a Status
+func Reply(msg *Message, status *Status) {
+	if msg == nil || status == nil || msg.Reply == nil {
+		return
+	}
+	m := NewStatusMessage(status, msg.Event())
+	msg.Reply(m)
 }

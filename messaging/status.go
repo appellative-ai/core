@@ -49,7 +49,7 @@ func NewStatus(code int) *Status {
 	return s
 }
 
-func NewStatusMessage(code int, msg, agentUri string) *Status {
+func NewStatusWithMessage(code int, msg, agentUri string) *Status {
 	s := new(Status)
 	s.Code = code
 	s.AgentUri = agentUri
