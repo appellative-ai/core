@@ -33,7 +33,7 @@ const (
 
 	ContentType      = "Content-Type"
 	ContentTypeError = "application/error"
-	ContentTypeAny   = "application/any"
+	ContentTypeMap   = "application/map"
 
 	//XRelatesTo         = "x-relates-to"
 	//XMessageId         = "x-message-id"
@@ -78,9 +78,9 @@ func NewMessageWithError(channel, event string, err error) *Message {
 	return m
 }
 
-func NewConfigMessage(content any) *Message {
+func NewConfigMessage(cfg map[string]string) *Message {
 	m := NewMessage(Control, ConfigEvent)
-	m.SetContent(ContentTypeAny, content)
+	m.SetContent(ContentTypeMap, cfg)
 	return m
 }
 
