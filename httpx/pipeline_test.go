@@ -6,6 +6,108 @@ import (
 	"net/http"
 )
 
+func ExamplePipeline() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	ex := NewPipeline(Do1, Do2, Do3, Do4)
+	ex(req)
+
+	//Output:
+	//test: Do1() -> request
+	//test: Do2() -> request
+	//test: Do3() -> request
+	//test: Do4() -> request
+	//test: Do4() -> response
+	//test: Do3() -> response
+	//test: Do2() -> response
+	//test: Do1() -> response
+
+}
+
+func ExamplePipeline_Abbreviated() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	ex := NewPipeline(Do1, Do2, Do3Fail, Do4)
+	ex(req)
+
+	//Output:
+	//test: Do1() -> request
+	//test: Do2() -> request
+	//test: Do3() -> request
+	//test: Do3() -> response
+	//test: Do2() -> response
+	//test: Do1() -> response
+
+}
+
+func Do1(next Exchange) Exchange {
+	return func(req *http.Request) (resp *http.Response, err error) {
+		fmt.Printf("test: Do1() -> request\n")
+		if next != nil {
+			resp, err = next(req)
+		} else {
+			resp = &http.Response{StatusCode: http.StatusOK}
+		}
+		fmt.Printf("test: Do1() -> response\n")
+		return
+	}
+}
+
+func Do2(next Exchange) Exchange {
+	return func(req *http.Request) (resp *http.Response, err error) {
+		fmt.Printf("test: Do2() -> request\n")
+		if next != nil {
+			resp, err = next(req)
+		} else {
+			resp = &http.Response{StatusCode: http.StatusOK}
+		}
+		fmt.Printf("test: Do2() -> response\n")
+		return
+	}
+}
+
+func Do3(next Exchange) Exchange {
+	return func(req *http.Request) (resp *http.Response, err error) {
+		fmt.Printf("test: Do3() -> request\n")
+		//fmt.Printf("test: Do3() -> response\n")
+		//return &http.Response{StatusCode: http.StatusBadRequest}, nil
+		if next != nil {
+			resp, err = next(req)
+		} else {
+			resp = &http.Response{StatusCode: http.StatusOK}
+		}
+		fmt.Printf("test: Do3() -> response\n")
+		return
+	}
+}
+
+func Do3Fail(next Exchange) Exchange {
+	return func(req *http.Request) (resp *http.Response, err error) {
+		fmt.Printf("test: Do3() -> request\n")
+		fmt.Printf("test: Do3() -> response\n")
+		return &http.Response{StatusCode: http.StatusBadRequest}, nil
+		if next != nil {
+			resp, err = next(req)
+		} else {
+			resp = &http.Response{StatusCode: http.StatusOK}
+		}
+		fmt.Printf("test: Do3() -> response\n")
+		return
+	}
+}
+
+func Do4(next Exchange) Exchange {
+	return func(req *http.Request) (resp *http.Response, err error) {
+		fmt.Printf("test: Do4() -> request\n")
+		if next != nil {
+			resp, err = next(req)
+		} else {
+			resp = &http.Response{StatusCode: http.StatusOK}
+		}
+		fmt.Printf("test: Do4() -> response\n")
+		return
+	}
+}
+
+/*
 func do1(req *http.Request, next *Frame) (*http.Response, error) {
 	fmt.Printf("test: do1() -> request\n")
 	if next != nil {
@@ -44,34 +146,5 @@ func do4(req *http.Request, next *Frame) (*http.Response, error) {
 	return &http.Response{StatusCode: http.StatusOK}, nil
 }
 
-func ExampleExchangePipeline_New() {
-	p := NewExchangePipeline(do1, do2, do3, do4)
-	for f := p.head; f != nil; f = f.Next {
-		fmt.Printf("test: Head() -> [curr:%v] [next:%v]\n", f, f.Next)
-	}
 
-	//Output:
-	//test: Head() -> [curr:do1] [next:do2]
-	//test: Head() -> [curr:do2] [next:do3]
-	//test: Head() -> [curr:do3] [next:do4]
-	//test: Head() -> [curr:do4] [next:<nil>]
-
-}
-
-func ExampleExchangePipeline_Run() {
-	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	p := NewExchangePipeline(do1, do2, do3, do4)
-
-	p.Run(req)
-
-	//Output:
-	//test: do1() -> request
-	//test: do2() -> request
-	//test: do3() -> request
-	//test: do4() -> request
-	//test: do4() -> response
-	//test: do3() -> response
-	//test: do2() -> response
-	//test: do1() -> response
-
-}
+*/

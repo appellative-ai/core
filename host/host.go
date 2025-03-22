@@ -3,7 +3,7 @@ package host
 import (
 	"context"
 	"github.com/behavioral-ai/core/access"
-	http2 "github.com/behavioral-ai/core/http"
+	"github.com/behavioral-ai/core/httpx"
 	"net/http"
 	"time"
 )
@@ -19,12 +19,12 @@ const (
 var (
 	//exchangeProxy = aspect.NewExchangeProxy()
 	hostDuration = time.Second * 5
-	authExchange http2.Exchange
+	authExchange httpx.Exchange
 	okFunc       = func(code int) bool { return code == http.StatusOK }
 )
 
 func init() {
-	resp, _ := http2.NewResponse(http.StatusOK, nil, nil)
+	resp, _ := httpx.NewResponse(http.StatusOK, nil, nil)
 	authExchange = func(_ *http.Request) (*http.Response, error) {
 		return resp, nil
 	}
@@ -34,7 +34,7 @@ func SetHostTimeout(d time.Duration) {
 	hostDuration = d
 }
 
-func SetAuthExchange(h http2.Exchange, ok func(int) bool) {
+func SetAuthExchange(h httpx.Exchange, ok func(int) bool) {
 	if h != nil {
 		authExchange = h
 		if ok != nil {
@@ -43,13 +43,13 @@ func SetAuthExchange(h http2.Exchange, ok func(int) bool) {
 	}
 }
 
-func Exchange(w http.ResponseWriter, r *http.Request, handler http2.Exchange) {
+func Exchange(w http.ResponseWriter, r *http.Request, handler httpx.Exchange) {
 	controllerCode := ""
 	start := time.Now().UTC()
 	var resp *http.Response
 	var err error
 
-	http2.AddRequestId(r)
+	httpx.AddRequestId(r)
 	resp, err = authExchange(r)
 	if !okFunc(resp.StatusCode) {
 		w.WriteHeader(resp.StatusCode)
@@ -71,10 +71,10 @@ func Exchange(w http.ResponseWriter, r *http.Request, handler http2.Exchange) {
 		resp, err = handler(r)
 	}
 	resp.Header.Del(XRoute)
-	if err != nil && err.Error() == "httpx.StatusGatewayTimeout" {
+	if err != nil && err.Error() == "http.StatusGatewayTimeout" {
 		controllerCode = access.ControllerTimeout
 	}
-	resp.ContentLength = http2.WriteResponse(w, resp.Header, resp.StatusCode, resp.Body, r.Header)
+	resp.ContentLength = httpx.WriteResponse(w, resp.Header, resp.StatusCode, resp.Body, r.Header)
 	r.Header.Set(XTo, Route)
 	access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Routing{From: from, Route: Route, To: "", Percent: -1}, access.Controller{Timeout: hostDuration, RateLimit: 0, RateBurst: 0, Code: controllerCode})
 }

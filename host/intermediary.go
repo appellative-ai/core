@@ -3,7 +3,7 @@ package host
 import (
 	"errors"
 	"github.com/behavioral-ai/core/access"
-	httpx "github.com/behavioral-ai/core/http"
+	"github.com/behavioral-ai/core/httpx"
 	"net/http"
 	"time"
 )

@@ -2,10 +2,10 @@ package httpx
 
 import (
 	"github.com/behavioral-ai/core/messaging"
-	http2 "net/http"
 )
 
+// Agent - adds a chainable exchange method
 type Agent interface {
 	messaging.Agent
-	Exchange(r *http2.Request, next *Frame) (*http2.Response, error)
+	Exchange(next Exchange) Exchange
 }
