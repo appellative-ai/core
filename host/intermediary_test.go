@@ -66,7 +66,7 @@ func ExampleConditionalIntermediary_AuthExchange() {
 }
 
 func ExampleAccessLogIntermediary() {
-	ic := NewAccessLogIntermediary(access.InternalTraffic, testDo)
+	ic := NewAccessLogIntermediary(access.IngressTraffic, testDo)
 
 	r, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q-golang", nil)
 	resp, status := ic(r)
@@ -144,3 +144,31 @@ func testDo(r *http.Request) (*http.Response, error) {
 		return resp, nil //errors.New(fmt.Sprintf("status code %v",resp.StatusCode))
 	}
 }
+
+/*
+func ExampleAccessLogExchange() {
+	ex := AccessLogExchange(access.IngressTraffic, testDo)
+
+	r, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q-golang", nil)
+	resp, status := ic(r)
+	buf, _ := io.ReadAll(resp.Body)
+	fmt.Printf("test: AccessLogIntermediary()-OK -> [status:%v] [content:%v]\n", status, len(buf) > 0)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*5)
+	defer cancel()
+	r, _ = http.NewRequestWithContext(ctx, http.MethodGet, "https://www.google.com/search?q-golang", nil)
+	resp, status = ic(r)
+	buf = nil
+	if resp.Body != nil {
+		buf, _ = io.ReadAll(resp.Body)
+	}
+	fmt.Printf("test: AccessLogIntermediary()-Gateway-Timeout -> [status:%v] [content:%v]\n", status, string(buf))
+
+	//Output:
+	//test: AccessLogIntermediary()-OK -> [status:<nil>] [content:true]
+	//test: AccessLogIntermediary()-Gateway-Timeout -> [status:status code 504] [content:Timeout [Get "https://www.google.com/search?q=golang": context deadline exceeded]]
+
+}
+
+
+*/

@@ -4,23 +4,22 @@ import (
 	"time"
 )
 
+// InternalTraffic = "internal"
+
 const (
-	InternalTraffic = "internal"
-	EgressTraffic   = "egress"
-	IngressTraffic  = "ingress"
+	EgressTraffic  = "egress"
+	IngressTraffic = "ingress"
 
 	failsafeUri     = "https://invalid-uri.com"
 	XRequestId      = "x-request-id"
-	XRelatesTo      = "x-relates-to"
+	XRateLimit      = "x-rate-limit"
+	XRateBurst      = "x-rate-burst"
+	XRedirect       = "x-redirect"
 	ContentEncoding = "Content-Encoding"
-	LocationHeader  = "Location"
 
-	Primary             = "primary"
-	Secondary           = "secondary"
 	ControllerTimeout   = "TO" // Controller struct code
 	ControllerRateLimit = "RL" // Controller struct code
-	RoutingFailover     = "FO" // Routing struct code
-	RoutingRedirect     = "RD" // Routing struct code
+	ControllerRedirect  = "RD" // Routing struct code
 )
 
 var (
@@ -34,7 +33,7 @@ func SetOrigin(o Origin) {
 }
 
 // LogFn - log function
-type LogFn func(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller)
+type LogFn func(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, controller Controller)
 
 // SetLogFn - override logging
 func SetLogFn(fn LogFn) {
@@ -57,11 +56,11 @@ func SetLogFn(fn LogFn) {
 // Header.Get(XRequestId)),
 // Header.Get(XRelatesTo)),
 // Header.Get(LocationHeader)
-func Log(traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) {
+func Log(traffic string, start time.Time, duration time.Duration, req any, resp any, controller Controller) {
 	if logger == nil {
 		return
 	}
-	logger(origin, traffic, start, duration, req, resp, routing, controller)
+	logger(origin, traffic, start, duration, req, resp, controller)
 }
 
 /*

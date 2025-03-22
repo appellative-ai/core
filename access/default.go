@@ -14,95 +14,172 @@ const (
 	XDomain = "X-Domain"
 )
 
-var defaultLog = func(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) {
-	s := DefaultFormat(o, traffic, start, duration, req, resp, routing, controller)
+var defaultLog = func(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, controller Controller) {
+	s := DefaultFormat(o, traffic, start, duration, req, resp, controller)
 	log.Default().Printf("%v\n", s)
 }
 
-func DefaultFormat(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) string {
+func DefaultFormat(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, controller Controller) string {
 	newReq := BuildRequest(req)
 	newResp := BuildResponse(resp)
 	url, parsed := ParseURL(newReq.Host, newReq.URL)
 	o.Host = Conditional(o.Host, parsed.Host)
-	if controller.RateLimit == 0 {
-		controller.RateLimit = -1
-	}
-	if controller.RateBurst == 0 {
-		controller.RateBurst = -1
-	}
-	s := fmt.Sprintf("{"+
+	UpdateDefaults(&controller)
+
+	return initFormat(o, traffic, start, duration) +
+		requestFormat(o, newReq, url, parsed) +
+		responseFormat(newResp) +
+		controllerFormat(traffic, controller)
+
+	/*
+		s := fmt.Sprintf("{"+
+			// Origin, traffic, timestamp, duration
+			"\"region\":%v, "+
+			"\"zone\":%v, "+
+			"\"sub-zone\":%v, "+
+			"\"instance-id\":%v, "+
+			"\"traffic\":\"%v\", "+
+			"\"start\":%v, "+
+			"\"duration\":%v, "+
+
+			// Request
+			"\"request-id\":%v, "+
+			"\"protocol\":%v, "+
+			"\"method\":%v, "+
+			"\"host\":%v, "+
+			"\"uri\":%v, "+
+			"\"path\":%v, "+
+			"\"query\":%v, "+
+
+			// Response
+			"\"status-code\":%v, "+
+			"\"encoding\":%v, "+
+			"\"bytes\":%v, "+
+
+			// Controller
+			"\"timeout\":%v, "+
+			"\"rate-limit\":%v, "+
+			"\"rate-burst\":%v, "+
+			"\"redirect\":%v, "+
+			"\"cc\":%v }",
+
+			// Origin, traffic, timestamp, duration
+			JsonString(o.Region),
+			JsonString(o.Zone),
+			JsonString(o.SubZone),
+			JsonString(o.InstanceId),
+			traffic,
+			FmtRFC3339Millis(start),
+			strconv.Itoa(Milliseconds(duration)),
+
+			// Request
+			JsonString(newReq.Header.Get(XRequestId)),
+			JsonString(newReq.Proto),
+			JsonString(newReq.Method),
+			JsonString(o.Host),
+			JsonString(url),
+			JsonString(parsed.Path),
+			JsonString(parsed.Query),
+
+			// Response
+			newResp.StatusCode,
+			JsonString(Encoding(newResp)),
+			fmt.Sprintf("%v", newResp.ContentLength),
+
+			// Controller
+			Milliseconds(controller.Timeout),
+			toInt(controller.RateLimit),
+			toInt(controller.RateBurst),
+			toInt(controller.Percentage),
+			JsonString(controller.Code),
+		)
+
+		return s
+
+	*/
+}
+
+func initFormat(o Origin, traffic string, start time.Time, duration time.Duration) string {
+	return fmt.Sprintf("{"+
+		// Origin, traffic, timestamp, duration
 		"\"region\":%v, "+
 		"\"zone\":%v, "+
 		"\"sub-zone\":%v, "+
 		"\"instance-id\":%v, "+
 		"\"traffic\":\"%v\", "+
 		"\"start\":%v, "+
-		"\"duration\":%v, "+
-		"\"request-id\":%v, "+
-		"\"relates-to\":%v, "+
-		"\"location\":%v, "+
-		"\"protocol\":%v, "+
-		"\"method\":%v, "+
-		"\"host\":%v, "+
-		"\"from\":%v, "+
-		"\"to\":%v, "+
-		"\"uri\":%v, "+
-		"\"path\":%v, "+
-		"\"query\":%v, "+
-		"\"status-code\":%v, "+
-		"\"encoding\":%v, "+
-		"\"bytes\":%v, "+
-		"\"timeout\":%v, "+
-		"\"rate-limit\":%v, "+
-		"\"rate-burst\":%v, "+
-		"\"cc\":%v, "+
-		"\"route\":%v, "+
-		"\"route-to\":%v, "+
-		"\"route-percent\":%v, "+
-		"\"rc\":%v }",
+		"\"duration\":%v, ",
 
-		// Origin, traffic, timestamp, duration
 		JsonString(o.Region),
 		JsonString(o.Zone),
 		JsonString(o.SubZone),
 		JsonString(o.InstanceId),
 		traffic,
 		FmtRFC3339Millis(start),
-		strconv.Itoa(Milliseconds(duration)),
+		strconv.Itoa(Milliseconds(duration)))
+}
 
+func requestFormat(o Origin, newReq *http.Request, url string, parsed *Parsed) string {
+	return fmt.Sprintf(
 		// Request
+		"\"request-id\":%v, "+
+			"\"protocol\":%v, "+
+			"\"method\":%v, "+
+			"\"host\":%v, "+
+			"\"uri\":%v, "+
+			"\"path\":%v, "+
+			"\"query\":%v, ",
+
 		JsonString(newReq.Header.Get(XRequestId)),
-		JsonString(newReq.Header.Get(XRelatesTo)),
-		JsonString(newReq.Header.Get(LocationHeader)),
 		JsonString(newReq.Proto),
 		JsonString(newReq.Method),
 		JsonString(o.Host),
-		JsonString(routing.From),
-		JsonString(CreateTo(newReq)),
 		JsonString(url),
 		JsonString(parsed.Path),
-		JsonString(parsed.Query),
+		JsonString(parsed.Query))
+}
 
+func responseFormat(newResp *http.Response) string {
+	return fmt.Sprintf(
 		// Response
+		"\"status-code\":%v, "+
+			"\"encoding\":%v, "+
+			"\"bytes\":%v, ",
+
 		newResp.StatusCode,
-		//jsonString(resp.Status),
 		JsonString(Encoding(newResp)),
 		fmt.Sprintf("%v", newResp.ContentLength),
-
-		// Controller
-		Milliseconds(controller.Timeout),
-		fmt.Sprintf("%v", controller.RateLimit),
-		strconv.Itoa(controller.RateBurst),
-		JsonString(controller.Code),
-
-		// Routing
-		JsonString(routing.Route),
-		JsonString(routing.To),
-		fmt.Sprintf("%v", routing.Percent),
-		JsonString(routing.Code),
 	)
+}
 
-	return s
+func controllerFormat(traffic string, controller Controller) string {
+	if traffic == EgressTraffic {
+		return fmt.Sprintf(
+			// Controller
+			"\"timeout\":%v, "+
+				"\"rate-limit\":%v, "+
+				"\"rate-burst\":%v, "+
+				"\"redirect\":%v, "+
+				"\"cc\":%v }",
+			Milliseconds(controller.Timeout),
+			toInt(controller.RateLimit),
+			toInt(controller.RateBurst),
+			toInt(controller.Percentage),
+			JsonString(controller.Code),
+		)
+	} else {
+		return fmt.Sprintf(
+			// Controller
+			"\"timeout\":%v, "+
+				"\"rate-limit\":%v, "+
+				"\"rate-burst\":%v, "+
+				"\"cc\":%v }",
+			Milliseconds(controller.Timeout),
+			toInt(controller.RateLimit),
+			toInt(controller.RateBurst),
+			JsonString(controller.Code),
+		)
+	}
 }
 
 // Milliseconds - convert time.Duration to milliseconds
@@ -168,38 +245,7 @@ func Conditional(primary, secondary string) string {
 	return primary
 }
 
-/*
-func threshold(threshold any) int {
-	if threshold == nil {
-		return 0
-	}
-	if dur, ok := threshold.(time.Duration); ok {
-		return Milliseconds(dur)
-	}
-	if i, ok1 := threshold.(int); ok1 {
-		return i
-	}
-	if f, ok2 := threshold.(float64); ok2 {
-		return int(f)
-	}
-	if ctx, ok := threshold.(context.Context); ok {
-		if deadline, ok1 := ctx.Deadline(); ok1 {
-			return Milliseconds(time.Until(deadline))
-		}
-	}
-	return 0
-}
-
-
-*/
-
-func CreateTo(req *http.Request) string {
-	//if req == nil {
-	//	return ""
-	//}
-	//to := req.Header.Get(XTo)
-	//if to != "" {
-	//	return to
-	//}
-	return "" //uri.UprootDomain(req.URL)
+func toInt(s string) int {
+	i, _ := strconv.Atoi(s)
+	return i
 }

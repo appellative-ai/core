@@ -44,7 +44,7 @@ func NewAccessLogIntermediary(traffic string, c2 httpx.Exchange) httpx.Exchange 
 			return badRequest("error: AccessLog Intermediary HttpExchange is nil")
 		}
 		reasonCode := ""
-		from := r.Header.Get(XFrom)
+		//from := r.Header.Get(XFrom)
 
 		var dur time.Duration
 		if ct, ok := r.Context().Deadline(); ok {
@@ -59,7 +59,7 @@ func NewAccessLogIntermediary(traffic string, c2 httpx.Exchange) httpx.Exchange 
 		if route == "" {
 			route = EtcRoute
 		}
-		access.Log(traffic, start, time.Since(start), r, resp, access.Routing{From: from, Route: route, To: "", Percent: -1}, access.Controller{Timeout: dur, RateLimit: 0, RateBurst: 0, Code: reasonCode})
+		access.Log(traffic, start, time.Since(start), r, resp, access.Controller{Timeout: dur, RateLimit: "0", RateBurst: "0", Code: reasonCode})
 		return
 	}
 }
@@ -82,42 +82,38 @@ func NewProxyIntermediary(host string, c2 httpx.Exchange) httpx.Exchange {
 	}
 }
 
-func AppendExchange(curr httpx.Exchange, next httpx.Exchange) httpx.Exchange {
-	if next == nil {
-		return nil
-	}
-	if curr == nil {
-		curr = next
-	} else {
-		// !panic
-		prev := curr
-		curr = func(req *http.Request) (resp *http.Response, err error) {
-			resp, err = prev(req)
-			if resp.StatusCode != http.StatusOK {
-				return resp, err
+func AccessLogExchange(next httpx.Exchange) httpx.Exchange {
+	return func(r *http.Request) (resp *http.Response, err error) {
+		reasonCode := ""
+		limit := ""
+		burst := ""
+		pct := ""
+
+		var dur time.Duration
+		if ct, ok := r.Context().Deadline(); ok {
+			dur = time.Until(ct) * -1
+		}
+		start := time.Now().UTC()
+		if next != nil {
+			resp, err = next(r)
+		}
+		if resp.StatusCode == http.StatusGatewayTimeout {
+			reasonCode = access.ControllerTimeout
+		} else {
+			if resp.StatusCode == http.StatusTooManyRequests {
+				reasonCode = access.ControllerRateLimit
+				limit = resp.Header.Get(access.XRateLimit)
+				resp.Header.Del(access.XRateLimit)
+				burst = resp.Header.Get(access.XRateBurst)
+				resp.Header.Del(access.XRateBurst)
 			}
-			return next(req)
 		}
-	}
-	return curr
-
-}
-
-//return func(r *httpx.Request) (resp *httpx.Response, err error) {
-//	return
-//}
-/*
-func NewIntermediary(e1 httpx.Exchange) httpx.Exchange {
-	return func(r *httpx.Request) (resp *httpx.Response, err error) {
-		if e1 == nil {
-			return badRequest("error: intermediary Exchange is nil")
+		pct = resp.Header.Get(access.XRedirect)
+		if pct != "" {
+			reasonCode = access.ControllerRedirect
+			resp.Header.Del(access.XRedirect)
 		}
-		resp,err := e1(r)
-
-
-		return c2(r2)
+		access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Controller{Timeout: dur, RateLimit: limit, RateBurst: burst, Percentage: pct, Code: reasonCode})
+		return
 	}
 }
-
-
-*/
