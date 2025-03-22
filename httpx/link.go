@@ -2,7 +2,7 @@ package httpx
 
 type ChainableExchange func(next Exchange) Exchange
 
-func NewPipeline(ex ...ChainableExchange) Exchange {
+func Link(ex ...ChainableExchange) Exchange {
 	if len(ex) == 0 {
 		return nil
 	}

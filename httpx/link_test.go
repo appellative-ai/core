@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-func ExamplePipeline() {
+func ExampleLink() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := NewPipeline(Do1, Do2, Do3, Do4)
+	ex := Link(Do1, Do2, Do3, Do4)
 	ex(req)
 
 	//Output:
@@ -23,9 +23,9 @@ func ExamplePipeline() {
 
 }
 
-func ExamplePipeline_Abbreviated() {
+func ExampleLink_Abbreviated() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := NewPipeline(Do1, Do2, Do3Fail, Do4)
+	ex := Link(Do1, Do2, Do3Fail, Do4)
 	ex(req)
 
 	//Output:

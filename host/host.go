@@ -1,56 +1,22 @@
 package host
 
 import (
-	"context"
-	"github.com/behavioral-ai/core/access"
 	"github.com/behavioral-ai/core/httpx"
 	"net/http"
-	"time"
 )
-
-const (
-	Route    = "host"
-	EtcRoute = "etc"
-	XFrom    = "X-From"
-	XTo      = "X-To"
-	XRoute   = "X-Route"
-)
-
-var (
-	//exchangeProxy = aspect.NewExchangeProxy()
-	hostDuration = time.Second * 5
-	authExchange httpx.Exchange
-	okFunc       = func(code int) bool { return code == http.StatusOK }
-)
-
-func init() {
-	resp, _ := httpx.NewResponse(http.StatusOK, nil, nil)
-	authExchange = func(_ *http.Request) (*http.Response, error) {
-		return resp, nil
-	}
-}
-
-func SetHostTimeout(d time.Duration) {
-	hostDuration = d
-}
-
-func SetAuthExchange(h httpx.Exchange, ok func(int) bool) {
-	if h != nil {
-		authExchange = h
-		if ok != nil {
-			okFunc = ok
-		}
-	}
-}
 
 func Exchange(w http.ResponseWriter, r *http.Request, handler httpx.Exchange) {
-	controllerCode := ""
-	start := time.Now().UTC()
-	var resp *http.Response
-	var err error
-
 	httpx.AddRequestId(r)
-	resp, err = authExchange(r)
+	if handler == nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	resp, _ := handler(r)
+	httpx.WriteResponse(w, resp.Header, resp.StatusCode, resp.Body, r.Header)
+}
+
+/*
+resp, err = authExchange(r)
 	if !okFunc(resp.StatusCode) {
 		w.WriteHeader(resp.StatusCode)
 		access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Controller{Timeout: hostDuration, RateLimit: "0", RateBurst: "0", Code: controllerCode})
@@ -78,3 +44,5 @@ func Exchange(w http.ResponseWriter, r *http.Request, handler httpx.Exchange) {
 	r.Header.Set(XTo, Route)
 	access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Controller{Timeout: hostDuration, RateLimit: "0", RateBurst: "0", Code: controllerCode})
 }
+
+*/

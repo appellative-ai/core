@@ -1,7 +1,6 @@
 package host
 
 import (
-	"errors"
 	"github.com/behavioral-ai/core/access"
 	"github.com/behavioral-ai/core/httpx"
 	"net/http"
@@ -12,6 +11,7 @@ const (
 	Authorization = "Authorization"
 )
 
+/*
 func badRequest(msg string) (*http.Response, error) {
 	return &http.Response{StatusCode: http.StatusBadRequest}, errors.New(msg)
 }
@@ -82,18 +82,34 @@ func NewProxyIntermediary(host string, c2 httpx.Exchange) httpx.Exchange {
 	}
 }
 
+
+*/
+
+func AuthorizationExchange(next httpx.Exchange) httpx.Exchange {
+	return func(r *http.Request) (resp *http.Response, err error) {
+		auth := r.Header.Get(Authorization)
+		if auth != "" {
+			return &http.Response{StatusCode: http.StatusOK}, nil
+		}
+		return &http.Response{StatusCode: http.StatusUnauthorized}, nil
+	}
+}
+
 func AccessLogExchange(next httpx.Exchange) httpx.Exchange {
 	return func(r *http.Request) (resp *http.Response, err error) {
-		reasonCode := ""
+		start := time.Now().UTC()
 		limit := ""
 		burst := ""
 		pct := ""
+		reasonCode := ""
 
-		var dur time.Duration
-		if ct, ok := r.Context().Deadline(); ok {
-			dur = time.Until(ct) * -1
-		}
-		start := time.Now().UTC()
+		/*
+			var dur time.Duration
+			if ct, ok := r.Context().Deadline(); ok {
+				dur = time.Until(ct) * -1
+			}
+		*/
+
 		if next != nil {
 			resp, err = next(r)
 		}
@@ -113,7 +129,7 @@ func AccessLogExchange(next httpx.Exchange) httpx.Exchange {
 			reasonCode = access.ControllerRedirect
 			resp.Header.Del(access.XRedirect)
 		}
-		access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Controller{Timeout: dur, RateLimit: limit, RateBurst: burst, Percentage: pct, Code: reasonCode})
+		access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Controller{Timeout: -1, RateLimit: limit, RateBurst: burst, Percentage: pct, Code: reasonCode})
 		return
 	}
 }

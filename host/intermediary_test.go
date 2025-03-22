@@ -1,17 +1,14 @@
 package host
 
 import (
-	"bytes"
 	"context"
-	"errors"
-	"fmt"
 	"github.com/behavioral-ai/core/access"
 	"github.com/behavioral-ai/core/httpx"
-	"io"
 	"net/http"
 	"time"
 )
 
+/*
 func serviceTestExchange(_ *http.Request) (*http.Response, error) {
 	//w.WriteHeader(httpx.StatusOK)
 	//fmt.Fprint(w, "Service OK")
@@ -113,20 +110,6 @@ func ExampleProxyIntermediary() {
 	buf, _ := io.ReadAll(resp.Body)
 	fmt.Printf("test: ProxyIntermediary()-OK -> [status:%v] [content:%v]\n", status, len(buf) > 0)
 
-	/*
-		ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*5)
-		defer cancel()
-		r, _ = httpx.NewRequestWithContext(ctx, httpx.MethodGet, "https://www.google.com/search?q-golang", nil)
-		resp, status = ic(r)
-		buf = nil
-		if resp.Body != nil {
-			buf, _ = iox.ReadAll(resp.Body)
-		}
-		fmt.Printf("test: AccessLogIntermediary()-Gateway-Timeout -> [status:%v] [content:%v]\n", status, string(buf))
-
-
-	*/
-
 	//Output:
 	//test: ProxyIntermediary()-OK -> [status:status code 500] [content:true]
 
@@ -146,6 +129,8 @@ func testDo(r *http.Request) (*http.Response, error) {
 	}
 }
 
+*/
+
 func limitExchange(next httpx.Exchange) httpx.Exchange {
 	return func(req *http.Request) (*http.Response, error) {
 		time.Sleep(time.Second * 3)
@@ -156,6 +141,7 @@ func limitExchange(next httpx.Exchange) httpx.Exchange {
 	}
 }
 
+/*
 func timeoutExchange(next httpx.Exchange) httpx.Exchange {
 	return func(req *http.Request) (*http.Response, error) {
 		time.Sleep(time.Second * 3)
@@ -166,6 +152,9 @@ func timeoutExchange(next httpx.Exchange) httpx.Exchange {
 	}
 }
 
+
+*/
+
 func ExampleAccessLogExchange() {
 	access.SetOrigin(access.Origin{
 		Region:     "us-west1",
@@ -175,17 +164,16 @@ func ExampleAccessLogExchange() {
 		Route:      "",
 		InstanceId: "123456789",
 	})
-	ctx, fn := context.WithTimeout(context.Background(), time.Second*2)
-	defer fn()
-	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	req.Header.Add(access.XRequestId, "request-id")
+	//ctx, fn := context.WithTimeout(context.Background(), time.Second*2)
+	//defer fn()
+	//req, _ := http.NewRequestWithContext(ctx, http.MethodGet, "https://www.google.com/search?q=golang", nil)
 
-	ex := httpx.NewPipeline(AccessLogExchange, timeoutExchange)
-	ex(req)
+	//ex := httpx.NewPipeline(AccessLogExchange, timeoutExchange)
+	//ex(req)
 
-	req, _ = http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex = httpx.NewPipeline(AccessLogExchange, limitExchange)
+	ex := httpx.NewPipeline(AccessLogExchange, limitExchange)
 	ex(req)
 
 	//Output:
