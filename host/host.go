@@ -53,7 +53,7 @@ func Exchange(w http.ResponseWriter, r *http.Request, handler httpx.Exchange) {
 	resp, err = authExchange(r)
 	if !okFunc(resp.StatusCode) {
 		w.WriteHeader(resp.StatusCode)
-		access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Routing{From: "", Route: Route, To: "", Percent: -1}, access.Controller{Timeout: hostDuration, RateLimit: 0, RateBurst: 0, Code: controllerCode})
+		access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Controller{Timeout: hostDuration, RateLimit: "0", RateBurst: "0", Code: controllerCode})
 		return
 	}
 	from := r.Header.Get(XFrom)
@@ -76,5 +76,5 @@ func Exchange(w http.ResponseWriter, r *http.Request, handler httpx.Exchange) {
 	}
 	resp.ContentLength = httpx.WriteResponse(w, resp.Header, resp.StatusCode, resp.Body, r.Header)
 	r.Header.Set(XTo, Route)
-	access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Routing{From: from, Route: Route, To: "", Percent: -1}, access.Controller{Timeout: hostDuration, RateLimit: 0, RateBurst: 0, Code: controllerCode})
+	access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Controller{Timeout: hostDuration, RateLimit: "0", RateBurst: "0", Code: controllerCode})
 }

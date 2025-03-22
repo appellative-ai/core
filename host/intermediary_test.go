@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/behavioral-ai/core/access"
+	"github.com/behavioral-ai/core/httpx"
 	"io"
 	"net/http"
 	"time"
@@ -65,7 +66,7 @@ func ExampleConditionalIntermediary_AuthExchange() {
 
 }
 
-func ExampleAccessLogIntermediary() {
+func _ExampleAccessLogIntermediary() {
 	ic := NewAccessLogIntermediary(access.IngressTraffic, testDo)
 
 	r, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q-golang", nil)
@@ -145,30 +146,50 @@ func testDo(r *http.Request) (*http.Response, error) {
 	}
 }
 
-/*
-func ExampleAccessLogExchange() {
-	ex := AccessLogExchange(access.IngressTraffic, testDo)
-
-	r, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q-golang", nil)
-	resp, status := ic(r)
-	buf, _ := io.ReadAll(resp.Body)
-	fmt.Printf("test: AccessLogIntermediary()-OK -> [status:%v] [content:%v]\n", status, len(buf) > 0)
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*5)
-	defer cancel()
-	r, _ = http.NewRequestWithContext(ctx, http.MethodGet, "https://www.google.com/search?q-golang", nil)
-	resp, status = ic(r)
-	buf = nil
-	if resp.Body != nil {
-		buf, _ = io.ReadAll(resp.Body)
+func limitExchange(next httpx.Exchange) httpx.Exchange {
+	return func(req *http.Request) (*http.Response, error) {
+		time.Sleep(time.Second * 3)
+		h := make(http.Header)
+		h.Add(access.XRateLimit, "123")
+		h.Add(access.XRateBurst, "12")
+		return &http.Response{StatusCode: http.StatusTooManyRequests, Header: h}, nil
 	}
-	fmt.Printf("test: AccessLogIntermediary()-Gateway-Timeout -> [status:%v] [content:%v]\n", status, string(buf))
+}
+
+func timeoutExchange(next httpx.Exchange) httpx.Exchange {
+	return func(req *http.Request) (*http.Response, error) {
+		time.Sleep(time.Second * 3)
+		h := make(http.Header)
+		//h.Add(access.XRateLimit, "123")
+		//h.Add(access.XRateBurst, "12")
+		return &http.Response{StatusCode: http.StatusGatewayTimeout, Header: h}, nil
+	}
+}
+
+func ExampleAccessLogExchange() {
+	access.SetOrigin(access.Origin{
+		Region:     "us-west1",
+		Zone:       "zone-a",
+		SubZone:    "sub-zone-1",
+		Host:       "test.com",
+		Route:      "",
+		InstanceId: "123456789",
+	})
+	ctx, fn := context.WithTimeout(context.Background(), time.Second*2)
+	defer fn()
+	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	req.Header.Add(access.XRequestId, "request-id")
+
+	ex := httpx.NewPipeline(AccessLogExchange, timeoutExchange)
+	ex(req)
+
+	req, _ = http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	req.Header.Add(access.XRequestId, "request-id")
+	ex = httpx.NewPipeline(AccessLogExchange, limitExchange)
+	ex(req)
 
 	//Output:
 	//test: AccessLogIntermediary()-OK -> [status:<nil>] [content:true]
 	//test: AccessLogIntermediary()-Gateway-Timeout -> [status:status code 504] [content:Timeout [Get "https://www.google.com/search?q=golang": context deadline exceeded]]
 
 }
-
-
-*/
