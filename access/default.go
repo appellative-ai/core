@@ -2,6 +2,7 @@ package access
 
 import (
 	"fmt"
+	"github.com/behavioral-ai/core/fmtx"
 	"log"
 	"net/http"
 	"strconv"
@@ -115,7 +116,7 @@ func initFormat(o Origin, traffic string, start time.Time, duration time.Duratio
 		JsonString(o.SubZone),
 		JsonString(o.InstanceId),
 		traffic,
-		FmtRFC3339Millis(start),
+		fmtx.FmtRFC3339Millis(start),
 		strconv.Itoa(Milliseconds(duration)))
 }
 

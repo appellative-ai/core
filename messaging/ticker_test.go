@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"fmt"
+	"github.com/behavioral-ai/core/fmtx"
 	"time"
 )
 
@@ -31,7 +32,7 @@ func tickerRun(ctrl <-chan *Message, t *Ticker) {
 	for {
 		select {
 		case <-t.ticker.C:
-			fmt.Printf("messagingtest: Ticker() -> %v\n", FmtRFC3339Millis(time.Now().UTC()))
+			fmt.Printf("messagingtest: Ticker() -> %v\n", fmtx.FmtRFC3339Millis(time.Now().UTC()))
 			count++
 			if count == 2 {
 				t.Start(time.Second * 5)
