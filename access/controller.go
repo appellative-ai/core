@@ -4,11 +4,12 @@ import "time"
 
 // Controller - controller attributes
 type Controller struct {
-	Timeout    time.Duration
+	Cached     bool
 	RateLimit  string
 	RateBurst  string
 	Percentage string
 	Code       string
+	Timeout    time.Duration
 }
 
 func UpdateDefaults(c *Controller) {

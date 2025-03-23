@@ -15,6 +15,7 @@ const (
 	XRateLimit      = "x-rate-limit"
 	XRateBurst      = "x-rate-burst"
 	XRedirect       = "x-redirect"
+	XCached         = "x-cached"
 	ContentEncoding = "Content-Encoding"
 
 	ControllerTimeout   = "TO" // Controller struct code
