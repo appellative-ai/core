@@ -111,10 +111,10 @@ func initFormat(o Origin, traffic string, start time.Time, duration time.Duratio
 		"\"start\":%v, "+
 		"\"duration\":%v, ",
 
-		JsonString(o.Region),
-		JsonString(o.Zone),
-		JsonString(o.SubZone),
-		JsonString(o.InstanceId),
+		fmtx.JsonString(o.Region),
+		fmtx.JsonString(o.Zone),
+		fmtx.JsonString(o.SubZone),
+		fmtx.JsonString(o.InstanceId),
 		traffic,
 		fmtx.FmtRFC3339Millis(start),
 		strconv.Itoa(Milliseconds(duration)))
@@ -131,13 +131,13 @@ func requestFormat(o Origin, newReq *http.Request, url string, parsed *Parsed) s
 			"\"path\":%v, "+
 			"\"query\":%v, ",
 
-		JsonString(newReq.Header.Get(XRequestId)),
-		JsonString(newReq.Proto),
-		JsonString(newReq.Method),
-		JsonString(o.Host),
-		JsonString(url),
-		JsonString(parsed.Path),
-		JsonString(parsed.Query))
+		fmtx.JsonString(newReq.Header.Get(XRequestId)),
+		fmtx.JsonString(newReq.Proto),
+		fmtx.JsonString(newReq.Method),
+		fmtx.JsonString(o.Host),
+		fmtx.JsonString(url),
+		fmtx.JsonString(parsed.Path),
+		fmtx.JsonString(parsed.Query))
 }
 
 func responseFormat(newResp *http.Response) string {
@@ -148,7 +148,7 @@ func responseFormat(newResp *http.Response) string {
 			"\"bytes\":%v, ",
 
 		newResp.StatusCode,
-		JsonString(Encoding(newResp)),
+		fmtx.JsonString(Encoding(newResp)),
 		fmt.Sprintf("%v", newResp.ContentLength),
 	)
 }
@@ -166,7 +166,7 @@ func controllerFormat(traffic string, controller Controller) string {
 			toInt(controller.RateLimit),
 			toInt(controller.RateBurst),
 			toInt(controller.Percentage),
-			JsonString(controller.Code),
+			fmtx.JsonString(controller.Code),
 		)
 	} else {
 		return fmt.Sprintf(
@@ -178,7 +178,7 @@ func controllerFormat(traffic string, controller Controller) string {
 			Milliseconds(controller.Timeout),
 			toInt(controller.RateLimit),
 			toInt(controller.RateBurst),
-			JsonString(controller.Code),
+			fmtx.JsonString(controller.Code),
 		)
 	}
 }
