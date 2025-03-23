@@ -15,6 +15,7 @@ import (
 var tf embed.FS
 
 const (
+	serviceConfigTxt = "file://[cwd]/ioxtest/service-config.txt"
 	testResponseTxt  = "file://[cwd]/ioxtest/test-response.txt"
 	testResponse2Txt = "file://[cwd]/ioxtest/test-response2.txt"
 
