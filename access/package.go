@@ -24,12 +24,14 @@ const (
 
 var (
 	origin = Origin{}
+	set    bool
 	logger = defaultLog
 )
 
 // SetOrigin - initialize the origin
 func SetOrigin(o Origin) {
 	origin = o
+	set = true
 }
 
 // LogFn - log function
