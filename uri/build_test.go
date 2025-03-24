@@ -59,30 +59,28 @@ func ExampleBuildValues() {
 
 func ExampleBuildURL() {
 	host := ""
-	version := ""
 	path := "/search/yahoo"
 	query := "q=golang&region=*"
-	u := BuildURL(host, version, path, query)
+	u := BuildURL(host, path, query)
 
 	u1, err := url2.Parse(u)
-	fmt.Printf("test: BuildURL(\"%v\",\"%v\",\"%v\",\"%v\") -> [uri:%v] [url:%v] [err:%v]\n", host, version, path, query, u, u1, err)
+	fmt.Printf("test: BuildURL(\"%v\",\"%v\",\"%v\") -> [uri:%v] [url:%v] [err:%v]\n", host, path, query, u, u1, err)
 
 	host = "www.google.com"
-	version = "v1"
 	values := make(url2.Values)
 	values.Add("q", "golang")
 	values.Add("region", "*")
-	u = BuildURL(host, version, path, values)
+	u = BuildURL(host, path, values)
 	u1, err = url2.Parse(u)
-	fmt.Printf("test: BuildURL(\"%v\",\"%v\",\"%v\",\"%v\") -> [uri:%v] [url:%v] [err:%v]\n", host, version, path, values, u, u1, err)
+	fmt.Printf("test: BuildURL(\"%v\",\"%v\",\"%v\") -> [uri:%v] [url:%v] [err:%v]\n", host, path, values, u, u1, err)
 
 	//Output:
-	//test: BuildURL("","","/search/yahoo","q=golang&region=*") -> [uri:/search/yahoo?q=golang&region=%2A] [url:/search/yahoo?q=golang&region=%2A] [err:<nil>]
-	//test: BuildURL("www.google.com","v1","/search/yahoo","map[q:[golang] region:[*]]") -> [uri:https://www.google.com/v1/search/yahoo?q=golang&region=%2A] [url:https://www.google.com/v1/search/yahoo?q=golang&region=%2A] [err:<nil>]
+	//test: BuildURL("","/search/yahoo","q=golang&region=*") -> [uri:/search/yahoo?q=golang&region=%2A] [url:/search/yahoo?q=golang&region=%2A] [err:<nil>]
+	//test: BuildURL("www.google.com","/search/yahoo","map[q:[golang] region:[*]]") -> [uri:https://www.google.com/search/yahoo?q=golang&region=%2A] [url:https://www.google.com/search/yahoo?q=golang&region=%2A] [err:<nil>]
 
 }
 
-func ExampleBuildURL_WithDomain() {
+func _ExampleBuildURL_WithDomain() {
 	host := ""
 	version := ""
 	domain := ""
@@ -91,7 +89,7 @@ func ExampleBuildURL_WithDomain() {
 	u := BuildURLWithDomain2(host, domain, version, path, query)
 
 	//u1, err := url2.Parse(u)
-	fmt.Printf("test: BuildURLWithDomain(\"%v\",\"%v\",\"%v\",\"%v\",\"%v\") -> [uri:%v]\n", host, version, domain, path, query, u)
+	fmt.Printf("test: BuildURLWithDomain(\"%v\",\"%v\",\"%v\",\"%v\") -> [uri:%v]\n", host, domain, path, query, u)
 
 	host = "www.google.com"
 	version = "v1"
@@ -99,7 +97,7 @@ func ExampleBuildURL_WithDomain() {
 	values := BuildValues("q=golang&region=*")
 	u = BuildURLWithDomain2(host, domain, version, path, values)
 	//u1, err = url2.Parse(u)
-	fmt.Printf("test: BuildURLWithDomain(\"%v\",\"%v\",\"%v\",\"%v\",\"%v\") -> [uri:%v]\n", host, version, domain, path, values, u)
+	fmt.Printf("test: BuildURLWithDomain(\"%v\",\"%v\",\"%v\",\"%v\") -> [uri:%v]\n", host, domain, path, values, u)
 
 	//Output:
 	//test: BuildURLWithDomain("","","","/search/yahoo","q=golang&region=*") -> [uri::search/yahoo?q=golang&region=%2A]

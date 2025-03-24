@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	HttpScheme   = "httpx"
+	HttpScheme   = "http"
 	HttpsScheme  = "https"
 	Localhost    = "localhost"
 	InternalHost = "internalhost"
@@ -14,7 +14,7 @@ const (
 
 // BuildURL - build an url with the components provided, escaping the query
 // TODO : escaping on path ?? url.PathEscape
-func BuildURL(host, version, path string, query any) string {
+func BuildURL(host, path string, query any) string {
 	newUrl := strings.Builder{}
 	if host != "" {
 		scheme := HttpsScheme
@@ -32,10 +32,13 @@ func BuildURL(host, version, path string, query any) string {
 			path += "/"
 		}
 	}
-	if version != "" {
-		newUrl.WriteString("/")
-		newUrl.WriteString(version)
-	}
+	/*
+		if version != "" {
+			newUrl.WriteString("/")
+			newUrl.WriteString(version)
+		}
+
+	*/
 	newUrl.WriteString(path)
 	q := BuildQuery(query)
 	if q != "" {
@@ -136,7 +139,7 @@ func TransformURL(host string, uri *url.URL) *url.URL {
 		}
 	}
 	q, _ := url.QueryUnescape(uri.RawQuery)
-	newURL := BuildURL(host, "", uri.Path, q)
+	newURL := BuildURL(host, uri.Path, q)
 	u, err1 := url.Parse(newURL)
 	if err1 != nil {
 		return uri
