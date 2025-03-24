@@ -9,10 +9,8 @@ import (
 )
 
 const (
-	internalError  = "Internal Error"
-	gatewayTimeout = "Gateway Timeout"
-	fileScheme     = "file"
-	//contextDeadlineExceeded = "context deadline exceeded"
+	internalError = "Internal Error"
+	fileScheme    = "file"
 )
 
 type Exchange func(r *http.Request) (*http.Response, error)
