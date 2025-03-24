@@ -1,7 +1,6 @@
 package httpx
 
 import (
-	"bytes"
 	"crypto/tls"
 	"io"
 	"net/http"
@@ -19,7 +18,10 @@ const (
 type Exchange func(r *http.Request) (*http.Response, error)
 
 var (
-	Client = http.DefaultClient
+	Client          = http.DefaultClient
+	emptyReader     = new(nilReader)
+	serverResponse  = serverErrorResponse()
+	timeoutResponse = gatewayTimeoutResponse()
 )
 
 func init() {
@@ -47,10 +49,10 @@ func Do(req *http.Request) (resp *http.Response, err error) {
 	if err != nil {
 		if urlErr, ok := any(err).(*url.Error); ok {
 			if urlErr.Timeout() {
-				return gatewayTimeoutResponse(), nil
+				return timeoutResponse, nil
 			}
 		}
-		resp = serverErrorResponse()
+		resp = serverResponse
 	}
 	return
 }
@@ -59,7 +61,7 @@ func serverErrorResponse() *http.Response {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusInternalServerError
 	resp.Status = internalError
-	resp.Body = io.NopCloser(bytes.NewReader([]byte("")))
+	resp.Body = io.NopCloser(emptyReader)
 	return resp
 }
 
@@ -67,8 +69,14 @@ func gatewayTimeoutResponse() *http.Response {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusGatewayTimeout
 	resp.Status = internalError
-	resp.Body = io.NopCloser(bytes.NewReader([]byte("")))
+	resp.Body = io.NopCloser(emptyReader)
 	return resp
+}
+
+type nilReader struct{}
+
+func (r *nilReader) Read(p []byte) (int, error) {
+	return 0, io.EOF
 }
 
 /*
