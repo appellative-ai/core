@@ -120,6 +120,7 @@ func initFormat(o Origin, traffic string, start time.Time, duration time.Duratio
 		strconv.Itoa(Milliseconds(duration)))
 }
 
+// TODO: adding caching header
 func requestFormat(o Origin, newReq *http.Request, url string, parsed *Parsed) string {
 	return fmt.Sprintf(
 		// Request
@@ -160,25 +161,25 @@ func controllerFormat(traffic string, controller Controller) string {
 			"\"timeout\":%v, "+
 				"\"rate-limit\":%v, "+
 				"\"rate-burst\":%v, "+
-				"\"redirect\":%v, "+
-				"\"cc\":%v }",
+				"\"redirect\":%v } ",
+			//"\"cc\":%v }",
 			Milliseconds(controller.Timeout),
 			toInt(controller.RateLimit),
 			toInt(controller.RateBurst),
-			toInt(controller.Percentage),
-			fmtx.JsonString(controller.Code),
+			toInt(controller.Redirect),
+			//fmtx.JsonString(controller.Code),
 		)
 	} else {
 		return fmt.Sprintf(
 			// Controller
 			"\"timeout\":%v, "+
 				"\"rate-limit\":%v, "+
-				"\"rate-burst\":%v, "+
-				"\"cc\":%v }",
+				"\"rate-burst\":%v } ",
+			//"\"cc\":%v }",
 			Milliseconds(controller.Timeout),
 			toInt(controller.RateLimit),
 			toInt(controller.RateBurst),
-			fmtx.JsonString(controller.Code),
+			//fmtx.JsonString(controller.Code),
 		)
 	}
 }
