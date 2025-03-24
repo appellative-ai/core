@@ -101,7 +101,6 @@ func AccessLogExchange(next httpx.Exchange) httpx.Exchange {
 		limit := ""
 		burst := ""
 		pct := ""
-		reasonCode := ""
 
 		/*
 			var dur time.Duration
@@ -113,23 +112,17 @@ func AccessLogExchange(next httpx.Exchange) httpx.Exchange {
 		if next != nil {
 			resp, err = next(r)
 		}
-		if resp.StatusCode == http.StatusGatewayTimeout {
-			reasonCode = access.ControllerTimeout
-		} else {
-			if resp.StatusCode == http.StatusTooManyRequests {
-				reasonCode = access.ControllerRateLimit
-				limit = resp.Header.Get(access.XRateLimit)
-				resp.Header.Del(access.XRateLimit)
-				burst = resp.Header.Get(access.XRateBurst)
-				resp.Header.Del(access.XRateBurst)
-			}
+		if resp.StatusCode == http.StatusTooManyRequests {
+			limit = resp.Header.Get(access.XRateLimit)
+			resp.Header.Del(access.XRateLimit)
+			burst = resp.Header.Get(access.XRateBurst)
+			resp.Header.Del(access.XRateBurst)
 		}
 		pct = resp.Header.Get(access.XRedirect)
 		if pct != "" {
-			reasonCode = access.ControllerRedirect
 			resp.Header.Del(access.XRedirect)
 		}
-		access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Controller{Timeout: -1, RateLimit: limit, RateBurst: burst, Percentage: pct, Code: reasonCode})
+		access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Controller{Timeout: -1, RateLimit: limit, RateBurst: burst, Redirect: pct})
 		return
 	}
 }

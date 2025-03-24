@@ -173,7 +173,7 @@ func ExampleAccessLogExchange() {
 
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := httpx.NewPipeline(AccessLogExchange, limitExchange)
+	ex := httpx.Link(AccessLogExchange, limitExchange)
 	ex(req)
 
 	//Output:
