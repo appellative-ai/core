@@ -27,6 +27,7 @@ const (
 type Status struct {
 	Code     int    `json:"code"`
 	Err      error  `json:"err"`
+	Id       string `json:"request-id"`
 	Msg      string `json:"message"`
 	AgentUri string `json:"agent-uri"`
 }
@@ -99,13 +100,15 @@ func (s *Status) String() string {
 	}
 }
 
-func (s *Status) Type() string    { return "core:messaging.status" }
-func (s *Status) Status() string  { return HttpStatus(s.Code) }
+func (s *Status) Type() string   { return "core:messaging.status" }
+func (s *Status) Status() string { return HttpStatus(s.Code) }
+
 func (s *Status) AgentId() string { return s.AgentUri }
-func (s *Status) SetAgent(agentUri string) *Status {
+func (s *Status) WithAgent(agentUri string) *Status {
 	s.AgentUri = agentUri
 	return s
 }
+
 func (s *Status) Message() string {
 	if s.Err != nil {
 		return s.Err.Error()
@@ -115,8 +118,14 @@ func (s *Status) Message() string {
 	}
 	return ""
 }
-func (s *Status) SetMessage(msg string) *Status {
+func (s *Status) WithMessage(msg string) *Status {
 	s.Msg = msg
+	return s
+}
+
+func (s *Status) RequestId() string { return s.Id }
+func (s *Status) WithRequestId(id string) *Status {
+	s.Id = id
 	return s
 }
 

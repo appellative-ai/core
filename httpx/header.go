@@ -1,7 +1,6 @@
 package httpx
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 )
@@ -49,13 +48,10 @@ func SetHeaders(w http.ResponseWriter, headers any) {
 	}
 }
 
-func Copy(h http.Header) http.Header {
-	h2 := make(http.Header)
-	if h != nil {
-		for k, v := range h {
-			fmt.Printf("header: %v %v\n", k, v)
-			h2.Set(k, v[0])
-		}
+func CloneHeader(hdr http.Header) http.Header {
+	clone := hdr.Clone()
+	if clone == nil {
+		clone = make(http.Header)
 	}
-	return h2
+	return clone
 }

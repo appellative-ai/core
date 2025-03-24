@@ -1,0 +1,92 @@
+// makeHeadersCopier makes a function that copies headers from the
+// initial Request, ireq. For every redirect, this function must be called
+// so that it can copy headers into the upcoming Request.
+func (c *Client) makeHeadersCopier(ireq *Request) func(req *Request, stripSensitiveHeaders bool) {
+	// The headers to copy are from the very initial request.
+	// We use a closured callback to keep a reference to these original headers.
+	var (
+		ireqhdr  = cloneOrMakeHeader(ireq.Header)
+		icookies map[string][]*Cookie
+	)
+	if c.Jar != nil && ireq.Header.Get("Cookie") != "" {
+		icookies = make(map[string][]*Cookie)
+		for _, c := range ireq.Cookies() {
+			icookies[c.Name] = append(icookies[c.Name], c)
+		}
+	}
+
+	return func(req *Request, stripSensitiveHeaders bool) {
+		// If Jar is present and there was some initial cookies provided
+		// via the request header, then we may need to alter the initial
+		// cookies as we follow redirects since each redirect may end up
+		// modifying a pre-existing cookie.
+		//
+		// Since cookies already set in the request header do not contain
+		// information about the original domain and path, the logic below
+		// assumes any new set cookies override the original cookie
+		// regardless of domain or path.
+		//
+		// See https://golang.org/issue/17494
+		if c.Jar != nil && icookies != nil {
+			var changed bool
+			resp := req.Response // The response that caused the upcoming redirect
+			for _, c := range resp.Cookies() {
+				if _, ok := icookies[c.Name]; ok {
+					delete(icookies, c.Name)
+					changed = true
+				}
+			}
+			if changed {
+				ireqhdr.Del("Cookie")
+				var ss []string
+				for _, cs := range icookies {
+					for _, c := range cs {
+						ss = append(ss, c.Name+"="+c.Value)
+					}
+				}
+				slices.Sort(ss) // Ensure deterministic headers
+				ireqhdr.Set("Cookie", strings.Join(ss, "; "))
+			}
+		}
+
+		// Copy the initial request's Header values
+		// (at least the safe ones).
+		for k, vv := range ireqhdr {
+			sensitive := false
+			switch CanonicalHeaderKey(k) {
+			case "Authorization", "Www-Authenticate", "Cookie", "Cookie2":
+				sensitive = true
+			}
+			if !(sensitive && stripSensitiveHeaders) {
+				req.Header[k] = vv
+			}
+		}
+	}
+}
+
+func defaultCheckRedirect(req *Request, via []*Request) error {
+	if len(via) >= 10 {
+		return errors.New("stopped after 10 redirects")
+	}
+	return nil
+}
+
+// cloneOrMakeHeader invokes Header.Clone but if the
+// result is nil, it'll instead make and return a non-nil Header.
+//
+// cloneOrMakeHeader should be an internal detail,
+// but widely used packages access it using linkname.
+// Notable members of the hall of shame include:
+//   - github.com/searKing/golang
+//
+// Do not remove or change the type signature.
+// See go.dev/issue/67401.
+//
+//go:linkname cloneOrMakeHeader
+func cloneOrMakeHeader(hdr Header) Header {
+	clone := hdr.Clone()
+	if clone == nil {
+		clone = make(Header)
+	}
+	return clone
+}

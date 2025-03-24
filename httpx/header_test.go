@@ -11,11 +11,11 @@ func ExampleCopy() {
 	h.Add("key-2", "value-2")
 	h.Add("key-3", "value-3")
 
-	h2 := Copy(h)
+	h2 := CloneHeader(h)
 
-	fmt.Printf("test: Copy() -> %v\n", h2)
+	fmt.Printf("test: CloneHeader() -> %v\n", h2)
 
 	//Output:
-	//fail
+	//test: CloneHeader() -> map[Key-1:[value-1] Key-2:[value-2] Key-3:[value-3]]
 
 }

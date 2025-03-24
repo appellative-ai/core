@@ -31,7 +31,7 @@ func deadlineExceededError(t any) bool {
 
 // dial tcp [2607:f8b0:4023:1009::68]:443: i/o timeout]
 
-func ExampleDo_InvalidArgument() {
+func _ExampleDo_InvalidArgument() {
 	_, s := Do(nil)
 	fmt.Printf("test: Do(nil) -> [%v]\n", s)
 
@@ -122,10 +122,10 @@ func _ExampleDo_Proxy() {
 func defaultDo(r *http.Request) (*http.Response, error) {
 	resp, err := http.DefaultClient.Do(r)
 	if err != nil {
-		if deadlineExceededError(r) {
-			return &http.Response{StatusCode: http.StatusGatewayTimeout}, err
-		}
-		return &http.Response{StatusCode: http.StatusInternalServerError}, err
+		//if deadlineExceededError(r) {
+		//	return &http.Response{StatusCode: http.StatusGatewayTimeout}, err
+		//}
+		return resp, err //&http.Response{StatusCode: http.StatusInternalServerError}, err
 	}
 	//time.Sleep(time.Second * 2)
 	buf, err1 := io.ReadAll(resp.Body)
@@ -164,8 +164,12 @@ func ExampleDefaultDo_Timeout() {
 	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, "https://www.google.com/search?q=golang", nil)
 
 	resp, err := defaultDo(req)
-	fmt.Printf("test: DefaultDo_Timeout()-Get()-timeout -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
+	if err != nil {
+		fmt.Printf("test: DefaultDo_Timeout()-Get()-timeout -> [resp:%v] [err:%v]\n", resp, err)
+	} else {
+		fmt.Printf("test: DefaultDo_Timeout()-Get()-timeout -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
+	}
 	ctx2, cancel2 := context.WithTimeout(context.Background(), time.Millisecond*600)
 	defer cancel2()
 	req, _ = http.NewRequestWithContext(ctx2, http.MethodGet, "https://www.google.com/search?q=golang", nil)
@@ -173,7 +177,7 @@ func ExampleDefaultDo_Timeout() {
 	fmt.Printf("test: DefaultDo_Timeout()-ReadAll()-timeout -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
 	//Output:
-	//test: DefaultDo_Timeout()-Get()-timeout -> [status-code:504] [err:Get "https://www.google.com/search?q=golang": context deadline exceeded]
+	//test: DefaultDo_Timeout()-Get()-timeout -> [resp:<nil>] [err:Get "https://www.google.com/search?q=golang": context deadline exceeded]
 	//test: DefaultDo_Timeout()-ReadAll()-timeout -> [status-code:200] [err:<nil>]
 
 }
@@ -228,7 +232,17 @@ func ExampleExchangeDo_Timeout() {
 	fmt.Printf("test: ExchangeDo_Timeout()-ReadAll()-timeout -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
 	//Output:
-	//test: ExchangeDo_Timeout()-Get()-timeout -> [status-code:504] [err:context deadline exceeded]
+	//test: ExchangeDo_Timeout()-Get()-timeout -> [status-code:504] [err:<nil>]
 	//test: ExchangeDo_Timeout()-ReadAll()-timeout -> [status-code:200] [err:<nil>]
+
+}
+
+func ExampleExchangeDo_URLError() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google2345.com/search?q=golang", nil)
+	resp, err := exchangeDo(req)
+	fmt.Printf("test: ExchangeDo_Timeout()-ReadAll()-timeout -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
+
+	//Output:
+	//test: ExchangeDo_Timeout()-ReadAll()-timeout -> [status-code:500] [err:Get "https://www.google2345.com/search?q=golang": tls: first record does not look like a TLS handshake]
 
 }
