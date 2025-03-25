@@ -22,17 +22,16 @@ var (
 )
 
 // TransformBody - read the body and create a new []byte buffer reader
-func TransformBody(resp *http.Response) (int64, error) {
+func TransformBody(resp *http.Response) error {
 	if resp == nil || resp.Body == nil {
-		return 0, nil
+		return nil
 	}
-	var cnt int64
 	buf, err := io.ReadAll(resp.Body)
 	if err == nil {
-		cnt = int64(len(buf))
+		resp.ContentLength = int64(len(buf))
 		resp.Body = io.NopCloser(bytes.NewReader(buf))
 	}
-	return cnt, err
+	return err
 }
 
 func NewResponse(statusCode int, h http.Header, content any) (resp *http.Response) {

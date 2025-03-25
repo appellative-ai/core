@@ -16,21 +16,21 @@ const (
 )
 
 func ExampleTransformBody() {
-	cnt, err := TransformBody(nil)
-	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", cnt, err)
+	err := TransformBody(nil)
+	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", 0, err)
 
-	cnt, err = TransformBody(&http.Response{})
-	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", cnt, err)
+	err = TransformBody(&http.Response{})
+	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", 0, err)
 
 	resp := &http.Response{StatusCode: http.StatusGatewayTimeout, Body: EmptyReader}
-	cnt, err = TransformBody(resp)
-	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", cnt, err)
+	err = TransformBody(resp)
+	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", resp.ContentLength, err)
 	buf, err1 := io.ReadAll(resp.Body)
 	fmt.Printf("test: io.ReadAll() -> [buf:%v] [err:%v]\n", string(buf), err1)
 
 	resp = &http.Response{StatusCode: http.StatusGatewayTimeout, Body: io.NopCloser(bytes.NewReader([]byte("this is content")))}
-	cnt, err = TransformBody(resp)
-	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", cnt, err)
+	err = TransformBody(resp)
+	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", resp.ContentLength, err)
 	buf, err1 = io.ReadAll(resp.Body)
 	fmt.Printf("test: io.ReadAll() -> [buf:%v] [err:%v]\n", string(buf), err1)
 
