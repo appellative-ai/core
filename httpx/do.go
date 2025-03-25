@@ -2,7 +2,6 @@ package httpx
 
 import (
 	"crypto/tls"
-	"io"
 	"net/http"
 	"net/url"
 	"time"
@@ -17,7 +16,6 @@ type Exchange func(r *http.Request) (*http.Response, error)
 
 var (
 	Client          = http.DefaultClient
-	emptyReader     = new(nilReader)
 	serverResponse  = serverErrorResponse()
 	timeoutResponse = gatewayTimeoutResponse()
 )
@@ -59,7 +57,7 @@ func serverErrorResponse() *http.Response {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusInternalServerError
 	resp.Status = internalError
-	resp.Body = io.NopCloser(emptyReader)
+	resp.Body = emptyReader
 	return resp
 }
 
@@ -67,14 +65,8 @@ func gatewayTimeoutResponse() *http.Response {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusGatewayTimeout
 	resp.Status = internalError
-	resp.Body = io.NopCloser(emptyReader)
+	resp.Body = emptyReader
 	return resp
-}
-
-type nilReader struct{}
-
-func (r *nilReader) Read(p []byte) (int, error) {
-	return 0, io.EOF
 }
 
 /*

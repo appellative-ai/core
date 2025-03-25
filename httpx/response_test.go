@@ -1,6 +1,7 @@
 package httpx
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/behavioral-ai/core/iox"
@@ -13,6 +14,35 @@ import (
 const (
 	testResponse = "file://[cwd]/httpxtest/test-response.txt"
 )
+
+func ExampleTransformBody() {
+	err := TransformBody(nil)
+	fmt.Printf("test: TransformBody() -> [err:%v]\n", err)
+
+	err = TransformBody(&http.Response{})
+	fmt.Printf("test: TransformBody() -> [err:%v]\n", err)
+
+	resp := &http.Response{StatusCode: http.StatusGatewayTimeout, Body: emptyReader}
+	err = TransformBody(resp)
+	fmt.Printf("test: TransformBody() -> [err:%v]\n", err)
+	buf, err1 := io.ReadAll(resp.Body)
+	fmt.Printf("test: io.ReadAll() -> [buf:%v] [err:%v]\n", string(buf), err1)
+
+	resp = &http.Response{StatusCode: http.StatusGatewayTimeout, Body: io.NopCloser(bytes.NewReader([]byte("this is content")))}
+	err = TransformBody(resp)
+	fmt.Printf("test: TransformBody() -> [err:%v]\n", err)
+	buf, err1 = io.ReadAll(resp.Body)
+	fmt.Printf("test: io.ReadAll() -> [buf:%v] [err:%v]\n", string(buf), err1)
+
+	//Output:
+	//test: TransformBody() -> [err:<nil>]
+	//test: TransformBody() -> [err:<nil>]
+	//test: TransformBody() -> [err:<nil>]
+	//test: io.ReadAll() -> [buf:] [err:<nil>]
+	//test: TransformBody() -> [err:<nil>]
+	//test: io.ReadAll() -> [buf:this is content] [err:<nil>]
+
+}
 
 func readAll(body io.ReadCloser) ([]byte, error) {
 	if body == nil {

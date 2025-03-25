@@ -21,13 +21,13 @@ var (
 	//healthLength = int64(len(healthOK))
 )
 
-// ConvertBody - read the current body and create a new NewReader over a []byte buffer
-func ConvertBody(resp *http.Response) error {
-	if resp.Body == nil {
+// TransformBody - read the body and create a new []byte buffer reader
+func TransformBody(resp *http.Response) error {
+	if resp == nil || resp.Body == nil {
 		return nil
 	}
 	buf, err := io.ReadAll(resp.Body)
-	if err != nil {
+	if err == nil {
 		resp.Body = io.NopCloser(bytes.NewReader(buf))
 	}
 	return err
