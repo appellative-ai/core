@@ -225,7 +225,7 @@ func ExampleExchangeDo_Timeout() {
 	resp, err := exchangeDo(req)
 	fmt.Printf("test: ExchangeDo_Timeout()-Get()-timeout -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
-	ctx2, cancel2 := context.WithTimeout(context.Background(), time.Millisecond*600)
+	ctx2, cancel2 := context.WithTimeout(context.Background(), time.Second*8)
 	defer cancel2()
 	req, _ = http.NewRequestWithContext(ctx2, http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	resp, err = exchangeDo(req)

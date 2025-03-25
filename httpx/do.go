@@ -8,8 +8,9 @@ import (
 )
 
 const (
-	internalError = "Internal Error"
-	fileScheme    = "file"
+	internalError  = "Internal Error"
+	gatewayTimeout = "Gateway Timeout"
+	fileScheme     = "file"
 )
 
 type Exchange func(r *http.Request) (*http.Response, error)
@@ -45,7 +46,7 @@ func Do(req *http.Request) (resp *http.Response, err error) {
 	if err != nil {
 		if urlErr, ok := any(err).(*url.Error); ok {
 			if urlErr.Timeout() {
-				return timeoutResponse, nil
+				return timeoutResponse, err
 			}
 		}
 		resp = serverResponse
@@ -64,7 +65,7 @@ func serverErrorResponse() *http.Response {
 func gatewayTimeoutResponse() *http.Response {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusGatewayTimeout
-	resp.Status = internalError
+	resp.Status = gatewayTimeout
 	resp.Body = EmptyReader
 	return resp
 }
