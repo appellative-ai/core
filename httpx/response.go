@@ -22,26 +22,26 @@ var (
 )
 
 // TransformBody - read the body and create a new []byte buffer reader
-func TransformBody(resp *http.Response) (int, error) {
+func TransformBody(resp *http.Response) (int64, error) {
 	if resp == nil || resp.Body == nil {
 		return 0, nil
 	}
-	cnt := 0
+	var cnt int64
 	buf, err := io.ReadAll(resp.Body)
 	if err == nil {
-		cnt = len(buf)
+		cnt = int64(len(buf))
 		resp.Body = io.NopCloser(bytes.NewReader(buf))
 	}
 	return cnt, err
 }
 
-func NewResponse(statusCode int, h http.Header, content any) (resp *http.Response, err error) {
+func NewResponse(statusCode int, h http.Header, content any) (resp *http.Response) {
 	resp = &http.Response{StatusCode: statusCode, ContentLength: -1, Header: h, Body: EmptyReader}
 	if h == nil {
 		resp.Header = make(http.Header)
 	}
 	if content == nil {
-		return resp, nil
+		return resp
 	}
 	switch ptr := (content).(type) {
 	case []byte:
@@ -60,10 +60,10 @@ func NewResponse(statusCode int, h http.Header, content any) (resp *http.Respons
 			resp.Body = io.NopCloser(bytes.NewReader([]byte(ptr.Error())))
 		}
 	default:
-		err = errors.New(fmt.Sprintf("error: content type is invalid: %v", reflect.TypeOf(ptr)))
-		return &http.Response{StatusCode: http.StatusInternalServerError, Header: SetHeader(nil, ContentType, ContentTypeText), ContentLength: int64(len(err.Error())), Body: io.NopCloser(bytes.NewReader([]byte(err.Error())))}, err
+		err := errors.New(fmt.Sprintf("error: content type is invalid: %v", reflect.TypeOf(ptr)))
+		return &http.Response{StatusCode: http.StatusInternalServerError, Header: SetHeader(nil, ContentType, ContentTypeText), ContentLength: int64(len(err.Error())), Body: io.NopCloser(bytes.NewReader([]byte(err.Error())))}
 	}
-	return resp, nil
+	return resp
 }
 
 // NewResponseFromUri - read a Http response given a URL
@@ -88,11 +88,9 @@ func NewResponseFromUri(uri any) (*http.Response, error) {
 }
 
 func NewHealthResponseOK() *http.Response {
-	resp, _ := NewResponse(http.StatusOK, SetHeader(nil, ContentType, ContentTypeText), healthOK)
-	return resp
+	return NewResponse(http.StatusOK, SetHeader(nil, ContentType, ContentTypeText), healthOK)
 }
 
 func NewNotFoundResponse() *http.Response {
-	resp, _ := NewResponse(http.StatusNotFound, SetHeader(nil, ContentType, ContentTypeText), "Not Found")
-	return resp
+	return NewResponse(http.StatusNotFound, SetHeader(nil, ContentType, ContentTypeText), "Not Found")
 }

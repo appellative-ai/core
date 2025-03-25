@@ -57,11 +57,11 @@ func readAll(body io.ReadCloser) ([]byte, error) {
 }
 
 func ExampleNewResponse_Error() {
-	resp, _ := NewResponse(http.StatusGatewayTimeout, nil, nil)
+	resp := NewResponse(http.StatusGatewayTimeout, nil, nil)
 	buf, _ := iox.ReadAll(resp.Body, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
-	resp, _ = NewResponse(http.StatusGatewayTimeout, nil, errors.New("Deadline Exceeded"))
+	resp = NewResponse(http.StatusGatewayTimeout, nil, errors.New("Deadline Exceeded"))
 	buf, _ = iox.ReadAll(resp.Body, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
@@ -72,10 +72,10 @@ func ExampleNewResponse_Error() {
 }
 
 func ExampleNewResponse() {
-	resp, _ := NewResponse(http.StatusOK, nil, nil)
+	resp := NewResponse(http.StatusOK, nil, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v]\n", resp.StatusCode)
 
-	resp, _ = NewResponse(http.StatusOK, nil, "version 1.2.35")
+	resp = NewResponse(http.StatusOK, nil, "version 1.2.35")
 	buf, _ := iox.ReadAll(resp.Body, nil)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
