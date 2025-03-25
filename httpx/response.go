@@ -36,7 +36,7 @@ func TransformBody(resp *http.Response) (int, error) {
 }
 
 func NewResponse(statusCode int, h http.Header, content any) (resp *http.Response, err error) {
-	resp = &http.Response{StatusCode: statusCode, ContentLength: -1, Header: h, Body: io.NopCloser(bytes.NewReader([]byte{}))}
+	resp = &http.Response{StatusCode: statusCode, ContentLength: -1, Header: h, Body: EmptyReader}
 	if h == nil {
 		resp.Header = make(http.Header)
 	}

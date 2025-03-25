@@ -22,7 +22,7 @@ func ExampleTransformBody() {
 	cnt, err = TransformBody(&http.Response{})
 	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", cnt, err)
 
-	resp := &http.Response{StatusCode: http.StatusGatewayTimeout, Body: emptyReader}
+	resp := &http.Response{StatusCode: http.StatusGatewayTimeout, Body: EmptyReader}
 	cnt, err = TransformBody(resp)
 	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", cnt, err)
 	buf, err1 := io.ReadAll(resp.Body)

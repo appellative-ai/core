@@ -3,15 +3,15 @@ package httpx
 import "io"
 
 var (
-	emptyReader = new(nilReader)
+	EmptyReader = new(emptyReader)
 )
 
-type nilReader struct{}
+type emptyReader struct{}
 
-func (r *nilReader) Read(p []byte) (int, error) {
+func (r *emptyReader) Read(p []byte) (int, error) {
 	return 0, io.EOF
 }
 
-func (r *nilReader) Close() error {
+func (r *emptyReader) Close() error {
 	return nil
 }

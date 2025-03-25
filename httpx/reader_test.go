@@ -8,7 +8,7 @@ import (
 )
 
 func ExampleEmptyReader() {
-	r := emptyReader
+	r := EmptyReader
 
 	buf, err := io.ReadAll(r)
 	fmt.Printf("test: emptyReader() -> [buf:%v] [err:%v]\n", string(buf), err)

@@ -57,7 +57,7 @@ func serverErrorResponse() *http.Response {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusInternalServerError
 	resp.Status = internalError
-	resp.Body = emptyReader
+	resp.Body = EmptyReader
 	return resp
 }
 
@@ -65,7 +65,7 @@ func gatewayTimeoutResponse() *http.Response {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusGatewayTimeout
 	resp.Status = internalError
-	resp.Body = emptyReader
+	resp.Body = EmptyReader
 	return resp
 }
 
