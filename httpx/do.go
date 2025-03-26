@@ -13,8 +13,6 @@ const (
 	fileScheme     = "file"
 )
 
-type Exchange func(r *http.Request) (*http.Response, error)
-
 var (
 	Client          = http.DefaultClient
 	serverResponse  = serverErrorResponse()
