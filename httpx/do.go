@@ -52,6 +52,20 @@ func Do(req *http.Request) (resp *http.Response, err error) {
 	return
 }
 
+// DoWithTimeout - process an HTTP request with a timeout
+func DoWithTimeout(req *http.Request, timeout time.Duration) (resp *http.Response, err error) {
+	if timeout <= 0 {
+		return Do(req)
+	}
+	ctx, cancel := NewContext(timeout)
+	defer cancel()
+	resp, err = Do(req.Clone(ctx))
+	if err == nil {
+		err = TransformBody(resp)
+	}
+	return
+}
+
 func serverErrorResponse() *http.Response {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusInternalServerError

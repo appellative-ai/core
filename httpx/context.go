@@ -6,12 +6,12 @@ import (
 )
 
 var (
-	cancel = func() {}
+	cancelFn = func() {}
 )
 
 func NewContext(timeout time.Duration) (context.Context, func()) {
 	if timeout > 0 {
 		return context.WithTimeout(context.Background(), timeout)
 	}
-	return context.Background(), cancel
+	return context.Background(), cancelFn
 }
