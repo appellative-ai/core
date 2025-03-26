@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-func ExampleLink() {
+func ExampleLinkT() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := Link(Do1, Do2, Do3, Do4)
+	ex := LinkT(Do1, Do2, Do3, Do4)
 	ex(req)
 
 	//Output:
@@ -23,9 +23,9 @@ func ExampleLink() {
 
 }
 
-func ExampleLink_Abbreviated() {
+func ExampleLinkT_Abbreviated() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := Link(Do1, Do2, Do3Fail, Do4)
+	ex := LinkT(Do1, Do2, Do3Fail, Do4)
 	ex(req)
 
 	//Output:

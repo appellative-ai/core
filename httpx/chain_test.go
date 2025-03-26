@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-func ExampleBuildChain() {
+func ExampleBuildChainT() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain(do1{}, do2{}, do3{}, do4{})
+	ex := BuildChainT(do1{}, do2{}, do3{}, do4{})
 	ex(req)
 
 	//Output:
@@ -23,9 +23,9 @@ func ExampleBuildChain() {
 
 }
 
-func ExampleBuild_Abbreviated() {
+func ExampleBuildChain_AbbreviatedT() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain(do1{}, do2{}, do3Fail{}, do4{})
+	ex := BuildChainT(do1{}, do2{}, do3Fail{}, do4{})
 	ex(req)
 
 	//Output:
