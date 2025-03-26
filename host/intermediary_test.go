@@ -131,7 +131,7 @@ func testDo(r *http.Request) (*http.Response, error) {
 
 */
 
-func limitExchange(next httpx.Exchange) httpx.Exchange {
+func limitLink(next httpx.Exchange) httpx.Exchange {
 	return func(req *http.Request) (*http.Response, error) {
 		time.Sleep(time.Second * 3)
 		h := make(http.Header)
@@ -155,7 +155,7 @@ func timeoutExchange(next httpx.Exchange) httpx.Exchange {
 
 */
 
-func ExampleAccessLogExchange() {
+func ExampleAccessLogLink() {
 	access.SetOrigin(access.Origin{
 		Region:     "us-west1",
 		Zone:       "zone-a",
@@ -173,7 +173,7 @@ func ExampleAccessLogExchange() {
 
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := httpx.Link(AccessLogExchange, limitExchange)
+	ex := httpx.BuildChain(AccessLogLink, limitLink)
 	ex(req)
 
 	//Output:

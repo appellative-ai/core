@@ -85,7 +85,7 @@ func NewProxyIntermediary(host string, c2 httpx.Exchange) httpx.Exchange {
 
 */
 
-func AuthorizationExchange(next httpx.Exchange) httpx.Exchange {
+func AuthorizationLink(next httpx.Exchange) httpx.Exchange {
 	return func(r *http.Request) (resp *http.Response, err error) {
 		auth := r.Header.Get(Authorization)
 		if auth != "" {
@@ -95,7 +95,7 @@ func AuthorizationExchange(next httpx.Exchange) httpx.Exchange {
 	}
 }
 
-func AccessLogExchange(next httpx.Exchange) httpx.Exchange {
+func AccessLogLink(next httpx.Exchange) httpx.Exchange {
 	return func(r *http.Request) (resp *http.Response, err error) {
 		start := time.Now().UTC()
 		limit := ""
