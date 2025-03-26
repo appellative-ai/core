@@ -243,13 +243,13 @@ func ExampleExchangeDo_Timeout() {
 
 func ExampleExchangeDoWithTimeout() {
 	req, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	resp, err := DoWithTimeout(req, time.Millisecond+2)
+	resp, err := DoWithTimeout(req, time.Millisecond+2, nil)
 	fmt.Printf("test: DoWithTimeout() -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
 	//ctx2, cancel2 := context.WithTimeout(context.Background(), time.Second*8)
 	//defer cancel2()
 	req, _ = http.NewRequest(http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	resp, err = DoWithTimeout(req, time.Second*8)
+	resp, err = DoWithTimeout(req, time.Second*8, nil)
 	fmt.Printf("test: DoWithTimeout() -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
 	buf, err1 := io.ReadAll(resp.Body)

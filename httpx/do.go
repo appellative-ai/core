@@ -52,14 +52,17 @@ func Do(req *http.Request) (resp *http.Response, err error) {
 	return
 }
 
-// DoWithTimeout - process an HTTP request with a timeout
-func DoWithTimeout(req *http.Request, timeout time.Duration) (resp *http.Response, err error) {
+// DoWithTimeout - process an HTTP request with a timeout and optional Exchange
+func DoWithTimeout(req *http.Request, timeout time.Duration, ex Exchange) (resp *http.Response, err error) {
+	if ex == nil {
+		ex = Do
+	}
 	if timeout <= 0 {
-		return Do(req)
+		return ex(req)
 	}
 	ctx, cancel := NewContext(timeout)
 	defer cancel()
-	resp, err = Do(req.Clone(ctx))
+	resp, err = ex(req.Clone(ctx))
 	if err == nil {
 		err = TransformBody(resp)
 	}
