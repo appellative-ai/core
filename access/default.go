@@ -107,6 +107,7 @@ func initFormat(o Origin, traffic string, start time.Time, duration time.Duratio
 		"\"zone\":%v, "+
 		"\"sub-zone\":%v, "+
 		"\"instance-id\":%v, "+
+		"\"route\":%v, "+
 		"\"traffic\":\"%v\", "+
 		"\"start\":%v, "+
 		"\"duration\":%v, ",
@@ -115,6 +116,7 @@ func initFormat(o Origin, traffic string, start time.Time, duration time.Duratio
 		fmtx.JsonString(o.Zone),
 		fmtx.JsonString(o.SubZone),
 		fmtx.JsonString(o.InstanceId),
+		fmtx.JsonString(o.Route),
 		traffic,
 		fmtx.FmtRFC3339Millis(start),
 		strconv.Itoa(Milliseconds(duration)))
