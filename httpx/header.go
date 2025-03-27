@@ -1,6 +1,7 @@
 package httpx
 
 import (
+	"github.com/behavioral-ai/core/iox"
 	"net/http"
 	"strings"
 )
@@ -54,4 +55,15 @@ func CloneHeader(hdr http.Header) http.Header {
 		clone = make(http.Header)
 	}
 	return clone
+}
+
+func CloneHeaderWithEncoding(req *http.Request) http.Header {
+	if req == nil {
+		return make(http.Header)
+	}
+	h := CloneHeader(req.Header)
+	if req.Method == http.MethodGet && h.Get(iox.AcceptEncoding) == "" {
+		h.Add(iox.AcceptEncoding, iox.GzipEncoding)
+	}
+	return h
 }

@@ -170,7 +170,7 @@ func ExampleDefaultDo_Timeout() {
 		fmt.Printf("test: DefaultDo_Timeout()-Get()-timeout -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
 	}
-	ctx2, cancel2 := context.WithTimeout(context.Background(), time.Millisecond*600)
+	ctx2, cancel2 := context.WithTimeout(context.Background(), time.Second*4)
 	defer cancel2()
 	req, _ = http.NewRequestWithContext(ctx2, http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	resp, err = defaultDo(req)
@@ -243,13 +243,13 @@ func ExampleExchangeDo_Timeout() {
 
 func ExampleExchangeDoWithTimeout() {
 	req, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	resp, err := DoWithTimeout(req, time.Millisecond+2, nil)
+	resp, err := ExchangeWithTimeout(time.Millisecond+2, nil)(req)
 	fmt.Printf("test: DoWithTimeout() -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
 	//ctx2, cancel2 := context.WithTimeout(context.Background(), time.Second*8)
 	//defer cancel2()
 	req, _ = http.NewRequest(http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	resp, err = DoWithTimeout(req, time.Second*8, nil)
+	resp, err = ExchangeWithTimeout(time.Second*8, nil)(req)
 	fmt.Printf("test: DoWithTimeout() -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
 	buf, err1 := io.ReadAll(resp.Body)
