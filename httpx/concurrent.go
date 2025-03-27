@@ -15,7 +15,7 @@ type ExchangeInvoke struct {
 	Timeout time.Duration
 	Do      Exchange
 	Req     *http.Request
-	Log     func(start time.Time, duration time.Duration, req *http.Request, resp *http.Response)
+	Log     func(start time.Time, duration time.Duration, req *http.Request, resp *http.Response, timeout time.Duration)
 }
 
 type ExchangeResponse struct {
@@ -32,16 +32,10 @@ func DoConcurrent(invokes []ExchangeInvoke) ConcurrentResult {
 		wg.Add(1)
 		go func(i *ExchangeInvoke) {
 			defer wg.Done()
-			var (
-				resp   *http.Response
-				err    error
-				cancel func()
-			)
-			i.Req, cancel = NewRequestWithTimeout(i.Req, i.Timeout)
-			defer cancel()
-			resp, err = i.Do(i.Req)
-			if err == nil && i.Timeout > 0 {
-				err = TransformBody(resp)
+			start := time.Now().UTC()
+			resp, err := ExchangeWithTimeout(i.Timeout, i.Do)(i.Req)
+			if i.Log != nil {
+				i.Log(start, time.Since(start), i.Req, resp, i.Timeout)
 			}
 			m.put(i.Name, &ExchangeResponse{Resp: resp, Err: err})
 		}(&invokes[i])

@@ -52,21 +52,26 @@ func Do(req *http.Request) (resp *http.Response, err error) {
 	return
 }
 
-// DoWithTimeout - process an HTTP request with a timeout and optional Exchange
-func DoWithTimeout(req *http.Request, timeout time.Duration, ex Exchange) (resp *http.Response, err error) {
-	if ex == nil {
-		ex = Do
+// ExchangeWithTimeout - create an Exchange with a timeout
+func ExchangeWithTimeout(timeout time.Duration, ex Exchange) Exchange {
+	return func(r *http.Request) (resp *http.Response, err error) {
+		if ex == nil {
+			ex = Do
+		}
+		if timeout <= 0 {
+			return ex(r)
+		}
+		var cancel func()
+
+		r, cancel = NewRequestWithTimeout(r, timeout)
+		defer cancel()
+		resp, err = ex(r)
+		if err == nil && timeout > 0 {
+			err = TransformBody(resp)
+		}
+		return
 	}
-	if timeout <= 0 {
-		return ex(req)
-	}
-	ctx, cancel := NewContext(timeout)
-	defer cancel()
-	resp, err = ex(req.Clone(ctx))
-	if err == nil {
-		err = TransformBody(resp)
-	}
-	return
+
 }
 
 func serverErrorResponse() *http.Response {
