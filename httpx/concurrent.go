@@ -40,7 +40,7 @@ func DoConcurrent(invokes []ExchangeInvoke) ConcurrentResult {
 			i.Req, cancel = NewRequestWithTimeout(i.Req, i.Timeout)
 			defer cancel()
 			resp, err = i.Do(i.Req)
-			if err == nil {
+			if err == nil && i.Timeout > 0 {
 				err = TransformBody(resp)
 			}
 			m.put(i.Name, &ExchangeResponse{Resp: resp, Err: err})
