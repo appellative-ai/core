@@ -14,16 +14,15 @@ func NewRequestWithTimeout(req *http.Request, timeout time.Duration) (*http.Requ
 	if timeout <= 0 || req == nil {
 		return req, cancelFn
 	}
-	ctxNew, cancel := NewContext(req, timeout)
+	ctxNew, cancel := NewContext(req.Context(), timeout)
 	return req.Clone(ctxNew), cancel
 }
 
-func NewContext(req *http.Request, timeout time.Duration) (context.Context, func()) {
-	var ctx = context.Background()
-	if req != nil && req.Context() != nil {
-		ctx = req.Context()
+func NewContext(ctx context.Context, timeout time.Duration) (context.Context, func()) {
+	if ctx == nil {
+		ctx = context.Background()
 	}
-	if timeout <= 0 || req == nil {
+	if timeout <= 0 {
 		return ctx, cancelFn
 	}
 	return context.WithTimeout(ctx, timeout)
