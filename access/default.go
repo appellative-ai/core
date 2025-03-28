@@ -15,12 +15,12 @@ const (
 	XDomain = "X-Domain"
 )
 
-var defaultLog = func(o *Origin, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Thresholds) {
+var defaultLog = func(o *Origin, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) {
 	s := DefaultFormat(o, traffic, start, duration, route, req, resp, thresholds)
 	log.Default().Printf("%v\n", s)
 }
 
-func DefaultFormat(o *Origin, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Thresholds) string {
+func DefaultFormat(o *Origin, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) string {
 	newReq := BuildRequest(req)
 	newResp := BuildResponse(resp)
 	url, parsed := ParseURL(newReq.Host, newReq.URL)
@@ -170,7 +170,7 @@ func responseFormat(newResp *http.Response) string {
 	)
 }
 
-func thresholdsFormat(traffic string, thresholds Thresholds) string {
+func thresholdsFormat(traffic string, thresholds Threshold) string {
 	if traffic == EgressTraffic {
 		return fmt.Sprintf(
 			"\"timeout\":%v, "+

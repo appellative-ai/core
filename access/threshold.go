@@ -5,13 +5,13 @@ import (
 	"time"
 )
 
-type Thresholds struct {
+type Threshold struct {
 	Timeout   any
 	RateLimit any
 	Redirect  any
 }
 
-func (t Thresholds) timeout() time.Duration {
+func (t Threshold) timeout() time.Duration {
 	var dur time.Duration
 
 	if t.Timeout == nil {
@@ -28,16 +28,26 @@ func (t Thresholds) timeout() time.Duration {
 	return dur
 }
 
-func (t Thresholds) rateLimit() float64 {
+func (t Threshold) rateLimit() float64 {
 	var limit float64 = -1
 
 	if t.RateLimit == nil {
 		return limit
 	}
+	if s, ok := t.RateLimit.(string); ok {
+		i, _ := strconv.Atoi(s)
+		return float64(i)
+	}
+	if l, ok1 := t.RateLimit.(float64); ok1 {
+		return l
+	}
+	if l, ok1 := t.RateLimit.(int); ok1 {
+		return float64(l)
+	}
 	return limit
 }
 
-func (t Thresholds) redirect() int {
+func (t Threshold) redirect() int {
 	pct := -1
 	if t.Redirect == nil {
 		return pct

@@ -99,7 +99,6 @@ func AccessLogLink(next httpx.Exchange) httpx.Exchange {
 	return func(r *http.Request) (resp *http.Response, err error) {
 		start := time.Now().UTC()
 		limit := ""
-		burst := ""
 		pct := ""
 
 		/*
@@ -115,14 +114,12 @@ func AccessLogLink(next httpx.Exchange) httpx.Exchange {
 		if resp.StatusCode == http.StatusTooManyRequests {
 			limit = resp.Header.Get(access.XRateLimit)
 			resp.Header.Del(access.XRateLimit)
-			burst = resp.Header.Get(access.XRateBurst)
-			resp.Header.Del(access.XRateBurst)
 		}
 		pct = resp.Header.Get(access.XRedirect)
 		if pct != "" {
 			resp.Header.Del(access.XRedirect)
 		}
-		access.Log(access.IngressTraffic, start, time.Since(start), r, resp, access.Controller{Timeout: -1, RateLimit: limit, RateBurst: burst, Redirect: pct})
+		access.Log(access.IngressTraffic, start, time.Since(start), "", r, resp, access.Threshold{Timeout: -1, RateLimit: limit, Redirect: pct})
 		return
 	}
 }

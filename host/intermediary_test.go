@@ -161,7 +161,6 @@ func ExampleAccessLogLink() {
 		Zone:       "zone-a",
 		SubZone:    "sub-zone-1",
 		Host:       "test.com",
-		Route:      "",
 		InstanceId: "123456789",
 	})
 	//ctx, fn := context.WithTimeout(context.Background(), time.Second*2)

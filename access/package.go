@@ -60,7 +60,7 @@ func SetLogFn(fn LogFn) {
 // Header.Get(XRequestId)),
 // Header.Get(XRelatesTo)),
 // Header.Get(LocationHeader)
-func Log(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Thresholds) {
+func Log(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) {
 	if originSet {
 		defaultLog(&origin, traffic, start, duration, route, req, resp, thresholds)
 	} else {

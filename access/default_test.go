@@ -1,6 +1,11 @@
 package access
 
-/*
+import (
+	"fmt"
+	"net/http"
+	"time"
+)
+
 func ExampleDefault_Host() {
 	start := time.Now().UTC()
 	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
@@ -12,7 +17,7 @@ func ExampleDefault_Host() {
 	resp.Header = make(http.Header)
 	resp.Header.Add(ContentEncoding, "gzip")
 	time.Sleep(time.Millisecond * 500)
-	logTest(EgressTraffic, start, time.Since(start), "", req, &resp, Controller{Timeout: -1})
+	logTest(EgressTraffic, start, time.Since(start), "", req, &resp, Threshold{Timeout: -1})
 
 	fmt.Printf("test: Default-Host() -> %v\n", "success")
 
@@ -21,6 +26,7 @@ func ExampleDefault_Host() {
 
 }
 
+/*
 func ExampleDefault_Domain() {
 	start := time.Now().UTC()
 	values := make(url.Values)
@@ -39,6 +45,7 @@ func ExampleDefault_Domain() {
 	//test: Default-Domain() -> success
 
 }
+*/
 
 func ExampleDefault_Access_Request_Status() {
 	h := make(http.Header)
@@ -49,7 +56,7 @@ func ExampleDefault_Access_Request_Status() {
 
 	resp := http.StatusNotFound
 	time.Sleep(time.Millisecond * 500)
-	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Controller{Timeout: -1})
+	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Threshold{Timeout: -1})
 
 	fmt.Printf("test: Default-Access-Request-Status() -> %v\n", "success")
 
@@ -63,11 +70,12 @@ func ExampleDefault_Access_Request_Status_Code() {
 	h.Add(XRequestId, "987-654")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	originSet = false
+	//SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
-	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Controller{Timeout: -1})
+	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Threshold{Timeout: -1})
 
 	fmt.Printf("test: Default-Access-Request-Status-Code() -> %v\n", "success")
 
@@ -81,11 +89,12 @@ func ExampleDefault_Threshold_Duration() {
 	h.Add(XRequestId, "987-654")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	originSet = false
+	//SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
-	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Controller{Timeout: time.Second * 4})
+	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Threshold{Timeout: time.Second * 4})
 
 	fmt.Printf("test: Default-Threshold-Duration() -> %v\n", "success")
 
@@ -94,23 +103,43 @@ func ExampleDefault_Threshold_Duration() {
 
 }
 
-func ExampleDefault_Threshold_Int() {
+func ExampleDefault_Threshold_Limit() {
 	h := make(http.Header)
 	h.Add(XRequestId, "987-654")
 	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
 	start := time.Now().UTC()
-	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
+	originSet = false
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
-	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Controller{Timeout: -1, RateLimit: "345"})
+	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Threshold{RateLimit: 234})
 
-	fmt.Printf("test: Default-Threshold-Int() -> %v\n", "success")
+	fmt.Printf("test: Default-Threshold-Limit() -> %v\n", "success")
 
 	//Output:
-	//test: Default-Threshold-Int() -> success
+	//test: Default-Threshold-Limit() -> success
 
 }
+
+func ExampleDefault_Threshold_Redirect() {
+	h := make(http.Header)
+	h.Add(XRequestId, "987-654")
+	req := RequestImpl{Method: http.MethodPut, Url: "https://www.google.com/search?q=test", Header: h}
+	start := time.Now().UTC()
+	originSet = false
+
+	resp := http.StatusGatewayTimeout
+	time.Sleep(time.Millisecond * 500)
+	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Threshold{Redirect: 80})
+
+	fmt.Printf("test: Default-Threshold-Redirect() -> %v\n", "success")
+
+	//Output:
+	//test: Default-Threshold-Redirect() -> success
+
+}
+
+/*
 
 func ExampleDefault_Threshold_Deadline() {
 	h := make(http.Header)
@@ -130,10 +159,8 @@ func ExampleDefault_Threshold_Deadline() {
 	//test: Default-Threshold-Int() -> success
 
 }
-
-func logTest(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds []any) {
-	Log(traffic, start, duration, route, req, resp, thresholds)
-}
-
-
 */
+
+func logTest(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, threshold Threshold) {
+	Log(traffic, start, duration, route, req, resp, threshold)
+}
