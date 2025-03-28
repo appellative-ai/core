@@ -20,11 +20,11 @@ func ExampleNewValues() {
 
 func ExampleNewOrigin() {
 	o := Origin{
-		Region:     "region",
-		Zone:       "zone",
-		SubZone:    "sub-zone",
-		Host:       "host",
-		Route:      "route",
+		Region:  "region",
+		Zone:    "zone",
+		SubZone: "sub-zone",
+		Host:    "host",
+		//Route:      "route",
 		InstanceId: "",
 	}
 	values := NewValues(o)
@@ -32,7 +32,7 @@ func ExampleNewOrigin() {
 	fmt.Printf("test: NewOrigin() -> [%v]\n", o)
 
 	//Output:
-	//test: NewOrigin() -> [{region zone sub-zone host route }]
+	//test: NewOrigin() -> [{region zone sub-zone host }]
 
 }
 
@@ -120,16 +120,15 @@ func ExampleOrigin_Uri() {
 	}
 
 	fmt.Printf("test: Origin_Uri_SubZone()       -> [%v]\n", target.Uri("class"))
-	target.Route = "route"
-	fmt.Printf("test: Origin_Uri_SubZone_Route() -> [%v]\n", target.Uri("class"))
+	//target.Route = "route"
+	//fmt.Printf("test: Origin_Uri_SubZone_Route() -> [%v]\n", target.Uri("class"))
 
 	target.SubZone = ""
-	target.Route = ""
+	//target.Route = ""
 	fmt.Printf("test: Origin_Uri_No_SubZone()    -> [%v]\n", target.Uri("class"))
 
 	//Output:
 	//test: Origin_Uri_SubZone()       -> [class:region.zone.sub-zone.host]
-	//test: Origin_Uri_SubZone_Route() -> [class:region.zone.sub-zone.host.route]
 	//test: Origin_Uri_No_SubZone()    -> [class:region.zone.host]
 
 }

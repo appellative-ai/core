@@ -1,8 +1,6 @@
 package access
 
-import (
-	"time"
-)
+import "time"
 
 // InternalTraffic = "internal"
 
@@ -24,17 +22,18 @@ const (
 )
 
 var (
-	origin = Origin{}
-	set    bool
-	logger = defaultLog
+	origin    = Origin{}
+	originSet bool
+	//logger = defaultLog
 )
 
 // SetOrigin - initialize the origin
 func SetOrigin(o Origin) {
 	origin = o
-	set = true
+	originSet = true
 }
 
+/*
 // LogFn - log function
 type LogFn func(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, controller Controller)
 
@@ -45,6 +44,8 @@ func SetLogFn(fn LogFn) {
 	}
 }
 
+
+*/
 // RequestConstraints - Request constraints
 //type RequestConstraints interface {
 //	*httpx.Request | Request
@@ -59,11 +60,13 @@ func SetLogFn(fn LogFn) {
 // Header.Get(XRequestId)),
 // Header.Get(XRelatesTo)),
 // Header.Get(LocationHeader)
-func Log(traffic string, start time.Time, duration time.Duration, req any, resp any, controller Controller) {
-	if logger == nil {
-		return
+func Log(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, controller Controller) {
+	if originSet {
+		defaultLog(&origin, traffic, start, duration, route, req, resp, controller)
+	} else {
+		defaultLog(nil, traffic, start, duration, route, req, resp, controller)
+
 	}
-	logger(origin, traffic, start, duration, req, resp, controller)
 }
 
 /*

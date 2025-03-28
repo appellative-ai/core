@@ -12,7 +12,6 @@ const (
 	SubZoneKey               = "sub-zone"
 	HostKey                  = "host"
 	InstanceIdKey            = "id"
-	RouteKey                 = "route"
 	RegionZoneHostFmt        = "%v:%v.%v.%v"
 	RegionZoneSubZoneHostFmt = "%v:%v.%v.%v.%v"
 )
@@ -23,7 +22,6 @@ type Origin struct {
 	Zone       string `json:"zone"`
 	SubZone    string `json:"sub-zone"`
 	Host       string `json:"host"`
-	Route      string `json:"route"`
 	InstanceId string `json:"instance-id"`
 }
 
@@ -48,9 +46,6 @@ func (o Origin) Uri(class string) string {
 	} else {
 		uri = fmt.Sprintf(RegionZoneSubZoneHostFmt, class, o.Region, o.Zone, o.SubZone, o.Host)
 	}
-	if o.Route != "" {
-		uri += "." + o.Route
-	}
 	return uri
 }
 
@@ -68,9 +63,6 @@ func NewValues(o Origin) url.Values {
 	if o.Host != "" {
 		values.Add(HostKey, o.Host)
 	}
-	if o.Route != "" {
-		values.Add(RouteKey, o.Route)
-	}
 	return values
 }
 
@@ -81,7 +73,7 @@ func NewOrigin(values url.Values) Origin {
 		o.Zone = values.Get(ZoneKey)
 		o.SubZone = values.Get(SubZoneKey)
 		o.Host = values.Get(HostKey)
-		o.Route = values.Get(RouteKey)
+		//o.Route = values.Get(RouteKey)
 	}
 	return o
 }
@@ -115,12 +107,15 @@ func OriginMatch(target Origin, filter Origin) bool {
 			return false
 		}
 	}
-	if filter.Route != "" {
-		isFilter = true
-		if !StringMatch(target.Route, filter.Route) {
-			return false
+	/*
+		if filter.Route != "" {
+			isFilter = true
+			if !StringMatch(target.Route, filter.Route) {
+				return false
+			}
 		}
-	}
+
+	*/
 	return isFilter
 }
 

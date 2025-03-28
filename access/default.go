@@ -15,20 +15,20 @@ const (
 	XDomain = "X-Domain"
 )
 
-var defaultLog = func(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, controller Controller) {
-	s := DefaultFormat(o, traffic, start, duration, req, resp, controller)
+var defaultLog = func(o *Origin, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, controller Controller) {
+	s := DefaultFormat(o, traffic, start, duration, route, req, resp, controller)
 	log.Default().Printf("%v\n", s)
 }
 
-func DefaultFormat(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, controller Controller) string {
+func DefaultFormat(o *Origin, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, controller Controller) string {
 	newReq := BuildRequest(req)
 	newResp := BuildResponse(resp)
 	url, parsed := ParseURL(newReq.Host, newReq.URL)
-	o.Host = Conditional(o.Host, parsed.Host)
+	//o.Host = Conditional(o.Host, parsed.Host)
 	UpdateDefaults(&controller)
 
-	return initFormat(o, traffic, start, duration) +
-		requestFormat(o, newReq, url, parsed) +
+	return initFormat(o, traffic, start, duration, route) +
+		requestFormat(newReq, url, parsed) +
 		responseFormat(newResp) +
 		controllerFormat(traffic, controller)
 
@@ -100,30 +100,44 @@ func DefaultFormat(o Origin, traffic string, start time.Time, duration time.Dura
 	*/
 }
 
-func initFormat(o Origin, traffic string, start time.Time, duration time.Duration) string {
-	return fmt.Sprintf("{"+
-		// Origin, traffic, timestamp, duration
-		"\"region\":%v, "+
-		"\"zone\":%v, "+
-		"\"sub-zone\":%v, "+
-		"\"instance-id\":%v, "+
-		"\"route\":%v, "+
-		"\"traffic\":\"%v\", "+
-		"\"start\":%v, "+
-		"\"duration\":%v, ",
+func initFormat(o *Origin, traffic string, start time.Time, duration time.Duration, route string) string {
+	if o == nil {
+		return fmt.Sprintf("{"+
+			// Traffic, timestamp, duration
+			"\"traffic\":\"%v\", "+
+			"\"start\":%v, "+
+			"\"duration\":%v, "+
+			"\"route\":%v, ",
 
-		fmtx.JsonString(o.Region),
-		fmtx.JsonString(o.Zone),
-		fmtx.JsonString(o.SubZone),
-		fmtx.JsonString(o.InstanceId),
-		fmtx.JsonString(o.Route),
-		traffic,
-		fmtx.FmtRFC3339Millis(start),
-		strconv.Itoa(Milliseconds(duration)))
+			traffic,
+			fmtx.FmtRFC3339Millis(start),
+			strconv.Itoa(Milliseconds(duration)),
+			fmtx.JsonString(route))
+	} else {
+		return fmt.Sprintf("{"+
+			// Origin, traffic, timestamp, duration
+			"\"region\":%v, "+
+			"\"zone\":%v, "+
+			"\"sub-zone\":%v, "+
+			"\"instance-id\":%v, "+
+			"\"traffic\":\"%v\", "+
+			"\"start\":%v, "+
+			"\"duration\":%v, "+
+			"\"route\":%v, ",
+
+			fmtx.JsonString(o.Region),
+			fmtx.JsonString(o.Zone),
+			fmtx.JsonString(o.SubZone),
+			fmtx.JsonString(o.InstanceId),
+			//fmtx.JsonString(o.Route),
+			traffic,
+			fmtx.FmtRFC3339Millis(start),
+			strconv.Itoa(Milliseconds(duration)),
+			fmtx.JsonString(route))
+	}
 }
 
-// TODO: adding caching header
-func requestFormat(o Origin, newReq *http.Request, url string, parsed *Parsed) string {
+func requestFormat(newReq *http.Request, url string, parsed *Parsed) string {
 	return fmt.Sprintf(
 		// Request
 		"\"request-id\":%v, "+
@@ -137,7 +151,7 @@ func requestFormat(o Origin, newReq *http.Request, url string, parsed *Parsed) s
 		fmtx.JsonString(newReq.Header.Get(XRequestId)),
 		fmtx.JsonString(newReq.Proto),
 		fmtx.JsonString(newReq.Method),
-		fmtx.JsonString(o.Host),
+		fmtx.JsonString(newReq.Host),
 		fmtx.JsonString(url),
 		fmtx.JsonString(parsed.Path),
 		fmtx.JsonString(parsed.Query))

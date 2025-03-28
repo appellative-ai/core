@@ -18,7 +18,7 @@ func ExampleDefault_Host() {
 	resp.Header = make(http.Header)
 	resp.Header.Add(ContentEncoding, "gzip")
 	time.Sleep(time.Millisecond * 500)
-	logTest(EgressTraffic, start, time.Since(start), req, &resp, Controller{Timeout: -1})
+	logTest(EgressTraffic, start, time.Since(start), "", req, &resp, Controller{Timeout: -1})
 
 	fmt.Printf("test: Default-Host() -> %v\n", "success")
 
@@ -37,7 +37,7 @@ func ExampleDefault_Domain() {
 	req.Header.Add(XRequestId, "123-456")
 	//fmt.Printf("test: NewRequest() -> [err:%v] [req:%v]\n", err, req != nil)
 	resp := http.Response{StatusCode: http.StatusOK}
-	logTest(IngressTraffic, start, time.Since(start), req, &resp, Controller{Timeout: -1})
+	logTest(IngressTraffic, start, time.Since(start), "", req, &resp, Controller{Timeout: -1})
 
 	fmt.Printf("test: Default-Domain() -> %v\n", "success")
 
@@ -55,7 +55,7 @@ func ExampleDefault_Access_Request_Status() {
 
 	resp := http.StatusNotFound
 	time.Sleep(time.Millisecond * 500)
-	logTest(EgressTraffic, start, time.Since(start), req, resp, Controller{Timeout: -1})
+	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Controller{Timeout: -1})
 
 	fmt.Printf("test: Default-Access-Request-Status() -> %v\n", "success")
 
@@ -73,7 +73,7 @@ func ExampleDefault_Access_Request_Status_Code() {
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
-	logTest(EgressTraffic, start, time.Since(start), req, resp, Controller{Timeout: -1})
+	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Controller{Timeout: -1})
 
 	fmt.Printf("test: Default-Access-Request-Status-Code() -> %v\n", "success")
 
@@ -91,7 +91,7 @@ func ExampleDefault_Threshold_Duration() {
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
-	logTest(EgressTraffic, start, time.Since(start), req, resp, Controller{Timeout: time.Second * 4})
+	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Controller{Timeout: time.Second * 4})
 
 	fmt.Printf("test: Default-Threshold-Duration() -> %v\n", "success")
 
@@ -109,7 +109,7 @@ func ExampleDefault_Threshold_Int() {
 
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
-	logTest(EgressTraffic, start, time.Since(start), req, resp, Controller{Timeout: -1, RateLimit: "345"})
+	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Controller{Timeout: -1, RateLimit: "345"})
 
 	fmt.Printf("test: Default-Threshold-Int() -> %v\n", "success")
 
@@ -128,7 +128,7 @@ func ExampleDefault_Threshold_Deadline() {
 	//ctx, _ := context.WithDeadline(context.Background(), time.Now().Add(time.Second*2))
 	resp := http.StatusGatewayTimeout
 	time.Sleep(time.Millisecond * 500)
-	logTest(EgressTraffic, start, time.Since(start), req, resp, Controller{})
+	logTest(EgressTraffic, start, time.Since(start), "", req, resp, Controller{})
 
 	fmt.Printf("test: Default-Threshold-Int() -> %v\n", "success")
 
@@ -137,6 +137,6 @@ func ExampleDefault_Threshold_Deadline() {
 
 }
 
-func logTest(traffic string, start time.Time, duration time.Duration, req any, resp any, controller Controller) {
-	Log(traffic, start, duration, req, resp, controller)
+func logTest(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, controller Controller) {
+	Log(traffic, start, duration, route, req, resp, controller)
 }
