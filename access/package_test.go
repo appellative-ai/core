@@ -11,13 +11,13 @@ func ExampleLogAccess() {
 	r, _ := http.NewRequest(http.MethodGet, "/github/advanced-go/example-domain/activity:entry", nil)
 	r.Host = "localhost:8080"
 
-	s := DefaultFormat(nil, IngressTraffic, start, time.Millisecond*2000, "ingress-route", r, &http.Response{StatusCode: http.StatusGatewayTimeout, Status: "Gateway Timeout"}, Controller{Timeout: time.Millisecond * 1500})
+	s := DefaultFormat(nil, IngressTraffic, start, time.Millisecond*2000, "ingress-route", r, &http.Response{StatusCode: http.StatusGatewayTimeout, Status: "Gateway Timeout"}, Thresholds{Timeout: time.Millisecond * 1500})
 	fmt.Printf("test: log() -> %v\n", s)
 
-	s = DefaultFormat(nil, IngressTraffic, start, time.Millisecond*750, "", r, &http.Response{StatusCode: http.StatusTooManyRequests, Status: "Too Many Requests"}, Controller{RateLimit: "50", RateBurst: "5"})
+	s = DefaultFormat(nil, IngressTraffic, start, time.Millisecond*750, "", r, &http.Response{StatusCode: http.StatusTooManyRequests, Status: "Too Many Requests"}, Thresholds{RateLimit: 50})
 	fmt.Printf("test: log() -> %v\n", s)
 
-	s = DefaultFormat(nil, EgressTraffic, start, time.Millisecond*345, "egress-route", r, &http.Response{StatusCode: 200, Status: "OK"}, Controller{Redirect: "10"})
+	s = DefaultFormat(nil, EgressTraffic, start, time.Millisecond*345, "egress-route", r, &http.Response{StatusCode: 200, Status: "OK"}, Thresholds{Redirect: 10})
 	fmt.Printf("test: log() -> %v\n", s)
 
 	//Output:

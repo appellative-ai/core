@@ -1,12 +1,6 @@
 package access
 
-import (
-	"fmt"
-	"net/http"
-	"net/url"
-	"time"
-)
-
+/*
 func ExampleDefault_Host() {
 	start := time.Now().UTC()
 	SetOrigin(Origin{Region: "us", Zone: "west", SubZone: "dc1", Host: "search-app", InstanceId: "123456789"})
@@ -137,6 +131,9 @@ func ExampleDefault_Threshold_Deadline() {
 
 }
 
-func logTest(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, controller Controller) {
-	Log(traffic, start, duration, route, req, resp, controller)
+func logTest(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds []any) {
+	Log(traffic, start, duration, route, req, resp, thresholds)
 }
+
+
+*/

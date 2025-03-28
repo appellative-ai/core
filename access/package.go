@@ -60,11 +60,11 @@ func SetLogFn(fn LogFn) {
 // Header.Get(XRequestId)),
 // Header.Get(XRelatesTo)),
 // Header.Get(LocationHeader)
-func Log(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, controller Controller) {
+func Log(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Thresholds) {
 	if originSet {
-		defaultLog(&origin, traffic, start, duration, route, req, resp, controller)
+		defaultLog(&origin, traffic, start, duration, route, req, resp, thresholds)
 	} else {
-		defaultLog(nil, traffic, start, duration, route, req, resp, controller)
+		defaultLog(nil, traffic, start, duration, route, req, resp, thresholds)
 
 	}
 }

@@ -15,22 +15,22 @@ const (
 	XDomain = "X-Domain"
 )
 
-var defaultLog = func(o *Origin, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, controller Controller) {
-	s := DefaultFormat(o, traffic, start, duration, route, req, resp, controller)
+var defaultLog = func(o *Origin, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Thresholds) {
+	s := DefaultFormat(o, traffic, start, duration, route, req, resp, thresholds)
 	log.Default().Printf("%v\n", s)
 }
 
-func DefaultFormat(o *Origin, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, controller Controller) string {
+func DefaultFormat(o *Origin, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Thresholds) string {
 	newReq := BuildRequest(req)
 	newResp := BuildResponse(resp)
 	url, parsed := ParseURL(newReq.Host, newReq.URL)
 	//o.Host = Conditional(o.Host, parsed.Host)
-	UpdateDefaults(&controller)
+	//UpdateDefaults(&controller)
 
 	return initFormat(o, traffic, start, duration, route) +
 		requestFormat(newReq, url, parsed) +
 		responseFormat(newResp) +
-		controllerFormat(traffic, controller)
+		thresholdsFormat(traffic, thresholds)
 
 	/*
 		s := fmt.Sprintf("{"+
@@ -170,32 +170,24 @@ func responseFormat(newResp *http.Response) string {
 	)
 }
 
-func controllerFormat(traffic string, controller Controller) string {
+func thresholdsFormat(traffic string, thresholds Thresholds) string {
 	if traffic == EgressTraffic {
 		return fmt.Sprintf(
-			// Controller
 			"\"timeout\":%v, "+
 				"\"rate-limit\":%v, "+
-				"\"rate-burst\":%v, "+
 				"\"redirect\":%v } ",
-			//"\"cc\":%v }",
-			Milliseconds(controller.Timeout),
-			toInt(controller.RateLimit),
-			toInt(controller.RateBurst),
-			toInt(controller.Redirect),
-			//fmtx.JsonString(controller.Code),
+			Milliseconds(thresholds.timeout()),
+			thresholds.rateLimit(),
+			thresholds.redirect(),
 		)
 	} else {
 		return fmt.Sprintf(
-			// Controller
 			"\"timeout\":%v, "+
 				"\"rate-limit\":%v, "+
-				"\"rate-burst\":%v } ",
-			//"\"cc\":%v }",
-			Milliseconds(controller.Timeout),
-			toInt(controller.RateLimit),
-			toInt(controller.RateBurst),
-			//fmtx.JsonString(controller.Code),
+				"\"redirect\":%v } ",
+			Milliseconds(thresholds.timeout()),
+			thresholds.rateLimit(),
+			thresholds.redirect(),
 		)
 	}
 }
