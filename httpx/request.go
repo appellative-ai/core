@@ -6,10 +6,10 @@ import (
 )
 
 const (
-	XRequestId = "X-Request-ID"
+	XRequestId = "X-Request-Id"
 )
 
-// AddRequestId - add a request to an httpx.Request or an httpx.Header
+// AddRequestId - add a request to an http.Request or an http.Header
 func AddRequestId(t any) http.Header {
 	if t == nil {
 		h := make(http.Header)
