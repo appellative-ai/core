@@ -11,20 +11,15 @@ const (
 	failsafeUri     = "https://invalid-uri.com"
 	XRequestId      = "x-request-id"
 	XRateLimit      = "x-rate-limit"
-	XRateBurst      = "x-rate-burst"
+	XTimeout        = "x-timeout"
 	XRedirect       = "x-redirect"
 	XCached         = "x-cached"
 	ContentEncoding = "Content-Encoding"
-
-	ControllerTimeout   = "TO" // Controller struct code
-	ControllerRateLimit = "RL" // Controller struct code
-	ControllerRedirect  = "RD" // Routing struct code
 )
 
 var (
 	origin    = Origin{}
 	originSet bool
-	//logger = defaultLog
 )
 
 // SetOrigin - initialize the origin
@@ -33,33 +28,6 @@ func SetOrigin(o Origin) {
 	originSet = true
 }
 
-/*
-// LogFn - log function
-type LogFn func(o Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, controller Controller)
-
-// SetLogFn - override logging
-func SetLogFn(fn LogFn) {
-	if fn != nil {
-		logger = fn
-	}
-}
-
-
-*/
-// RequestConstraints - Request constraints
-//type RequestConstraints interface {
-//	*httpx.Request | Request
-//}
-
-// ResponseConstraints - Response constraints
-//type ResponseConstraints interface {
-//	*httpx.Response | *aspect.Status | int
-//}
-
-// Log - access logging.
-// Header.Get(XRequestId)),
-// Header.Get(XRelatesTo)),
-// Header.Get(LocationHeader)
 func Log(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) {
 	if originSet {
 		defaultLog(&origin, traffic, start, duration, route, req, resp, thresholds)
@@ -68,22 +36,3 @@ func Log(traffic string, start time.Time, duration time.Duration, route string, 
 
 	}
 }
-
-/*
-// FormatFunc - formatting
-type FormatFunc func(o aspect.Origin, traffic string, start time.Time, duration time.Duration, req any, resp any, routing Routing, controller Controller) string
-
-// SetFormatFunc - override formatting
-func SetFormatFunc(fn FormatFunc) {
-	if fn != nil {
-		formatter = fn
-	}
-}
-func DisableLogging(v bool) {
-	disabled = v
-}
-origin    = aspect.Origin{}
-	//formatter = DefaultFormat
-	logger    = defaultLog
-	disabled  = false
-*/

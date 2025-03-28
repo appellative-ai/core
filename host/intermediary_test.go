@@ -136,40 +136,30 @@ func limitLink(next httpx.Exchange) httpx.Exchange {
 		time.Sleep(time.Second * 3)
 		h := make(http.Header)
 		h.Add(access.XRateLimit, "123")
-		h.Add(access.XRateBurst, "12")
 		return &http.Response{StatusCode: http.StatusTooManyRequests, Header: h}, nil
 	}
 }
 
-/*
-func timeoutExchange(next httpx.Exchange) httpx.Exchange {
+func timeoutLink(next httpx.Exchange) httpx.Exchange {
 	return func(req *http.Request) (*http.Response, error) {
 		time.Sleep(time.Second * 3)
 		h := make(http.Header)
-		//h.Add(access.XRateLimit, "123")
-		//h.Add(access.XRateBurst, "12")
+		h.Add(access.XTimeout, "1500ms")
 		return &http.Response{StatusCode: http.StatusGatewayTimeout, Header: h}, nil
 	}
 }
 
+func redirectLink(next httpx.Exchange) httpx.Exchange {
+	return func(req *http.Request) (*http.Response, error) {
+		time.Sleep(time.Second * 3)
+		h := make(http.Header)
+		h.Add(access.XRedirect, "51")
+		h.Add(access.XTimeout, "1500ms")
+		return &http.Response{StatusCode: http.StatusGatewayTimeout, Header: h}, nil
+	}
+}
 
-*/
-
-func ExampleAccessLogLink() {
-	access.SetOrigin(access.Origin{
-		Region:     "us-west1",
-		Zone:       "zone-a",
-		SubZone:    "sub-zone-1",
-		Host:       "test.com",
-		InstanceId: "123456789",
-	})
-	//ctx, fn := context.WithTimeout(context.Background(), time.Second*2)
-	//defer fn()
-	//req, _ := http.NewRequestWithContext(ctx, http.MethodGet, "https://www.google.com/search?q=golang", nil)
-
-	//ex := httpx.NewPipeline(AccessLogExchange, timeoutExchange)
-	//ex(req)
-
+func ExampleAccessLogLink_Limit() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
 	ex := httpx.BuildChain(AccessLogLink, limitLink)
@@ -177,6 +167,28 @@ func ExampleAccessLogLink() {
 
 	//Output:
 	//test: AccessLogIntermediary()-OK -> [status:<nil>] [content:true]
+
+}
+
+func ExampleAccessLogLink_Timeout() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	req.Header.Add(access.XRequestId, "request-id")
+	ex := httpx.BuildChain(AccessLogLink, timeoutLink)
+	ex(req)
+
+	//Output:
+	//test: AccessLogIntermediary()-OK -> [status:<nil>] [content:true]
 	//test: AccessLogIntermediary()-Gateway-Timeout -> [status:status code 504] [content:Timeout [Get "https://www.google.com/search?q=golang": context deadline exceeded]]
+
+}
+
+func ExampleAccessLogLink_Redirect() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	req.Header.Add(access.XRequestId, "request-id")
+	ex := httpx.BuildChain(AccessLogLink, redirectLink)
+	ex(req)
+
+	//Output:
+	//test: AccessLogIntermediary()-OK -> [status:<nil>] [content:true]
 
 }

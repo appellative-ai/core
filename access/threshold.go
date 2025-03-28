@@ -1,6 +1,7 @@
 package access
 
 import (
+	"github.com/behavioral-ai/core/fmtx"
 	"strconv"
 	"time"
 )
@@ -12,14 +13,19 @@ type Threshold struct {
 }
 
 func (t Threshold) timeout() time.Duration {
-	var dur time.Duration
+	var dur time.Duration = -1
 
 	if t.Timeout == nil {
 		return -1
 	}
 	if s, ok := t.Timeout.(string); ok {
-		i, _ := strconv.Atoi(s)
-		dur = time.Duration(i)
+		if s == "" {
+			return dur
+		}
+		i, err := fmtx.ParseDuration(s)
+		if err == nil {
+			dur = i
+		}
 	} else {
 		if d, ok1 := t.Timeout.(time.Duration); ok1 {
 			dur = d
@@ -35,6 +41,9 @@ func (t Threshold) rateLimit() float64 {
 		return limit
 	}
 	if s, ok := t.RateLimit.(string); ok {
+		if s == "" {
+			return limit
+		}
 		i, _ := strconv.Atoi(s)
 		return float64(i)
 	}
@@ -53,6 +62,9 @@ func (t Threshold) redirect() int {
 		return pct
 	}
 	if s, ok := t.Redirect.(string); ok {
+		if s == "" {
+			return pct
+		}
 		i, _ := strconv.Atoi(s)
 		pct = i
 	} else {
