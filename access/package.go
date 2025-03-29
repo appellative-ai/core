@@ -11,6 +11,7 @@ const (
 	failsafeUri     = "https://invalid-uri.com"
 	XRequestId      = "x-request-id"
 	XRateLimit      = "x-rate-limit"
+	XRateBurst      = "x-rate-burst"
 	XTimeout        = "x-timeout"
 	XRedirect       = "x-redirect"
 	XCached         = "x-cached"
