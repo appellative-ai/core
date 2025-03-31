@@ -32,11 +32,10 @@ const (
 	XChannel   = "x-channel"
 	XRelatesTo = "x-relates-to"
 
-	ContentType         = "Content-Type"
-	ContentTypeError    = "application/error"
-	ContentTypeMap      = "application/map"
-	ContentTypeStatus   = "application/status"
-	ContentTypeExchange = "application/exchange"
+	ContentType       = "Content-Type"
+	ContentTypeError  = "application/error"
+	ContentTypeMap    = "application/map"
+	ContentTypeStatus = "application/status"
 )
 
 var (

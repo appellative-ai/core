@@ -9,6 +9,9 @@ import (
 // Exchange - http exchange
 type Exchange func(r *http.Request) (*http.Response, error)
 
+// ExchangeWriter - http exchange writer
+type ExchangeWriter func(w http.ResponseWriter, r *http.Request)
+
 // Link - function to link http Exchanges
 type Link func(next Exchange) Exchange
 
