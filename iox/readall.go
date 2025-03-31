@@ -21,6 +21,7 @@ func ReadAll(body io.Reader, h http.Header) ([]byte, error) {
 			}
 		}()
 	}
+	enc := h.Get(ContentEncoding)
 	reader, status := NewEncodingReader(body, h)
 	if status != nil {
 		return nil, status //status.AddLocation()
@@ -29,6 +30,9 @@ func ReadAll(body io.Reader, h http.Header) ([]byte, error) {
 	_ = reader.Close()
 	if err != nil {
 		return nil, err
+	}
+	if enc != "" {
+		h.Del(ContentEncoding)
 	}
 	return buf, nil
 }
