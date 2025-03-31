@@ -14,12 +14,12 @@ func ExampleConfigMessage() {
 		return NewResponse(http.StatusTeapot, nil, nil), nil
 	})
 
-	ex = ConfigExchangeContent(m)
+	ex, _ = ConfigExchangeContent(m)
 	resp, err := ex(req)
 	fmt.Printf("test: ConfigExchangeContent() -> [status:%v] [err:%v]\n", resp.StatusCode, err)
 
 	m = NewConfigExchangeMessage(ex)
-	ex = ConfigExchangeContent(m)
+	ex, _ = ConfigExchangeContent(m)
 	resp, err = ex(req)
 	fmt.Printf("test: ConfigExchangeContent() -> [status:%v] [err:%v]\n", resp.StatusCode, err)
 
