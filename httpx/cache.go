@@ -30,9 +30,9 @@ func newCache() *contentT {
 	return c
 }
 
-// Get - load a response based on a key, usually the URL
-func (c *contentT) Get(key string) *http.Response {
-	value, ok := c.m.Load(key)
+// Get - load a response based on a URI, usually the URL
+func (c *contentT) Get(uri string) *http.Response {
+	value, ok := c.m.Load(uri)
 	if !ok {
 		return notFoundResponse
 	}
@@ -42,9 +42,9 @@ func (c *contentT) Get(key string) *http.Response {
 	return notFoundResponse
 }
 
-// Put - store response based on a key, usually the URL
-func (c *contentT) Put(key string, resp *http.Response) {
-	c.m.Store(key, resp)
+// Put - store response based on a URI, usually the URL
+func (c *contentT) Put(uri string, resp *http.Response) {
+	c.m.Store(uri, resp)
 }
 
 // CreateResponse - create a response from a request
