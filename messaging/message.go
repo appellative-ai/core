@@ -32,10 +32,11 @@ const (
 	XChannel   = "x-channel"
 	XRelatesTo = "x-relates-to"
 
-	ContentType       = "Content-Type"
-	ContentTypeError  = "application/error"
-	ContentTypeMap    = "application/map"
-	ContentTypeStatus = "application/status"
+	ContentType         = "Content-Type"
+	ContentTypeError    = "application/error"
+	ContentTypeMap      = "application/map"
+	ContentTypeStatus   = "application/status"
+	ContentTypeExchange = "application/exchange"
 )
 
 var (
@@ -66,7 +67,7 @@ func NewMessage(channel, event string) *Message {
 	return m
 }
 
-func NewConfigMessage(cfg map[string]string) *Message {
+func NewConfigMapMessage(cfg map[string]string) *Message {
 	m := NewMessage(Control, ConfigEvent)
 	m.SetContent(ContentTypeMap, cfg)
 	return m

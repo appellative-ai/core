@@ -19,7 +19,7 @@ func ExampleConfigMessage() {
 	cfg := make(map[string]string)
 	cfg["key1"] = "value1"
 	cfg["key2"] = "value2"
-	m := NewConfigMessage(cfg)
+	m := NewConfigMapMessage(cfg)
 
 	m2 := ConfigMapContent(NewMessage(Master, ShutdownEvent))
 	fmt.Printf("test: NewConfigMessage() -> [%v]\n", m2)
