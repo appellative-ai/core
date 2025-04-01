@@ -25,6 +25,7 @@ func ConfigExchangeContent(m *messaging.Message) (Exchange, bool) {
 	return nil, false
 }
 
+/*
 func NewConfigExchangeWriterMessage(ex ExchangeWriter) *messaging.Message {
 	m := messaging.NewMessage(messaging.Control, messaging.ConfigEvent)
 	m.SetContent(ContentTypeExchangeWriter, ex)
@@ -40,3 +41,6 @@ func ConfigExchangeWriterContent(m *messaging.Message) (ExchangeWriter, bool) {
 	}
 	return nil, false
 }
+
+
+*/

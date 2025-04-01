@@ -9,9 +9,6 @@ import (
 // Exchange - http exchange
 type Exchange func(r *http.Request) (*http.Response, error)
 
-// ExchangeWriter - http exchange writer
-type ExchangeWriter func(w http.ResponseWriter, r *http.Request)
-
 // Link - function to link http Exchanges
 type Link func(next Exchange) Exchange
 
@@ -52,38 +49,3 @@ func BuildChain(links ...any) Exchange {
 	}
 	return head
 }
-
-/*
-	if i == len(ex)-1 {
-		if link, ok := ex[i].(func(next Exchange) Exchange); ok {
-			head = link(nil)
-			continue
-		}
-		if i, ok := ex[i].(Chainable); ok {
-			head = i.Link(nil)
-			continue
-		}
-		panic(ex[i])
-	} else {
-
-func BuildChainT(ex ...Chainable) Exchange {
-	if len(ex) == 0 {
-		return nil
-	}
-	var head Exchange
-
-	for i := len(ex) - 1; i >= 0; i-- {
-		if i == len(ex)-1 {
-			head = ex[i].Link(nil)
-		} else {
-			head = ex[i].Link(head)
-		}
-	}
-	return head
-}
-
-
-
-
-
-*/
