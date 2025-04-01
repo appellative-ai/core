@@ -14,10 +14,15 @@ const (
 func AuthorizationLink(next httpx.Exchange) httpx.Exchange {
 	return func(r *http.Request) (resp *http.Response, err error) {
 		auth := r.Header.Get(Authorization)
-		if auth != "" {
+		if auth == "" {
+			return &http.Response{StatusCode: http.StatusUnauthorized}, nil
+		}
+		if next != nil {
+			resp, err = next(r)
+		} else {
 			return &http.Response{StatusCode: http.StatusOK}, nil
 		}
-		return &http.Response{StatusCode: http.StatusUnauthorized}, nil
+		return
 	}
 }
 
