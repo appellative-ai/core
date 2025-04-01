@@ -9,6 +9,7 @@ import (
 
 const (
 	Authorization = "Authorization"
+	Route         = "host"
 )
 
 func AuthorizationLink(next httpx.Exchange) httpx.Exchange {
@@ -42,7 +43,7 @@ func AccessLogLink(next httpx.Exchange) httpx.Exchange {
 		resp.Header.Del(access.XTimeout)
 		pct = resp.Header.Get(access.XRedirect)
 		resp.Header.Del(access.XRedirect)
-		access.Log(access.IngressTraffic, start, time.Since(start), "", r, resp, access.Threshold{Timeout: timeout, RateLimit: limit, Redirect: pct})
+		access.Log(access.IngressTraffic, start, time.Since(start), Route, r, resp, access.Threshold{Timeout: timeout, RateLimit: limit, Redirect: pct})
 		return
 	}
 }
