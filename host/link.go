@@ -18,7 +18,7 @@ func AuthorizationLink(next httpx.Exchange) httpx.Exchange {
 		if auth == "" {
 			return &http.Response{StatusCode: http.StatusUnauthorized}, nil
 		}
-		
+
 		*/
 		if next != nil {
 			resp, err = next(r)
