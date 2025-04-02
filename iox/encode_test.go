@@ -13,7 +13,7 @@ type echo struct {
 	Header http.Header `json:"header"`
 }
 
-func ExampleEncodeContent_None() {
+func ExampleEncodeContent() {
 	h := make(http.Header)
 	h.Add("x-request-id", "1234-56-7890")
 	e := echo{
@@ -26,21 +26,19 @@ func ExampleEncodeContent_None() {
 	if err1 != nil {
 		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err1)
 	}
-	buf, encoding, err := EncodeContent(nil, content)
-	fmt.Printf("test: EncodeContent-Nil-Request() -> [buf:%v] [encoding:%v] [err:%v]\n", len(buf), encoding, err)
+	//buf, encoding, err := EncodeContent(nil, content)
+	//fmt.Printf("test: EncodeContent-Nil-Header() -> [buf:%v] [encoding:%v] [err:%v]\n", len(buf), encoding, err)
 
-	req, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	buf, encoding, err = EncodeContent(req, content)
+	h2 := make(http.Header)
+	buf, encoding, err := EncodeContent(h2, content)
 	fmt.Printf("test: EncodeContent-No-Accept-Encoding() -> [buf:%v] [encoding:%v] [err:%v]\n", len(buf), encoding, err)
 
-	//req, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	req.Header.Add(AcceptEncoding, AcceptEncodingValue)
-	buf, encoding, err = EncodeContent(req, content)
+	h2.Add(AcceptEncoding, AcceptEncodingValue)
+	buf, encoding, err = EncodeContent(h2, content)
 	ct := http.DetectContentType(buf)
 	fmt.Printf("test: EncodeContent() -> [buf:%v] [encoding:%v] [content-type:%v] [err:%v]\n", len(buf), encoding, ct, err)
 
 	//Output:
-	//test: EncodeContent-Nil-Request() -> [buf:0] [encoding:] [err:request or request header is nil]
 	//test: EncodeContent-No-Accept-Encoding() -> [buf:0] [encoding:] [err:<nil>]
 	//test: EncodeContent() -> [buf:144] [encoding:gzip] [content-type:application/x-gzip] [err:<nil>]
 

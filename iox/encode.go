@@ -2,21 +2,17 @@ package iox
 
 import (
 	"bytes"
-	"errors"
 	"net/http"
 	"strings"
 )
 
-func EncodeContent(r *http.Request, content []byte) (buff []byte, encoding string, err error) {
-	if r == nil || r.Header == nil {
-		return nil, "", errors.New("request or request header is nil")
-	}
-	enc := acceptEncoding(r.Header)
+func EncodeContent(h http.Header, content []byte) (buff []byte, encoding string, err error) {
+	enc := acceptEncoding(h)
 	if !strings.Contains(enc, GzipEncoding) {
 		return nil, "", nil
 	}
 	buf := new(bytes.Buffer)
-	w, err1 := NewEncodingWriter(buf, r.Header)
+	w, err1 := NewEncodingWriter(buf, h)
 	if err1 != nil {
 		return nil, "", err
 	}
