@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	iox "github.com/behavioral-ai/core/io"
+	"github.com/behavioral-ai/core/iox"
 	"io"
 	"net/http"
 )
