@@ -17,10 +17,11 @@ func WriteResponse(w http.ResponseWriter, headers any, statusCode int, content a
 		w.WriteHeader(statusCode)
 		return 0
 	}
+	clone := CloneHeader(reqHeader)
 	if len(w.Header().Get(ContentEncoding)) != 0 {
-		reqHeader.Set(AcceptEncoding, "")
+		clone.Del(AcceptEncoding)
 	}
-	writer, err := iox.NewEncodingWriter(w, reqHeader)
+	writer, err := iox.NewEncodingWriter(w, clone)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
