@@ -20,6 +20,9 @@ const (
 	ExchangeOverride    = "X-Exchange-Override"
 	ContentResolver     = "X-Content-Resolver"
 	ResolverSeparator   = "->"
+	CacheControl        = "Cache-Control"
+	NoStore             = "no-store"
+	NoCache             = "no-cache"
 )
 
 func SetHeader(h http.Header, name, value string) http.Header {
@@ -66,4 +69,18 @@ func CloneHeaderWithEncoding(req *http.Request) http.Header {
 		h.Add(iox.AcceptEncoding, iox.GzipEncoding)
 	}
 	return h
+}
+
+func CacheControlNoStore(h http.Header) bool {
+	if h == nil {
+		return false
+	}
+	return strings.Contains(h.Get(CacheControl), NoStore)
+}
+
+func CacheControlNoCache(h http.Header) bool {
+	if h == nil {
+		return false
+	}
+	return strings.Contains(h.Get(CacheControl), NoCache)
 }

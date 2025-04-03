@@ -36,3 +36,26 @@ func ExampleCloneHeaderWithEncoding() {
 	//test: CloneHeaderWithEncoding() -> gzip
 
 }
+
+func ExampleCacheControl() {
+	h := make(http.Header)
+
+	fmt.Printf("test: CacheControlNoCache() -> [%v]\n", CacheControlNoCache(nil))
+	fmt.Printf("test: CacheControlNoCache() -> [%v]\n", CacheControlNoCache(h))
+	h.Set(CacheControl, NoCache)
+	fmt.Printf("test: CacheControlNoCache() -> [%v]\n", CacheControlNoCache(h))
+
+	fmt.Printf("test: CacheControlNoStore() -> [%v]\n", CacheControlNoStore(nil))
+	fmt.Printf("test: CacheControlNoStore() -> [%v]\n", CacheControlNoStore(h))
+	h.Set(CacheControl, NoStore)
+	fmt.Printf("test: CacheControlNoStore() -> [%v]\n", CacheControlNoStore(h))
+
+	//Output:
+	//test: CacheControlNoCache() -> [false]
+	//test: CacheControlNoCache() -> [false]
+	//test: CacheControlNoCache() -> [true]
+	//test: CacheControlNoStore() -> [false]
+	//test: CacheControlNoStore() -> [false]
+	//test: CacheControlNoStore() -> [true]
+
+}
