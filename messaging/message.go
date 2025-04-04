@@ -141,6 +141,11 @@ func (m *Message) Channel() string {
 	return m.Header.Get(XChannel)
 }
 
+func (m *Message) SetChannel(channel string) *Message {
+	m.Header.Set(XChannel, channel)
+	return m
+}
+
 func (m *Message) SetContentType(contentType string) {
 	if len(contentType) == 0 {
 		return //errors.New("error: content type is empty")
