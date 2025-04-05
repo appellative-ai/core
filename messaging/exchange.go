@@ -14,10 +14,13 @@ const (
 )
 
 // Mailbox - mailbox functionality
+/*
 type Mailbox interface {
 	Uri() string
 	Message(m *Message)
 }
+
+*/
 
 // Exchange - exchange directory
 type Exchange struct {
@@ -61,11 +64,11 @@ func (e *Exchange) Send(msg *Message) error {
 	//	return nil
 	//}
 	if msg == nil {
-		return errors.New(fmt.Sprintf("error: controller2.Send() failed as message is nil"))
+		return errors.New(fmt.Sprintf("error: exchange.Send() failed as message is nil"))
 	}
 	a := e.Get(msg.To())
 	if a == nil {
-		return errors.New(fmt.Sprintf("error: controller2.Send() failed as the message To is empty or invalid : [%v]", msg.To()))
+		return errors.New(fmt.Sprintf("error: exchange.Send() failed as the message To is empty or invalid : [%v]", msg.To()))
 	}
 	a.Message(msg)
 	return nil
@@ -92,28 +95,26 @@ func (e *Exchange) Broadcast(msg *Message) {
 	}
 }
 
-// RegisterMailbox - register a mailbox
-func (e *Exchange) RegisterMailbox(m Mailbox) error {
+// registerMailbox - register a mailbox
+/*
+func (e *Exchange) registerMailbox(m Mailbox) error {
 	if m == nil {
-		return errors.New("error: controller2.Register() agent is nil")
+		return errors.New("error: exchange.Register() agent is nil")
 	}
 	_, ok := e.m.Load(m.Uri())
 	if ok {
-		return errors.New(fmt.Sprintf("error: controller2.Register() agent already exists: [%v]", m.Uri()))
+		return errors.New(fmt.Sprintf("error: exchange.Register() agent already exists: [%v]", m.Uri()))
 	}
 	e.m.Store(m.Uri(), m)
-	/*
-		if sd, ok1 := m.(OnShutdown); ok1 {
+	if sd, ok1 := m.(OnShutdown); ok1 {
 			sd.Add(func() {
 				e.m.Delete(m.Uri())
 			})
 		}
-
-	*/
 	return nil
 }
 
-// GetMailbox - find a mailbox
+ // GetMailbox - find a mailbox
 func (e *Exchange) GetMailbox(uri string) Mailbox {
 	if len(uri) == 0 {
 		return nil
@@ -127,6 +128,8 @@ func (e *Exchange) GetMailbox(uri string) Mailbox {
 	}
 	return nil
 }
+
+*/
 
 // Register - register an agent
 func (e *Exchange) Register(agent Agent) error {
