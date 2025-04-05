@@ -97,19 +97,19 @@ func (m *Message) To() string {
 	return m.Header.Get(XTo)
 }
 
+func (m *Message) SetTo(uri string) *Message {
+	m.Header.Set(XTo, uri)
+	return m
+}
+
 func (m *Message) From() string {
 	return m.Header.Get(XFrom)
 }
 
-/*
-func (m *Message) SetFrom(uri string) {
+func (m *Message) SetFrom(uri string) *Message {
 	m.Header.Set(XFrom, uri)
+	return m
 }
-func (m *Message) SetTo(uri string) {
-	m.Header.Set(XTo, uri)
-}
-
-*/
 
 func (m *Message) Event() string {
 	return m.Header.Get(XEvent)
@@ -124,11 +124,12 @@ func (m *Message) SetChannel(channel string) *Message {
 	return m
 }
 
-func (m *Message) SetContentType(contentType string) {
+func (m *Message) SetContentType(contentType string) *Message {
 	if len(contentType) == 0 {
-		return //errors.New("error: content type is empty")
+		return m //errors.New("error: content type is empty")
 	}
 	m.Header.Add(ContentType, contentType)
+	return m
 }
 
 func (m *Message) ContentType() string {
