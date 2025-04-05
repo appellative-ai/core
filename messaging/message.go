@@ -188,14 +188,14 @@ func NewEventingHandlerMessage(agent Agent) *Message {
 	return m
 }
 
-func EventingHandlerContent(m *Message) Agent {
+func EventingHandlerContent(m *Message) (Agent, bool) {
 	if m.Event() != ConfigEvent || m.ContentType() != ContentTypeEventing {
-		return nil
+		return nil, false
 	}
 	if v, ok := m.Body.(Agent); ok {
-		return v
+		return v, true
 	}
-	return nil
+	return nil, false
 }
 
 func NewDispatcherMessage(dispatcher Dispatcher) *Message {
@@ -204,14 +204,14 @@ func NewDispatcherMessage(dispatcher Dispatcher) *Message {
 	return m
 }
 
-func DispatcherContent(m *Message) Dispatcher {
+func DispatcherContent(m *Message) (Dispatcher, bool) {
 	if m.Event() != ConfigEvent || m.ContentType() != ContentTypeDispatcher {
-		return nil
+		return nil, false
 	}
 	if v, ok := m.Body.(Dispatcher); ok {
-		return v
+		return v, true
 	}
-	return nil
+	return nil, false
 }
 
 // Reply - function used by message recipient to reply with a Status
