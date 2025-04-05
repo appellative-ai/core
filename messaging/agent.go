@@ -29,10 +29,10 @@ func Name(agent Agent) string {
 	if agent == nil {
 		return ""
 	}
-	return name(agent.Uri())
+	return getName(agent.Uri())
 }
 
-func name(uri string) string {
+func getName(uri string) string {
 	i := strings.Index(uri, AssignmentIdentifier)
 	if i == -1 {
 		return uri

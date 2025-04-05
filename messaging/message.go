@@ -32,10 +32,12 @@ const (
 	XChannel   = "x-channel"
 	XRelatesTo = "x-relates-to"
 
-	ContentType       = "Content-Type"
-	ContentTypeError  = "application/error"
-	ContentTypeMap    = "application/map"
-	ContentTypeStatus = "application/status"
+	ContentType           = "Content-Type"
+	ContentTypeError      = "application/error"
+	ContentTypeMap        = "application/map"
+	ContentTypeStatus     = "application/status"
+	ContentTypeEventing   = "application/eventing"
+	ContentTypeDispatcher = "application/dispatcher"
 )
 
 var (
@@ -66,35 +68,11 @@ func NewMessage(channel, event string) *Message {
 	return m
 }
 
-func NewConfigMapMessage(cfg map[string]string) *Message {
-	m := NewMessage(Control, ConfigEvent)
-	m.SetContent(ContentTypeMap, cfg)
-	return m
-}
-
-func NewStatusMessage(status *Status, relatesTo string) *Message {
-	m := NewMessage(Control, StatusEvent)
-	m.SetContent(ContentTypeStatus, status)
-	if relatesTo != "" {
-		m.Header.Add(XRelatesTo, relatesTo)
-	}
-	return m
-}
-
 func NewMessageWithError(channel, event string, err error) *Message {
 	m := NewMessage(channel, event)
 	m.SetContent(ContentTypeError, err)
 	return m
 }
-
-/*
-func NewMessageWithReply(channel, event string, replyTo Handler) *Message {
-	m := NewMessage(channel, event)
-	m.ReplyTo = replyTo
-	return m
-}
-
-*/
 
 func NewAddressableMessage(channel, to, from, event string) *Message {
 	m := new(Message)
@@ -169,6 +147,12 @@ func (m *Message) SetContent(contentType string, content any) error {
 	return nil
 }
 
+func NewConfigMapMessage(cfg map[string]string) *Message {
+	m := NewMessage(Control, ConfigEvent)
+	m.SetContent(ContentTypeMap, cfg)
+	return m
+}
+
 func ConfigMapContent(m *Message) map[string]string {
 	if m.Event() != ConfigEvent || m.ContentType() != ContentTypeMap {
 		return nil
@@ -179,6 +163,15 @@ func ConfigMapContent(m *Message) map[string]string {
 	return nil
 }
 
+func NewStatusMessage(status *Status, relatesTo string) *Message {
+	m := NewMessage(Control, StatusEvent)
+	m.SetContent(ContentTypeStatus, status)
+	if relatesTo != "" {
+		m.Header.Add(XRelatesTo, relatesTo)
+	}
+	return m
+}
+
 func StatusContent(m *Message) (*Status, string) {
 	if m.Event() != StatusEvent || m.ContentType() != ContentTypeStatus {
 		return nil, ""
@@ -187,6 +180,38 @@ func StatusContent(m *Message) (*Status, string) {
 		return s, m.RelatesTo()
 	}
 	return nil, ""
+}
+
+func NewEventingHandlerMessage(agent Agent) *Message {
+	m := NewMessage(Control, ConfigEvent)
+	m.SetContent(ContentTypeEventing, agent)
+	return m
+}
+
+func EventingHandlerContent(m *Message) Agent {
+	if m.Event() != ConfigEvent || m.ContentType() != ContentTypeEventing {
+		return nil
+	}
+	if v, ok := m.Body.(Agent); ok {
+		return v
+	}
+	return nil
+}
+
+func NewDispatcherMessage(dispatcher Dispatcher) *Message {
+	m := NewMessage(Control, ConfigEvent)
+	m.SetContent(ContentTypeDispatcher, dispatcher)
+	return m
+}
+
+func DispatcherContent(m *Message) Dispatcher {
+	if m.Event() != ConfigEvent || m.ContentType() != ContentTypeDispatcher {
+		return nil
+	}
+	if v, ok := m.Body.(Dispatcher); ok {
+		return v
+	}
+	return nil
 }
 
 // Reply - function used by message recipient to reply with a Status

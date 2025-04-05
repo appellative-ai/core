@@ -156,11 +156,11 @@ func ExampleAgentRun() {
 
 func ExampleName() {
 	uri := "resiliency:agent/core/test"
-	n := name(uri)
+	n := getName(uri)
 	fmt.Printf("test: name(\"%v\") -> [%v]\n", uri, n)
 
 	uri = "resiliency:agent/core/test#west1.zone1.host"
-	n = name(uri)
+	n = getName(uri)
 	fmt.Printf("test: name(\"%v\") -> [%v]\n", uri, n)
 
 	//Output:
