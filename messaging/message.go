@@ -6,9 +6,6 @@ import (
 	"net/http"
 )
 
-//StartEvent    = "event:start"
-//StopEvent     = "event:stop"
-
 const (
 	StartupEvent  = "event:startup"
 	ShutdownEvent = "event:shutdown"
@@ -36,7 +33,6 @@ const (
 	ContentTypeError      = "application/error"
 	ContentTypeMap        = "application/map"
 	ContentTypeStatus     = "application/status"
-	ContentTypeEventing   = "application/eventing"
 	ContentTypeDispatcher = "application/dispatcher"
 )
 
@@ -181,22 +177,6 @@ func StatusContent(m *Message) (*Status, string) {
 		return s, m.RelatesTo()
 	}
 	return nil, ""
-}
-
-func NewEventingHandlerMessage(agent Agent) *Message {
-	m := NewMessage(Control, ConfigEvent)
-	m.SetContent(ContentTypeEventing, agent)
-	return m
-}
-
-func EventingHandlerContent(m *Message) (Agent, bool) {
-	if m.Event() != ConfigEvent || m.ContentType() != ContentTypeEventing {
-		return nil, false
-	}
-	if v, ok := m.Body.(Agent); ok {
-		return v, true
-	}
-	return nil, false
 }
 
 func NewDispatcherMessage(dispatcher Dispatcher) *Message {
