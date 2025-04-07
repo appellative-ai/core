@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"fmt"
+	"reflect"
 )
 
 func ExampleTraceDispatch_Channel() {
@@ -44,5 +45,18 @@ func ExampleTraceDispatch_Event() {
 	//trace -> 2024-11-24T18:46:04.697Z [<nil>] [] [eventing:shutdown]
 	//test: Dispatch() -> [eventing:shutdown]
 	//test: Dispatch() -> [channel:] [eventing:observation]
+
+}
+
+func ExampleDispatcherMessage() {
+	m := NewDispatcherMessage(NewTraceDispatcher())
+	fmt.Printf("test: NewDispatcherMessage() -> [%v] [%v] [%v]\n", m.Event(), m.ContentType(), reflect.TypeOf(m.Body))
+
+	c, ok := DispatcherContent(m)
+	fmt.Printf("test: DispatcherContent() -> [%v] [%v]\n", reflect.TypeOf(c), ok)
+
+	//Output:
+	//test: NewDispatcherMessage() -> [event:config] [application/x-dispatcher] [*messaging.traceDispatch]
+	//test: DispatcherContent() -> [*messaging.traceDispatch] [true]
 
 }

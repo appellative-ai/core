@@ -7,14 +7,12 @@ import (
 )
 
 const (
-	StartupEvent            = "event:startup"
-	ShutdownEvent           = "event:shutdown"
-	PauseEvent              = "event:pause"  // disable data channel receive
-	ResumeEvent             = "event:resume" // enable data channel receive
-	ConfigEvent             = "event:config"
-	StatusEvent             = "event:status"
-	SubscriptionCreateEvent = "event:subscription-create"
-	SubscriptionCancelEvent = "event:subscription-cancel"
+	StartupEvent  = "event:startup"
+	ShutdownEvent = "event:shutdown"
+	PauseEvent    = "event:pause"  // disable data channel receive
+	ResumeEvent   = "event:resume" // enable data channel receive
+	ConfigEvent   = "event:config"
+	StatusEvent   = "event:status"
 
 	ObservationEvent = "event:observation"
 	TickEvent        = "event:tick"
@@ -31,12 +29,10 @@ const (
 	XChannel   = "x-channel"
 	XRelatesTo = "x-relates-to"
 
-	ContentType             = "Content-Type"
-	ContentTypeError        = "application/error"
-	ContentTypeMap          = "application/map"
-	ContentTypeStatus       = "application/status"
-	ContentTypeDispatcher   = "application/dispatcher"
-	ContentTypeSubscription = "application/subscription"
+	ContentType       = "Content-Type"
+	ContentTypeError  = "application/x-error"
+	ContentTypeMap    = "application/x-map"
+	ContentTypeStatus = "application/x-status"
 )
 
 var (
@@ -180,63 +176,6 @@ func StatusContent(m *Message) (*Status, string) {
 		return s, m.RelatesTo()
 	}
 	return nil, ""
-}
-
-func NewDispatcherMessage(dispatcher Dispatcher) *Message {
-	m := NewMessage(Control, ConfigEvent)
-	m.SetContent(ContentTypeDispatcher, dispatcher)
-	return m
-}
-
-func DispatcherContent(m *Message) (Dispatcher, bool) {
-	if m.Event() != ConfigEvent || m.ContentType() != ContentTypeDispatcher {
-		return nil, false
-	}
-	if v, ok := m.Body.(Dispatcher); ok {
-		return v, true
-	}
-	return nil, false
-}
-
-type Subscription struct {
-	Event string
-	From  string
-}
-
-func NewSubscriptionCreateMessage(to, from, event string) *Message {
-	m := NewMessage(Control, SubscriptionCreateEvent)
-	m.SetTo(to)
-	m.SetFrom(from)
-	m.SetContent(ContentTypeSubscription, Subscription{From: from, Event: event})
-	return m
-}
-
-func SubscriptionCreateContent(m *Message) (Subscription, bool) {
-	if m.Event() != SubscriptionCreateEvent || m.ContentType() != ContentTypeSubscription {
-		return Subscription{}, false
-	}
-	if v, ok := m.Body.(Subscription); ok {
-		return v, true
-	}
-	return Subscription{}, false
-}
-
-func NewSubscriptionCancelMessage(to, from, event string) *Message {
-	m := NewMessage(Control, SubscriptionCancelEvent)
-	m.SetTo(to)
-	m.SetFrom(from)
-	m.SetContent(ContentTypeSubscription, Subscription{From: from, Event: event})
-	return m
-}
-
-func SubscriptionCancelContent(m *Message) (Subscription, bool) {
-	if m.Event() != SubscriptionCancelEvent || m.ContentType() != ContentTypeSubscription {
-		return Subscription{}, false
-	}
-	if v, ok := m.Body.(Subscription); ok {
-		return v, true
-	}
-	return Subscription{}, false
 }
 
 // Reply - function used by message recipient to reply with a Status

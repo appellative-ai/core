@@ -6,6 +6,26 @@ import (
 	"time"
 )
 
+const (
+	ContentTypeDispatcher = "application/x-dispatcher"
+)
+
+func NewDispatcherMessage(dispatcher Dispatcher) *Message {
+	m := NewMessage(Control, ConfigEvent)
+	m.SetContent(ContentTypeDispatcher, dispatcher)
+	return m
+}
+
+func DispatcherContent(m *Message) (Dispatcher, bool) {
+	if m.Event() != ConfigEvent || m.ContentType() != ContentTypeDispatcher {
+		return nil, false
+	}
+	if v, ok := m.Body.(Dispatcher); ok {
+		return v, true
+	}
+	return nil, false
+}
+
 type Dispatcher interface {
 	Dispatch(agent Agent, channel any, event string)
 }
