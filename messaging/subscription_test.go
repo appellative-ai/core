@@ -44,6 +44,42 @@ func ExampleCatalog_Create() {
 
 }
 
+func ExampleCatalog_Lookup() {
+	event1 := "event:publish-1"
+	event2 := "event:test"
+	c := new(Catalog)
+
+	err := c.Create(Subscription{Event: publishEvent, From: subscriberName})
+	if err != nil {
+		fmt.Printf("test: Catalog() -> [err:%v]\n", err)
+	}
+
+	err = c.Create(Subscription{Event: publishEvent, From: "subscriber-1"})
+	if err != nil {
+		fmt.Printf("test: Catalog() -> [err:%v]\n", err)
+	}
+
+	err = c.Create(Subscription{Event: event1, From: subscriberName})
+	if err != nil {
+		fmt.Printf("test: Catalog() -> [err:%v]\n", err)
+	}
+
+	subs, ok := c.Lookup(event2)
+	fmt.Printf("test: Catalog(\"%v\") -> [subs:%v] [ok:%v]\n", event2, subs, ok)
+
+	subs, ok = c.Lookup(event1)
+	fmt.Printf("test: Catalog(\"%v\") -> [subs:%v] [ok:%v]\n", event1, subs, ok)
+
+	subs, ok = c.Lookup(publishEvent)
+	fmt.Printf("test: Catalog(\"%v\") -> [subs:%v] [ok:%v]\n", publishEvent, subs, ok)
+
+	//Output:
+	//test: Catalog("event:test") -> [subs:[]] [ok:false]
+	//test: Catalog("event:publish-1") -> [subs:[{event:publish-1 subscriber}]] [ok:true]
+	//test: Catalog("event:publish") -> [subs:[{event:publish subscriber} {event:publish subscriber-1}]] [ok:true]
+
+}
+
 func ExampleCatalog_Cancel_1() {
 	c := new(Catalog)
 

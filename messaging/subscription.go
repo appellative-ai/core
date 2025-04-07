@@ -20,6 +20,16 @@ type Catalog struct {
 	subs []Subscription
 }
 
+func (c *Catalog) Lookup(event string) (subs []Subscription, ok bool) {
+	for _, item := range c.subs {
+		if event == item.Event {
+			subs = append(subs, item)
+			ok = true
+		}
+	}
+	return
+}
+
 func (c *Catalog) Create(s Subscription) error {
 	if s.From == "" || s.Event == "" {
 		return errors.New("invalid subscription: from or event is empty")
