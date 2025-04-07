@@ -80,9 +80,9 @@ func (e *Exchange) Broadcast(msg *Message) {
 		return //errors.New(fmt.Sprintf("error: exchange.Broadcast() failed as message is nil"))
 	}
 	// TODO : Need to disallow shutdown message??
-	if msg.Event() == ShutdownEvent {
-		return
-	}
+	//if msg.Event() == ShutdownEvent {
+	//	return
+	//}
 	for _, uri := range e.List() {
 		a := e.Get(uri)
 		if a == nil {

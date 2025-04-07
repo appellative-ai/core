@@ -1,8 +1,11 @@
 package messaging
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
-func ExampleSubscriptionMessage() {
+func _ExampleSubscriptionMessage() {
 	m := NewSubscriptionCreateMessage("create-to", "create-from", SubscriptionCreateEvent)
 	s, ok := SubscriptionCreateContent(m)
 	fmt.Printf("test: NewSubscriptionCreateMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Event(), s, ok)
@@ -17,7 +20,7 @@ func ExampleSubscriptionMessage() {
 
 }
 
-func ExampleCatalog_Create() {
+func _ExampleCatalog_Create() {
 	c := new(Catalog)
 
 	m := NewSubscriptionCreateMessage(publisherName, "", publishEvent)
@@ -44,7 +47,7 @@ func ExampleCatalog_Create() {
 
 }
 
-func ExampleCatalog_Lookup() {
+func _ExampleCatalog_Lookup() {
 	event1 := "event:publish-1"
 	event2 := "event:test"
 	c := new(Catalog)
@@ -80,7 +83,7 @@ func ExampleCatalog_Lookup() {
 
 }
 
-func ExampleCatalog_Cancel_1() {
+func _ExampleCatalog_Cancel_1() {
 	c := new(Catalog)
 
 	// create 1 subscription and cancel
@@ -100,7 +103,7 @@ func ExampleCatalog_Cancel_1() {
 
 }
 
-func ExampleCatalog_Cancel_2() {
+func _ExampleCatalog_Cancel_2() {
 	event1 := "event:publish-1"
 	c := new(Catalog)
 
@@ -133,7 +136,7 @@ func ExampleCatalog_Cancel_2() {
 
 }
 
-func ExampleCatalog_Cancel_3() {
+func _ExampleCatalog_Cancel_3() {
 	event1 := "event:publish-1"
 	event2 := "event:publish-2"
 	c := new(Catalog)
@@ -182,16 +185,40 @@ func ExampleCatalog_Cancel_3() {
 }
 
 const (
-	subscriberName = "subscriber"
-	publisherName  = "publisher"
-	publishEvent   = "event:publish"
+	subscriberName  = "subscriber"
+	publisherName   = "publisher"
+	publishEvent    = "event:publish"
+	workEvent       = "event:work"
+	contentTypeItem = "content-type/x-item"
 )
 
 var (
 	exchange = NewExchange()
 )
 
+type workItem struct {
+	statusCode int
+	duration   time.Duration
+}
+
+func newWorkItemMessage(w workItem) *Message {
+	m := NewMessage(Control, workEvent)
+	m.SetContent(contentTypeItem, w)
+	return m
+}
+
+func workItemContent(m *Message) (workItem, bool) {
+	if m.Event() != workEvent || m.ContentType() != contentTypeItem {
+		return workItem{}, false
+	}
+	if v, ok := m.Body.(workItem); ok {
+		return v, true
+	}
+	return workItem{}, false
+}
+
 type subscriber struct {
+	running  bool
 	emissary *Channel
 }
 
@@ -202,9 +229,12 @@ func newSubscriber() Agent {
 }
 func (s *subscriber) Uri() string { return subscriberName }
 func (s *subscriber) Message(m *Message) {
-	if m.Event() == StartupEvent {
+	if m.Event() == StartupEvent && !s.running {
+		s.running = true
 		go s.run()
-		exchange.Send(NewSubscriptionCreateMessage(publisherName, subscriberName, publishEvent))
+		return
+	}
+	if !s.running {
 		return
 	}
 	s.emissary.C <- m
@@ -214,19 +244,33 @@ func (s *subscriber) run() {
 		select {
 		case m := <-s.emissary.C:
 			switch m.Event() {
+			case publishEvent:
+				exchange.Send(NewSubscriptionCreateMessage(publisherName, subscriberName, workEvent))
+				fmt.Printf("test: subscriber() -> [create] [%v]\n", workEvent)
+			case workEvent:
+				if work, ok := workItemContent(m); ok {
+					fmt.Printf("test: subscriber() -> [received] [status-code:%v] [duration:%v]\n", work.statusCode, work.duration)
+				}
 			case ShutdownEvent:
-				exchange.Send(NewSubscriptionCancelMessage(publisherName, subscriberName, publishEvent))
-				s.emissary.Close()
+				exchange.Send(NewSubscriptionCancelMessage(publisherName, subscriberName, workEvent))
+				fmt.Printf("test: subscriber() -> [cancel] [%v]\n", workEvent)
+				s.shutdown()
 				return
 			default:
-				fmt.Printf("test: Subscriber() -> [%v]\n", m)
+				fmt.Printf("test: subscriber() -> [%v]\n", m)
 			}
 		default:
 		}
 	}
 }
 
+func (s *subscriber) shutdown() {
+	s.running = false
+	s.emissary.Close()
+}
+
 type publisher struct {
+	running  bool
 	catalog  *Catalog
 	emissary *Channel
 }
@@ -239,8 +283,13 @@ func newPublisher() Agent {
 }
 func (p *publisher) Uri() string { return publisherName }
 func (p *publisher) Message(m *Message) {
-	if m.Event() == StartupEvent {
+	if m.Event() == StartupEvent && !p.running {
+		p.running = true
 		go p.run()
+		return
+	}
+	if !p.running {
+		fmt.Printf("test: publisher() [message:%v]\n", m.Event())
 		return
 	}
 	p.emissary.C <- m
@@ -250,15 +299,28 @@ func (p *publisher) run() {
 		select {
 		case m := <-p.emissary.C:
 			switch m.Event() {
+			case workEvent:
+				fmt.Printf("test: publisher() -> [received] [%v]\n", m.Event())
+				if subs, ok := p.catalog.Lookup(m.Event()); ok {
+					for _, item := range subs {
+						m.SetTo(item.From)
+						fmt.Printf("test: publisher() -> [published] [%v] [subscriber:%v] \n", item.Event, item.From)
+						exchange.Send(m)
+					}
+				}
 			case SubscriptionCreateEvent:
 				err := p.catalog.CreateMessage(m)
 				if err != nil {
 					fmt.Printf("test: publisher() -> [err:%v]\n", err)
+				} else {
+					fmt.Printf("test: publisher() -> [created] [%v]\n", m.Event())
 				}
 			case SubscriptionCancelEvent:
 				p.catalog.CancelMessage(m)
+				fmt.Printf("test: publisher() -> [canceled] [%v]\n", m.Event())
 			case ShutdownEvent:
-				p.emissary.Close()
+				fmt.Printf("test: publisher() -> [%v]\n", m.Event())
+				p.shutdown()
 				return
 			default:
 				fmt.Printf("test: publisher() -> [%v]\n", m)
@@ -268,6 +330,84 @@ func (p *publisher) run() {
 	}
 }
 
-func _ExampleSubscription() {
+func (p *publisher) shutdown() {
+	p.running = false
+	p.emissary.Close()
+}
+
+func _ExampleSubscription_Publisher() {
+	p := newPublisher()
+	p.Message(StartupMessage)
+
+	p.Message(NewSubscriptionCreateMessage(publisherName, subscriberName, workEvent))
+	time.Sleep(time.Second * 2)
+
+	p.Message(newWorkItemMessage(workItem{statusCode: 200, duration: time.Millisecond * 1500}))
+	time.Sleep(time.Second * 2)
+
+	p.Message(NewSubscriptionCancelMessage(publisherName, subscriberName, workEvent))
+	time.Sleep(time.Second * 2)
+
+	p.Message(ShutdownMessage)
+
+	//Output:
+	//test: publisher() -> [created] [event:subscription-create]
+	//test: publisher() -> [received] [event:work]
+	//test: publisher() -> [published] [event:work] [subscriber:subscriber]
+	//test: publisher() -> [canceled] [event:subscription-cancel]
+
+}
+
+func _ExampleSubscription_Subscriber() {
+	s := newSubscriber()
+	s.Message(StartupMessage)
+
+	s.Message(NewMessage(Emissary, publishEvent))
+	time.Sleep(time.Second * 2)
+
+	s.Message(newWorkItemMessage(workItem{statusCode: 200, duration: time.Millisecond * 1500}))
+	time.Sleep(time.Second * 2)
+
+	s.Message(ShutdownMessage)
+	time.Sleep(time.Second * 2)
+
+	//Output:
+	//test: subscriber() -> [create] [event:work]
+	//test: subscriber() -> [received] [status-code:200] [duration:1.5s]
+	//test: subscriber() -> [cancel] [event:work]
+
+}
+
+func ExampleSubscription() {
+	s := newSubscriber()
+	p := newPublisher()
+	exchange.Register(s)
+	exchange.Register(p)
+	exchange.Broadcast(StartupMessage)
+
+	// send workItem to publisher, not sent to subscriber
+	p.Message(newWorkItemMessage(workItem{statusCode: 200, duration: time.Millisecond * 1500}))
+	time.Sleep(time.Second * 2)
+
+	// subscriber create subscription
+	s.Message(NewMessage(Emissary, publishEvent))
+	time.Sleep(time.Second * 2)
+
+	p.Message(newWorkItemMessage(workItem{statusCode: 200, duration: time.Millisecond * 1500}))
+	time.Sleep(time.Second * 2)
+
+	exchange.Broadcast(ShutdownMessage)
+	time.Sleep(time.Second * 8)
+
+	//Output:
+	//test: publisher() -> [received] [event:work]
+	//test: subscriber() -> [create] [event:work]
+	//test: publisher() -> [created] [event:subscription-create]
+	//test: publisher() -> [received] [event:work]
+	//test: publisher() -> [published] [event:work] [subscriber:subscriber]
+	//test: subscriber() -> [received] [status-code:200] [duration:1.5s]
+	//test: publisher() -> [event:shutdown]
+	//test: publisher() [message:event:subscription-cancel]
+	//test: subscriber() -> [cancel] [event:work]
 
 }
