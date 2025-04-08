@@ -8,6 +8,10 @@ import (
 func emptyRun(uri string, ctrl, data <-chan *Message, state any) {
 }
 
+var (
+	pkgPath = "/github/behavioral-ai/core/messaging"
+)
+
 func emptyHandler(_ *Message) {}
 
 func ExampleRegister() {
@@ -72,8 +76,8 @@ func ExampleMessageError() {
 	ex := NewExchange()
 
 	fmt.Printf("test: Message(%v) -> : %v\n", uri, ex.Message(nil))
-	fmt.Printf("test: Message(%v) -> : %v\n", uri, ex.Message(NewMessage(Control, "")))
-	fmt.Printf("test: Message(%v) -> : %v\n", uri, ex.Message(NewMessage(Control, "")))
+	fmt.Printf("test: Message(%v) -> : %v\n", uri, ex.Message(NewMessage(ChannelControl, "")))
+	fmt.Printf("test: Message(%v) -> : %v\n", uri, ex.Message(NewMessage(ChannelControl, "")))
 
 	//Output:
 	//test: Message(urn:test) -> : error: exchange.Message() failed as message is nil
@@ -96,9 +100,9 @@ func ExampleMessage() {
 	a3 := newTestAgent(uri3, c, nil)
 	ex.Register(a3)
 
-	ex.Message(NewAddressableMessage(Control, uri1, PkgPath, StartupEvent))
-	ex.Message(NewAddressableMessage(Control, uri2, PkgPath, StartupEvent))
-	ex.Message(NewAddressableMessage(Control, uri3, PkgPath, StartupEvent))
+	ex.Message(newAddressableMessage(ChannelControl, uri1, pkgPath, StartupEvent))
+	ex.Message(newAddressableMessage(ChannelControl, uri2, pkgPath, StartupEvent))
+	ex.Message(newAddressableMessage(ChannelControl, uri3, pkgPath, StartupEvent))
 
 	time.Sleep(time.Second * 1)
 	resp1 := <-c.C

@@ -15,11 +15,11 @@ func NewChannel(name string) *Channel {
 }
 
 func NewEmissaryChannel() *Channel {
-	return NewChannel(Emissary)
+	return NewChannel(ChannelEmissary)
 }
 
 func NewMasterChannel() *Channel {
-	return NewChannel(Master)
+	return NewChannel(ChannelMaster)
 }
 
 /*

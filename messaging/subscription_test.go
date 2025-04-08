@@ -6,7 +6,7 @@ import (
 )
 
 func _ExampleSubscriptionMessage() {
-	m := NewSubscriptionCreateMessage("create-to", "create-from", SubscriptionCreateEvent)
+	m := NewSubscriptionCreateMessage("create-to", "create-from", ChannelControl, SubscriptionCreateEvent)
 	s, ok := SubscriptionCreateContent(m)
 	fmt.Printf("test: NewSubscriptionCreateMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Event(), s, ok)
 
@@ -23,19 +23,19 @@ func _ExampleSubscriptionMessage() {
 func _ExampleCatalog_Create() {
 	c := new(Catalog)
 
-	m := NewSubscriptionCreateMessage(publisherName, "", publishEvent)
+	m := NewSubscriptionCreateMessage(publisherName, "", ChannelControl, publishEvent)
 	err := c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, "")
+	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, "")
 	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, publishEvent)
+	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, publishEvent)
 	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, publishEvent)
+	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, publishEvent)
 	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
@@ -87,7 +87,7 @@ func ExampleCatalog_Cancel_1() {
 	c := new(Catalog)
 
 	// create 1 subscription and cancel
-	m := NewSubscriptionCreateMessage(publisherName, subscriberName, publishEvent)
+	m := NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, publishEvent)
 	err := c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
@@ -108,12 +108,12 @@ func ExampleCatalog_Cancel_2() {
 	c := new(Catalog)
 
 	// create 2 subscriptions and cancel
-	m := NewSubscriptionCreateMessage(publisherName, subscriberName, publishEvent)
+	m := NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, publishEvent)
 	err := c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, event1)
+	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, event1)
 	err = c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
@@ -142,17 +142,17 @@ func ExampleCatalog_Cancel_3() {
 	c := new(Catalog)
 
 	// create 3 subscriptions
-	m := NewSubscriptionCreateMessage(publisherName, subscriberName, publishEvent)
+	m := NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, publishEvent)
 	err := c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, event1)
+	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, event1)
 	err = c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, event2)
+	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, event2)
 	err = c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
@@ -202,7 +202,7 @@ type workItem struct {
 }
 
 func newWorkItemMessage(w workItem) *Message {
-	m := NewMessage(Control, workEvent)
+	m := NewMessage(ChannelControl, workEvent)
 	m.SetContent(contentTypeItem, w)
 	return m
 }
@@ -224,7 +224,7 @@ type subscriber struct {
 
 func newSubscriber() Agent {
 	s := new(subscriber)
-	s.emissary = NewChannel(Emissary)
+	s.emissary = NewChannel(ChannelEmissary)
 	return s
 }
 func (s *subscriber) Uri() string { return subscriberName }
@@ -248,7 +248,7 @@ func (s *subscriber) run() {
 		case m := <-s.emissary.C:
 			switch m.Event() {
 			case publishEvent:
-				exchange.Message(NewSubscriptionCreateMessage(publisherName, subscriberName, workEvent))
+				exchange.Message(NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, workEvent))
 				fmt.Printf("test: subscriber() -> [create] [%v]\n", workEvent)
 			case workEvent:
 				if work, ok := workItemContent(m); ok {
@@ -281,7 +281,7 @@ type publisher struct {
 func newPublisher() Agent {
 	s := new(publisher)
 	s.catalog = new(Catalog)
-	s.emissary = NewChannel(Emissary)
+	s.emissary = NewChannel(ChannelEmissary)
 	return s
 }
 func (p *publisher) Uri() string { return publisherName }
@@ -342,7 +342,7 @@ func _ExampleSubscription_Publisher() {
 	p := newPublisher()
 	p.Message(StartupMessage)
 
-	p.Message(NewSubscriptionCreateMessage(publisherName, subscriberName, workEvent))
+	p.Message(NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, workEvent))
 	time.Sleep(time.Second * 2)
 
 	p.Message(newWorkItemMessage(workItem{statusCode: 200, duration: time.Millisecond * 1500}))
@@ -365,7 +365,7 @@ func _ExampleSubscription_Subscriber() {
 	s := newSubscriber()
 	s.Message(StartupMessage)
 
-	s.Message(NewMessage(Emissary, publishEvent))
+	s.Message(NewMessage(ChannelEmissary, publishEvent))
 	time.Sleep(time.Second * 2)
 
 	s.Message(newWorkItemMessage(workItem{statusCode: 200, duration: time.Millisecond * 1500}))
@@ -393,7 +393,7 @@ func ExampleSubscription() {
 	time.Sleep(time.Second * 2)
 
 	// subscriber create subscription
-	s.Message(NewMessage(Emissary, publishEvent))
+	s.Message(NewMessage(ChannelEmissary, publishEvent))
 	time.Sleep(time.Second * 2)
 
 	p.Message(newWorkItemMessage(workItem{statusCode: 200, duration: time.Millisecond * 1500}))

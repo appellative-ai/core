@@ -18,10 +18,10 @@ const (
 	TickEvent        = "event:tick"
 	DataChangeEvent  = "event:data-change"
 
-	Master   = "master"
-	Emissary = "emissary"
-	Control  = "ctrl"
-	Data     = "data"
+	ChannelMaster   = "master"
+	ChannelEmissary = "emissary"
+	ChannelControl  = "ctrl"
+	ChannelData     = "data"
 
 	XTo        = "x-to"
 	XFrom      = "x-from"
@@ -36,13 +36,13 @@ const (
 )
 
 var (
-	StartupMessage  = NewMessage(Control, StartupEvent)
-	ShutdownMessage = NewMessage(Control, ShutdownEvent)
-	PauseMessage    = NewMessage(Control, PauseEvent)
-	ResumeMessage   = NewMessage(Control, ResumeEvent)
+	StartupMessage  = NewMessage(ChannelControl, StartupEvent)
+	ShutdownMessage = NewMessage(ChannelControl, ShutdownEvent)
+	PauseMessage    = NewMessage(ChannelControl, PauseEvent)
+	ResumeMessage   = NewMessage(ChannelControl, ResumeEvent)
 
-	EmissaryShutdownMessage = NewMessage(Emissary, ShutdownEvent)
-	MasterShutdownMessage   = NewMessage(Master, ShutdownEvent)
+	EmissaryShutdownMessage = NewMessage(ChannelEmissary, ShutdownEvent)
+	MasterShutdownMessage   = NewMessage(ChannelMaster, ShutdownEvent)
 )
 
 // Handler - uniform interface for message handling
@@ -69,7 +69,7 @@ func NewMessageWithError(channel, event string, err error) *Message {
 	return m
 }
 
-func NewAddressableMessage(channel, to, from, event string) *Message {
+func newAddressableMessage(channel, to, from, event string) *Message {
 	m := new(Message)
 	m.Header = make(http.Header)
 	m.Header.Add(XChannel, channel)
@@ -144,7 +144,7 @@ func (m *Message) SetContent(contentType string, content any) error {
 }
 
 func NewConfigMapMessage(cfg map[string]string) *Message {
-	m := NewMessage(Control, ConfigEvent)
+	m := NewMessage(ChannelControl, ConfigEvent)
 	m.SetContent(ContentTypeMap, cfg)
 	return m
 }
@@ -160,7 +160,7 @@ func ConfigMapContent(m *Message) map[string]string {
 }
 
 func NewStatusMessage(status *Status, relatesTo string) *Message {
-	m := NewMessage(Control, StatusEvent)
+	m := NewMessage(ChannelControl, StatusEvent)
 	m.SetContent(ContentTypeStatus, status)
 	if relatesTo != "" {
 		m.Header.Add(XRelatesTo, relatesTo)

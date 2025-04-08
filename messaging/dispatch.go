@@ -11,7 +11,7 @@ const (
 )
 
 func NewDispatcherMessage(dispatcher Dispatcher) *Message {
-	m := NewMessage(Control, ConfigEvent)
+	m := NewMessage(ChannelControl, ConfigEvent)
 	m.SetContent(ContentTypeDispatcher, dispatcher)
 	return m
 }

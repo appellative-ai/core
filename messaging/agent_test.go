@@ -23,12 +23,12 @@ func newTestAgent(uri string, ctrl, data *Channel) *testAgent {
 	t := new(testAgent)
 	t.agentId = uri
 	if ctrl == nil {
-		t.ctrl = NewChannel(Data)
+		t.ctrl = NewChannel(ChannelData)
 	} else {
 		t.ctrl = ctrl
 	}
 	if data == nil {
-		t.data = NewChannel(Control)
+		t.data = NewChannel(ChannelControl)
 	} else {
 		t.data = data
 	}
@@ -44,11 +44,11 @@ func (t *testAgent) Message(msg *Message) {
 		return
 	}
 	switch msg.Channel() {
-	case Control:
+	case ChannelControl:
 		if t.ctrl != nil {
 			t.ctrl.C <- msg
 		}
-	case Data:
+	case ChannelData:
 		if t.data != nil {
 			t.data.C <- msg
 		}
@@ -142,7 +142,7 @@ func ExampleAgentRun() {
 	uri := "urn:agent007"
 	a := newTestAgent(uri, nil, nil)
 	a.Run()
-	a.Message(NewAddressableMessage(Control, uri, "ExampleAgentRun()", StartupEvent))
+	a.Message(newAddressableMessage(ChannelControl, uri, "ExampleAgentRun()", StartupEvent))
 	//a.Message(NewDataMessage(uri, "ExampleAgentRun()", DataEvent))
 	time.Sleep(time.Second)
 	a.Shutdown()

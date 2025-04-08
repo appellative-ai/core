@@ -11,8 +11,9 @@ const (
 )
 
 type Subscription struct {
-	Event string
-	From  string
+	Channel string
+	Event   string
+	From    string
 }
 
 type Catalog struct {
@@ -30,12 +31,13 @@ func (c *Catalog) Lookup(event string) (subs []Subscription, ok bool) {
 }
 
 func (c *Catalog) Create(s Subscription) error {
-	if s.From == "" || s.Event == "" {
+	if s.From == "" || s.Event == "" || s.Channel == "" {
 		return errors.New("invalid subscription: from or event is empty")
 	}
 	for _, item := range c.subs {
+		// Check if already subscribed
 		if s.From == item.From && s.Event == item.Event {
-			return nil //return errors.New(fmt.Sprintf("invalid subscription: subscription is a duplicate [%v] [%v]", s.From, s.Event))
+			return nil
 		}
 	}
 	c.subs = append(c.subs, s)
@@ -55,10 +57,7 @@ func (c *Catalog) CreateWithMessage(m *Message) error {
 	return nil
 }
 
-func (c *Catalog) Cancel(s Subscription) error {
-	if s.From == "" || s.Event == "" {
-		return errors.New("invalid subscription: from or event is empty")
-	}
+func (c *Catalog) Cancel(s Subscription) {
 	for i, item := range c.subs {
 		if s.From == item.From && s.Event == item.Event {
 			if len(c.subs) == 1 {
@@ -74,9 +73,9 @@ func (c *Catalog) Cancel(s Subscription) error {
 					c.subs = append(c.subs, last...)
 				}
 			}
+			return
 		}
 	}
-	return nil
 }
 
 func (c *Catalog) CancelWithMessage(m *Message) {
@@ -88,14 +87,19 @@ func (c *Catalog) CancelWithMessage(m *Message) {
 	}
 }
 
-func NewSubscriptionCreateMessage(to, from, event string) *Message {
+func NewSubscriptionCreateMessage(to, from, channel, event string) *Message {
 	if to == "" || from == "" || event == "" {
 		return nil
 	}
-	m := NewMessage(Control, SubscriptionCreateEvent)
+	// Send to publishers control channel
+	m := NewMessage(ChannelControl, SubscriptionCreateEvent)
 	m.SetTo(to)
 	m.SetFrom(from)
-	m.SetContent(ContentTypeSubscription, Subscription{From: from, Event: event})
+	// Allow subscriber to determine receive channel
+	if channel == "" {
+		channel = ChannelControl
+	}
+	m.SetContent(ContentTypeSubscription, Subscription{Channel: ChannelControl, From: from, Event: event})
 	return m
 }
 
@@ -113,7 +117,7 @@ func NewSubscriptionCancelMessage(to, from, event string) *Message {
 	if to == "" || from == "" || event == "" {
 		return nil
 	}
-	m := NewMessage(Control, SubscriptionCancelEvent)
+	m := NewMessage(ChannelControl, SubscriptionCancelEvent)
 	m.SetTo(to)
 	m.SetFrom(from)
 	m.SetContent(ContentTypeSubscription, Subscription{From: from, Event: event})

@@ -6,14 +6,14 @@ import (
 )
 
 func ExampleTraceDispatch_Channel() {
-	d := NewFilteredTraceDispatcher(nil, Emissary)
+	d := NewFilteredTraceDispatcher(nil, ChannelEmissary)
 	channel := ""
 	event := ""
 
 	d.Dispatch(nil, channel, event)
 	fmt.Printf("test: Dispatch() -> [channel:%v]\n", channel)
 
-	channel = Emissary
+	channel = ChannelEmissary
 	d.Dispatch(nil, channel, event)
 	fmt.Printf("test: Dispatch() -> [channel:%v]\n", channel)
 

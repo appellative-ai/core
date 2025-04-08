@@ -38,19 +38,19 @@ func ExampleNewControlAgent() {
 	// Needed time.Nanoseconds * 1 for directory send via sync.Map
 	d := time.Nanosecond * 1
 	//Startup(a)
-	a.Message(NewMessage(Control, StartupEvent))
+	a.Message(NewMessage(ChannelControl, StartupEvent))
 	//c <- Message{To: "", From: "", Event: aspect.StartupEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
-	a.Message(NewMessage(Control, PauseEvent))
+	a.Message(NewMessage(ChannelControl, PauseEvent))
 	//c <- Message{To: "", From: "", Event: aspect.PauseEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
-	a.Message(NewMessage(Control, ResumeEvent))
+	a.Message(NewMessage(ChannelControl, ResumeEvent))
 	//c <- Message{To: "", From: "", Event: aspect.ResumeEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
-	a.Message(NewMessage(Control, PingEvent))
+	a.Message(NewMessage(ChannelControl, PingEvent))
 	//c <- Message{To: "", From: "", Event: aspect.PingEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
-	a.Message(NewMessage(Control, ReconfigureEvent))
+	a.Message(NewMessage(ChannelControl, ReconfigureEvent))
 	//c <- Message{To: "", From: "", Event: aspect.ReconfigureEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
 	time.Sleep(d)
 	a.Message(ShutdownMessage) //.SendCtrl(Message{To: uri, From: "", Event: aspect.ShutdownEvent})

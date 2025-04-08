@@ -21,7 +21,7 @@ func ExampleConfigMessage() {
 	cfg["key2"] = "value2"
 	m := NewConfigMapMessage(cfg)
 
-	m2 := ConfigMapContent(NewMessage(Master, ShutdownEvent))
+	m2 := ConfigMapContent(NewMessage(ChannelMaster, ShutdownEvent))
 	fmt.Printf("test: NewConfigMessage() -> [%v]\n", m2)
 
 	fmt.Printf("test: NewConfigMessage() -> [%v]\n", ConfigMapContent(m))
