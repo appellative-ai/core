@@ -14,9 +14,9 @@ const (
 	ConfigEvent   = "event:config"
 	StatusEvent   = "event:status"
 
-	ObservationEvent = "event:observation"
-	TickEvent        = "event:tick"
-	DataChangeEvent  = "event:data-change"
+	//ObservationEvent = "event:observation"
+	//TickEvent        = "event:tick"
+	//DataChangeEvent  = "event:data-change"
 
 	ChannelMaster   = "master"
 	ChannelEmissary = "emissary"
