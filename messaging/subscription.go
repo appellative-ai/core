@@ -90,6 +90,9 @@ func (c *Catalog) CancelWithMessage(m *Message) {
 }
 
 func NewSubscriptionCreateMessage(to, from, event string) *Message {
+	if to == "" || from == "" || event == "" {
+		return nil
+	}
 	m := NewMessage(Control, SubscriptionCreateEvent)
 	m.SetTo(to)
 	m.SetFrom(from)
@@ -98,7 +101,7 @@ func NewSubscriptionCreateMessage(to, from, event string) *Message {
 }
 
 func SubscriptionCreateContent(m *Message) (Subscription, bool) {
-	if m.Event() != SubscriptionCreateEvent || m.ContentType() != ContentTypeSubscription {
+	if m == nil || m.Event() != SubscriptionCreateEvent || m.ContentType() != ContentTypeSubscription {
 		return Subscription{}, false
 	}
 	if v, ok := m.Body.(Subscription); ok {
@@ -108,6 +111,9 @@ func SubscriptionCreateContent(m *Message) (Subscription, bool) {
 }
 
 func NewSubscriptionCancelMessage(to, from, event string) *Message {
+	if to == "" || from == "" || event == "" {
+		return nil
+	}
 	m := NewMessage(Control, SubscriptionCancelEvent)
 	m.SetTo(to)
 	m.SetFrom(from)
@@ -116,7 +122,7 @@ func NewSubscriptionCancelMessage(to, from, event string) *Message {
 }
 
 func SubscriptionCancelContent(m *Message) (Subscription, bool) {
-	if m.Event() != SubscriptionCancelEvent || m.ContentType() != ContentTypeSubscription {
+	if m == nil || m.Event() != SubscriptionCancelEvent || m.ContentType() != ContentTypeSubscription {
 		return Subscription{}, false
 	}
 	if v, ok := m.Body.(Subscription); ok {
