@@ -21,6 +21,10 @@ func NewSubscription(from, channel, event, path string) Subscription {
 	return Subscription{From: from, Channel: channel, Event: event, Path: path}
 }
 
+func (s Subscription) Valid(path string) bool {
+	return s.Path == "" || s.Path == path
+}
+
 type Catalog struct {
 	subs []Subscription
 }

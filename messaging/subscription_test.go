@@ -5,8 +5,33 @@ import (
 	"time"
 )
 
+func ExampleSubscription_Valid() {
+	s := NewSubscription("create-from", ChannelControl, SubscriptionCreateEvent, "")
+
+	path := ""
+	fmt.Printf("test: Valid(\"%v\") -> [sub-path:%v] [valid:%v]\n", path, s.Path, s.Valid(path))
+
+	path = "/google/search"
+	fmt.Printf("test: Valid(\"%v\") -> [sub-path:%v] [valid:%v]\n", path, s.Path, s.Valid(path))
+
+	s = NewSubscription("create-from", ChannelControl, SubscriptionCreateEvent, "/google/search")
+
+	path = ""
+	fmt.Printf("test: Valid(\"%v\") -> [sub-path:%v] [valid:%v]\n", path, s.Path, s.Valid(path))
+
+	path = "/google/search"
+	fmt.Printf("test: Valid(\"%v\") -> [sub-path:%v] [valid:%v]\n", path, s.Path, s.Valid(path))
+
+	//Output:
+	//test: Valid("") -> [sub-path:] [valid:true]
+	//test: Valid("/google/search") -> [sub-path:] [valid:true]
+	//test: Valid("") -> [sub-path:/google/search] [valid:false]
+	//test: Valid("/google/search") -> [sub-path:/google/search] [valid:true]
+
+}
+
 func _ExampleSubscriptionMessage() {
-	m := NewSubscriptionCreateMessage("create-to", Subscription{From: "create-from", Channel: ChannelControl, Event: SubscriptionCreateEvent})
+	m := NewSubscriptionCreateMessage("create-to", NewSubscription("create-from", ChannelControl, SubscriptionCreateEvent, ""))
 	s, ok := SubscriptionCreateContent(m)
 	fmt.Printf("test: NewSubscriptionCreateMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Event(), s, ok)
 
@@ -381,7 +406,7 @@ func _ExampleSubscription_Subscriber() {
 
 }
 
-func ExampleSubscription() {
+func _ExampleSubscription() {
 	s := newSubscriber()
 	p := newPublisher()
 	exchange.Register(s)
