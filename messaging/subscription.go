@@ -2,7 +2,6 @@ package messaging
 
 import (
 	"errors"
-	"fmt"
 )
 
 const (
@@ -36,7 +35,7 @@ func (c *Catalog) Create(s Subscription) error {
 	}
 	for _, item := range c.subs {
 		if s.From == item.From && s.Event == item.Event {
-			return errors.New(fmt.Sprintf("invalid subscription: subscription is a duplicate [%v] [%v]", s.From, s.Event))
+			return nil //return errors.New(fmt.Sprintf("invalid subscription: subscription is a duplicate [%v] [%v]", s.From, s.Event))
 		}
 	}
 	c.subs = append(c.subs, s)
