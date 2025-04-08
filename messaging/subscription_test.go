@@ -24,19 +24,19 @@ func _ExampleCatalog_Create() {
 	c := new(Catalog)
 
 	m := NewSubscriptionCreateMessage(publisherName, "", publishEvent)
-	err := c.CreateMessage(m)
+	err := c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
 	m = NewSubscriptionCreateMessage(publisherName, subscriberName, "")
-	err = c.CreateMessage(m)
+	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
 	m = NewSubscriptionCreateMessage(publisherName, subscriberName, publishEvent)
-	err = c.CreateMessage(m)
+	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
 	m = NewSubscriptionCreateMessage(publisherName, subscriberName, publishEvent)
-	err = c.CreateMessage(m)
+	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
 	//Output:
@@ -83,18 +83,18 @@ func _ExampleCatalog_Lookup() {
 
 }
 
-func _ExampleCatalog_Cancel_1() {
+func ExampleCatalog_Cancel_1() {
 	c := new(Catalog)
 
 	// create 1 subscription and cancel
 	m := NewSubscriptionCreateMessage(publisherName, subscriberName, publishEvent)
-	err := c.CreateMessage(m)
+	err := c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
 	fmt.Printf("test: Catalog.PreCancel()  -> [count:%v]\n", len(c.subs))
 	m = NewSubscriptionCancelMessage(publisherName, subscriberName, publishEvent)
-	c.CancelMessage(m)
+	c.CancelWithMessage(m)
 	fmt.Printf("test: Catalog.PostCancel() -> [count:%v]\n", len(c.subs))
 
 	//Output:
@@ -103,29 +103,29 @@ func _ExampleCatalog_Cancel_1() {
 
 }
 
-func _ExampleCatalog_Cancel_2() {
+func ExampleCatalog_Cancel_2() {
 	event1 := "event:publish-1"
 	c := new(Catalog)
 
 	// create 2 subscriptions and cancel
 	m := NewSubscriptionCreateMessage(publisherName, subscriberName, publishEvent)
-	err := c.CreateMessage(m)
+	err := c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
 	m = NewSubscriptionCreateMessage(publisherName, subscriberName, event1)
-	err = c.CreateMessage(m)
+	err = c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
 	m = NewSubscriptionCancelMessage(publisherName, subscriberName, event1)
 	fmt.Printf("test: Catalog.PreCancel()  -> [count:%v]\n", len(c.subs))
-	c.CancelMessage(m)
+	c.CancelWithMessage(m)
 	fmt.Printf("test: Catalog.PostCancel() -> [count:%v]\n", len(c.subs))
 
 	m = NewSubscriptionCancelMessage(publisherName, subscriberName, publishEvent)
 	fmt.Printf("test: Catalog.PreCancel()  -> [count:%v]\n", len(c.subs))
-	c.CancelMessage(m)
+	c.CancelWithMessage(m)
 	fmt.Printf("test: Catalog.PostCancel() -> [count:%v]\n", len(c.subs))
 
 	//Output:
@@ -136,24 +136,24 @@ func _ExampleCatalog_Cancel_2() {
 
 }
 
-func _ExampleCatalog_Cancel_3() {
+func ExampleCatalog_Cancel_3() {
 	event1 := "event:publish-1"
 	event2 := "event:publish-2"
 	c := new(Catalog)
 
 	// create 3 subscriptions
 	m := NewSubscriptionCreateMessage(publisherName, subscriberName, publishEvent)
-	err := c.CreateMessage(m)
+	err := c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
 	m = NewSubscriptionCreateMessage(publisherName, subscriberName, event1)
-	err = c.CreateMessage(m)
+	err = c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
 	m = NewSubscriptionCreateMessage(publisherName, subscriberName, event2)
-	err = c.CreateMessage(m)
+	err = c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
@@ -161,17 +161,17 @@ func _ExampleCatalog_Cancel_3() {
 	// cancel middle, first, last
 	m = NewSubscriptionCancelMessage(publisherName, subscriberName, event1)
 	fmt.Printf("test: Catalog.PreCancel()  -> [count:%v]\n", len(c.subs))
-	c.CancelMessage(m)
+	c.CancelWithMessage(m)
 	fmt.Printf("test: Catalog.PostCancel() -> [count:%v]\n", len(c.subs))
 
 	m = NewSubscriptionCancelMessage(publisherName, subscriberName, publishEvent)
 	fmt.Printf("test: Catalog.PreCancel()  -> [count:%v]\n", len(c.subs))
-	c.CancelMessage(m)
+	c.CancelWithMessage(m)
 	fmt.Printf("test: Catalog.PostCancel() -> [count:%v]\n", len(c.subs))
 
 	m = NewSubscriptionCancelMessage(publisherName, subscriberName, event2)
 	fmt.Printf("test: Catalog.PreCancel()  -> [count:%v]\n", len(c.subs))
-	c.CancelMessage(m)
+	c.CancelWithMessage(m)
 	fmt.Printf("test: Catalog.PostCancel() -> [count:%v]\n", len(c.subs))
 
 	//Output:
@@ -312,14 +312,14 @@ func (p *publisher) run() {
 					}
 				}
 			case SubscriptionCreateEvent:
-				err := p.catalog.CreateMessage(m)
+				err := p.catalog.CreateWithMessage(m)
 				if err != nil {
 					fmt.Printf("test: publisher() -> [err:%v]\n", err)
 				} else {
 					fmt.Printf("test: publisher() -> [created] [%v]\n", m.Event())
 				}
 			case SubscriptionCancelEvent:
-				p.catalog.CancelMessage(m)
+				p.catalog.CancelWithMessage(m)
 				fmt.Printf("test: publisher() -> [canceled] [%v]\n", m.Event())
 			case ShutdownEvent:
 				fmt.Printf("test: publisher() -> [%v]\n", m.Event())

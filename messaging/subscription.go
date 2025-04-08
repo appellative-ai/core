@@ -43,7 +43,7 @@ func (c *Catalog) Create(s Subscription) error {
 	return nil
 }
 
-func (c *Catalog) CreateMessage(m *Message) error {
+func (c *Catalog) CreateWithMessage(m *Message) error {
 	if m == nil {
 		return nil
 	}
@@ -80,7 +80,7 @@ func (c *Catalog) Cancel(s Subscription) error {
 	return nil
 }
 
-func (c *Catalog) CancelMessage(m *Message) {
+func (c *Catalog) CancelWithMessage(m *Message) {
 	if m == nil {
 		return
 	}
