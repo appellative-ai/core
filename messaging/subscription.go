@@ -11,21 +11,32 @@ const (
 )
 
 type Subscription struct {
+	Path    string
 	Channel string
 	Event   string
 	From    string
+}
+
+func NewSubscription(from, channel, event, path string) Subscription {
+	return Subscription{From: from, Channel: channel, Event: event, Path: path}
 }
 
 type Catalog struct {
 	subs []Subscription
 }
 
-func (c *Catalog) Lookup(event string) (subs []Subscription, ok bool) {
+func (c *Catalog) Lookup(event, path string) (subs []Subscription, ok bool) {
 	for _, item := range c.subs {
-		if event == item.Event {
-			subs = append(subs, item)
-			ok = true
+		// event filter
+		if item.Event != event {
+			continue
 		}
+		// path filter if configured
+		if item.Path != "" && path != item.Path {
+			continue
+		}
+		subs = append(subs, item)
+		ok = true
 	}
 	return
 }
@@ -87,19 +98,19 @@ func (c *Catalog) CancelWithMessage(m *Message) {
 	}
 }
 
-func NewSubscriptionCreateMessage(to, from, channel, event string) *Message {
-	if to == "" || from == "" || event == "" {
+func NewSubscriptionCreateMessage(to string, s Subscription) *Message {
+	if to == "" || s.From == "" || s.Event == "" {
 		return nil
 	}
 	// Send to publishers control channel
 	m := NewMessage(ChannelControl, SubscriptionCreateEvent)
 	m.SetTo(to)
-	m.SetFrom(from)
+	m.SetFrom(s.From)
 	// Allow subscriber to determine receive channel
-	if channel == "" {
-		channel = ChannelControl
+	if s.Channel == "" {
+		s.Channel = ChannelControl
 	}
-	m.SetContent(ContentTypeSubscription, Subscription{Channel: ChannelControl, From: from, Event: event})
+	m.SetContent(ContentTypeSubscription, s)
 	return m
 }
 

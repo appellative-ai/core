@@ -6,7 +6,7 @@ import (
 )
 
 func _ExampleSubscriptionMessage() {
-	m := NewSubscriptionCreateMessage("create-to", "create-from", ChannelControl, SubscriptionCreateEvent)
+	m := NewSubscriptionCreateMessage("create-to", Subscription{From: "create-from", Channel: ChannelControl, Event: SubscriptionCreateEvent})
 	s, ok := SubscriptionCreateContent(m)
 	fmt.Printf("test: NewSubscriptionCreateMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Event(), s, ok)
 
@@ -23,19 +23,19 @@ func _ExampleSubscriptionMessage() {
 func _ExampleCatalog_Create() {
 	c := new(Catalog)
 
-	m := NewSubscriptionCreateMessage(publisherName, "", ChannelControl, publishEvent)
+	m := NewSubscriptionCreateMessage(publisherName, Subscription{From: "", Channel: ChannelControl, Event: publishEvent})
 	err := c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, "")
+	m = NewSubscriptionCreateMessage(publisherName, Subscription{From: subscriberName, Channel: ChannelControl})
 	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, publishEvent)
+	m = NewSubscriptionCreateMessage(publisherName, Subscription{From: subscriberName, Channel: ChannelControl, Event: publishEvent})
 	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, publishEvent)
+	m = NewSubscriptionCreateMessage(publisherName, Subscription{From: subscriberName, Channel: ChannelControl, Event: publishEvent})
 	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
@@ -67,13 +67,13 @@ func _ExampleCatalog_Lookup() {
 		fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 	}
 
-	subs, ok := c.Lookup(event2)
+	subs, ok := c.Lookup(event2, "")
 	fmt.Printf("test: Catalog(\"%v\") -> [subs:%v] [ok:%v]\n", event2, subs, ok)
 
-	subs, ok = c.Lookup(event1)
+	subs, ok = c.Lookup(event1, "")
 	fmt.Printf("test: Catalog(\"%v\") -> [subs:%v] [ok:%v]\n", event1, subs, ok)
 
-	subs, ok = c.Lookup(publishEvent)
+	subs, ok = c.Lookup(publishEvent, "")
 	fmt.Printf("test: Catalog(\"%v\") -> [subs:%v] [ok:%v]\n", publishEvent, subs, ok)
 
 	//Output:
@@ -87,7 +87,7 @@ func ExampleCatalog_Cancel_1() {
 	c := new(Catalog)
 
 	// create 1 subscription and cancel
-	m := NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, publishEvent)
+	m := NewSubscriptionCreateMessage(publisherName, NewSubscription(subscriberName, ChannelControl, publishEvent, ""))
 	err := c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
@@ -108,12 +108,12 @@ func ExampleCatalog_Cancel_2() {
 	c := new(Catalog)
 
 	// create 2 subscriptions and cancel
-	m := NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, publishEvent)
+	m := NewSubscriptionCreateMessage(publisherName, NewSubscription(subscriberName, ChannelControl, publishEvent, ""))
 	err := c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, event1)
+	m = NewSubscriptionCreateMessage(publisherName, NewSubscription(subscriberName, ChannelControl, event1, ""))
 	err = c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
@@ -142,17 +142,17 @@ func ExampleCatalog_Cancel_3() {
 	c := new(Catalog)
 
 	// create 3 subscriptions
-	m := NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, publishEvent)
+	m := NewSubscriptionCreateMessage(publisherName, NewSubscription(subscriberName, ChannelControl, publishEvent, ""))
 	err := c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, event1)
+	m = NewSubscriptionCreateMessage(publisherName, NewSubscription(subscriberName, ChannelControl, event1, ""))
 	err = c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
 	}
-	m = NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, event2)
+	m = NewSubscriptionCreateMessage(publisherName, NewSubscription(subscriberName, ChannelControl, event2, ""))
 	err = c.CreateWithMessage(m)
 	if err != nil {
 		fmt.Printf("test: Catalog.Create() -> [err:%v]\n", err)
@@ -248,7 +248,7 @@ func (s *subscriber) run() {
 		case m := <-s.emissary.C:
 			switch m.Event() {
 			case publishEvent:
-				exchange.Message(NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, workEvent))
+				exchange.Message(NewSubscriptionCreateMessage(publisherName, NewSubscription(subscriberName, ChannelControl, workEvent, "")))
 				fmt.Printf("test: subscriber() -> [create] [%v]\n", workEvent)
 			case workEvent:
 				if work, ok := workItemContent(m); ok {
@@ -304,7 +304,7 @@ func (p *publisher) run() {
 			switch m.Event() {
 			case workEvent:
 				fmt.Printf("test: publisher() -> [received] [%v]\n", m.Event())
-				if subs, ok := p.catalog.Lookup(m.Event()); ok {
+				if subs, ok := p.catalog.Lookup(m.Event(), ""); ok {
 					for _, item := range subs {
 						m.SetTo(item.From)
 						fmt.Printf("test: publisher() -> [published] [%v] [subscriber:%v] \n", item.Event, item.From)
@@ -342,7 +342,7 @@ func _ExampleSubscription_Publisher() {
 	p := newPublisher()
 	p.Message(StartupMessage)
 
-	p.Message(NewSubscriptionCreateMessage(publisherName, subscriberName, ChannelControl, workEvent))
+	p.Message(NewSubscriptionCreateMessage(publisherName, NewSubscription(subscriberName, ChannelControl, workEvent, "")))
 	time.Sleep(time.Second * 2)
 
 	p.Message(newWorkItemMessage(workItem{statusCode: 200, duration: time.Millisecond * 1500}))
