@@ -67,22 +67,22 @@ func ExampleRegisterError() {
 
 }
 
-func ExampleSendError() {
+func ExampleMessageError() {
 	uri := "urn:test"
 	ex := NewExchange()
 
-	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(nil))
-	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(NewMessage(Control, "")))
-	fmt.Printf("test: Send(%v) -> : %v\n", uri, ex.Send(NewMessage(Control, "")))
+	fmt.Printf("test: Message(%v) -> : %v\n", uri, ex.Message(nil))
+	fmt.Printf("test: Message(%v) -> : %v\n", uri, ex.Message(NewMessage(Control, "")))
+	fmt.Printf("test: Message(%v) -> : %v\n", uri, ex.Message(NewMessage(Control, "")))
 
 	//Output:
-	//test: Send(urn:test) -> : error: controller2.Send() failed as message is nil
-	//test: Send(urn:test) -> : error: controller2.Send() failed as the message To is empty or invalid : []
-	//test: Send(urn:test) -> : error: controller2.Send() failed as the message To is empty or invalid : []
+	//test: Message(urn:test) -> : error: exchange.Message() failed as message is nil
+	//test: Message(urn:test) -> : error: exchange.Message() failed as the message To is empty or invalid : []
+	//test: Message(urn:test) -> : error: exchange.Message() failed as the message To is empty or invalid : []
 
 }
 
-func ExampleSend() {
+func ExampleMessage() {
 	uri1 := "urn:agent-1"
 	uri2 := "urn:agent-2"
 	uri3 := "urn:agent-3"
@@ -96,9 +96,9 @@ func ExampleSend() {
 	a3 := newTestAgent(uri3, c, nil)
 	ex.Register(a3)
 
-	ex.Send(NewAddressableMessage(Control, uri1, PkgPath, StartupEvent))
-	ex.Send(NewAddressableMessage(Control, uri2, PkgPath, StartupEvent))
-	ex.Send(NewAddressableMessage(Control, uri3, PkgPath, StartupEvent))
+	ex.Message(NewAddressableMessage(Control, uri1, PkgPath, StartupEvent))
+	ex.Message(NewAddressableMessage(Control, uri2, PkgPath, StartupEvent))
+	ex.Message(NewAddressableMessage(Control, uri3, PkgPath, StartupEvent))
 
 	time.Sleep(time.Second * 1)
 	resp1 := <-c.C

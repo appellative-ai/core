@@ -248,14 +248,14 @@ func (s *subscriber) run() {
 		case m := <-s.emissary.C:
 			switch m.Event() {
 			case publishEvent:
-				exchange.Send(NewSubscriptionCreateMessage(publisherName, subscriberName, workEvent))
+				exchange.Message(NewSubscriptionCreateMessage(publisherName, subscriberName, workEvent))
 				fmt.Printf("test: subscriber() -> [create] [%v]\n", workEvent)
 			case workEvent:
 				if work, ok := workItemContent(m); ok {
 					fmt.Printf("test: subscriber() -> [received] [status-code:%v] [duration:%v]\n", work.statusCode, work.duration)
 				}
 			case ShutdownEvent:
-				exchange.Send(NewSubscriptionCancelMessage(publisherName, subscriberName, workEvent))
+				exchange.Message(NewSubscriptionCancelMessage(publisherName, subscriberName, workEvent))
 				fmt.Printf("test: subscriber() -> [cancel] [%v]\n", workEvent)
 				s.shutdown()
 				return
@@ -308,7 +308,7 @@ func (p *publisher) run() {
 					for _, item := range subs {
 						m.SetTo(item.From)
 						fmt.Printf("test: publisher() -> [published] [%v] [subscriber:%v] \n", item.Event, item.From)
-						exchange.Send(m)
+						exchange.Message(m)
 					}
 				}
 			case SubscriptionCreateEvent:

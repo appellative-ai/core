@@ -57,18 +57,18 @@ func (e *Exchange) List() []string {
 	return uri
 }
 
-// Send - send a message
-func (e *Exchange) Send(msg *Message) error {
+// Message - send a message
+func (e *Exchange) Message(msg *Message) error {
 	// TO DO : authenticate shutdown control message
 	//if msg != nil && msg.Event() == ShutdownEvent {
 	//	return nil
 	//}
 	if msg == nil {
-		return errors.New(fmt.Sprintf("error: exchange.Send() failed as message is nil"))
+		return errors.New(fmt.Sprintf("error: exchange.Message() failed as message is nil"))
 	}
 	a := e.Get(msg.To())
 	if a == nil {
-		return errors.New(fmt.Sprintf("error: exchange.Send() failed as the message To is empty or invalid : [%v]", msg.To()))
+		return errors.New(fmt.Sprintf("error: exchange.Message() failed as the message To is empty or invalid : [%v]", msg.To()))
 	}
 	a.Message(msg)
 	return nil
