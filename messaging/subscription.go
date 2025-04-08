@@ -25,18 +25,12 @@ type Catalog struct {
 	subs []Subscription
 }
 
-func (c *Catalog) Lookup(event, path string) (subs []Subscription, ok bool) {
+func (c *Catalog) Lookup(event string) (subs []Subscription, ok bool) {
 	for _, item := range c.subs {
-		// event filter
-		if item.Event != event {
-			continue
+		if event == item.Event {
+			subs = append(subs, item)
+			ok = true
 		}
-		// path filter if configured
-		if item.Path != "" && path != item.Path {
-			continue
-		}
-		subs = append(subs, item)
-		ok = true
 	}
 	return
 }

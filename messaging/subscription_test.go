@@ -67,13 +67,13 @@ func _ExampleCatalog_Lookup() {
 		fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 	}
 
-	subs, ok := c.Lookup(event2, "")
+	subs, ok := c.Lookup(event2)
 	fmt.Printf("test: Catalog(\"%v\") -> [subs:%v] [ok:%v]\n", event2, subs, ok)
 
-	subs, ok = c.Lookup(event1, "")
+	subs, ok = c.Lookup(event1)
 	fmt.Printf("test: Catalog(\"%v\") -> [subs:%v] [ok:%v]\n", event1, subs, ok)
 
-	subs, ok = c.Lookup(publishEvent, "")
+	subs, ok = c.Lookup(publishEvent)
 	fmt.Printf("test: Catalog(\"%v\") -> [subs:%v] [ok:%v]\n", publishEvent, subs, ok)
 
 	//Output:
@@ -304,7 +304,7 @@ func (p *publisher) run() {
 			switch m.Event() {
 			case workEvent:
 				fmt.Printf("test: publisher() -> [received] [%v]\n", m.Event())
-				if subs, ok := p.catalog.Lookup(m.Event(), ""); ok {
+				if subs, ok := p.catalog.Lookup(m.Event()); ok {
 					for _, item := range subs {
 						m.SetTo(item.From)
 						fmt.Printf("test: publisher() -> [published] [%v] [subscriber:%v] \n", item.Event, item.From)
