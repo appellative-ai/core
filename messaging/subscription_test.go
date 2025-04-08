@@ -229,16 +229,19 @@ func newSubscriber() Agent {
 }
 func (s *subscriber) Uri() string { return subscriberName }
 func (s *subscriber) Message(m *Message) {
-	if m.Event() == StartupEvent && !s.running {
-		s.running = true
-		go s.run()
+	if !s.running {
+		if m.Event() == StartupEvent {
+			go s.run()
+			s.running = true
+		}
 		return
 	}
-	if !s.running {
-		return
+	if m.Event() == ShutdownEvent {
+		s.running = false
 	}
 	s.emissary.C <- m
 }
+
 func (s *subscriber) run() {
 	for {
 		select {
