@@ -111,7 +111,7 @@ func initFormat(o *Origin, traffic string, start time.Time, duration time.Durati
 
 			traffic,
 			fmtx.FmtRFC3339Millis(start),
-			strconv.Itoa(Milliseconds(duration)),
+			strconv.Itoa(fmtx.Milliseconds(duration)),
 			fmtx.JsonString(route))
 	} else {
 		return fmt.Sprintf("{"+
@@ -132,7 +132,7 @@ func initFormat(o *Origin, traffic string, start time.Time, duration time.Durati
 			//fmtx.JsonString(o.Route),
 			traffic,
 			fmtx.FmtRFC3339Millis(start),
-			strconv.Itoa(Milliseconds(duration)),
+			strconv.Itoa(fmtx.Milliseconds(duration)),
 			fmtx.JsonString(route))
 	}
 }
@@ -176,7 +176,7 @@ func thresholdsFormat(traffic string, thresholds Threshold) string {
 			"\"timeout\":%v, "+
 				"\"rate-limit\":%v, "+
 				"\"redirect\":%v } ",
-			Milliseconds(thresholds.timeout()),
+			fmtx.Milliseconds(thresholds.timeout()),
 			thresholds.rateLimit(),
 			thresholds.redirect(),
 		)
@@ -185,19 +185,11 @@ func thresholdsFormat(traffic string, thresholds Threshold) string {
 			"\"timeout\":%v, "+
 				"\"rate-limit\":%v, "+
 				"\"redirect\":%v } ",
-			Milliseconds(thresholds.timeout()),
+			fmtx.Milliseconds(thresholds.timeout()),
 			thresholds.rateLimit(),
 			thresholds.redirect(),
 		)
 	}
-}
-
-// Milliseconds - convert time.Duration to milliseconds
-func Milliseconds(duration time.Duration) int {
-	if duration <= 0 {
-		return -1
-	}
-	return int(duration / time.Duration(1e6))
 }
 
 func BuildRequest(r any) *http.Request {

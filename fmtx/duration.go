@@ -45,3 +45,11 @@ func ParseDuration(s string) (time.Duration, error) {
 	}
 	return time.Duration(val) * time.Second, nil
 }
+
+// Milliseconds - convert time.Duration to milliseconds
+func Milliseconds(duration time.Duration) int {
+	if duration <= 0 {
+		return -1
+	}
+	return int(duration / time.Duration(1e6))
+}
