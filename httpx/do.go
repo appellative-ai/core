@@ -2,6 +2,7 @@ package httpx
 
 import (
 	"crypto/tls"
+	"github.com/behavioral-ai/core/rest"
 	"net/http"
 	"net/url"
 	"time"
@@ -53,7 +54,7 @@ func Do(req *http.Request) (resp *http.Response, err error) {
 }
 
 // ExchangeWithTimeout - create an Exchange with a timeout
-func ExchangeWithTimeout(timeout time.Duration, ex Exchange) Exchange {
+func ExchangeWithTimeout(timeout time.Duration, ex rest.Exchange) rest.Exchange {
 	return func(r *http.Request) (resp *http.Response, err error) {
 		if ex == nil {
 			ex = Do

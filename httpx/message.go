@@ -2,6 +2,7 @@ package httpx
 
 import (
 	"github.com/behavioral-ai/core/messaging"
+	"github.com/behavioral-ai/core/rest"
 )
 
 const (
@@ -9,17 +10,17 @@ const (
 	ContentTypeExchangeWriter = "application/exchange-writer"
 )
 
-func NewConfigExchangeMessage(ex Exchange) *messaging.Message {
+func NewConfigExchangeMessage(ex rest.Exchange) *messaging.Message {
 	m := messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent)
 	m.SetContent(ContentTypeExchange, ex)
 	return m
 }
 
-func ConfigExchangeContent(m *messaging.Message) (Exchange, bool) {
+func ConfigExchangeContent(m *messaging.Message) (rest.Exchange, bool) {
 	if m.Event() != messaging.ConfigEvent || m.ContentType() != ContentTypeExchange {
 		return nil, false
 	}
-	if cfg, ok := m.Body.(Exchange); ok {
+	if cfg, ok := m.Body.(rest.Exchange); ok {
 		return cfg, true
 	}
 	return nil, false

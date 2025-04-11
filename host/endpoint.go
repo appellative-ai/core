@@ -2,19 +2,20 @@ package host
 
 import (
 	"github.com/behavioral-ai/core/httpx"
+	"github.com/behavioral-ai/core/rest"
 	"net/http"
 )
 
 // ExchangeHandler - http exchange handler interface
-type ExchangeHandler interface {
+type ExchangeHandler2 interface {
 	Exchange(w http.ResponseWriter, r *http.Request)
 }
 
 type endpoint struct {
-	handler httpx.Exchange
+	handler rest.Exchange
 }
 
-func NewEndpoint(handler httpx.Exchange) ExchangeHandler {
+func NewEndpoint(handler rest.Exchange) ExchangeHandler2 {
 	e := new(endpoint)
 	e.handler = handler
 	return e

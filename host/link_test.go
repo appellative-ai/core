@@ -3,12 +3,12 @@ package host
 import (
 	"context"
 	"github.com/behavioral-ai/core/access"
-	"github.com/behavioral-ai/core/httpx"
+	"github.com/behavioral-ai/core/rest"
 	"net/http"
 	"time"
 )
 
-func limitLink(next httpx.Exchange) httpx.Exchange {
+func limitLink(next rest.Exchange) rest.Exchange {
 	return func(req *http.Request) (*http.Response, error) {
 		time.Sleep(time.Second * 3)
 		h := make(http.Header)
@@ -17,7 +17,7 @@ func limitLink(next httpx.Exchange) httpx.Exchange {
 	}
 }
 
-func timeoutLink(next httpx.Exchange) httpx.Exchange {
+func timeoutLink(next rest.Exchange) rest.Exchange {
 	return func(req *http.Request) (*http.Response, error) {
 		time.Sleep(time.Second * 3)
 		h := make(http.Header)
@@ -26,7 +26,7 @@ func timeoutLink(next httpx.Exchange) httpx.Exchange {
 	}
 }
 
-func redirectLink(next httpx.Exchange) httpx.Exchange {
+func redirectLink(next rest.Exchange) rest.Exchange {
 	return func(req *http.Request) (*http.Response, error) {
 		time.Sleep(time.Second * 3)
 		h := make(http.Header)
@@ -39,7 +39,7 @@ func redirectLink(next httpx.Exchange) httpx.Exchange {
 func ExampleAccessLogLink_Limit() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := httpx.BuildChain(AccessLogLink, limitLink)
+	ex := rest.BuildChain(AccessLogLink, limitLink)
 	ex(req)
 
 	//Output:
@@ -50,7 +50,7 @@ func ExampleAccessLogLink_Limit() {
 func ExampleAccessLogLink_Timeout() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := httpx.BuildChain(AccessLogLink, timeoutLink)
+	ex := rest.BuildChain(AccessLogLink, timeoutLink)
 	ex(req)
 
 	//Output:
@@ -62,7 +62,7 @@ func ExampleAccessLogLink_Timeout() {
 func ExampleAccessLogLink_Redirect() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := httpx.BuildChain(AccessLogLink, redirectLink)
+	ex := rest.BuildChain(AccessLogLink, redirectLink)
 	ex(req)
 
 	//Output:

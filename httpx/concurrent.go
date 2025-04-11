@@ -1,6 +1,7 @@
 package httpx
 
 import (
+	"github.com/behavioral-ai/core/rest"
 	"net/http"
 	"sync"
 	"time"
@@ -13,7 +14,7 @@ type ConcurrentResult interface {
 type ExchangeInvoke struct {
 	Name    string
 	Timeout time.Duration
-	Do      Exchange
+	Do      rest.Exchange
 	Req     *http.Request
 	Log     func(start time.Time, duration time.Duration, req *http.Request, resp *http.Response, timeout time.Duration)
 }

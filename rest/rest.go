@@ -1,4 +1,4 @@
-package httpx
+package rest
 
 import (
 	"net/http"
@@ -9,8 +9,8 @@ import (
 // Exchange - http exchange
 type Exchange func(r *http.Request) (*http.Response, error)
 
-// Link - function to link http Exchanges
-type Link func(next Exchange) Exchange
+// ExchangeHandler - extend the http.HandlerFunc to include the http.Response
+type ExchangeHandler func(w http.ResponseWriter, req *http.Request, resp *http.Response)
 
 // Chainable - interface to link http Exchanges
 type Chainable interface {

@@ -1,4 +1,4 @@
-package httpx
+package rest
 
 import (
 	"context"
@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-func ExampleLinkT() {
+func ExampleBuildChain_Link() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := LinkT(Do1, Do2, Do3, Do4)
+	ex := BuildChain(do1Fn, do2Fn, do3Fn, do4Fn)
 	ex(req)
 
 	//Output:
@@ -23,9 +23,61 @@ func ExampleLinkT() {
 
 }
 
-func ExampleLinkT_Abbreviated() {
+func ExampleBuildChain_Chainable() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := LinkT(Do1, Do2, Do3Fail, Do4)
+	ex := BuildChain(do1{}, do2{}, do3{}, do4{})
+	ex(req)
+
+	//Output:
+	//test: Do1() -> request
+	//test: Do2() -> request
+	//test: Do3() -> request
+	//test: Do4() -> request
+	//test: Do4() -> response
+	//test: Do3() -> response
+	//test: Do2() -> response
+	//test: Do1() -> response
+
+}
+
+func ExampleBuildChain_Any() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	ex := BuildChain(do1{}, do2Fn, do3{}, do4Fn)
+	ex(req)
+
+	//Output:
+	//test: Do1() -> request
+	//test: Do2() -> request
+	//test: Do3() -> request
+	//test: Do4() -> request
+	//test: Do4() -> response
+	//test: Do3() -> response
+	//test: Do2() -> response
+	//test: Do1() -> response
+
+}
+
+func _ExampleBuildChain_Panic_Type() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	ex := BuildChain(do1{}, req, do3{}, do4Fn)
+	ex(req)
+
+	//Output:
+	//fail
+}
+
+func _ExampleBuildChain_Panic_Nil() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	ex := BuildChain(do1{}, nil, do3{}, do4Fn)
+	ex(req)
+
+	//Output:
+	//fail
+}
+
+func ExampleBuildChain_Abbreviated() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	ex := BuildChain(do1Fn, do2Fn, do3FailFn, do4Fn)
 	ex(req)
 
 	//Output:
@@ -38,7 +90,7 @@ func ExampleLinkT_Abbreviated() {
 
 }
 
-func Do1(next Exchange) Exchange {
+func do1Fn(next Exchange) Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
 		fmt.Printf("test: Do1() -> request\n")
 		if next != nil {
@@ -51,7 +103,7 @@ func Do1(next Exchange) Exchange {
 	}
 }
 
-func Do2(next Exchange) Exchange {
+func do2Fn(next Exchange) Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
 		fmt.Printf("test: Do2() -> request\n")
 		if next != nil {
@@ -64,7 +116,7 @@ func Do2(next Exchange) Exchange {
 	}
 }
 
-func Do3(next Exchange) Exchange {
+func do3Fn(next Exchange) Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
 		fmt.Printf("test: Do3() -> request\n")
 		//fmt.Printf("test: Do3() -> response\n")
@@ -79,7 +131,7 @@ func Do3(next Exchange) Exchange {
 	}
 }
 
-func Do3Fail(next Exchange) Exchange {
+func do3FailFn(next Exchange) Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
 		fmt.Printf("test: Do3() -> request\n")
 		fmt.Printf("test: Do3() -> response\n")
@@ -94,7 +146,7 @@ func Do3Fail(next Exchange) Exchange {
 	}
 }
 
-func Do4(next Exchange) Exchange {
+func do4Fn(next Exchange) Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
 		fmt.Printf("test: Do4() -> request\n")
 		if next != nil {
@@ -107,44 +159,32 @@ func Do4(next Exchange) Exchange {
 	}
 }
 
-/*
-func do1(req *http.Request, next *Frame) (*http.Response, error) {
-	fmt.Printf("test: do1() -> request\n")
-	if next != nil {
-		next.Fn(req, next.Next)
+type do1 struct{}
 
-	}
-	fmt.Printf("test: do1() -> response\n")
-	return &http.Response{StatusCode: http.StatusOK}, nil
+func (d do1) Link(next Exchange) Exchange {
+	return do1Fn(next)
 }
 
-func do2(req *http.Request, next *Frame) (*http.Response, error) {
-	fmt.Printf("test: do2() -> request\n")
-	if next != nil {
-		next.Fn(req, next.Next)
-	}
-	fmt.Printf("test: do2() -> response\n")
-	return &http.Response{StatusCode: http.StatusOK}, nil
+type do2 struct{}
+
+func (d do2) Link(next Exchange) Exchange {
+	return do2Fn(next)
 }
 
-func do3(req *http.Request, next *Frame) (*http.Response, error) {
-	fmt.Printf("test: do3() -> request\n")
-	//return &httpx.Response{StatusCode: httpx.StatusOK}, nil
-	if next != nil {
-		next.Fn(req, next.Next)
-	}
-	fmt.Printf("test: do3() -> response\n")
-	return &http.Response{StatusCode: http.StatusOK}, nil
+type do3 struct{}
+
+func (d do3) Link(next Exchange) Exchange {
+	return do3Fn(next)
 }
 
-func do4(req *http.Request, next *Frame) (*http.Response, error) {
-	fmt.Printf("test: do4() -> request\n")
-	if next != nil {
-		next.Fn(req, next.Next)
-	}
-	fmt.Printf("test: do4() -> response\n")
-	return &http.Response{StatusCode: http.StatusOK}, nil
+type do3Fail struct{}
+
+func (d do3Fail) Link(next Exchange) Exchange {
+	return do3FailFn(next)
 }
 
+type do4 struct{}
 
-*/
+func (d do4) Link(next Exchange) Exchange {
+	return do4Fn(next)
+}

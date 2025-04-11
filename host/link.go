@@ -2,7 +2,7 @@ package host
 
 import (
 	"github.com/behavioral-ai/core/access"
-	"github.com/behavioral-ai/core/httpx"
+	"github.com/behavioral-ai/core/rest"
 	"net/http"
 	"time"
 )
@@ -12,7 +12,7 @@ const (
 	Route         = "host"
 )
 
-func AuthorizationLink(next httpx.Exchange) httpx.Exchange {
+func AuthorizationLink(next rest.Exchange) rest.Exchange {
 	return func(r *http.Request) (resp *http.Response, err error) {
 		/*auth := r.Header.Get(Authorization)
 		if auth == "" {
@@ -29,7 +29,7 @@ func AuthorizationLink(next httpx.Exchange) httpx.Exchange {
 	}
 }
 
-func AccessLogLink(next httpx.Exchange) httpx.Exchange {
+func AccessLogLink(next rest.Exchange) rest.Exchange {
 	return func(r *http.Request) (resp *http.Response, err error) {
 		start := time.Now().UTC()
 		limit := ""
