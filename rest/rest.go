@@ -26,15 +26,21 @@ func BuildChain(links ...any) Exchange {
 
 	// initialize head to last item
 	last := len(links) - 1
-	if fn, ok := links[last].(func(next Exchange) Exchange); ok {
-		head = fn(nil)
+	// Allow last item to be an Exchange and not linkable
+	if ex, ok := links[last].(func(r *http.Request) (*http.Response, error)); ok {
+		head = ex
 	} else {
-		if c, ok1 := links[last].(Chainable); ok1 {
-			head = c.Link(nil)
+		if fn, ok1 := links[last].(func(next Exchange) Exchange); ok1 {
+			head = fn(nil)
 		} else {
-			panic(links[last])
+			if c, ok2 := links[last].(Chainable); ok2 {
+				head = c.Link(nil)
+			} else {
+				panic(links[last])
+			}
 		}
 	}
+
 	// build rest of chain
 	for i := len(links) - 2; i >= 0; i-- {
 		if fn, ok := links[i].(func(next Exchange) Exchange); ok {
