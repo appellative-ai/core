@@ -28,8 +28,8 @@ func BuildChain(links ...any) Exchange {
 		return nil
 	}
 
-	// create tail link, allowing Exchange or Exchangeable links
-	head := createTail(links)
+	// create the last link which is of type Exchange or Exchangeable
+	head := exchangeLink(links)
 
 	// build rest of chain
 	for i := len(links) - 2; i >= 0; i-- {
@@ -46,8 +46,8 @@ func BuildChain(links ...any) Exchange {
 	return head
 }
 
-// createTail - allow last link to be of type Exchange or Exchangeable
-func createTail(links []any) Exchange {
+// exchangeLink - last link needs to be of type Exchange or Exchangeable
+func exchangeLink(links []any) Exchange {
 	last := len(links) - 1
 	if ex, ok := links[last].(func(r *http.Request) (*http.Response, error)); ok {
 		return ex
@@ -55,11 +55,14 @@ func createTail(links []any) Exchange {
 	if exc, ok1 := links[last].(Exchangeable); ok1 {
 		return exc.Exchange
 	}
-	if fn, ok2 := links[last].(func(next Exchange) Exchange); ok2 {
-		return fn(nil)
-	}
-	if c, ok3 := links[last].(Chainable); ok3 {
-		return c.Link(nil)
-	}
+	/*
+		if fn, ok2 := links[last].(func(next Exchange) Exchange); ok2 {
+			return fn(nil)
+		}
+		if c, ok3 := links[last].(Chainable); ok3 {
+			return c.Link(nil)
+		}
+
+	*/
 	panic(links[last])
 }

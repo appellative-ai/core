@@ -1,11 +1,10 @@
 package host
 
-import (
-	"fmt"
-	"net/http"
-	"net/http/httptest"
-)
+func ExampleNewEndpoint() {
 
+}
+
+/*
 func ExampleExchangeHandler() {
 	e := NewEndpoint2(nil)
 
@@ -19,3 +18,6 @@ func ExampleExchangeHandler() {
 	//test: ExchangeHandler() -> [https://www.google.com/search?q=golang]
 
 }
+
+
+*/

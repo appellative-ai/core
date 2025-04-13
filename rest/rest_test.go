@@ -8,13 +8,15 @@ import (
 
 func ExampleBuildChain_Link() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain(do1LinkFn, do2LinkFn, do3LinkFn)
+	ex := BuildChain(do1LinkFn, do2LinkFn, do3LinkFn, do5ExchangeFn)
 	ex(req)
 
 	//Output:
 	//test: Do1-Link() -> request
 	//test: Do2-Link() -> request
 	//test: Do3-Link() -> request
+	//test: Do5-Exchange() -> request
+	//test: Do5-Exchange() -> response
 	//test: Do3-Link() -> response
 	//test: Do2-Link() -> response
 	//test: Do1-Link() -> response
@@ -23,13 +25,15 @@ func ExampleBuildChain_Link() {
 
 func ExampleBuildChain_Chainable() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain(do1{}, do2{}, do3{})
+	ex := BuildChain(do1{}, do2{}, do3{}, do5{})
 	ex(req)
 
 	//Output:
 	//test: Do1-Link() -> request
 	//test: Do2-Link() -> request
 	//test: Do3-Link() -> request
+	//test: Do5-Exchange() -> request
+	//test: Do5-Exchange() -> response
 	//test: Do3-Link() -> response
 	//test: Do2-Link() -> response
 	//test: Do1-Link() -> response
@@ -38,7 +42,7 @@ func ExampleBuildChain_Chainable() {
 
 func ExampleBuildChain_Any() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain(do1{}, do2LinkFn, do3{}, do4LinkFn)
+	ex := BuildChain(do1{}, do2LinkFn, do3{}, do4LinkFn, do5{})
 	ex(req)
 
 	//Output:
@@ -46,6 +50,8 @@ func ExampleBuildChain_Any() {
 	//test: Do2-Link() -> request
 	//test: Do3-Link() -> request
 	//test: Do4-Link() -> request
+	//test: Do5-Exchange() -> request
+	//test: Do5-Exchange() -> response
 	//test: Do4-Link() -> response
 	//test: Do3-Link() -> response
 	//test: Do2-Link() -> response
@@ -55,7 +61,7 @@ func ExampleBuildChain_Any() {
 
 func ExampleBuildChain_Abbreviated() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain(do1LinkFn, do2LinkFn, do3FailLinkFn, do4LinkFn)
+	ex := BuildChain(do1LinkFn, do2LinkFn, do3FailLinkFn, do4LinkFn, do5{})
 	ex(req)
 
 	//Output:
