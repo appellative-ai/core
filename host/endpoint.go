@@ -6,22 +6,22 @@ import (
 	"net/http"
 )
 
-// ExchangeHandler - http exchange handler interface
+// ExchangeHandler2 - http exchange handler interface
 type ExchangeHandler2 interface {
 	Exchange(w http.ResponseWriter, r *http.Request)
 }
 
-type endpoint struct {
+type endpoint2 struct {
 	handler rest.Exchange
 }
 
-func NewEndpoint(handler rest.Exchange) ExchangeHandler2 {
-	e := new(endpoint)
+func NewEndpoint2(handler rest.Exchange) ExchangeHandler2 {
+	e := new(endpoint2)
 	e.handler = handler
 	return e
 }
 
-func (e *endpoint) Exchange(w http.ResponseWriter, r *http.Request) {
+func (e *endpoint2) Exchange(w http.ResponseWriter, r *http.Request) {
 	if e.handler == nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

@@ -7,7 +7,7 @@ import (
 )
 
 func ExampleExchangeHandler() {
-	e := NewEndpoint(nil)
+	e := NewEndpoint2(nil)
 
 	rec := httptest.NewRecorder()
 	req, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q=golang", nil)

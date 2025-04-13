@@ -10,7 +10,7 @@ func ExampleHost() {
 	r := httptest.NewRecorder()
 	req, _ := http.NewRequest("", "http://localhost:8081/github/advanced-go/search:google?q=golang", nil)
 
-	Exchange(r, req, func(r *http.Request) (*http.Response, error) {
+	Exchange3(r, req, func(r *http.Request) (*http.Response, error) {
 		return &http.Response{StatusCode: http.StatusOK}, nil
 	})
 

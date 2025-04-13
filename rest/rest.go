@@ -12,6 +12,11 @@ type Exchange func(r *http.Request) (*http.Response, error)
 // ExchangeHandler - extend the http.HandlerFunc to include the http.Response
 type ExchangeHandler func(w http.ResponseWriter, req *http.Request, resp *http.Response)
 
+// Exchangeable - interface to http Exchanges
+type Exchangeable interface {
+	Exchange(r *http.Request) (*http.Response, error)
+}
+
 // Chainable - interface to link http Exchanges
 type Chainable interface {
 	Link(next Exchange) Exchange
@@ -22,24 +27,9 @@ func BuildChain(links ...any) Exchange {
 	if len(links) == 0 {
 		return nil
 	}
-	var head Exchange
 
-	// initialize head to last item
-	last := len(links) - 1
-	// Allow last item to be an Exchange and not linkable
-	if ex, ok := links[last].(func(r *http.Request) (*http.Response, error)); ok {
-		head = ex
-	} else {
-		if fn, ok1 := links[last].(func(next Exchange) Exchange); ok1 {
-			head = fn(nil)
-		} else {
-			if c, ok2 := links[last].(Chainable); ok2 {
-				head = c.Link(nil)
-			} else {
-				panic(links[last])
-			}
-		}
-	}
+	// create tail link, allowing Exchange or Exchangeable links
+	head := createTail(links)
 
 	// build rest of chain
 	for i := len(links) - 2; i >= 0; i-- {
@@ -54,4 +44,22 @@ func BuildChain(links ...any) Exchange {
 		panic(links[i])
 	}
 	return head
+}
+
+// createTail - allow last link to be of type Exchange or Exchangeable
+func createTail(links []any) Exchange {
+	last := len(links) - 1
+	if ex, ok := links[last].(func(r *http.Request) (*http.Response, error)); ok {
+		return ex
+	}
+	if exc, ok1 := links[last].(Exchangeable); ok1 {
+		return exc.Exchange
+	}
+	if fn, ok2 := links[last].(func(next Exchange) Exchange); ok2 {
+		return fn(nil)
+	}
+	if c, ok3 := links[last].(Chainable); ok3 {
+		return c.Link(nil)
+	}
+	panic(links[last])
 }

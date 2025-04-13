@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func Exchange(w http.ResponseWriter, r *http.Request, handler rest.Exchange) {
+func Exchange3(w http.ResponseWriter, r *http.Request, handler rest.Exchange) {
 	httpx.AddRequestId(r)
 	if handler == nil {
 		w.WriteHeader(http.StatusInternalServerError)
