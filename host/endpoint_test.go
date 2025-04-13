@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 )
 
-func Exchange(w http.ResponseWriter, r *http.Request, handler rest.Exchange) {
+func ExchangeTest(w http.ResponseWriter, r *http.Request, handler rest.Exchange) {
 	httpx.AddRequestId(r)
 	if handler == nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -22,7 +22,7 @@ func ExampleHost() {
 	r := httptest.NewRecorder()
 	req, _ := http.NewRequest("", "http://localhost:8081/github/advanced-go/search:google?q=golang", nil)
 
-	Exchange(r, req, func(r *http.Request) (*http.Response, error) {
+	ExchangeTest(r, req, func(r *http.Request) (*http.Response, error) {
 		return &http.Response{StatusCode: http.StatusOK}, nil
 	})
 
