@@ -27,12 +27,12 @@ func BuildChain(links ...any) Exchange {
 	if len(links) == 0 {
 		return nil
 	}
-
+	last := len(links) - 1
 	// create the last link which is of type Exchange or Exchangeable
-	head := exchangeLink(links)
+	head := exchangeLink(links[last])
 
 	// build rest of chain
-	for i := len(links) - 2; i >= 0; i-- {
+	for i := last - 1; i >= 0; i-- {
 		if fn, ok := links[i].(func(next Exchange) Exchange); ok {
 			head = fn(head)
 			continue
@@ -47,12 +47,11 @@ func BuildChain(links ...any) Exchange {
 }
 
 // exchangeLink - last link needs to be of type Exchange or Exchangeable
-func exchangeLink(links []any) Exchange {
-	last := len(links) - 1
-	if ex, ok := links[last].(func(r *http.Request) (*http.Response, error)); ok {
+func exchangeLink(last any) Exchange {
+	if ex, ok := last.(func(r *http.Request) (*http.Response, error)); ok {
 		return ex
 	}
-	if exc, ok1 := links[last].(Exchangeable); ok1 {
+	if exc, ok1 := last.(Exchangeable); ok1 {
 		return exc.Exchange
 	}
 	/*
@@ -64,5 +63,5 @@ func exchangeLink(links []any) Exchange {
 		}
 
 	*/
-	panic(links[last])
+	panic(last)
 }
