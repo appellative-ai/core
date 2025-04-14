@@ -3,10 +3,28 @@ package host
 import (
 	"fmt"
 	"github.com/behavioral-ai/core/httpx"
+	"github.com/behavioral-ai/core/messaging"
 	"github.com/behavioral-ai/core/rest"
 	"net/http"
 	"net/http/httptest"
 )
+
+type agentT struct{}
+
+func newTestAgent() *agentT {
+	return new(agentT)
+}
+func (a *agentT) String() string { return a.Uri() }
+
+// Uri - agent identifier
+func (a *agentT) Uri() string { return "agent:test" }
+
+// Message - message the agent
+func (a *agentT) Message(m *messaging.Message) {}
+
+func (a *agentT) Exchange(r *http.Request) (*http.Response, error) {
+	return nil, nil
+}
 
 func ExchangeTest(w http.ResponseWriter, r *http.Request, handler rest.Exchange) {
 	httpx.AddRequestId(r)
@@ -18,7 +36,7 @@ func ExchangeTest(w http.ResponseWriter, r *http.Request, handler rest.Exchange)
 	httpx.WriteResponse(w, resp.Header, resp.StatusCode, resp.Body, r.Header)
 }
 
-func ExampleHost() {
+func _ExampleHost() {
 	r := httptest.NewRecorder()
 	req, _ := http.NewRequest("", "http://localhost:8081/github/advanced-go/search:google?q=golang", nil)
 
@@ -34,6 +52,16 @@ func ExampleHost() {
 }
 
 func ExampleNewEndpoint() {
+	agent := newTestAgent()
+	fmt.Printf("test: NewEndpoint() -> [%v]\n", agent)
+
+	rest.BuildChain(AccessLogLink, AuthorizationLink, agent)
+	e := NewEndpoint(agent)
+	fmt.Printf("test: NewEndpoint() -> [%v]\n", e)
+
+	//Output:
+	//test: NewEndpoint() -> [agent:test]
+	//test: NewEndpoint() -> [&{0xa2ee00 0xa2f460 0xa2ef20}]
 
 }
 

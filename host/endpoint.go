@@ -44,6 +44,8 @@ func Init(r *http.Request) {
 }
 
 func NewEndpoint(links ...any) *rest.Endpoint {
-	chain := rest.BuildChain(AccessLogLink, AuthorizationLink, links)
+	links2 := []any{AccessLogLink, AuthorizationLink}
+	links2 = append(links2, links...)
+	chain := rest.BuildChain(links2...)
 	return rest.NewEndpoint(ExchangeHandler, Init, chain)
 }
