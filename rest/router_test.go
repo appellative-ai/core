@@ -2,6 +2,7 @@ package rest
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
@@ -11,6 +12,19 @@ const (
 )
 
 func ExampleRouter() {
+	r := NewRouter()
+
+	r.Modify(route1, "https://www.google.com/search?q=golang", nil)
+	route, ok := r.Lookup(route1)
+	fmt.Printf("test: NewRouter(\"%v\") -> [name:%v] [uri:%v] [ex:%v] [ok:%v]\n", route1, route.Name, route.Uri, route.Ex, ok)
+
+	r.Modify(route1, "https://search.yahoo.com/search?q=golang", nil)
+	route, ok = r.Lookup(route1)
+	fmt.Printf("test: NewRouter(\"%v\") -> [name:%v] [uri:%v] [ex:%v] [ok:%v]\n", route1, route.Name, route.Uri, route.Ex, ok)
+
+	//Output:
+	//test: NewRouter("route-1") -> [name:route-1] [uri:https://www.google.com/search?q=golang] [ex:<nil>] [ok:true]
+	//test: NewRouter("route-1") -> [name:route-1] [uri:https://search.yahoo.com/search?q=golang] [ex:<nil>] [ok:true]
 
 }
 

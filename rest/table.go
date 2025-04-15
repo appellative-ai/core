@@ -9,13 +9,13 @@ type routeTable struct {
 }
 
 func newRouteTable() *routeTable {
-	r := new(routeTable)
-	r.m = new(sync.Map)
-	return r
+	t := new(routeTable)
+	t.m = new(sync.Map)
+	return t
 }
 
-func (c *routeTable) get(name string) (*Route, bool) {
-	value, ok := c.m.Load(name)
+func (t *routeTable) get(name string) (*Route, bool) {
+	value, ok := t.m.Load(name)
 	if !ok {
 		return nil, false
 	}
@@ -25,8 +25,8 @@ func (c *routeTable) get(name string) (*Route, bool) {
 	return nil, false
 }
 
-func (c *routeTable) put(route *Route) {
+func (t *routeTable) put(route *Route) {
 	if route != nil && route.Name != "" {
-		c.m.Store(route.Name, route)
+		t.m.Store(route.Name, route)
 	}
 }
