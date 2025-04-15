@@ -6,27 +6,34 @@ import (
 )
 
 const (
-	ContentTypeExchange       = "application/exchange"
-	ContentTypeExchangeWriter = "application/exchange-writer"
+	ContentTypeExchange = "application/exchange"
+	DefaultRelatesTo    = "default"
 )
 
-func NewConfigExchangeMessage(ex rest.Exchange) *messaging.Message {
+func NewConfigExchangeMessage(ex rest.Exchange, name string) *messaging.Message {
 	m := messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent)
+	if name == "" {
+		name = DefaultRelatesTo
+	}
+	m.SetRelatesTo(name)
 	m.SetContent(ContentTypeExchange, ex)
 	return m
 }
 
-func ConfigExchangeContent(m *messaging.Message) (rest.Exchange, bool) {
+func ConfigExchangeContent(m *messaging.Message) (rest.Exchange, string, bool) {
 	if m.Event() != messaging.ConfigEvent || m.ContentType() != ContentTypeExchange {
-		return nil, false
+		return nil, "", false
 	}
 	if cfg, ok := m.Body.(rest.Exchange); ok {
-		return cfg, true
+		return cfg, m.RelatesTo(), true
 	}
-	return nil, false
+	return nil, "", false
 }
 
 /*
+
+	ContentTypeExchangeWriter = "application/exchange-writer"
+
 func NewConfigExchangeWriterMessage(ex ExchangeWriter) *messaging.Message {
 	m := messaging.NewMessage(messaging.Control, messaging.ConfigEvent)
 	m.SetContent(ContentTypeExchangeWriter, ex)

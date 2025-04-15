@@ -12,19 +12,20 @@ func ExampleConfigMessage() {
 	}
 	m := NewConfigExchangeMessage(func(r *http.Request) (*http.Response, error) {
 		return NewResponse(http.StatusTeapot, nil, nil), nil
-	})
+	}, "")
 
-	ex, _ = ConfigExchangeContent(m)
+	var name string
+	ex, name, _ = ConfigExchangeContent(m)
 	resp, err := ex(req)
-	fmt.Printf("test: ConfigExchangeContent() -> [status:%v] [err:%v]\n", resp.StatusCode, err)
+	fmt.Printf("test: ConfigExchangeContent() -> [name:%v] [status:%v] [err:%v]\n", name, resp.StatusCode, err)
 
-	m = NewConfigExchangeMessage(ex)
-	ex, _ = ConfigExchangeContent(m)
+	m = NewConfigExchangeMessage(ex, "test-exchange")
+	ex, name, _ = ConfigExchangeContent(m)
 	resp, err = ex(req)
-	fmt.Printf("test: ConfigExchangeContent() -> [status:%v] [err:%v]\n", resp.StatusCode, err)
+	fmt.Printf("test: ConfigExchangeContent() -> [name:%v] [status:%v] [err:%v]\n", name, resp.StatusCode, err)
 
 	//Output:
-	//test: ConfigExchangeContent() -> [status:418] [err:<nil>]
-	//test: ConfigExchangeContent() -> [status:418] [err:<nil>]
+	//test: ConfigExchangeContent() -> [name:default] [status:418] [err:<nil>]
+	//test: ConfigExchangeContent() -> [name:test-exchange] [status:418] [err:<nil>]
 
 }

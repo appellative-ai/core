@@ -88,6 +88,11 @@ func (m *Message) RelatesTo() string {
 	return m.Header.Get(XRelatesTo)
 }
 
+func (m *Message) SetRelatesTo(s string) *Message {
+	m.Header.Set(XRelatesTo, s)
+	return m
+}
+
 func (m *Message) To() string {
 	return m.Header.Get(XTo)
 }
