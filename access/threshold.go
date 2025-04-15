@@ -12,7 +12,7 @@ type Threshold struct {
 	Redirect  any
 }
 
-func (t Threshold) timeout() time.Duration {
+func (t Threshold) TimeoutT() time.Duration {
 	var dur time.Duration = -1
 
 	if t.Timeout == nil {
@@ -34,7 +34,7 @@ func (t Threshold) timeout() time.Duration {
 	return dur
 }
 
-func (t Threshold) rateLimit() float64 {
+func (t Threshold) RateLimitT() float64 {
 	var limit float64 = -1
 
 	if t.RateLimit == nil {
@@ -56,7 +56,7 @@ func (t Threshold) rateLimit() float64 {
 	return limit
 }
 
-func (t Threshold) redirect() int {
+func (t Threshold) RedirectT() int {
 	pct := -1
 	if t.Redirect == nil {
 		return pct

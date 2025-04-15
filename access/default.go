@@ -176,18 +176,18 @@ func thresholdsFormat(traffic string, thresholds Threshold) string {
 			"\"timeout\":%v, "+
 				"\"rate-limit\":%v, "+
 				"\"redirect\":%v } ",
-			fmtx.Milliseconds(thresholds.timeout()),
-			thresholds.rateLimit(),
-			thresholds.redirect(),
+			fmtx.Milliseconds(thresholds.TimeoutT()),
+			thresholds.RateLimitT(),
+			thresholds.RedirectT(),
 		)
 	} else {
 		return fmt.Sprintf(
 			"\"timeout\":%v, "+
 				"\"rate-limit\":%v, "+
 				"\"redirect\":%v } ",
-			fmtx.Milliseconds(thresholds.timeout()),
-			thresholds.rateLimit(),
-			thresholds.redirect(),
+			fmtx.Milliseconds(thresholds.TimeoutT()),
+			thresholds.RateLimitT(),
+			thresholds.RedirectT(),
 		)
 	}
 }
