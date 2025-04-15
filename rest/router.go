@@ -2,12 +2,14 @@ package rest
 
 type Route struct {
 	Name string
+	Uri  string
 	Ex   Exchange
 }
 
-func NewRoute(name string, ex Exchange) *Route {
+func NewRoute(name, uri string, ex Exchange) *Route {
 	r := new(Route)
 	r.Name = name
+	r.Uri = uri
 	r.Ex = ex
 	return r
 }

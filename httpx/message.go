@@ -10,24 +10,20 @@ const (
 	DefaultRelatesTo    = "default"
 )
 
-func NewConfigExchangeMessage(ex rest.Exchange, name string) *messaging.Message {
+func NewConfigExchangeMessage(ex rest.Exchange) *messaging.Message {
 	m := messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent)
-	if name == "" {
-		name = DefaultRelatesTo
-	}
-	m.SetRelatesTo(name)
 	m.SetContent(ContentTypeExchange, ex)
 	return m
 }
 
-func ConfigExchangeContent(m *messaging.Message) (rest.Exchange, string, bool) {
+func ConfigExchangeContent(m *messaging.Message) (rest.Exchange, bool) {
 	if m.Event() != messaging.ConfigEvent || m.ContentType() != ContentTypeExchange {
-		return nil, "", false
+		return nil, false
 	}
 	if cfg, ok := m.Body.(rest.Exchange); ok {
-		return cfg, m.RelatesTo(), true
+		return cfg, true
 	}
-	return nil, "", false
+	return nil, false
 }
 
 /*
