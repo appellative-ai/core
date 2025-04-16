@@ -6,35 +6,6 @@ import (
 	"net/http"
 )
 
-/*
-// ExchangeHandler2 - http exchange handler interface
-type ExchangeHandler2 interface {
-	Exchange(w http.ResponseWriter, r *http.Request)
-}
-
-type endpoint2 struct {
-	handler rest.Exchange
-}
-
-func NewEndpoint2(handler rest.Exchange) ExchangeHandler2 {
-	e := new(endpoint2)
-	e.handler = handler
-	return e
-}
-
-func (e *endpoint2) Exchange(w http.ResponseWriter, r *http.Request) {
-	if e.handler == nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	httpx.AddRequestId(r)
-	resp, _ := e.handler(r)
-	httpx.WriteResponse(w, resp.Header, resp.StatusCode, resp.Body, r.Header)
-}
-
-
-*/
-
 func ExchangeHandler(w http.ResponseWriter, req *http.Request, resp *http.Response) {
 	httpx.WriteResponse(w, resp.Header, resp.StatusCode, resp.Body, req.Header)
 }
@@ -44,8 +15,6 @@ func Init(r *http.Request) {
 }
 
 func NewEndpoint(links ...any) *rest.Endpoint {
-	links2 := []any{AccessLogLink, AuthorizationLink}
-	links2 = append(links2, links...)
-	chain := rest.BuildChain(links2...)
+	chain := rest.BuildChain(links...)
 	return rest.NewEndpoint(ExchangeHandler, Init, chain)
 }
