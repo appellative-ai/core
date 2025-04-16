@@ -22,8 +22,9 @@ const (
 )
 
 var (
-	origin    = Origin{}
-	originSet bool
+	origin           = Origin{}
+	originSet        bool
+	defaultOperators []Operator
 )
 
 func init() {
@@ -36,11 +37,23 @@ func SetOrigin(o Origin) {
 	originSet = true
 }
 
-func Log(operators []Operator, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) {
-	e := newEvent(traffic, start, duration, route, req, resp, thresholds)
-	if len(operators) == 0 {
-		operators = defaultOperators
+// SetOperators - initialize the operators
+func SetOperators(o []Operator) {
+	if len(o) > 0 {
+		defaultOperators = o
 	}
+}
+
+func Log(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) {
+	LogWithOperators(defaultOperators, traffic, start, duration, route, req, resp, thresholds)
+}
+
+func LogWithOperators(operators []Operator, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) {
+	if len(operators) == 0 {
+		log.Printf("%v\n", "{ \"error\" : \"no operators configured\" }")
+		return
+	}
+	e := newEvent(traffic, start, duration, route, req, resp, thresholds)
 	s := writeJson(operators, e)
 	log.Printf("%v\n", s)
 }

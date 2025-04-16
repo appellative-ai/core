@@ -51,10 +51,6 @@ const (
 
 )
 
-var (
-	defaultOperators []Operator
-)
-
 func init() {
 	defaultOperators, _ = CreateOperators([]string{TrafficOperator,
 		StartTimeOperator,
