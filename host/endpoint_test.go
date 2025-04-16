@@ -2,11 +2,13 @@ package host
 
 import (
 	"fmt"
+	access "github.com/behavioral-ai/core/access2"
 	"github.com/behavioral-ai/core/httpx"
 	"github.com/behavioral-ai/core/messaging"
 	"github.com/behavioral-ai/core/rest"
 	"net/http"
 	"net/http/httptest"
+	"time"
 )
 
 type agentT struct{}
@@ -51,12 +53,48 @@ func _ExampleHost() {
 
 }
 
+const (
+	authorization = "Authorization"
+	route         = "host"
+)
+
+func authorizationLink(next rest.Exchange) rest.Exchange {
+	return func(r *http.Request) (resp *http.Response, err error) {
+		auth := r.Header.Get(authorization)
+		if auth == "" {
+			return &http.Response{StatusCode: http.StatusUnauthorized}, nil
+		}
+		resp, err = next(r)
+		return
+	}
+}
+
+func accessLogLink(next rest.Exchange) rest.Exchange {
+	return func(r *http.Request) (resp *http.Response, err error) {
+		start := time.Now().UTC()
+		limit := ""
+		pct := ""
+		timeout := ""
+
+		if next != nil {
+			resp, err = next(r)
+		}
+		limit = resp.Header.Get(access.XRateLimit)
+		resp.Header.Del(access.XRateLimit)
+		timeout = resp.Header.Get(access.XTimeout)
+		resp.Header.Del(access.XTimeout)
+		pct = resp.Header.Get(access.XRedirect)
+		resp.Header.Del(access.XRedirect)
+		access.Log(nil, access.IngressTraffic, start, time.Since(start), route, r, resp, access.Threshold{Timeout: timeout, RateLimit: limit, Redirect: pct})
+		return
+	}
+}
+
 func ExampleNewEndpoint() {
 	agent := newTestAgent()
 	fmt.Printf("test: NewEndpoint() -> [%v]\n", agent)
 
-	rest.BuildChain(AccessLogLink, AuthorizationLink, agent)
-	e := NewEndpoint(agent)
+	e := NewEndpoint(accessLogLink, authorizationLink, agent)
 	fmt.Printf("test: NewEndpoint() -> [%v]\n", e)
 
 	//Output:
