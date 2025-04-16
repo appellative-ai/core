@@ -2,7 +2,6 @@ package access2
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/access"
 	"github.com/behavioral-ai/core/fmtx"
 	"net/http"
 	"strconv"
@@ -22,7 +21,7 @@ type Event struct {
 	NewReq     *http.Request
 	NewResp    *http.Response
 	Url        string
-	Parsed     *access.Parsed
+	Parsed     *Parsed
 }
 
 func NewEvent(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) *Event {
@@ -34,18 +33,18 @@ func NewEvent(traffic string, start time.Time, duration time.Duration, route str
 	e.Req = req
 	e.Resp = resp
 	e.Thresholds = thresholds
-	e.NewReq = access.BuildRequest(req)
-	e.NewResp = access.BuildResponse(resp)
-	e.Url, e.Parsed = access.ParseURL(e.NewReq.Host, e.NewReq.URL)
+	e.NewReq = BuildRequest(req)
+	e.NewResp = BuildResponse(resp)
+	e.Url, e.Parsed = ParseURL(e.NewReq.Host, e.NewReq.URL)
 	return e
 }
 
 func (e *Event) AddRequest(r *http.Request) {
-	e.NewReq = access.BuildRequest(r)
+	e.NewReq = BuildRequest(r)
 }
 
 func (e *Event) AddResponse(r *http.Response) {
-	e.NewResp = access.BuildResponse(r)
+	e.NewResp = BuildResponse(r)
 }
 
 func (e *Event) Value(value string) string {
@@ -107,7 +106,7 @@ func (e *Event) Value(value string) string {
 			return strconv.Itoa(e.NewResp.StatusCode)
 		}
 	case ResponseContentEncodingOperator:
-		return access.Encoding(e.NewResp)
+		return Encoding(e.NewResp)
 	case ResponseCachedOperator:
 		s := e.NewResp.Header.Get(XCached)
 		if s == "" {

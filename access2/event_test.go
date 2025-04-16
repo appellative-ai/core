@@ -2,7 +2,6 @@ package access2
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/access"
 	"net/http"
 	"time"
 )
@@ -50,7 +49,7 @@ func ExampleValue_Thresholds() {
 	//data = Event{ControllerName: name}
 	//fmt.Printf("test: Value(\"%v\") -> [controller:%v]\n", name, data.Value(op))
 
-	data1 := NewEvent(access.EgressTraffic, start, time.Since(start), "test-route", nil, nil, Threshold{
+	data1 := NewEvent(EgressTraffic, start, time.Since(start), "test-route", nil, nil, Threshold{
 		Timeout:   time.Millisecond * 1500,
 		RateLimit: 125,
 		Redirect:  10})
