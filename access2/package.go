@@ -1,7 +1,7 @@
 package access2
 
 import (
-	"github.com/behavioral-ai/core/access"
+	"log"
 	"time"
 )
 
@@ -26,22 +26,21 @@ var (
 	originSet bool
 )
 
+func init() {
+	log.SetFlags(0)
+}
+
 // SetOrigin - initialize the origin
 func SetOrigin(o Origin) {
 	origin = o
 	originSet = true
 }
 
-func Log(operators []Operator, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds access.Threshold) {
+func Log(operators []Operator, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) {
 	e := NewEvent(traffic, start, duration, route, req, resp, thresholds)
-	writeJson(operators, e)
-	/*
-		if originSet {
-			defaultLog(&origin, traffic, start, duration, route, req, resp, thresholds)
-		} else {
-			defaultLog(nil, traffic, start, duration, route, req, resp, thresholds)
-
-		}
-
-	*/
+	if len(operators) == 0 {
+		operators = defaultOperators
+	}
+	s := writeJson(operators, e)
+	log.Printf("%v\n", s)
 }

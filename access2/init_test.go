@@ -16,7 +16,7 @@ func translateOperator(op Operator) Operator {
 	return newOp
 }
 
-func _ExampleOperators() {
+func ExampleOperators() {
 	op := operators[DurationOperator]
 	fmt.Printf("test: Operator() -> %v\n", op)
 
@@ -24,7 +24,9 @@ func _ExampleOperators() {
 	fmt.Printf("test: Operator() -> %v\n", op)
 
 	//Output:
-	//fail
+	//test: Operator() -> &{duration-ms %DURATION%}
+	//test: Operator() -> &{start-time %START_TIME%}
+
 }
 
 func Example_createOperator() {
@@ -76,9 +78,12 @@ func Example_createOperator() {
 }
 
 func Example_CreateOperators() {
-	var items []Operator
+	var (
+		err   error
+		items []Operator
+	)
 
-	items, err := CreateOperators([]string{TrafficOperator,
+	items, err = CreateOperators([]string{TrafficOperator,
 		StartTimeOperator,
 		DurationOperator,
 		OriginRegionOperator})
@@ -90,9 +95,12 @@ func Example_CreateOperators() {
 }
 
 func Example_InitOperators() {
-	var items []Operator
+	var (
+		err   error
+		items []Operator
+	)
 
-	items, err := InitOperators([]Operator{})
+	items, err = InitOperators([]Operator{})
 	fmt.Printf("test: InitOperators({}) -> [err:%v] [%v]\n", err, items)
 
 	items, err = InitOperators([]Operator{{Name: "name", Value: ""}})

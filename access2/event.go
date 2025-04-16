@@ -18,14 +18,14 @@ type Event struct {
 	Route      string
 	Req        any
 	Resp       any
-	Thresholds access.Threshold
+	Thresholds Threshold
 	NewReq     *http.Request
 	NewResp    *http.Response
 	Url        string
 	Parsed     *access.Parsed
 }
 
-func NewEvent(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds access.Threshold) *Event {
+func NewEvent(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) *Event {
 	e := new(Event)
 	e.Traffic = traffic
 	e.Start = start
@@ -40,32 +40,38 @@ func NewEvent(traffic string, start time.Time, duration time.Duration, route str
 	return e
 }
 
+func (e *Event) AddRequest(r *http.Request) {
+	e.NewReq = access.BuildRequest(r)
+}
+
+func (e *Event) AddResponse(r *http.Response) {
+	e.NewResp = access.BuildResponse(r)
+}
+
 func (e *Event) Value(value string) string {
 	switch value {
 	case TrafficOperator:
 		return e.Traffic
 	case StartTimeOperator:
-		return fmtx.FmtRFC3339Millis(e.Start) //strings2.FmtTimestamp(l.Start)
+		return fmtx.FmtRFC3339Millis(e.Start)
 	case DurationOperator:
-		//d := int(l.Duration / time.Duration(1e6))
-		//return strconv.Itoa(d)
 		return strconv.Itoa(fmtx.Milliseconds(e.Duration))
 	case DurationStringOperator:
-		return "" //l.Duration.String()
+		return e.Duration.String()
 	case RouteOperator:
 		return e.Route
 
 		// Origin
 	case OriginRegionOperator:
-		return "" //runtime.OriginRegion()
+		return origin.Region
 	case OriginZoneOperator:
-		return "" //runtime.OriginZone()
+		return origin.Zone
 	case OriginSubZoneOperator:
-		return "" //runtime.OriginSubZone()
+		return origin.SubZone
 	case OriginServiceOperator:
-		return "" //runtime.OriginService()
+		return origin.Host
 	case OriginInstanceIdOperator:
-		return "" //runtime.OriginInstanceId()
+		return origin.InstanceId
 
 		// Request
 	case RequestMethodOperator:
@@ -79,9 +85,9 @@ func (e *Event) Value(value string) string {
 	case RequestHostOperator:
 		return e.NewReq.Host
 	case RequestIdOperator:
-		return "" //l.Header.Get(RequestIdHeaderName)
+		return e.NewReq.Header.Get(RequestIdHeaderName)
 	case RequestFromRouteOperator:
-		return "" //l.Header.Get(FromRouteHeaderName)
+		return e.NewReq.Header.Get(FromRouteHeaderName)
 	case RequestUserAgentOperator:
 		return e.NewReq.Header.Get(UserAgentHeaderName)
 	case RequestAuthorityOperator:
@@ -90,34 +96,32 @@ func (e *Event) Value(value string) string {
 		return e.NewReq.Header.Get(ForwardedForHeaderName)
 
 		// Response
-	case StatusFlagsOperator:
-		return "" //l.StatusFlags
 	case ResponseBytesReceivedOperator:
-		return strconv.Itoa(int(0)) //l.BytesReceived))
+		return fmt.Sprintf("%v", e.NewResp.ContentLength) //strconv.Itoa(e.NewResp.ContentLength) //l.BytesReceived))
 	case ResponseBytesSentOperator:
 		return fmt.Sprintf("%v", 0) //l.BytesSent)
 	case ResponseStatusCodeOperator:
-		return strconv.Itoa(e.NewResp.StatusCode)
+		if e.NewResp == nil {
+			return "0"
+		} else {
+			return strconv.Itoa(e.NewResp.StatusCode)
+		}
+	case ResponseContentEncodingOperator:
+		return access.Encoding(e.NewResp)
+	case ResponseCachedOperator:
+		s := e.NewResp.Header.Get(XCached)
+		if s == "" {
+			s = "false"
+		}
+		return s
 
-	// Controller State
-	case ControllerNameOperator:
-		return "" //l.ControllerName
+	// Thresholds
 	case TimeoutDurationOperator:
 		return strconv.Itoa(fmtx.Milliseconds(e.Thresholds.TimeoutT())) //strconv.Itoa(l.Timeout)
 	case RateLimitOperator:
 		return fmt.Sprintf("%v", e.Thresholds.RateLimitT())
-	case RateBurstOperator:
-		return "" //strconv.Itoa(l.RateBurst)
 	case RedirectOperator:
 		return strconv.Itoa(e.Thresholds.RedirectT())
-		//case ProxyThresholdOperator:
-		//	return l.ProxyThreshold
-		//case RetryOperator:
-		//	return l.Retry
-		//case RetryRateLimitOperator:
-		//		return l.CtrlState[RetryRateLimitName]
-		//	case RetryRateBurstOperator:
-		//		return l.CtrlState[RetryRateBurstName]
 	}
 	if strings.HasPrefix(value, RequestReferencePrefix) {
 		name := requestOperatorHeaderName(value)

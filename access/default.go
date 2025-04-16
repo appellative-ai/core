@@ -213,18 +213,22 @@ func BuildRequest(r any) *http.Request {
 func BuildResponse(r any) *http.Response {
 	if r == nil {
 		newResp := &http.Response{StatusCode: http.StatusOK}
+		newResp.Header = make(http.Header)
 		return newResp
 	}
 	if newResp, ok := r.(*http.Response); ok {
+		if newResp.Header == nil {
+			newResp.Header = make(http.Header)
+		}
 		return newResp
 	}
 	if sc, ok := r.(int); ok {
-		return &http.Response{StatusCode: sc}
+		return &http.Response{StatusCode: sc, Header: make(http.Header)}
 	}
 	if status, ok := r.(int); ok {
-		return &http.Response{StatusCode: status}
+		return &http.Response{StatusCode: status, Header: make(http.Header)}
 	}
-	newResp := &http.Response{StatusCode: http.StatusOK}
+	newResp := &http.Response{StatusCode: http.StatusOK, Header: make(http.Header)}
 	return newResp
 }
 

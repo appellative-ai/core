@@ -3,7 +3,6 @@ package access2
 import (
 	"fmt"
 	"net/url"
-	"strings"
 )
 
 const (
@@ -76,52 +75,4 @@ func NewOrigin(values url.Values) Origin {
 		//o.Route = values.Get(RouteKey)
 	}
 	return o
-}
-
-func OriginMatch(target Origin, filter Origin) bool {
-	isFilter := false
-	if filter.Region != "" {
-		if filter.Region == "*" {
-			return true
-		}
-		isFilter = true
-		if !StringMatch(target.Region, filter.Region) {
-			return false
-		}
-	}
-	if filter.Zone != "" {
-		isFilter = true
-		if !StringMatch(target.Zone, filter.Zone) {
-			return false
-		}
-	}
-	if filter.SubZone != "" {
-		isFilter = true
-		if !StringMatch(target.SubZone, filter.SubZone) {
-			return false
-		}
-	}
-	if filter.Host != "" {
-		isFilter = true
-		if !StringMatch(target.Host, filter.Host) {
-			return false
-		}
-	}
-	/*
-		if filter.Route != "" {
-			isFilter = true
-			if !StringMatch(target.Route, filter.Route) {
-				return false
-			}
-		}
-
-	*/
-	return isFilter
-}
-
-func StringMatch(target, filter string) bool {
-	//if filter == "" {
-	//	return true
-	//}
-	return strings.ToLower(target) == strings.ToLower(filter)
 }

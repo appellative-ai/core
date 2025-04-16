@@ -10,26 +10,14 @@ var operators = map[string]*Operator{
 	StartTimeOperator:      {"start-time", StartTimeOperator},
 	DurationOperator:       {"duration-ms", DurationOperator},
 	DurationStringOperator: {"duration", DurationStringOperator},
+	RouteOperator:          {"route", RouteOperator},
 
+	// Origin
 	OriginRegionOperator:     {"region", OriginRegionOperator},
 	OriginZoneOperator:       {"zone", OriginZoneOperator},
 	OriginSubZoneOperator:    {"sub-zone", OriginSubZoneOperator},
 	OriginServiceOperator:    {"service", OriginServiceOperator},
 	OriginInstanceIdOperator: {"instance-id", OriginInstanceIdOperator},
-
-	// Controller
-	//ControllerNameOperator:  {"controller", ControllerNameOperator},
-	TimeoutDurationOperator: {"timeout-ms", TimeoutDurationOperator},
-	RateLimitOperator:       {"rate-limit", RateLimitOperator},
-	//RateBurstOperator:       {"rate-burst", RateBurstOperator},
-	//ProxyOperator:           {"proxy", ProxyOperator},
-
-	// Response
-	ResponseStatusCodeOperator:    {"status-code", ResponseStatusCodeOperator},
-	ResponseBytesReceivedOperator: {"bytes-received", ResponseBytesReceivedOperator},
-	ResponseBytesSentOperator:     {"bytes-sent", ResponseBytesSentOperator},
-	//StatusFlagsOperator:           {"status-flags", StatusFlagsOperator},
-	//UpstreamHostOperator:  {"upstream_host", UpstreamHostOperator},
 
 	// Request
 	RequestProtocolOperator: {"protocol", RequestProtocolOperator},
@@ -44,9 +32,17 @@ var operators = map[string]*Operator{
 	RequestAuthorityOperator:    {"authority", RequestAuthorityOperator},
 	RequestForwardedForOperator: {"forwarded", RequestForwardedForOperator},
 
-	// gRPC
-	//GRPCStatusOperator:       {"grpc-status", GRPCStatusOperator},
-	//GRPCStatusNumberOperator: {"grpc-number", GRPCStatusNumberOperator},
+	// Response
+	ResponseStatusCodeOperator:      {"status-code", ResponseStatusCodeOperator},
+	ResponseBytesReceivedOperator:   {"bytes-received", ResponseBytesReceivedOperator},
+	ResponseBytesSentOperator:       {"bytes-sent", ResponseBytesSentOperator},
+	ResponseContentEncodingOperator: {"encoding", ResponseContentEncodingOperator},
+	ResponseCachedOperator:          {"cached", ResponseCachedOperator},
+
+	// Thresholds
+	TimeoutDurationOperator: {"timeout-ms", TimeoutDurationOperator},
+	RateLimitOperator:       {"rate-limit", RateLimitOperator},
+	RedirectOperator:        {"redirect", RedirectOperator},
 }
 
 func CreateOperators(operators []string) ([]Operator, error) {

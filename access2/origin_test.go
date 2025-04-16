@@ -63,53 +63,6 @@ func ExampleOrigin_Tag() {
 
 }
 
-func ExampleOriginMatch() {
-	target := Origin{
-		Region:     "Region",
-		Zone:       "zonE",
-		SubZone:    "sub-zone",
-		Host:       "hOst",
-		InstanceId: "",
-	}
-	filter := Origin{
-		Region:     "",
-		Zone:       "",
-		SubZone:    "",
-		Host:       "",
-		InstanceId: "",
-	}
-
-	fmt.Printf("test: OriginMatch(%v,%v) -> [match:%v]\n", target, filter, OriginMatch(target, filter))
-
-	filter.Region = "region"
-	fmt.Printf("test: OriginMatch(%v,%v) -> [match:%v]\n", target, filter, OriginMatch(target, filter))
-
-	filter.Zone = "zone"
-	fmt.Printf("test: OriginMatch(%v,%v) -> [match:%v]\n", target, filter, OriginMatch(target, filter))
-
-	filter.SubZone = "sub-zone"
-	fmt.Printf("test: OriginMatch(%v,%v) -> [match:%v]\n", target, filter, OriginMatch(target, filter))
-
-	filter.Host = "host"
-	fmt.Printf("test: OriginMatch(%v,%v) -> [match:%v]\n", target, filter, OriginMatch(target, filter))
-
-	filter.SubZone = ""
-	fmt.Printf("test: OriginMatch(%v,%v) -> [match:%v]\n", target, filter, OriginMatch(target, filter))
-
-	filter.SubZone = "invalid"
-	fmt.Printf("test: OriginMatch(%v,%v) -> [match:%v]\n", target, filter, OriginMatch(target, filter))
-
-	//Output:
-	//test: OriginMatch({Region zonE sub-zone hOst  },{     }) -> [match:false]
-	//test: OriginMatch({Region zonE sub-zone hOst  },{region     }) -> [match:true]
-	//test: OriginMatch({Region zonE sub-zone hOst  },{region zone    }) -> [match:true]
-	//test: OriginMatch({Region zonE sub-zone hOst  },{region zone sub-zone   }) -> [match:true]
-	//test: OriginMatch({Region zonE sub-zone hOst  },{region zone sub-zone host  }) -> [match:true]
-	//test: OriginMatch({Region zonE sub-zone hOst  },{region zone  host  }) -> [match:true]
-	//test: OriginMatch({Region zonE sub-zone hOst  },{region zone invalid host  }) -> [match:false]
-
-}
-
 func ExampleOrigin_Uri() {
 	target := Origin{
 		Region:     "region",

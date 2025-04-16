@@ -5,13 +5,15 @@ import (
 )
 
 const (
-	OperatorPrefix         = "%"
-	RequestReferencePrefix = "%REQ("
-
 	RequestIdHeaderName    = "X-REQUEST-ID"
 	FromRouteHeaderName    = "FROM-ROUTE"
 	UserAgentHeaderName    = "USER-AGENT"
 	ForwardedForHeaderName = "X-FORWARDED-FOR"
+)
+
+const (
+	OperatorPrefix         = "%"
+	RequestReferencePrefix = "%REQ("
 
 	TrafficOperator        = "%TRAFFIC%"      // ingress, egress, ping
 	StartTimeOperator      = "%START_TIME%"   // start time
@@ -25,19 +27,6 @@ const (
 	OriginServiceOperator    = "%SERVICE%"     // origin service
 	OriginInstanceIdOperator = "%INSTANCE_ID%" // origin instance id
 
-	ControllerNameOperator  = "%CONTROLLER_NAME%"
-	TimeoutDurationOperator = "%TIMEOUT_DURATION%"
-	RateLimitOperator       = "%RATE_LIMIT%"
-	RateBurstOperator       = "%RATE_BURST%"
-	ProxyOperator           = "%PROXY%"
-	RedirectOperator        = "%REDIRECT%"
-
-	ResponseStatusCodeOperator    = "%STATUS_CODE%"    // HTTP status code
-	ResponseBytesReceivedOperator = "%BYTES_RECEIVED%" // bytes received
-	ResponseBytesSentOperator     = "%BYTES_SENT%"     // bytes sent
-	StatusFlagsOperator           = "%STATUS_FLAGS%"   // status flags
-	//UpstreamHostOperator  = "%UPSTREAM_HOST%"  // Upstream host URL (e.g., tcp://ip:port for TCP connections).
-
 	RequestProtocolOperator = "%PROTOCOL%" // HTTP Protocol
 	RequestMethodOperator   = "%METHOD%"   // HTTP method
 	RequestUrlOperator      = "%URL%"
@@ -50,8 +39,15 @@ const (
 	RequestAuthorityOperator    = "%AUTHORITY%"       // authority request header value
 	RequestForwardedForOperator = "%X-FORWARDED-FOR%" // client IP address (X-FORWARDED-FOR request header value)
 
-	//GRPCStatusOperator       = "%GRPC_STATUS(X)%"     // gRPC status code formatted according to the optional parameter X, which can be CAMEL_STRING, SNAKE_STRING and NUMBER. X-REQUEST-ID request header value
-	//GRPCStatusNumberOperator = "%GRPC_STATUS_NUMBER%" // gRPC status code.
+	ResponseStatusCodeOperator      = "%STATUS_CODE%"      // HTTP status code
+	ResponseBytesReceivedOperator   = "%BYTES_RECEIVED%"   // bytes received
+	ResponseBytesSentOperator       = "%BYTES_SENT%"       // bytes sent
+	ResponseContentEncodingOperator = "%CONTENT-ENCODING%" // content encoding
+	ResponseCachedOperator          = "%CACHED%"           // cached flag
+
+	TimeoutDurationOperator = "%TIMEOUT_DURATION%" // threshold timeout
+	RateLimitOperator       = "%RATE_LIMIT%"       // threshold rate limit
+	RedirectOperator        = "%REDIRECT%"         // threshold redirect percentage
 
 )
 
@@ -91,9 +87,10 @@ func requestOperatorHeaderName(value string) string {
 
 func IsStringValue(op Operator) bool {
 	switch op.Value {
-	case DurationOperator, TimeoutDurationOperator, RateBurstOperator,
-		RateLimitOperator, ProxyOperator,
-		ResponseStatusCodeOperator, ResponseBytesSentOperator, ResponseBytesReceivedOperator:
+	case DurationOperator, TimeoutDurationOperator,
+		RateLimitOperator, RedirectOperator,
+		ResponseStatusCodeOperator, ResponseCachedOperator,
+		ResponseBytesSentOperator, ResponseBytesReceivedOperator:
 		return false
 	}
 	return true
