@@ -51,6 +51,27 @@ const (
 
 )
 
+var (
+	defaultOperators []Operator
+)
+
+func init() {
+	defaultOperators, _ = CreateOperators([]string{TrafficOperator,
+		StartTimeOperator,
+		DurationOperator,
+		RouteOperator,
+		RequestMethodOperator,
+		RequestUrlOperator,
+		ResponseStatusCodeOperator,
+		ResponseCachedOperator,
+		ResponseContentEncodingOperator,
+		ResponseBytesReceivedOperator,
+		TimeoutDurationOperator,
+		RateLimitOperator,
+		RedirectOperator,
+	})
+}
+
 // Operator - configuration of logging entries
 type Operator struct {
 	Name  string

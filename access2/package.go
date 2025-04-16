@@ -37,7 +37,7 @@ func SetOrigin(o Origin) {
 }
 
 func Log(operators []Operator, traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) {
-	e := NewEvent(traffic, start, duration, route, req, resp, thresholds)
+	e := newEvent(traffic, start, duration, route, req, resp, thresholds)
 	if len(operators) == 0 {
 		operators = defaultOperators
 	}

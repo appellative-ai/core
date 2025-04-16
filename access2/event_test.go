@@ -10,7 +10,7 @@ func _ExampleValue_Duration() {
 	start := time.Now()
 
 	time.Sleep(time.Second * 2)
-	data := &Event{}
+	data := &event{}
 	data.Duration = time.Since(start)
 	fmt.Printf("test: Value(\"Duration\") -> [%v]\n", data.Value(DurationOperator))
 	fmt.Printf("test: Value(\"DurationString\") -> [%v]\n", data.Value(DurationStringOperator))
@@ -24,7 +24,7 @@ func _ExampleValue_Duration() {
 func ExampleValue_Origin() {
 	SetOrigin(Origin{Region: "region", Zone: "zone", SubZone: "subZone", Host: "host-name", InstanceId: "instanceId"})
 
-	data := Event{}
+	data := event{}
 	fmt.Printf("test: Value(\"%v\") -> [%v]\n", "region", data.Value(OriginRegionOperator))
 	fmt.Printf("test: Value(\"%v\") -> [%v]\n", "zone", data.Value(OriginZoneOperator))
 	fmt.Printf("test: Value(\"%v\") -> [%v]\n", "sub-zone", data.Value(OriginSubZoneOperator))
@@ -49,7 +49,7 @@ func ExampleValue_Thresholds() {
 	//data = Event{ControllerName: name}
 	//fmt.Printf("test: Value(\"%v\") -> [controller:%v]\n", name, data.Value(op))
 
-	data1 := NewEvent(EgressTraffic, start, time.Since(start), "test-route", nil, nil, Threshold{
+	data1 := newEvent(EgressTraffic, start, time.Since(start), "test-route", nil, nil, Threshold{
 		Timeout:   time.Millisecond * 1500,
 		RateLimit: 125,
 		Redirect:  10})
@@ -74,13 +74,13 @@ func ExampleValue_Thresholds() {
 func ExampleValue_Request() {
 	op := RequestMethodOperator
 
-	data := &Event{}
+	data := &event{}
 	//fmt.Printf("test: Value(\"method\") -> [%v]\n", data.Value(op))
 
 	req, _ := http.NewRequest("POST", "www.google.com", nil)
 	req.Header.Add(RequestIdHeaderName, "123-456-789")
 	req.Header.Add(FromRouteHeaderName, "calling-route")
-	data = &Event{}
+	data = &event{}
 	data.AddRequest(req)
 	fmt.Printf("test: Value(\"method\") -> [%v]\n", data.Value(op))
 
@@ -94,11 +94,11 @@ func ExampleValue_Request() {
 func ExampleValue_Response() {
 	op := ResponseStatusCodeOperator
 
-	data := &Event{}
+	data := &event{}
 	fmt.Printf("test: Value(\"code\") -> [%v]\n", data.Value(op))
 
 	resp := &http.Response{StatusCode: 200}
-	data = &Event{}
+	data = &event{}
 	data.AddResponse(resp)
 	fmt.Printf("test: Value(\"code\") -> [%v]\n", data.Value(op))
 
@@ -110,7 +110,7 @@ func ExampleValue_Response() {
 func ExampleValue_Request_Header() {
 	req, _ := http.NewRequest("", "www.google.com", nil)
 	req.Header.Add("customer", "Ted's Bait & Tackle")
-	data := Event{}
+	data := event{}
 	data.AddRequest(req)
 	fmt.Printf("test: Value(\"customer\") -> [%v]\n", data.Value("%REQ(customer)%"))
 

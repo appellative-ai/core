@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-// Event - struct for all access logging
-type Event struct {
+// event - struct for all access logging
+type event struct {
 	Traffic    string
 	Start      time.Time
 	Duration   time.Duration
@@ -24,8 +24,8 @@ type Event struct {
 	Parsed     *Parsed
 }
 
-func NewEvent(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) *Event {
-	e := new(Event)
+func newEvent(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold) *event {
+	e := new(event)
 	e.Traffic = traffic
 	e.Start = start
 	e.Duration = duration
@@ -39,15 +39,15 @@ func NewEvent(traffic string, start time.Time, duration time.Duration, route str
 	return e
 }
 
-func (e *Event) AddRequest(r *http.Request) {
+func (e *event) AddRequest(r *http.Request) {
 	e.NewReq = BuildRequest(r)
 }
 
-func (e *Event) AddResponse(r *http.Response) {
+func (e *event) AddResponse(r *http.Response) {
 	e.NewResp = BuildResponse(r)
 }
 
-func (e *Event) Value(value string) string {
+func (e *event) Value(value string) string {
 	switch value {
 	case TrafficOperator:
 		return e.Traffic

@@ -11,7 +11,7 @@ const (
 	markupValue  = "\"%v\":%v"
 )
 
-func writeJson(items []Operator, data *Event) string {
+func writeJson(items []Operator, data *event) string {
 	if len(items) == 0 || data == nil {
 		return "{}"
 	}
@@ -40,7 +40,7 @@ func writeMarkup(sb *strings.Builder, name, value string, stringValue bool) {
 	}
 }
 
-func writeText(items []Operator, data *Event) string {
+func writeText(items []Operator, data *event) string {
 	if len(items) == 0 || data == nil {
 		return ""
 	}
