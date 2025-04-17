@@ -41,6 +41,9 @@ func Do(req *http.Request) (resp *http.Response, err error) {
 		return NewResponseFromUri(req.URL)
 	}
 	resp, err = Client.Do(req)
+	if resp != nil && resp.Header == nil {
+		resp.Header = make(http.Header)
+	}
 	// catch *url.Error - can be a connectivity or a context deadline exceeded error
 	if err != nil {
 		if urlErr, ok := any(err).(*url.Error); ok {
@@ -67,6 +70,9 @@ func ExchangeWithTimeout(timeout time.Duration, ex rest.Exchange) rest.Exchange 
 		r, cancel = NewRequestWithTimeout(r, timeout)
 		defer cancel()
 		resp, err = ex(r)
+		if resp.Header == nil {
+			resp.Header = make(http.Header)
+		}
 		if err == nil && timeout > 0 {
 			err = TransformBody(resp)
 		}
@@ -80,6 +86,7 @@ func serverErrorResponse() *http.Response {
 	resp.StatusCode = http.StatusInternalServerError
 	resp.Status = internalError
 	resp.Body = EmptyReader
+	resp.Header = make(http.Header)
 	return resp
 }
 
@@ -88,6 +95,7 @@ func gatewayTimeoutResponse() *http.Response {
 	resp.StatusCode = http.StatusGatewayTimeout
 	resp.Status = gatewayTimeout
 	resp.Body = EmptyReader
+	resp.Header = make(http.Header)
 	return resp
 }
 
