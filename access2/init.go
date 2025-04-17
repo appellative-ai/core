@@ -16,7 +16,7 @@ var operators = map[string]*Operator{
 	OriginRegionOperator:     {"region", OriginRegionOperator},
 	OriginZoneOperator:       {"zone", OriginZoneOperator},
 	OriginSubZoneOperator:    {"sub-zone", OriginSubZoneOperator},
-	OriginServiceOperator:    {"service", OriginServiceOperator},
+	OriginHostOperator:       {"origin-host", OriginHostOperator},
 	OriginInstanceIdOperator: {"instance-id", OriginInstanceIdOperator},
 
 	// Request

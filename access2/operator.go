@@ -21,11 +21,11 @@ const (
 	DurationStringOperator = "%DURATION_STR%" // Time package formatted
 	RouteOperator          = "%ROUTE%"        // Route name
 
-	OriginRegionOperator     = "%REGION%"      // origin region
-	OriginZoneOperator       = "%ZONE%"        // origin zone
-	OriginSubZoneOperator    = "%SUB_ZONE%"    // origin sub zone
-	OriginServiceOperator    = "%SERVICE%"     // origin service
-	OriginInstanceIdOperator = "%INSTANCE_ID%" // origin instance id
+	OriginRegionOperator     = "%ORIGIN_REGION%"      // origin region
+	OriginZoneOperator       = "%ORIGIN_ZONE%"        // origin zone
+	OriginSubZoneOperator    = "%ORIGIN_SUB_ZONE%"    // origin sub zone
+	OriginHostOperator       = "%ORIGIN_HOST%"        // origin host
+	OriginInstanceIdOperator = "%ORIGIN_INSTANCE_ID%" // origin instance id
 
 	RequestProtocolOperator = "%PROTOCOL%" // HTTP Protocol
 	RequestMethodOperator   = "%METHOD%"   // HTTP method

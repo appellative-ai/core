@@ -28,7 +28,7 @@ func ExampleValue_Origin() {
 	fmt.Printf("test: Value(\"%v\") -> [%v]\n", "region", data.Value(OriginRegionOperator))
 	fmt.Printf("test: Value(\"%v\") -> [%v]\n", "zone", data.Value(OriginZoneOperator))
 	fmt.Printf("test: Value(\"%v\") -> [%v]\n", "sub-zone", data.Value(OriginSubZoneOperator))
-	fmt.Printf("test: Value(\"%v\") -> [%v]\n", "service", data.Value(OriginServiceOperator))
+	fmt.Printf("test: Value(\"%v\") -> [%v]\n", "service", data.Value(OriginHostOperator))
 	fmt.Printf("test: Value(\"%v\") -> [%v]\n", "instance-id", data.Value(OriginInstanceIdOperator))
 
 	//Output:

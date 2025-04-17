@@ -90,7 +90,7 @@ func Example_CreateOperators() {
 	fmt.Printf("test: CreateOperators({}) -> [err:%v] [%v]\n", err, items)
 
 	//Output:
-	//test: CreateOperators({}) -> [err:<nil>] [[{traffic %TRAFFIC%} {start-time %START_TIME%} {duration-ms %DURATION%} {region %REGION%}]]
+	//test: CreateOperators({}) -> [err:<nil>] [[{traffic %TRAFFIC%} {start-time %START_TIME%} {duration-ms %DURATION%} {region %ORIGIN_REGION%}]]
 
 }
 

@@ -67,7 +67,7 @@ func (e *event) Value(value string) string {
 		return origin.Zone
 	case OriginSubZoneOperator:
 		return origin.SubZone
-	case OriginServiceOperator:
+	case OriginHostOperator:
 		return origin.Host
 	case OriginInstanceIdOperator:
 		return origin.InstanceId
