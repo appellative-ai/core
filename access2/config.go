@@ -5,16 +5,6 @@ import (
 	"errors"
 )
 
-// InitEgressOperators - allows configuration of access attributes for egress traffic
-/*
-func InitEgressOperators(config []accessdata.Operator) error {
-	var err error
-	egressOperators, err = accessdata.InitOperators(config)
-	return err
-}
-
-*/
-
 // LoadOperators - load operators from file
 func LoadOperators(read func() ([]byte, error)) error {
 	if read == nil {

@@ -41,7 +41,7 @@ func ExampleBuildHostWithScheme() {
 
 func ExampleBuildPath() {
 	auth := "github/advanced-go/timeseries"
-	path := "v2/access"
+	path := "v2/access1"
 	//ver := "v2"
 	values := make(url.Values)
 
@@ -59,10 +59,10 @@ func ExampleBuildPath() {
 	fmt.Printf("test: BuildPath(\"%v\",\"%v\") -> [%v]\n", auth, path, p)
 
 	//Output:
-	//test: BuildPath("v2/access") -> [v2/access]
-	//test: BuildPath("github/advanced-go/timeseries","v2/access") -> [github/advanced-go/timeseries:v2/access]
-	//test: BuildPath("v2/access") -> [v2/access?region=*]
-	//test: BuildPath("github/advanced-go/timeseries","v2/access") -> [github/advanced-go/timeseries:v2/access?region=*]
+	//test: BuildPath("v2/access1") -> [v2/access1]
+	//test: BuildPath("github/advanced-go/timeseries","v2/access1") -> [github/advanced-go/timeseries:v2/access1]
+	//test: BuildPath("v2/access1") -> [v2/access1?region=*]
+	//test: BuildPath("github/advanced-go/timeseries","v2/access1") -> [github/advanced-go/timeseries:v2/access1?region=*]
 
 }
 
@@ -109,7 +109,7 @@ func ExampleResolve_Url() {
 func ExampleResolve_UrlWithDomain() {
 	host := ""
 	auth := "github/advanced-go/timeseries"
-	path := "access"
+	path := "access1"
 	values := make(url.Values)
 	r := NewResolver("")
 
@@ -149,12 +149,12 @@ func ExampleResolve_UrlWithDomain() {
 	fmt.Printf("test: Url(\"%v\",\"%v\",\"%v\") -> [%v]\n", host, auth, path, url1)
 
 	//Output:
-	//test: Url("","github/advanced-go/timeseries","access") -> [/github/advanced-go/timeseries:access]
-	//test: Url("","github/advanced-go/timeseries","access") -> [/github/advanced-go/timeseries:access?region=*]
-	//test: Url_String("","github/advanced-go/timeseries","access") -> [/github/advanced-go/timeseries:access?region=*]
-	//test: Url("www.google.com","github/advanced-go/timeseries","access") -> [https://www.google.com/github/advanced-go/timeseries:access?region=*]
-	//test: Url("localhost:8080","github/advanced-go/timeseries","v2/access") -> [http://localhost:8080/github/advanced-go/timeseries:v2/access?region=*]
-	//test: Url("localhost:8080","github/advanced-go/timeseries","v2/access") -> [http://localhost:8080/github/advanced-go/timeseries:v2/access?region=*]
+	//test: Url("","github/advanced-go/timeseries","access1") -> [/github/advanced-go/timeseries:access1]
+	//test: Url("","github/advanced-go/timeseries","access1") -> [/github/advanced-go/timeseries:access1?region=*]
+	//test: Url_String("","github/advanced-go/timeseries","access1") -> [/github/advanced-go/timeseries:access1?region=*]
+	//test: Url("www.google.com","github/advanced-go/timeseries","access1") -> [https://www.google.com/github/advanced-go/timeseries:access?region=*]
+	//test: Url("localhost:8080","github/advanced-go/timeseries","v2/access1") -> [http://localhost:8080/github/advanced-go/timeseries:v2/access?region=*]
+	//test: Url("localhost:8080","github/advanced-go/timeseries","v2/access1") -> [http://localhost:8080/github/advanced-go/timeseries:v2/access?region=*]
 	//test: Url("www.google.com","","v2/search") -> [https://www.google.com/v2/search?q=golang]
 
 }

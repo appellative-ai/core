@@ -2,7 +2,7 @@ package host
 
 import (
 	"context"
-	"github.com/behavioral-ai/core/access"
+	access "github.com/behavioral-ai/core/access2"
 	"github.com/behavioral-ai/core/rest"
 	"net/http"
 	"time"

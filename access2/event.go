@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// event - struct for all access logging
+// event - struct for all logging
 type event struct {
 	Traffic    string
 	Start      time.Time

@@ -85,7 +85,7 @@ func accessLogLink(next rest.Exchange) rest.Exchange {
 		resp.Header.Del(access.XTimeout)
 		pct = resp.Header.Get(access.XRedirect)
 		resp.Header.Del(access.XRedirect)
-		access.Log(nil, access.IngressTraffic, start, time.Since(start), route, r, resp, access.Threshold{Timeout: timeout, RateLimit: limit, Redirect: pct})
+		access.Log(access.IngressTraffic, start, time.Since(start), route, r, resp, access.Threshold{Timeout: timeout, RateLimit: limit, Redirect: pct})
 		return
 	}
 }
