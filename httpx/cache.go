@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"sync"
+	"time"
 )
 
 var (
@@ -13,8 +14,9 @@ var (
 )
 
 type cacheT struct {
-	body []byte
-	resp *http.Response
+	createdTS time.Time
+	body      []byte
+	resp      *http.Response
 }
 
 type ResponseCache interface {
@@ -44,7 +46,7 @@ func (c *contentT) Get(uri string) *http.Response {
 	if !ok {
 		return notFoundResponse
 	}
-	if v2, ok1 := value.(cacheT); ok1 {
+	if v2, ok1 := value.(*cacheT); ok1 {
 		v2.resp.Body = io.NopCloser(bytes.NewReader(v2.body))
 		return v2.resp
 	}
@@ -60,10 +62,7 @@ func (c *contentT) Put(uri string, resp *http.Response) error {
 	if err != nil {
 		return err
 	}
-	data := cacheT{
-		body: buf,
-		resp: resp,
-	}
+	data := &cacheT{createdTS: time.Now().UTC(), body: buf, resp: resp}
 	c.m.Store(uri, data)
 	return nil
 }
