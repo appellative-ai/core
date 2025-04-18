@@ -13,16 +13,19 @@ var (
 )
 
 func ExampleNewCache() {
+	c := NewResponseCache()
 	uri := "https://www.google.com/search?q=golang"
 	s := "this is string content"
-	c := NewResponseCache()
 
 	h := make(http.Header)
 	h.Set("key-1", "value-1")
 	h.Set("key-2", "value-2")
 	h.Set("key-3", "value-3")
 	resp := NewResponse(http.StatusOK, h, s)
-	c.Put(uri, resp)
+	err1 := c.Put(uri, resp)
+	if err1 != nil {
+		fmt.Printf("test: cache.Put() -> [err:%v]\n", err1)
+	}
 
 	req2, _ := http.NewRequest(http.MethodGet, uri, nil)
 	resp1 := c.Get(req2.URL.String())
@@ -30,17 +33,27 @@ func ExampleNewCache() {
 	if err != nil {
 		fmt.Printf("test: iox.ReadAll() -> [buf:%v] [err:%v]\n", buf, err)
 	}
-	fmt.Printf("test: NewCache() -> [%v] [%v] [%v]\n", resp.StatusCode, resp.Header, string(buf))
+	fmt.Printf("test: NewCache(\"%v\") -> [%v] [%v] [%v]\n", uri, resp.StatusCode, resp.Header, string(buf))
 
 	uri = "https://bing.com/search?q=golang"
 	//req3, _ := http.NewRequest(http.MethodGet,uri, nil)
 	resp = c.Get(uri)
 	buf, err = iox.ReadAll(resp.Body, nil)
-	fmt.Printf("test: NewCache() -> [%v] [%v] [%v] [err:%v]\n", resp.StatusCode, resp.Header, buf, err)
+	fmt.Printf("test: NewCache(\"%v\") -> [%v] [%v] [%v] [err:%v]\n", uri, resp.StatusCode, resp.Header, buf, err)
+
+	uri = "https://www.google.com/search?q=golang"
+	req2, _ = http.NewRequest(http.MethodGet, uri, nil)
+	resp1 = c.Get(req2.URL.String())
+	buf, err = iox.ReadAll(resp1.Body, nil)
+	if err != nil {
+		fmt.Printf("test: iox.ReadAll() -> [buf:%v] [err:%v]\n", buf, err)
+	}
+	fmt.Printf("test: NewCache(\"%v\") -> [%v] [%v] [%v]\n", uri, resp1.StatusCode, resp1.Header, string(buf))
 
 	//Output:
-	//test: NewCache() -> [200] [map[Key-1:[value-1] Key-2:[value-2] Key-3:[value-3]]] [this is string content]
-	//test: NewCache() -> [404] [map[]] [[]] [err:<nil>]
+	//test: NewCache("https://www.google.com/search?q=golang") -> [200] [map[Key-1:[value-1] Key-2:[value-2] Key-3:[value-3]]] [this is string content]
+	//test: NewCache("https://bing.com/search?q=golang") -> [404] [map[]] [[]] [err:<nil>]
+	//test: NewCache("https://www.google.com/search?q=golang") -> [200] [map[Key-1:[value-1] Key-2:[value-2] Key-3:[value-3]]] [this is string content]
 
 }
 

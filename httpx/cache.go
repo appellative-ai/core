@@ -1,6 +1,9 @@
 package httpx
 
 import (
+	"bytes"
+	"errors"
+	"io"
 	"net/http"
 	"sync"
 )
@@ -9,9 +12,14 @@ var (
 	notFoundResponse = &http.Response{StatusCode: http.StatusNotFound}
 )
 
+type cacheT struct {
+	body []byte
+	resp *http.Response
+}
+
 type ResponseCache interface {
 	Get(key string) *http.Response
-	Put(key string, resp *http.Response)
+	Put(key string, resp *http.Response) error
 }
 
 type contentT struct {
@@ -36,15 +44,28 @@ func (c *contentT) Get(uri string) *http.Response {
 	if !ok {
 		return notFoundResponse
 	}
-	if r, ok1 := value.(*http.Response); ok1 {
-		return r
+	if v2, ok1 := value.(cacheT); ok1 {
+		v2.resp.Body = io.NopCloser(bytes.NewReader(v2.body))
+		return v2.resp
 	}
 	return notFoundResponse
 }
 
 // Put - store response based on a URI, usually the URL
-func (c *contentT) Put(uri string, resp *http.Response) {
-	c.m.Store(uri, resp)
+func (c *contentT) Put(uri string, resp *http.Response) error {
+	if uri == "" || resp == nil {
+		return errors.New("invalid argument: either uri is empty or http.Response is nil")
+	}
+	buf, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	data := cacheT{
+		body: buf,
+		resp: resp,
+	}
+	c.m.Store(uri, data)
+	return nil
 }
 
 // CreateResponse - create a response from a request
