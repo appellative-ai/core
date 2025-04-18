@@ -13,7 +13,7 @@ var (
 	notFoundResponse = &http.Response{StatusCode: http.StatusNotFound}
 )
 
-type cacheT struct {
+type contentT struct {
 	createdTS time.Time
 	body      []byte
 	resp      *http.Response
@@ -24,29 +24,29 @@ type ResponseCache interface {
 	Put(key string, resp *http.Response) error
 }
 
-type contentT struct {
+type cacheT struct {
 	m *sync.Map
 }
 
 func NewResponseCache() ResponseCache {
-	c := new(contentT)
+	c := new(cacheT)
 	c.m = new(sync.Map)
 	return newCache()
 }
 
-func newCache() *contentT {
-	c := new(contentT)
+func newCache() *cacheT {
+	c := new(cacheT)
 	c.m = new(sync.Map)
 	return c
 }
 
 // Get - load a response based on a URI, usually the URL
-func (c *contentT) Get(uri string) *http.Response {
+func (c *cacheT) Get(uri string) *http.Response {
 	value, ok := c.m.Load(uri)
 	if !ok {
 		return notFoundResponse
 	}
-	if v2, ok1 := value.(*cacheT); ok1 {
+	if v2, ok1 := value.(*contentT); ok1 {
 		v2.resp.Body = io.NopCloser(bytes.NewReader(v2.body))
 		return v2.resp
 	}
@@ -54,7 +54,7 @@ func (c *contentT) Get(uri string) *http.Response {
 }
 
 // Put - store response based on a URI, usually the URL
-func (c *contentT) Put(uri string, resp *http.Response) error {
+func (c *cacheT) Put(uri string, resp *http.Response) error {
 	if uri == "" || resp == nil {
 		return errors.New("invalid argument: either uri is empty or http.Response is nil")
 	}
@@ -62,7 +62,7 @@ func (c *contentT) Put(uri string, resp *http.Response) error {
 	if err != nil {
 		return err
 	}
-	data := &cacheT{createdTS: time.Now().UTC(), body: buf, resp: resp}
+	data := &contentT{createdTS: time.Now().UTC(), body: buf, resp: resp}
 	c.m.Store(uri, data)
 	return nil
 }
