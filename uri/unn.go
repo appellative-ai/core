@@ -48,6 +48,30 @@ func ParseUnn(uri string) *Unn {
 	return u
 }
 
+func BuildUnn(u *Unn) string {
+	return BuildUnnFrom(u.Domain, u.Namespace, u.Class, u.Path, u.Resource, u.Fragment)
+}
+
+func BuildUnnFrom(domain, namespace, class, path, resource, fragment string) string {
+	sb := strings.Builder{}
+	sb.WriteString(UnnPrefix)
+	sb.WriteString(domain)
+	sb.WriteString(Colon)
+	sb.WriteString(namespace)
+	sb.WriteString(Colon)
+	sb.WriteString(class)
+	sb.WriteString(Slash + path)
+	if resource != "" {
+		sb.WriteString(Colon)
+		sb.WriteString(resource)
+	}
+	if fragment != "" {
+		sb.WriteString(Fragment)
+		sb.WriteString(fragment)
+	}
+	return sb.String()
+}
+
 func parseClass(s string, u *Unn) error {
 	i := strings.Index(s, Slash)
 	if i == -1 {

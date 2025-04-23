@@ -24,6 +24,46 @@ func ExampleParseUnn() {
 
 }
 
+func ExampleBuildUnn() {
+	domain := "behavioral-ai.github.com"
+	namespace := "resiliency"
+	class := "agent"
+	path := "collective/namespace"
+	resource := "state"
+	fragment := "1.3.5"
+
+	uri := BuildUnnFrom(domain, namespace, class, path, "", "")
+	fmt.Printf("test: BuildUnnFrom() -> [%v]\n", uri)
+
+	uri = BuildUnnFrom(domain, namespace, class, path, resource, "")
+	fmt.Printf("test: BuildUnnFrom() -> [%v]\n", uri)
+
+	uri = BuildUnnFrom(domain, namespace, class, path, "", fragment)
+	fmt.Printf("test: BuildUnnFrom() -> [%v]\n", uri)
+
+	uri = BuildUnnFrom(domain, namespace, class, path, resource, fragment)
+	fmt.Printf("test: BuildUnnFrom() -> [%v]\n", uri)
+
+	uri = BuildUnn(&Unn{
+		Domain:    domain,
+		Namespace: namespace,
+		Class:     class,
+		Path:      path,
+		Resource:  resource,
+		Fragment:  fragment,
+		Err:       nil,
+	})
+	fmt.Printf("test: BuildUnn() -> [%v]\n", uri)
+
+	//Output:
+	//test: BuildUnnFrom() -> [unn:behavioral-ai.github.com:resiliency:agent/collective/namespace]
+	//test: BuildUnnFrom() -> [unn:behavioral-ai.github.com:resiliency:agent/collective/namespace:state]
+	//test: BuildUnnFrom() -> [unn:behavioral-ai.github.com:resiliency:agent/collective/namespace#1.3.5]
+	//test: BuildUnnFrom() -> [unn:behavioral-ai.github.com:resiliency:agent/collective/namespace:state#1.3.5]
+	//test: BuildUnn() -> [unn:behavioral-ai.github.com:resiliency:agent/collective/namespace:state#1.3.5]
+
+}
+
 func ExampleParseClass() {
 	unn := new(Unn)
 	s := "agentcollective-namespace"
