@@ -16,9 +16,9 @@ const (
 )
 
 type Unn struct {
+	Authority string
 	Domain    string
-	Namespace string
-	Class     string
+	Kind      string
 	Path      string
 	Resource  string
 	Fragment  string
@@ -36,11 +36,11 @@ func ParseUnn(uri string) *Unn {
 	for i := 0; i < len(tokens); i++ {
 		switch i {
 		case 0:
-			u.Domain = tokens[i]
+			u.Authority = tokens[i]
 		case 1:
-			u.Namespace = tokens[i]
+			u.Domain = tokens[i]
 		case 2:
-			parseClass(tokens[i], u)
+			parseKind(tokens[i], u)
 		case 3:
 			parseResource(tokens[i], u)
 		}
@@ -49,17 +49,17 @@ func ParseUnn(uri string) *Unn {
 }
 
 func BuildUnn(u *Unn) string {
-	return BuildUnnFrom(u.Domain, u.Namespace, u.Class, u.Path, u.Resource, u.Fragment)
+	return BuildUnnFrom(u.Authority, u.Domain, u.Kind, u.Path, u.Resource, u.Fragment)
 }
 
-func BuildUnnFrom(domain, namespace, class, path, resource, fragment string) string {
+func BuildUnnFrom(authority, domain, kind, path, resource, fragment string) string {
 	sb := strings.Builder{}
 	sb.WriteString(UnnPrefix)
+	sb.WriteString(authority)
+	sb.WriteString(Colon)
 	sb.WriteString(domain)
 	sb.WriteString(Colon)
-	sb.WriteString(namespace)
-	sb.WriteString(Colon)
-	sb.WriteString(class)
+	sb.WriteString(kind)
 	sb.WriteString(Slash + path)
 	if resource != "" {
 		sb.WriteString(Colon)
@@ -72,12 +72,12 @@ func BuildUnnFrom(domain, namespace, class, path, resource, fragment string) str
 	return sb.String()
 }
 
-func parseClass(s string, u *Unn) error {
+func parseKind(s string, u *Unn) error {
 	i := strings.Index(s, Slash)
 	if i == -1 {
 		return errors.New(fmt.Sprintf("invalid argument: no path for agent [%v]", s))
 	}
-	u.Class = s[:i]
+	u.Kind = s[:i]
 	u.Path = s[i+1:]
 	return nil
 }

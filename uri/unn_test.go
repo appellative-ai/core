@@ -7,15 +7,15 @@ import (
 func ExampleParseUnn() {
 	uri := "unn:behavioral-ai.github.com:resiliency:agent/collective/namespace"
 	u := ParseUnn(uri)
-	fmt.Printf("test: ParseUnn(\"%v\") -> [%v] [%v] [%v] [%v] [%v] [%v] [err:%v]\n", uri, u.Domain, u.Namespace, u.Class, u.Path, u.Resource, u.Fragment, u.Err)
+	fmt.Printf("test: ParseUnn(\"%v\") -> [%v] [%v] [%v] [%v] [%v] [%v] [err:%v]\n", uri, u.Authority, u.Domain, u.Kind, u.Path, u.Resource, u.Fragment, u.Err)
 
 	uri = "unn:behavioral-ai.github.com:resiliency:agent/collective/namespace:state#1.3.5"
 	u = ParseUnn(uri)
-	fmt.Printf("test: ParseUnn(\"%v\") -> [%v] [%v] [%v] [%v] [%v] [%v] [err:%v]\n", uri, u.Domain, u.Namespace, u.Class, u.Path, u.Resource, u.Fragment, u.Err)
+	fmt.Printf("test: ParseUnn(\"%v\") -> [%v] [%v] [%v] [%v] [%v] [%v] [err:%v]\n", uri, u.Authority, u.Domain, u.Kind, u.Path, u.Resource, u.Fragment, u.Err)
 
 	uri = "https://somedomain.com/behavioral-ai.github.com:resiliency:agent/collective/namespace:advice#2.3.5"
 	u = ParseUnn(uri)
-	fmt.Printf("test: ParseUnn(\"%v\") -> [%v] [%v] [%v] [%v] [%v] [%v] [err:%v]\n", uri, u.Domain, u.Namespace, u.Class, u.Path, u.Resource, u.Fragment, u.Err)
+	fmt.Printf("test: ParseUnn(\"%v\") -> [%v] [%v] [%v] [%v] [%v] [%v] [err:%v]\n", uri, u.Authority, u.Domain, u.Kind, u.Path, u.Resource, u.Fragment, u.Err)
 
 	//Output:
 	//test: ParseUnn("unn:behavioral-ai.github.com:resiliency:agent/collective/namespace") -> [behavioral-ai.github.com] [resiliency] [agent] [collective/namespace] [] [] [err:<nil>]
@@ -25,29 +25,29 @@ func ExampleParseUnn() {
 }
 
 func ExampleBuildUnn() {
-	domain := "behavioral-ai.github.com"
-	namespace := "resiliency"
-	class := "agent"
+	authority := "behavioral-ai.github.com"
+	domain := "resiliency"
+	kind := "agent"
 	path := "collective/namespace"
 	resource := "state"
 	fragment := "1.3.5"
 
-	uri := BuildUnnFrom(domain, namespace, class, path, "", "")
+	uri := BuildUnnFrom(authority, domain, kind, path, "", "")
 	fmt.Printf("test: BuildUnnFrom() -> [%v]\n", uri)
 
-	uri = BuildUnnFrom(domain, namespace, class, path, resource, "")
+	uri = BuildUnnFrom(authority, domain, kind, path, resource, "")
 	fmt.Printf("test: BuildUnnFrom() -> [%v]\n", uri)
 
-	uri = BuildUnnFrom(domain, namespace, class, path, "", fragment)
+	uri = BuildUnnFrom(authority, domain, kind, path, "", fragment)
 	fmt.Printf("test: BuildUnnFrom() -> [%v]\n", uri)
 
-	uri = BuildUnnFrom(domain, namespace, class, path, resource, fragment)
+	uri = BuildUnnFrom(authority, domain, kind, path, resource, fragment)
 	fmt.Printf("test: BuildUnnFrom() -> [%v]\n", uri)
 
 	uri = BuildUnn(&Unn{
+		Authority: authority,
 		Domain:    domain,
-		Namespace: namespace,
-		Class:     class,
+		Kind:      kind,
 		Path:      path,
 		Resource:  resource,
 		Fragment:  fragment,
@@ -64,19 +64,19 @@ func ExampleBuildUnn() {
 
 }
 
-func ExampleParseClass() {
+func ExampleParseKind() {
 	unn := new(Unn)
 	s := "agentcollective-namespace"
-	err := parseClass(s, unn)
-	fmt.Printf("test: parseClass(\"%v\") -> [class:%v] [path:%v] [err:%v]\n", s, unn.Class, unn.Path, err)
+	err := parseKind(s, unn)
+	fmt.Printf("test: parseKind(\"%v\") -> [kind:%v] [path:%v] [err:%v]\n", s, unn.Kind, unn.Path, err)
 
 	s = "agent/collective/namespace"
-	err = parseClass(s, unn)
-	fmt.Printf("test: parseClass(\"%v\") -> [class:%v] [path:%v] [err:%v]\n", s, unn.Class, unn.Path, err)
+	err = parseKind(s, unn)
+	fmt.Printf("test: parseKind(\"%v\") -> [kind:%v] [path:%v] [err:%v]\n", s, unn.Kind, unn.Path, err)
 
 	//Output:
-	//test: parseClass("agentcollective-namespace") -> [class:] [path:] [err:invalid argument: no path for agent [agentcollective-namespace]]
-	//test: parseClass("agent/collective/namespace") -> [class:agent] [path:collective/namespace] [err:<nil>]
+	//test: parseKind("agentcollective-namespace") -> [kind:] [path:] [err:invalid argument: no path for agent [agentcollective-namespace]]
+	//test: parseKind("agent/collective/namespace") -> [kind:agent] [path:collective/namespace] [err:<nil>]
 
 }
 
