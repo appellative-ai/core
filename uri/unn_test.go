@@ -5,27 +5,27 @@ import (
 )
 
 func ExampleParseUnn() {
-	uri := "unn:behavioral-ai.github.com:resiliency:agent/collective/namespace"
+	uri := "unn:behavioral-ai:resiliency:agent/collective/namespace"
 	u := ParseUnn(uri)
 	fmt.Printf("test: ParseUnn(\"%v\") -> [%v] [%v] [%v] [%v] [%v] [%v] [err:%v]\n", uri, u.Authority, u.Domain, u.Kind, u.Path, u.Resource, u.Fragment, u.Err)
 
-	uri = "unn:behavioral-ai.github.com:resiliency:agent/collective/namespace:state#1.3.5"
+	uri = "unn:behavioral-ai:resiliency:agent/collective/namespace:state#1.3.5"
 	u = ParseUnn(uri)
 	fmt.Printf("test: ParseUnn(\"%v\") -> [%v] [%v] [%v] [%v] [%v] [%v] [err:%v]\n", uri, u.Authority, u.Domain, u.Kind, u.Path, u.Resource, u.Fragment, u.Err)
 
-	uri = "https://somedomain.com/behavioral-ai.github.com:resiliency:agent/collective/namespace:advice#2.3.5"
+	uri = "https://somedomain.com/behavioral-ai:resiliency:agent/collective/namespace:advice#2.3.5"
 	u = ParseUnn(uri)
 	fmt.Printf("test: ParseUnn(\"%v\") -> [%v] [%v] [%v] [%v] [%v] [%v] [err:%v]\n", uri, u.Authority, u.Domain, u.Kind, u.Path, u.Resource, u.Fragment, u.Err)
 
 	//Output:
-	//test: ParseUnn("unn:behavioral-ai.github.com:resiliency:agent/collective/namespace") -> [behavioral-ai.github.com] [resiliency] [agent] [collective/namespace] [] [] [err:<nil>]
-	//test: ParseUnn("unn:behavioral-ai.github.com:resiliency:agent/collective/namespace:state#1.3.5") -> [behavioral-ai.github.com] [resiliency] [agent] [collective/namespace] [state] [1.3.5] [err:<nil>]
-	//test: ParseUnn("https://somedomain.com/behavioral-ai.github.com:resiliency:agent/collective/namespace:advice#2.3.5") -> [behavioral-ai.github.com] [resiliency] [agent] [collective/namespace] [advice] [2.3.5] [err:<nil>]
+	//test: ParseUnn("unn:behavioral-ai:resiliency:agent/collective/namespace") -> [behavioral-ai] [resiliency] [agent] [collective/namespace] [] [] [err:<nil>]
+	//test: ParseUnn("unn:behavioral-ai:resiliency:agent/collective/namespace:state#1.3.5") -> [behavioral-ai] [resiliency] [agent] [collective/namespace] [state] [1.3.5] [err:<nil>]
+	//test: ParseUnn("https://somedomain.com/behavioral-ai:resiliency:agent/collective/namespace:advice#2.3.5") -> [behavioral-ai] [resiliency] [agent] [collective/namespace] [advice] [2.3.5] [err:<nil>]
 
 }
 
 func ExampleBuildUnn() {
-	authority := "behavioral-ai.github.com"
+	authority := "behavioral-ai"
 	domain := "resiliency"
 	kind := "agent"
 	path := "collective/namespace"
@@ -56,11 +56,11 @@ func ExampleBuildUnn() {
 	fmt.Printf("test: BuildUnn() -> [%v]\n", uri)
 
 	//Output:
-	//test: BuildUnnFrom() -> [unn:behavioral-ai.github.com:resiliency:agent/collective/namespace]
-	//test: BuildUnnFrom() -> [unn:behavioral-ai.github.com:resiliency:agent/collective/namespace:state]
-	//test: BuildUnnFrom() -> [unn:behavioral-ai.github.com:resiliency:agent/collective/namespace#1.3.5]
-	//test: BuildUnnFrom() -> [unn:behavioral-ai.github.com:resiliency:agent/collective/namespace:state#1.3.5]
-	//test: BuildUnn() -> [unn:behavioral-ai.github.com:resiliency:agent/collective/namespace:state#1.3.5]
+	//test: BuildUnnFrom() -> [unn:behavioral-ai:resiliency:agent/collective/namespace]
+	//test: BuildUnnFrom() -> [unn:behavioral-ai:resiliency:agent/collective/namespace:state]
+	//test: BuildUnnFrom() -> [unn:behavioral-ai:resiliency:agent/collective/namespace#1.3.5]
+	//test: BuildUnnFrom() -> [unn:behavioral-ai:resiliency:agent/collective/namespace:state#1.3.5]
+	//test: BuildUnn() -> [unn:behavioral-ai:resiliency:agent/collective/namespace:state#1.3.5]
 
 }
 
@@ -121,17 +121,32 @@ func ExampleUprootURL() {
 	uri := uprootUnn(s)
 	fmt.Printf("test: uprootURL(\"%v\") -> [%v]\n", s, uri)
 
-	s = "https://somedomain.com/behavioral-ai.github.com:resiliency:agent/collective/namespace"
+	s = "https://somedomain.com/behavioral-ai:resiliency:agent/collective/namespace"
 	uri = uprootUnn(s)
 	fmt.Printf("test: uprootURL(\"%v\") -> [%v]\n", s, uri)
 
-	s = "https://somedomain.com/behavioral-ai.github.com:resiliency:agent/collective/namespace:state#1.3.5"
+	s = "https://somedomain.com/behavioral-ai:resiliency:agent/collective/namespace:state#1.3.5"
 	uri = uprootUnn(s)
 	fmt.Printf("test: uprootUnn(\"%v\") -> [%v]\n", s, uri)
 
 	//Output:
 	//test: uprootURL("https://www.google.com/search?q=golang") -> [search]
-	//test: uprootURL("https://somedomain.com/behavioral-ai.github.com:resiliency:agent/collective/namespace") -> [behavioral-ai.github.com:resiliency:agent/collective/namespace]
-	//test: uprootUnn("https://somedomain.com/behavioral-ai.github.com:resiliency:agent/collective/namespace:state#1.3.5") -> [behavioral-ai.github.com:resiliency:agent/collective/namespace:state#1.3.5]
+	//test: uprootURL("https://somedomain.com/behavioral-ai:resiliency:agent/collective/namespace") -> [behavioral-ai:resiliency:agent/collective/namespace]
+	//test: uprootUnn("https://somedomain.com/behavioral-ai:resiliency:agent/collective/namespace:state#1.3.5") -> [behavioral-ai:resiliency:agent/collective/namespace:state#1.3.5]
+
+}
+
+func ExampleUnnVersion() {
+	u := "behavioral-ai:resiliency:agent/collective/namespace:state"
+	v := UnnVersion(u)
+	fmt.Printf("test: UnnVersion(\"%v\") -> [%v]\n", u, v)
+
+	u = "behavioral-ai:resiliency:agent/collective/namespace:state#1.3.5"
+	v = UnnVersion(u)
+	fmt.Printf("test: UnnVersion(\"%v\") -> [%v]\n", u, v)
+
+	//Output:
+	//test: UnnVersion("behavioral-ai:resiliency:agent/collective/namespace:state") -> []
+	//test: UnnVersion("behavioral-ai:resiliency:agent/collective/namespace:state#1.3.5") -> [1.3.5]
 
 }

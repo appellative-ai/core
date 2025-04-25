@@ -52,6 +52,25 @@ func BuildUnn(u *Unn) string {
 	return BuildUnnFrom(u.Authority, u.Domain, u.Kind, u.Path, u.Resource, u.Fragment)
 }
 
+func UnnVersion(name string) string {
+	i := strings.Index(name, Fragment)
+	if i >= 0 {
+		return name[i+1:]
+	}
+	return ""
+}
+
+func UnnWithResource(name, resource, fragment string) string {
+	uri := name
+	if resource != "" {
+		uri += Colon + resource
+	}
+	if fragment != "" {
+		uri += Fragment + fragment
+	}
+	return uri
+}
+
 func BuildUnnFrom(authority, domain, kind, path, resource, fragment string) string {
 	sb := strings.Builder{}
 	sb.WriteString(UnnPrefix)
