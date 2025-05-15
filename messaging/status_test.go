@@ -19,7 +19,7 @@ func ExampleNewStatus_OK() {
 }
 
 func ExampleNewStatus_Teapot() {
-	s := NewStatus(http.StatusTeapot)
+	s := NewStatus(http.StatusTeapot, nil)
 	fmt.Printf("test: NewStatus() -> [status:%v]\n", s)
 
 	//Output:

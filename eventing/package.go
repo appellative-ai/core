@@ -26,7 +26,7 @@ type ActivityEvent struct {
 
 // NotifyEvent -
 type NotifyEvent interface {
-	AgentId() string
+	Location() string
 	Type() string
 	Status() string
 	Message() string

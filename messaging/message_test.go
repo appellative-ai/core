@@ -33,7 +33,7 @@ func ExampleConfigMessage() {
 }
 
 func ExampleStatusMessage() {
-	m := NewStatusMessage(NewStatus(http.StatusTeapot), ConfigEvent)
+	m := NewStatusMessage(NewStatus(http.StatusTeapot, nil), ConfigEvent)
 
 	status, event := StatusContent(m)
 	fmt.Printf("test: NewStatusMessage() -> [%v] [%v]\n", status, event)

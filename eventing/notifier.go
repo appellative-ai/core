@@ -10,7 +10,7 @@ import (
 type NotifyFunc func(e NotifyEvent)
 
 func OutputNotify(e NotifyEvent) {
-	fmt.Printf("notify-> %v [%v] [%v] [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), e.AgentId(), e.Type(), e.RequestId(), e.Status(), e.Message())
+	fmt.Printf("notify-> %v [%v] [%v] [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), e.Location(), e.Type(), e.RequestId(), e.Status(), e.Message())
 }
 
 func NewNotifyConfigMessage(fn NotifyFunc) *messaging.Message {

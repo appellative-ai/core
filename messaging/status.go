@@ -25,11 +25,11 @@ const (
 )
 
 type Status struct {
-	Code     int    `json:"code"`
-	Err      error  `json:"err"`
-	Id       string `json:"request-id"`
-	Msg      string `json:"message"`
-	AgentUri string `json:"agent-uri"`
+	Code  int    `json:"code"`
+	Err   error  `json:"err"`
+	Msg   string `json:"message"`
+	Place string `json:"location"`
+	Id    string `json:"request-id"`
 }
 
 func StatusOK() *Status {
@@ -44,27 +44,39 @@ func StatusNotFound() *Status {
 	return notFoundStatus
 }
 
-func NewStatus(code int) *Status {
+func NewStatus(code int, msg any) *Status {
 	s := new(Status)
 	s.Code = code
+	if msg == nil {
+		return s
+	}
+	if e, ok := msg.(error); ok {
+		s.Err = e
+		return s
+	}
+	if str, ok := msg.(string); ok {
+		s.Msg = str
+	}
 	return s
 }
 
-func NewStatusWithMessage(code int, msg, agentUri string) *Status {
-	s := new(Status)
-	s.Code = code
-	s.AgentUri = agentUri
-	s.Msg = msg
-	return s
-}
+/*
+	func NewStatusWithMessage(code int, msg, agentUri string) *Status {
+		s := new(Status)
+		s.Code = code
+		s.AgentUri = agentUri
+		s.Msg = msg
+		return s
+	}
 
-func NewStatusError(code int, err error, agentUri string) *Status {
-	s := new(Status)
-	s.Code = code
-	s.Err = err
-	s.AgentUri = agentUri
-	return s
-}
+	func NewStatusError(code int, err error, agentUri string) *Status {
+		s := new(Status)
+		s.Code = code
+		s.Err = err
+		s.AgentUri = agentUri
+		return s
+	}
+*/
 
 func (s *Status) OK() bool {
 	return s.Code == http.StatusOK
@@ -72,6 +84,10 @@ func (s *Status) OK() bool {
 
 func (s *Status) NotFound() bool {
 	return s.Code == http.StatusNotFound
+}
+
+func (s *Status) NoContent() bool {
+	return s.Code == http.StatusNoContent
 }
 
 func (s *Status) BadRequest() bool {
@@ -84,8 +100,8 @@ func (s *Status) HttpCode() int {
 
 func (s *Status) String() string {
 	if s.Msg != "" {
-		if s.AgentUri != "" {
-			return fmt.Sprintf("%v [msg:%v] [agent:%v]", HttpStatus(s.Code), s.Msg, s.AgentUri)
+		if s.Place != "" {
+			return fmt.Sprintf("%v [msg:%v] [location:%v]", HttpStatus(s.Code), s.Msg, s.Place)
 		} else {
 			return fmt.Sprintf("%v [msg:%v]", HttpStatus(s.Code), s.Msg)
 		}
@@ -93,8 +109,8 @@ func (s *Status) String() string {
 	if s.Err == nil {
 		return fmt.Sprintf("%v", HttpStatus(s.Code))
 	}
-	if s.AgentUri != "" {
-		return fmt.Sprintf("%v [err:%v] [agent:%v]", HttpStatus(s.Code), s.Err, s.AgentUri)
+	if s.Place != "" {
+		return fmt.Sprintf("%v [err:%v] [location:%v]", HttpStatus(s.Code), s.Err, s.Place)
 	} else {
 		return fmt.Sprintf("%v [err:%v]", HttpStatus(s.Code), s.Err)
 	}
@@ -103,9 +119,9 @@ func (s *Status) String() string {
 func (s *Status) Type() string   { return "core:messaging.status" }
 func (s *Status) Status() string { return HttpStatus(s.Code) }
 
-func (s *Status) AgentId() string { return s.AgentUri }
-func (s *Status) WithAgent(agentUri string) *Status {
-	s.AgentUri = agentUri
+func (s *Status) Location() string { return s.Place }
+func (s *Status) WithLocation(location string) *Status {
+	s.Place = location
 	return s
 }
 

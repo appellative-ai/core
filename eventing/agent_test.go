@@ -9,7 +9,7 @@ import (
 
 func ExampleNewAgent() {
 	a := newAgent()
-	status := messaging.NewStatusError(http.StatusTeapot, errors.New("test error message"), NamespaceName)
+	status := messaging.NewStatus(http.StatusTeapot, errors.New("test error message"))
 	a.Notify(status)
 
 	a.AddActivity(ActivityEvent{
