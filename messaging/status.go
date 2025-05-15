@@ -69,7 +69,7 @@ func NewStatus(code int, msg any) *Status {
 		return s
 	}
 
-	func NewStatusError(code int, err error, agentUri string) *Status {
+	func NewStatus(code int, err error) *Status {
 		s := new(Status)
 		s.Code = code
 		s.Err = err

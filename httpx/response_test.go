@@ -194,7 +194,7 @@ func ExampleNewError() {
 	err = NewError(status, nil)
 	fmt.Printf("test: NewError() -> [status:%v] [resp:%v] [err:%v]\n", messaging.StatusOK(), nil, err)
 
-	status = messaging.NewStatusError(messaging.StatusInvalidContent, errors.New("error: invalid content"))
+	status = messaging.NewStatus(messaging.StatusInvalidContent, errors.New("error: invalid content"))
 	err = NewError(status, nil)
 	fmt.Printf("test: NewError() -> [status:%v] [resp:%v] [%v]\n", status, nil, err)
 

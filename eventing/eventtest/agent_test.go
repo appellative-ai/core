@@ -11,7 +11,7 @@ import (
 func ExampleNewAgent() {
 	a := newAgent()
 
-	status := messaging.NewStatusError(http.StatusTeapot, errors.New("error message"), a.Uri())
+	status := messaging.NewStatus(http.StatusTeapot, errors.New("error message")).WithLocation(a.Uri())
 	a.Notify(status)
 	a.AddActivity(eventing.ActivityEvent{
 		Agent:   a,
@@ -23,6 +23,6 @@ func ExampleNewAgent() {
 	fmt.Printf("test: newAgent() -> [%v]\n", a)
 
 	//Output:
-	//test: newAgent() -> [resiliency:agent/behavioral-ai/collective/eventing]
+	//test: newAgent() -> [core:agent/eventing]
 
 }

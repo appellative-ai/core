@@ -13,7 +13,7 @@ func Indent(body io.ReadCloser, h http.Header, prefix, indent string) (io.ReadCl
 	var buf bytes.Buffer
 
 	if body == nil {
-		return nil, errors.New("error: body is nil") //aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: body is nil"))
+		return nil, errors.New("error: body is nil")
 	}
 	buf2, status := iox.ReadAll(body, h)
 	if status != nil {
@@ -21,7 +21,7 @@ func Indent(body io.ReadCloser, h http.Header, prefix, indent string) (io.ReadCl
 	}
 	err := json.Indent(&buf, buf2, prefix, indent)
 	if err != nil {
-		return nil, err //aspect.NewStatusError(aspect.StatusJsonDecodeError, err)
+		return nil, err
 	}
-	return io.NopCloser(bytes.NewReader(buf.Bytes())), nil //aspect.StatusOK()
+	return io.NopCloser(bytes.NewReader(buf.Bytes())), nil
 }

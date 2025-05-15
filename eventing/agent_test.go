@@ -22,6 +22,6 @@ func ExampleNewAgent() {
 	fmt.Printf("test: newAgent() -> [%v]\n", a)
 
 	//Output:
-	//test: newAgent() -> [unn:behavioral-ai.github.com:resiliency:agent/collective/eventing]
+	//test: newAgent() -> [core:agent/eventing]
 
 }

@@ -29,7 +29,7 @@ func decodeStatus(err error) error {
 	if err.Error() == eofError {
 		return errors.New("error: no content") //aspect.StatusNoContent()
 	}
-	return err //aspect.NewStatusError(aspect.StatusJsonDecodeError, err)
+	return err
 }
 
 //type NewConstraints interface {
@@ -41,7 +41,7 @@ func New[T any](v any, h http.Header) (t T, status error) {
 	var buf []byte
 
 	if v == nil {
-		return t, errors.New("error: value parameter is nil") //aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New("error: value parameter is nil"))
+		return t, errors.New("error: value parameter is nil")
 	}
 	switch ptr := v.(type) {
 	case string:
@@ -108,7 +108,7 @@ func New[T any](v any, h http.Header) (t T, status error) {
 	case *http.Response:
 		return New[T](ptr.Body, h)
 	default:
-		return t, errors.New(fmt.Sprintf("error: invalid type [%v]", reflect.TypeOf(v))) //}aspect.NewStatusError(aspect.StatusInvalidArgument, errors.New(fmt.Sprintf("error: invalid type [%v]", reflect.TypeOf(v))))
+		return t, errors.New(fmt.Sprintf("error: invalid type [%v]", reflect.TypeOf(v)))
 	}
 }
 
@@ -125,7 +125,7 @@ func New[T any](v any, h http.Header) (t T, status error) {
 		err := json.NewDecoder(ptr.Body).Decode(&t)
 		_ = ptr.Body.Close()
 		if err != nil {
-			return t, NewStatusError(StatusJsonDecodeError, newLoc, err)
+			return t, NewStatus(StatusJsonDecodeError, err)
 		}
 		return t, StatusOK()
 	case *httpx.Request:
@@ -140,7 +140,7 @@ func New[T any](v any, h http.Header) (t T, status error) {
 		err := json.NewDecoder(ptr.Body).Decode(&t)
 		_ = ptr.Body.Close()
 		if err != nil {
-			return t, NewStatusError(StatusJsonDecodeError, newLoc, err)
+			return t, NewStatus(StatusJsonDecodeError, err)
 		}
 		return t, StatusOK()
 

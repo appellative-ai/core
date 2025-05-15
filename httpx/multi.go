@@ -22,7 +22,7 @@ func MultiExchange(reqs []*http.Request, handler OnResponse) ([]ExchangeResultM,
 	cnt := len(reqs)
 	if cnt == 0 || handler == nil {
 		fmt.Printf("%v", "error: no requests were found to process, or OnResponse handler is nil")
-		return nil, messaging.NewStatusError(messaging.StatusInvalidArgument, errors.New("error: no requests were found to process"), "")
+		return nil, messaging.NewStatus(messaging.StatusInvalidArgument, errors.New("error: no requests were found to process"))
 	}
 	var wg sync.WaitGroup
 	failure := atomic.Bool{}
@@ -50,7 +50,7 @@ func MultiExchange(reqs []*http.Request, handler OnResponse) ([]ExchangeResultM,
 	}
 	wg.Wait()
 	if failure.Load() {
-		return results, messaging.NewStatusError(messaging.StatusExecError, errors.New("error: request failures"), "")
+		return results, messaging.NewStatus(messaging.StatusExecError, errors.New("error: request failures"))
 	}
 	return results, messaging.StatusOK()
 }

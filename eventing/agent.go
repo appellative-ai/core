@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	NamespaceName   = "unn:behavioral-ai.github.com:resiliency:agent/collective/eventing"
+	NamespaceName   = "core:agent/eventing"
 	defaultDuration = time.Second * 10
 )
 
