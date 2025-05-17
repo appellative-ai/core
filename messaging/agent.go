@@ -7,6 +7,9 @@ const (
 	AssignmentIdentifier = "#"
 )
 
+// NewAgent - agent constructor
+type NewAgent func() Agent
+
 // Agent - agent
 type Agent interface {
 	Uri() string

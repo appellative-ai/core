@@ -2,7 +2,17 @@ package uri
 
 import (
 	"fmt"
+	"net/url"
 )
+
+func ExampleQueryArg() {
+	u, _ := url.Parse("https://www.google.com/search??")
+
+	fmt.Printf("test: url.ParseRaw() -> [path:%v] [query:%v] [raw:%v]\n", u.Path, u.Query(), u.RawQuery)
+
+	//Output:
+	//fail
+}
 
 func ExampleParseUnn() {
 	uri := "unn:behavioral-ai:resiliency:agent/collective/namespace"
