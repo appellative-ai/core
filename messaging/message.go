@@ -7,12 +7,12 @@ import (
 )
 
 const (
-	StartupEvent  = "event:startup"
-	ShutdownEvent = "event:shutdown"
-	PauseEvent    = "event:pause"  // disable data channel receive
-	ResumeEvent   = "event:resume" // enable data channel receive
-	ConfigEvent   = "event:config"
-	StatusEvent   = "event:status"
+	StartupEvent  = "core:event/startup"
+	ShutdownEvent = "core:event/shutdown"
+	PauseEvent    = "core:event/pause"  // disable data channel receive
+	ResumeEvent   = "core:event/resume" // enable data channel receive
+	ConfigEvent   = "core:event/config"
+	StatusEvent   = "core:event/status"
 
 	//ObservationEvent = "event:observation"
 	//TickEvent        = "event:tick"
