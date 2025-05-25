@@ -1,7 +1,5 @@
 package messaging
 
-import "fmt"
-
 const (
 	registerEvent    = "core:event/register"
 	contentTypeAgent = "application/x-agent"
@@ -37,7 +35,8 @@ func (a *agentT) Message(m *Message) {
 			a.ex.Register(agent)
 		}
 	default:
-		fmt.Printf("exchange agent - invalid name %v\n", m)
+		a.ex.Message(m)
+		//fmt.Printf("exchange agent - invalid name %v\n", m)
 	}
 }
 
