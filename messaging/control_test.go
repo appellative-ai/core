@@ -6,12 +6,12 @@ import (
 )
 
 const (
-	PingEvent        = "event:ping"
-	ReconfigureEvent = "event:reconfigure"
+	PingEvent        = "core:event/ping"
+	ReconfigureEvent = "core:event/reconfigure"
 )
 
 func newAgentCtrlHandler(msg *Message) {
-	fmt.Printf(fmt.Sprintf("test: NewControlAgent_CtrlHandler() -> %v\n", msg.Event()))
+	fmt.Printf(fmt.Sprintf("test: NewControlAgent_CtrlHandler() -> %v\n", msg.Name()))
 }
 
 func ExampleNewControlAgent() {
@@ -62,11 +62,11 @@ func ExampleNewControlAgent() {
 	//c <- Message{}
 
 	//Output:
-	//test: NewControlAgent_CtrlHandler() -> event:pause
-	//test: NewControlAgent_CtrlHandler() -> event:resume
-	//test: NewControlAgent_CtrlHandler() -> event:ping
-	//test: NewControlAgent_CtrlHandler() -> event:reconfigure
-	//test: NewControlAgent_CtrlHandler() -> event:shutdown
+	//test: NewControlAgent_CtrlHandler() -> core:event/pause
+	//test: NewControlAgent_CtrlHandler() -> core:event/resume
+	//test: NewControlAgent_CtrlHandler() -> core:event/ping
+	//test: NewControlAgent_CtrlHandler() -> core:event/reconfigure
+	//test: NewControlAgent_CtrlHandler() -> core:event/shutdown
 	//test: NewControlAgent() -> [recovered:send on closed channel]
 
 }

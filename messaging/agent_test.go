@@ -84,7 +84,7 @@ func testAgentRun(t *testAgent) {
 				return
 			}
 			fmt.Printf("test: AgentRun() -> %v\n", msg)
-			if msg.Event() == ShutdownEvent {
+			if msg.Name() == ShutdownEvent {
 				return
 			}
 		default:
@@ -149,8 +149,8 @@ func ExampleAgentRun() {
 	time.Sleep(time.Second)
 
 	//Output:
-	//test: AgentRun() -> [chan:ctrl] [from:ExampleAgentRun()] [to:urn:agent007] [event:startup]
-	//test: AgentRun() -> [chan:ctrl] [from:] [to:] [event:shutdown]
+	//test: AgentRun() -> [chan:ctrl] [from:ExampleAgentRun()] [to:urn:agent007] [core:event/startup]
+	//test: AgentRun() -> [chan:ctrl] [from:] [to:] [core:event/shutdown]
 
 }
 

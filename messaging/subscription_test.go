@@ -33,22 +33,22 @@ func ExampleSubscription_Valid() {
 func _ExampleSubscriptionMessage() {
 	m := NewSubscriptionCreateMessage("create-to", NewSubscription("create-from", ChannelControl, SubscriptionCreateEvent, ""))
 	s, ok := SubscriptionCreateContent(m)
-	fmt.Printf("test: NewSubscriptionCreateMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Event(), s, ok)
+	fmt.Printf("test: NewSubscriptionCreateMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Name(), s, ok)
 
 	m = NewSubscriptionCancelMessage("cancel-to", "cancel-from", SubscriptionCancelEvent)
 	s, ok = SubscriptionCancelContent(m)
-	fmt.Printf("test: NewSubscriptionCancelMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Event(), s, ok)
+	fmt.Printf("test: NewSubscriptionCancelMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Name(), s, ok)
 
 	//Output:
-	//test: NewSubscriptionCreateMessage() -> [create-to] [event:subscription-create] [{event:subscription-create create-from}] [true]
-	//test: NewSubscriptionCancelMessage() -> [cancel-to] [event:subscription-cancel] [{event:subscription-cancel cancel-from}] [true]
+	//test: NewSubscriptionCreateMessage() -> [create-to] [Name:subscription-create] [{Name:subscription-create create-from}] [true]
+	//test: NewSubscriptionCancelMessage() -> [cancel-to] [Name:subscription-cancel] [{Name:subscription-cancel cancel-from}] [true]
 
 }
 
 func _ExampleCatalog_Create() {
 	c := new(Catalog)
 
-	m := NewSubscriptionCreateMessage(publisherName, Subscription{From: "", Channel: ChannelControl, Event: publishEvent})
+	m := NewSubscriptionCreateMessage(publisherName, Subscription{From: "", Channel: ChannelControl, Name: publishEvent})
 	err := c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
@@ -56,19 +56,19 @@ func _ExampleCatalog_Create() {
 	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
-	m = NewSubscriptionCreateMessage(publisherName, Subscription{From: subscriberName, Channel: ChannelControl, Event: publishEvent})
+	m = NewSubscriptionCreateMessage(publisherName, Subscription{From: subscriberName, Channel: ChannelControl, Name: publishEvent})
 	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
-	m = NewSubscriptionCreateMessage(publisherName, Subscription{From: subscriberName, Channel: ChannelControl, Event: publishEvent})
+	m = NewSubscriptionCreateMessage(publisherName, Subscription{From: subscriberName, Channel: ChannelControl, Name: publishEvent})
 	err = c.CreateWithMessage(m)
 	fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 
 	//Output:
-	//test: Catalog() -> [err:invalid subscription: from or event is empty]
-	//test: Catalog() -> [err:invalid subscription: from or event is empty]
+	//test: Catalog() -> [err:invalid subscription: from or Name is empty]
+	//test: Catalog() -> [err:invalid subscription: from or Name is empty]
 	//test: Catalog() -> [err:<nil>]
-	//test: Catalog() -> [err:invalid subscription: subscription is a duplicate [subscriber] [event:publish]]
+	//test: Catalog() -> [err:invalid subscription: subscription is a duplicate [subscriber] [Name:publish]]
 
 }
 
@@ -77,17 +77,17 @@ func _ExampleCatalog_Lookup() {
 	event2 := "event:test"
 	c := new(Catalog)
 
-	err := c.Create(Subscription{Event: publishEvent, From: subscriberName})
+	err := c.Create(Subscription{Name: publishEvent, From: subscriberName})
 	if err != nil {
 		fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 	}
 
-	err = c.Create(Subscription{Event: publishEvent, From: "subscriber-1"})
+	err = c.Create(Subscription{Name: publishEvent, From: "subscriber-1"})
 	if err != nil {
 		fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 	}
 
-	err = c.Create(Subscription{Event: event1, From: subscriberName})
+	err = c.Create(Subscription{Name: event1, From: subscriberName})
 	if err != nil {
 		fmt.Printf("test: Catalog() -> [err:%v]\n", err)
 	}
@@ -102,9 +102,9 @@ func _ExampleCatalog_Lookup() {
 	fmt.Printf("test: Catalog(\"%v\") -> [subs:%v] [ok:%v]\n", publishEvent, subs, ok)
 
 	//Output:
-	//test: Catalog("event:test") -> [subs:[]] [ok:false]
-	//test: Catalog("event:publish-1") -> [subs:[{event:publish-1 subscriber}]] [ok:true]
-	//test: Catalog("event:publish") -> [subs:[{event:publish subscriber} {event:publish subscriber-1}]] [ok:true]
+	//test: Catalog("Name:test") -> [subs:[]] [ok:false]
+	//test: Catalog("Name:publish-1") -> [subs:[{Name:publish-1 subscriber}]] [ok:true]
+	//test: Catalog("Name:publish") -> [subs:[{Name:publish subscriber} {Name:publish subscriber-1}]] [ok:true]
 
 }
 
@@ -129,7 +129,7 @@ func ExampleCatalog_Cancel_1() {
 }
 
 func ExampleCatalog_Cancel_2() {
-	event1 := "event:publish-1"
+	event1 := "Name:publish-1"
 	c := new(Catalog)
 
 	// create 2 subscriptions and cancel
@@ -162,8 +162,8 @@ func ExampleCatalog_Cancel_2() {
 }
 
 func ExampleCatalog_Cancel_3() {
-	event1 := "event:publish-1"
-	event2 := "event:publish-2"
+	event1 := "Name:publish-1"
+	event2 := "Name:publish-2"
 	c := new(Catalog)
 
 	// create 3 subscriptions
@@ -212,8 +212,8 @@ func ExampleCatalog_Cancel_3() {
 const (
 	subscriberName  = "subscriber"
 	publisherName   = "publisher"
-	publishEvent    = "event:publish"
-	workEvent       = "event:work"
+	publishEvent    = "core:publish"
+	workEvent       = "core:work"
 	contentTypeItem = "content-type/x-item"
 )
 
@@ -233,7 +233,7 @@ func newWorkItemMessage(w workItem) *Message {
 }
 
 func workItemContent(m *Message) (workItem, bool) {
-	if m.Event() != workEvent || m.ContentType() != contentTypeItem {
+	if m.Name() != workEvent || m.ContentType() != contentTypeItem {
 		return workItem{}, false
 	}
 	if v, ok := m.Body.(workItem); ok {
@@ -255,13 +255,13 @@ func newSubscriber() Agent {
 func (s *subscriber) Uri() string { return subscriberName }
 func (s *subscriber) Message(m *Message) {
 	if !s.running {
-		if m.Event() == StartupEvent {
+		if m.Name() == StartupEvent {
 			go s.run()
 			s.running = true
 		}
 		return
 	}
-	if m.Event() == ShutdownEvent {
+	if m.Name() == ShutdownEvent {
 		s.running = false
 	}
 	s.emissary.C <- m
@@ -271,7 +271,7 @@ func (s *subscriber) run() {
 	for {
 		select {
 		case m := <-s.emissary.C:
-			switch m.Event() {
+			switch m.Name() {
 			case publishEvent:
 				exchange.Message(NewSubscriptionCreateMessage(publisherName, NewSubscription(subscriberName, ChannelControl, workEvent, "")))
 				fmt.Printf("test: subscriber() -> [create] [%v]\n", workEvent)
@@ -311,13 +311,13 @@ func newPublisher() Agent {
 }
 func (p *publisher) Uri() string { return publisherName }
 func (p *publisher) Message(m *Message) {
-	if m.Event() == StartupEvent && !p.running {
+	if m.Name() == StartupEvent && !p.running {
 		p.running = true
 		go p.run()
 		return
 	}
 	if !p.running {
-		fmt.Printf("test: publisher() [message:%v]\n", m.Event())
+		fmt.Printf("test: publisher() [message:%v]\n", m.Name())
 		return
 	}
 	p.emissary.C <- m
@@ -326,13 +326,13 @@ func (p *publisher) run() {
 	for {
 		select {
 		case m := <-p.emissary.C:
-			switch m.Event() {
+			switch m.Name() {
 			case workEvent:
-				fmt.Printf("test: publisher() -> [received] [%v]\n", m.Event())
-				if subs, ok := p.catalog.Lookup(m.Event()); ok {
+				fmt.Printf("test: publisher() -> [received] [%v]\n", m.Name())
+				if subs, ok := p.catalog.Lookup(m.Name()); ok {
 					for _, item := range subs {
 						m.SetTo(item.From)
-						fmt.Printf("test: publisher() -> [published] [%v] [subscriber:%v] \n", item.Event, item.From)
+						fmt.Printf("test: publisher() -> [published] [%v] [subscriber:%v] \n", item.Name, item.From)
 						exchange.Message(m)
 					}
 				}
@@ -341,13 +341,13 @@ func (p *publisher) run() {
 				if err != nil {
 					fmt.Printf("test: publisher() -> [err:%v]\n", err)
 				} else {
-					fmt.Printf("test: publisher() -> [created] [%v]\n", m.Event())
+					fmt.Printf("test: publisher() -> [created] [%v]\n", m.Name())
 				}
 			case SubscriptionCancelEvent:
 				p.catalog.CancelWithMessage(m)
-				fmt.Printf("test: publisher() -> [canceled] [%v]\n", m.Event())
+				fmt.Printf("test: publisher() -> [canceled] [%v]\n", m.Name())
 			case ShutdownEvent:
-				fmt.Printf("test: publisher() -> [%v]\n", m.Event())
+				fmt.Printf("test: publisher() -> [%v]\n", m.Name())
 				p.shutdown()
 				return
 			default:

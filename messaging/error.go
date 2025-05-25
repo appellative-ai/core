@@ -6,12 +6,12 @@ import (
 )
 
 func EventError(agentId string, msg *Message) error {
-	err := errors.New(fmt.Sprintf("error: message event:%v is invalid for agent:%v", msg.Event(), agentId))
+	err := errors.New(fmt.Sprintf("error: message name:%v is invalid for agent:%v", msg.Name(), agentId))
 	return err
 }
 
 func MessageContentTypeError(agentId string, msg *Message) error {
-	err := errors.New(fmt.Sprintf("error: message content:%v is invalid for agent:%v and event:%v", msg.ContentType(), agentId, msg.Event()))
+	err := errors.New(fmt.Sprintf("error: message content:%v is invalid for agent:%v and name:%v", msg.ContentType(), agentId, msg.Name()))
 	return err
 }
 

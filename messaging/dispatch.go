@@ -17,7 +17,7 @@ func NewDispatcherMessage(dispatcher Dispatcher) *Message {
 }
 
 func DispatcherContent(m *Message) (Dispatcher, bool) {
-	if m.Event() != ConfigEvent || m.ContentType() != ContentTypeDispatcher {
+	if m.Name() != ConfigEvent || m.ContentType() != ContentTypeDispatcher {
 		return nil, false
 	}
 	if v, ok := m.Body.(Dispatcher); ok {

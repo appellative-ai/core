@@ -40,7 +40,7 @@ func (c *controlAgent) Message(msg *Message) {
 	if msg == nil {
 		return
 	}
-	if msg.Event() == StartupEvent {
+	if msg.Name() == StartupEvent {
 		c.run()
 		return
 	}
@@ -97,9 +97,9 @@ func controlAgentRun(c *controlAgent) {
 			if !open {
 				return
 			}
-			switch msg.Event() {
+			switch msg.Name() {
 			case ShutdownEvent:
-				c.handler(NewMessageWithError(ChannelControl, msg.Event(), nil))
+				c.handler(NewMessageWithError(ChannelControl, msg.Name(), nil))
 				c.shutdown()
 				return
 			default:

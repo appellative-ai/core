@@ -13,12 +13,12 @@ const (
 type Subscription struct {
 	Path    string
 	Channel string
-	Event   string
+	Name    string
 	From    string
 }
 
-func NewSubscription(from, channel, event, path string) Subscription {
-	return Subscription{From: from, Channel: channel, Event: event, Path: path}
+func NewSubscription(from, channel, name, path string) Subscription {
+	return Subscription{From: from, Channel: channel, Name: name, Path: path}
 }
 
 func (s Subscription) Valid(path string) bool {
@@ -29,9 +29,9 @@ type Catalog struct {
 	subs []Subscription
 }
 
-func (c *Catalog) Lookup(event string) (subs []Subscription, ok bool) {
+func (c *Catalog) Lookup(name string) (subs []Subscription, ok bool) {
 	for _, item := range c.subs {
-		if event == item.Event {
+		if name == item.Name {
 			subs = append(subs, item)
 			ok = true
 		}
@@ -40,12 +40,12 @@ func (c *Catalog) Lookup(event string) (subs []Subscription, ok bool) {
 }
 
 func (c *Catalog) Create(s Subscription) error {
-	if s.From == "" || s.Event == "" || s.Channel == "" {
+	if s.From == "" || s.Name == "" || s.Channel == "" {
 		return errors.New("invalid subscription: from or event is empty")
 	}
 	for _, item := range c.subs {
 		// Check if already subscribed
-		if s.From == item.From && s.Event == item.Event {
+		if s.From == item.From && s.Name == item.Name {
 			return nil
 		}
 	}
@@ -68,7 +68,7 @@ func (c *Catalog) CreateWithMessage(m *Message) error {
 
 func (c *Catalog) Cancel(s Subscription) {
 	for i, item := range c.subs {
-		if s.From == item.From && s.Event == item.Event {
+		if s.From == item.From && s.Name == item.Name {
 			if len(c.subs) == 1 {
 				c.subs = nil
 			} else {
@@ -97,7 +97,7 @@ func (c *Catalog) CancelWithMessage(m *Message) {
 }
 
 func NewSubscriptionCreateMessage(to string, s Subscription) *Message {
-	if to == "" || s.From == "" || s.Event == "" {
+	if to == "" || s.From == "" || s.Name == "" {
 		return nil
 	}
 	// Send to publishers control channel
@@ -113,7 +113,7 @@ func NewSubscriptionCreateMessage(to string, s Subscription) *Message {
 }
 
 func SubscriptionCreateContent(m *Message) (Subscription, bool) {
-	if m == nil || m.Event() != SubscriptionCreateEvent || m.ContentType() != ContentTypeSubscription {
+	if m == nil || m.Name() != SubscriptionCreateEvent || m.ContentType() != ContentTypeSubscription {
 		return Subscription{}, false
 	}
 	if v, ok := m.Body.(Subscription); ok {
@@ -122,19 +122,19 @@ func SubscriptionCreateContent(m *Message) (Subscription, bool) {
 	return Subscription{}, false
 }
 
-func NewSubscriptionCancelMessage(to, from, event string) *Message {
-	if to == "" || from == "" || event == "" {
+func NewSubscriptionCancelMessage(to, from, Name string) *Message {
+	if to == "" || from == "" || Name == "" {
 		return nil
 	}
 	m := NewMessage(ChannelControl, SubscriptionCancelEvent)
 	m.SetTo(to)
 	m.SetFrom(from)
-	m.SetContent(ContentTypeSubscription, Subscription{From: from, Event: event})
+	m.SetContent(ContentTypeSubscription, Subscription{From: from, Name: Name})
 	return m
 }
 
 func SubscriptionCancelContent(m *Message) (Subscription, bool) {
-	if m == nil || m.Event() != SubscriptionCancelEvent || m.ContentType() != ContentTypeSubscription {
+	if m == nil || m.Name() != SubscriptionCancelEvent || m.ContentType() != ContentTypeSubscription {
 		return Subscription{}, false
 	}
 	if v, ok := m.Body.(Subscription); ok {

@@ -42,21 +42,21 @@ func ExampleTraceDispatch_Event() {
 
 	//Output:
 	//test: Dispatch() -> []
-	//trace -> 2024-11-24T18:46:04.697Z [<nil>] [] [eventing:shutdown]
-	//test: Dispatch() -> [eventing:shutdown]
-	//test: Dispatch() -> [channel:] [eventing:config]
+	//trace -> 2024-11-24T18:46:04.697Z [<nil>] [] [core:event/shutdown]
+	//test: Dispatch() -> [core/event/shutdown]
+	//test: Dispatch() -> [channel:] [core:event/config]
 
 }
 
 func ExampleDispatcherMessage() {
 	m := NewDispatcherMessage(NewTraceDispatcher())
-	fmt.Printf("test: NewDispatcherMessage() -> [%v] [%v] [%v]\n", m.Event(), m.ContentType(), reflect.TypeOf(m.Body))
+	fmt.Printf("test: NewDispatcherMessage() -> [%v] [%v] [%v]\n", m.Name(), m.ContentType(), reflect.TypeOf(m.Body))
 
 	c, ok := DispatcherContent(m)
 	fmt.Printf("test: DispatcherContent() -> [%v] [%v]\n", reflect.TypeOf(c), ok)
 
 	//Output:
-	//test: NewDispatcherMessage() -> [event:config] [application/x-dispatcher] [*messaging.traceDispatch]
+	//test: NewDispatcherMessage() -> [core:event/config] [application/x-dispatcher] [*messaging.traceDispatch]
 	//test: DispatcherContent() -> [*messaging.traceDispatch] [true]
 
 }
