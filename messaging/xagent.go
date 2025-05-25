@@ -3,7 +3,7 @@ package messaging
 import "fmt"
 
 const (
-	registerEvent    = "core:event/register"
+	registerEvent    = "core:event/agent/register"
 	contentTypeAgent = "application/x-agent"
 	nameFmt          = "core:agent/exchange%v"
 )
