@@ -1,18 +1,25 @@
 package messaging
 
+import "fmt"
+
 const (
 	registerEvent    = "core:event/register"
 	contentTypeAgent = "application/x-agent"
+	nameFmt          = "core:agent/exchange%v"
 )
+
+type ExchangeAgent interface {
+	Agent
+}
 
 type agentT struct {
 	name string
 	ex   *Exchange
 }
 
-func NewExchangeAgent(name string) Agent {
+func NewExchangeAgent(nss string) ExchangeAgent {
 	a := new(agentT)
-	a.name = name
+	a.name = fmt.Sprintf(nameFmt, nss)
 	a.ex = NewExchange()
 	return a
 }
