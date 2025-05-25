@@ -3,8 +3,8 @@ package messaging
 import "strings"
 
 const (
-	ChannelSize          = 16
-	AssignmentIdentifier = "#"
+	ChannelSize        = 16
+	FragmentIdentifier = "#"
 )
 
 // NewAgent - agent constructor
@@ -12,7 +12,7 @@ type NewAgent func() Agent
 
 // Agent - agent
 type Agent interface {
-	Uri() string
+	Name() string
 	Message(m *Message)
 }
 
@@ -32,11 +32,11 @@ func Name(agent Agent) string {
 	if agent == nil {
 		return ""
 	}
-	return getName(agent.Uri())
+	return getName(agent.Name())
 }
 
 func getName(uri string) string {
-	i := strings.Index(uri, AssignmentIdentifier)
+	i := strings.Index(uri, FragmentIdentifier)
 	if i == -1 {
 		return uri
 	}

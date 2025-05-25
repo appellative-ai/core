@@ -6,8 +6,8 @@ import (
 )
 
 type testAgent struct {
-	running    bool
-	agentId    string
+	running bool
+	//agentId    string
 	name       string
 	ctrl       *Channel
 	data       *Channel
@@ -15,13 +15,13 @@ type testAgent struct {
 	shutdownFn func()
 }
 
-func NewTestAgent(uri string) Agent {
-	return newTestAgent(uri, nil, nil)
+func NewTestAgent(name string) Agent {
+	return newTestAgent(name, nil, nil)
 }
 
-func newTestAgent(uri string, ctrl, data *Channel) *testAgent {
+func newTestAgent(name string, ctrl, data *Channel) *testAgent {
 	t := new(testAgent)
-	t.agentId = uri
+	t.name = name
 	if ctrl == nil {
 		t.ctrl = NewChannel(ChannelData)
 	} else {
@@ -36,8 +36,8 @@ func newTestAgent(uri string, ctrl, data *Channel) *testAgent {
 }
 
 // func (t *testAgent) IsFinalized() bool { return t.data.IsFinalized() && t.ctrl.IsFinalized() }
-func (t *testAgent) Uri() string    { return t.agentId }
-func (t *testAgent) String() string { return t.Uri() }
+// func (t *testAgent) NUri() string    { return t.agentId }
+func (t *testAgent) String() string { return t.Name() }
 func (t *testAgent) Name() string   { return t.name }
 func (t *testAgent) Message(msg *Message) {
 	if msg == nil {

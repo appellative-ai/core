@@ -13,11 +13,11 @@ type controlAgent struct {
 }
 
 // NewControlAgent - create an agent that only listens on a control channel, and has a default AgentRun func
-func NewControlAgent(uri string, handler Handler) (Agent, error) {
+func NewControlAgent(name string, handler Handler) (Agent, error) {
 	if handler == nil {
 		return nil, errors.New("error: control agent handler is nil")
 	}
-	return newControlAgent(uri, make(chan *Message, ChannelSize), handler), nil
+	return newControlAgent(name, make(chan *Message, ChannelSize), handler), nil
 	//return NewAgentWithChannels(uri, nil, nil, controlAgentRun, ctrlHandler)
 }
 
@@ -29,11 +29,11 @@ func newControlAgent(uri string, ch chan *Message, handler Handler) *controlAgen
 	return c
 }
 
-// Uri - identity
-func (c *controlAgent) Uri() string { return c.uri }
+// Name -
+func (c *controlAgent) Name() string { return c.uri }
 
 // String - identity
-func (c *controlAgent) String() string { return c.Uri() }
+func (c *controlAgent) String() string { return c.Name() }
 
 // Message - message an agent
 func (c *controlAgent) Message(msg *Message) {

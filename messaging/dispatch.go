@@ -83,7 +83,7 @@ func (t *traceDispatch) Dispatch(agent Agent, channel any, event string) {
 	}
 	id := "<nil>"
 	if agent != nil {
-		id = agent.Uri()
+		id = agent.Name()
 	}
 	fmt.Printf("trace -> %v [%v] [%v] [%v]\n", fmtx.FmtRFC3339Millis(time.Now().UTC()), id, name, event)
 	//} else {

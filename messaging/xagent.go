@@ -3,13 +3,14 @@ package messaging
 import "fmt"
 
 const (
-	registerEvent    = "core:event/agent/register"
-	contentTypeAgent = "application/x-agent"
-	nameFmt          = "core:agent/exchange%v"
+	//registerEvent    = "core:event/agent/register"
+	//contentTypeAgent = "application/x-agent"
+	nameFmt = "core:agent/exchange%v"
 )
 
 type ExchangeAgent interface {
 	Agent
+	Register(agent Agent)
 }
 
 type agentT struct {
@@ -24,11 +25,15 @@ func NewExchangeAgent(nss string) ExchangeAgent {
 	return a
 }
 
-func (a *agentT) Uri() string {
+func (a *agentT) Name() string {
 	return a.name
 }
 
-func (a *agentT) String() string { return a.Uri() }
+func (a *agentT) Register(agent Agent) {
+	a.ex.Register(agent)
+}
+
+func (a *agentT) String() string { return a.Name() }
 
 func (a *agentT) Message(m *Message) {
 	switch m.Name() {
@@ -36,17 +41,13 @@ func (a *agentT) Message(m *Message) {
 		a.ex.Broadcast(m)
 	case StartupEvent:
 		a.ex.Broadcast(m)
-	case registerEvent:
-		agent := RegisterAgentContent(m)
-		if agent != nil {
-			a.ex.Register(agent)
-		}
 	default:
 		a.ex.Message(m)
 		//fmt.Printf("exchange agent - invalid name %v\n", m)
 	}
 }
 
+/*
 func NewRegisterAgentMessage(a Agent) *Message {
 	m := NewMessage(ChannelControl, registerEvent)
 	m.SetContent(contentTypeAgent, a)
@@ -62,3 +63,6 @@ func RegisterAgentContent(m *Message) Agent {
 	}
 	return nil
 }
+
+
+*/

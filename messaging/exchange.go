@@ -136,18 +136,18 @@ func (e *Exchange) Register(agent Agent) error {
 	if agent == nil {
 		return errors.New("error: exchange.Register() agent is nil")
 	}
-	if agent.Uri() == "" {
-		return errors.New("error: exchange.Register() agent Uri is empty")
+	if agent.Name() == "" {
+		return errors.New("error: exchange.Register() agent Name is empty")
 	}
-	_, ok := e.m.Load(agent.Uri())
+	_, ok := e.m.Load(agent.Name())
 	if ok {
-		return errors.New(fmt.Sprintf("error: exchange.Register() agent already exists: [%v]", agent.Uri()))
+		return errors.New(fmt.Sprintf("error: exchange.Register() agent already exists: [%v]", agent.Name()))
 	}
-	e.m.Store(agent.Uri(), agent)
+	e.m.Store(agent.Name(), agent)
 	/*
 		if sd, ok1 := agent.(OnShutdown); ok1 {
 			sd.Add(func() {
-				e.m.Delete(agent.Uri())
+				e.m.Delete(agent.Name())
 			})
 		}
 
@@ -156,11 +156,11 @@ func (e *Exchange) Register(agent Agent) error {
 }
 
 // Get - find an agent
-func (e *Exchange) Get(uri string) Agent {
-	if len(uri) == 0 {
+func (e *Exchange) Get(name string) Agent {
+	if len(name) == 0 {
 		return nil
 	}
-	v, ok1 := e.m.Load(uri)
+	v, ok1 := e.m.Load(name)
 	if !ok1 {
 		return nil
 	}
@@ -173,14 +173,14 @@ func (e *Exchange) Get(uri string) Agent {
 // Shutdown - shutdown all agents
 func (e *Exchange) Shutdown() {
 	//go func() {
-	for _, uri := range e.List() {
-		a := e.Get(uri)
+	for _, name := range e.List() {
+		a := e.Get(name)
 		if a == nil {
 			continue
 		}
 		a.Message(ShutdownMessage)
 		// TODO: verify
-		e.m.Delete(uri)
+		e.m.Delete(name)
 	}
 	//	}()
 }

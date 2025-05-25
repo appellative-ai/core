@@ -29,7 +29,7 @@ func ExampleRegister() {
 
 	fmt.Printf("test: Count() -> : %v\n", testDir.Count())
 	m1 := testDir.Get(uri1)
-	fmt.Printf("test: Get(%v) -> : [agent:%v]\n", uri1, m1.Uri())
+	fmt.Printf("test: Get(%v) -> : [agent:%v]\n", uri1, m1.Name())
 
 	uri2 := "urn:test:two"
 	a2, _ := NewControlAgent(uri2, emptyHandler)
@@ -37,7 +37,7 @@ func ExampleRegister() {
 	fmt.Printf("test: Register(%v) -> : [err:%v]\n", uri2, err)
 	fmt.Printf("test: Count() -> : %v\n", testDir.Count())
 	m2 := testDir.Get(uri2)
-	fmt.Printf("test: Get(%v) -> : [agent:%v]\n", uri2, m2.Uri())
+	fmt.Printf("test: Get(%v) -> : [agent:%v]\n", uri2, m2.Name())
 
 	fmt.Printf("test: List() -> : %v\n", testDir.List())
 

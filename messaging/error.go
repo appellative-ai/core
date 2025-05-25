@@ -16,9 +16,9 @@ func MessageContentTypeError(agentId string, msg *Message) error {
 }
 
 func ConfigEmptyStatusError(agent Agent) *Status {
-	return NewStatus(StatusInvalidArgument, errors.New("config map is nil")).WithLocation(agent.Uri())
+	return NewStatus(StatusInvalidArgument, errors.New("config map is nil")).WithLocation(agent.Name())
 }
 
 func ConfigContentStatusError(agent Agent, key string) *Status {
-	return NewStatus(StatusInvalidArgument, errors.New(fmt.Sprintf("config map does not contain key: %v", key))).WithLocation(agent.Uri())
+	return NewStatus(StatusInvalidArgument, errors.New(fmt.Sprintf("config map does not contain key: %v", key))).WithLocation(agent.Name())
 }

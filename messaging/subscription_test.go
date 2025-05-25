@@ -252,7 +252,7 @@ func newSubscriber() Agent {
 	s.emissary = NewChannel(ChannelEmissary)
 	return s
 }
-func (s *subscriber) Uri() string { return subscriberName }
+func (s *subscriber) Name() string { return subscriberName }
 func (s *subscriber) Message(m *Message) {
 	if !s.running {
 		if m.Name() == StartupEvent {
@@ -309,7 +309,7 @@ func newPublisher() Agent {
 	s.emissary = NewChannel(ChannelEmissary)
 	return s
 }
-func (p *publisher) Uri() string { return publisherName }
+func (p *publisher) Name() string { return publisherName }
 func (p *publisher) Message(m *Message) {
 	if m.Name() == StartupEvent && !p.running {
 		p.running = true
