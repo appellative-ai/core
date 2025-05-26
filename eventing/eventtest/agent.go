@@ -22,10 +22,10 @@ func newAgent() *agentT {
 }
 
 // String - identity
-func (a *agentT) String() string { return a.Uri() }
+func (a *agentT) String() string { return a.Name() }
 
-// Uri - agent identifier
-func (a *agentT) Uri() string { return eventing.NamespaceName }
+// Name - agent identifier
+func (a *agentT) Name() string { return eventing.NamespaceName }
 
 // Message - message the agent
 func (a *agentT) Message(m *messaging.Message) {}

@@ -13,7 +13,7 @@ func masterAttend(a *agentT) {
 	for {
 		select {
 		case msg := <-a.master.C:
-			switch msg.Event() {
+			switch msg.Name() {
 			case messaging.PauseEvent:
 				paused = true
 			case messaging.ResumeEvent:

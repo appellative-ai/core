@@ -32,10 +32,10 @@ func newAgent() *agentT {
 }
 
 // String - identity
-func (a *agentT) String() string { return a.Uri() }
+func (a *agentT) String() string { return a.Name() }
 
-// Uri - agent identifier
-func (a *agentT) Uri() string { return NamespaceName }
+// Name - agent identifier
+func (a *agentT) Name() string { return NamespaceName }
 
 // Message - message the agent
 func (a *agentT) Message(m *messaging.Message) {
@@ -43,18 +43,18 @@ func (a *agentT) Message(m *messaging.Message) {
 		return
 	}
 	if !a.running {
-		if m.Event() == messaging.ConfigEvent || m.Event() == NotifyConfigEvent || m.Event() == ActivityConfigEvent {
+		if m.Name() == messaging.ConfigEvent || m.Name() == NotifyConfigEvent || m.Name() == ActivityConfigEvent {
 			a.configure(m)
 			return
 		}
-		if m.Event() == messaging.StartupEvent {
+		if m.Name() == messaging.StartupEvent {
 			a.run()
 			a.running = true
 			return
 		}
 		return
 	}
-	if m.Event() == messaging.ShutdownEvent {
+	if m.Name() == messaging.ShutdownEvent {
 		a.running = false
 	}
 	switch m.Channel() {
@@ -82,7 +82,7 @@ func (a *agentT) AddActivity(e ActivityEvent) {
 	} else {
 		uri := ""
 		if e.Agent != nil {
-			uri = e.Agent.Uri()
+			uri = e.Agent.Name()
 		}
 		httpAddActivity("", uri, e.Event, e.Source, e.Content)
 	}
@@ -118,9 +118,9 @@ func (a *agentT) configure(m *messaging.Message) {
 	case messaging.ContentTypeMap:
 		cfg := messaging.ConfigMapContent(m)
 		if cfg == nil {
-			messaging.Reply(m, messaging.ConfigEmptyStatusError(a), a.Uri())
+			messaging.Reply(m, messaging.ConfigEmptyStatusError(a), a.Name())
 		}
 		// TODO : configure
 	}
-	messaging.Reply(m, messaging.StatusOK(), a.Uri())
+	messaging.Reply(m, messaging.StatusOK(), a.Name())
 }

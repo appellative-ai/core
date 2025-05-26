@@ -54,14 +54,5 @@ func exchangeLink(last any) Exchange {
 	if exc, ok1 := last.(Exchangeable); ok1 {
 		return exc.Exchange
 	}
-	/*
-		if fn, ok2 := links[last].(func(next Exchange) Exchange); ok2 {
-			return fn(nil)
-		}
-		if c, ok3 := links[last].(Chainable); ok3 {
-			return c.Link(nil)
-		}
-
-	*/
 	panic(last)
 }

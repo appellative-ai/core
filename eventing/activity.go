@@ -16,7 +16,7 @@ func (a ActivityEvent) IsEmpty() bool {
 func OutputActivity(a ActivityEvent) {
 	uri := "<nil>"
 	if a.Agent != nil {
-		uri = a.Agent.Uri()
+		uri = a.Agent.Name()
 	}
 	fmt.Printf("active-> %v [%v] [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), uri, a.Event, a.Source, a.Content)
 }

@@ -11,7 +11,7 @@ import (
 func ExampleNewAgent() {
 	a := newAgent()
 
-	status := messaging.NewStatus(http.StatusTeapot, errors.New("error message")).WithLocation(a.Uri())
+	status := messaging.NewStatus(http.StatusTeapot, errors.New("error message")).WithLocation(a.Name())
 	a.Notify(status)
 	a.AddActivity(eventing.ActivityEvent{
 		Agent:   a,
