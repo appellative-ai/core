@@ -60,7 +60,7 @@ func (e *Exchange) List() []string {
 // Message - send a message
 func (e *Exchange) Message(msg *Message) error {
 	// TO DO : authenticate shutdown control message
-	//if msg != nil && msg.Event() == ShutdownEvent {
+	//if msg != nil && msg.Name() == ShutdownEvent {
 	//	return nil
 	//}
 	if msg == nil {
@@ -80,7 +80,7 @@ func (e *Exchange) Broadcast(msg *Message) {
 		return //errors.New(fmt.Sprintf("error: exchange.Broadcast() failed as message is nil"))
 	}
 	// TODO : Need to disallow shutdown message??
-	//if msg.Event() == ShutdownEvent {
+	//if msg.Name() == ShutdownEvent {
 	//	return
 	//}
 	for _, uri := range e.List() {
@@ -89,7 +89,7 @@ func (e *Exchange) Broadcast(msg *Message) {
 			continue
 		}
 		a.Message(msg)
-		//if msg.Event() == ShutdownEvent {
+		//if msg.Name() == ShutdownEvent {
 		//	d.m.Delete(uri)
 		//}
 	}

@@ -80,7 +80,7 @@ func newAddressableMessage(channel, to, from, name string) *Message {
 
 func (m *Message) String() string {
 	return fmt.Sprintf("[chan:%v] [from:%v] [to:%v] [%v]", m.Channel(), m.From(), m.To(), m.Name())
-	//return fmt.Sprintf("[chan:%v] [%v]", m.Channel(), m.Event())
+	//return fmt.Sprintf("[chan:%v] [%v]", m.Channel(), m.Name())
 }
 
 func (m *Message) RelatesTo() string {

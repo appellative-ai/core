@@ -17,7 +17,7 @@ func NewConfigExchangeMessage(ex rest.Exchange) *messaging.Message {
 }
 
 func ConfigExchangeContent(m *messaging.Message) (rest.Exchange, bool) {
-	if m.Event() != messaging.ConfigEvent || m.ContentType() != ContentTypeExchange {
+	if m.Name() != messaging.ConfigEvent || m.ContentType() != ContentTypeExchange {
 		return nil, false
 	}
 	if cfg, ok := m.Body.(rest.Exchange); ok {
@@ -37,7 +37,7 @@ func NewConfigExchangeWriterMessage(ex ExchangeWriter) *messaging.Message {
 }
 
 func ConfigExchangeWriterContent(m *messaging.Message) (ExchangeWriter, bool) {
-	if m.Event() != messaging.ConfigEvent || m.ContentType() != ContentTypeExchangeWriter {
+	if m.Name() != messaging.ConfigEvent || m.ContentType() != ContentTypeExchangeWriter {
 		return nil, false
 	}
 	if cfg, ok := m.Body.(ExchangeWriter); ok {
