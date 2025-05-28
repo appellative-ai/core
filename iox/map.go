@@ -21,10 +21,10 @@ func ReadMap(uri any) (map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	return parseBuffer(buf)
+	return ParseMap(buf)
 }
 
-func parseBuffer(buf []byte) (map[string]string, error) {
+func ParseMap(buf []byte) (map[string]string, error) {
 	m := make(map[string]string)
 	if len(buf) == 0 {
 		return m, nil
