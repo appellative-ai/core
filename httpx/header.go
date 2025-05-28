@@ -16,6 +16,7 @@ const (
 	ContentEncodingGzip = "gzip"
 	ContentTypeTextHtml = "text/html"
 	ContentTypeText     = "text/plain charset=utf-8"
+	ContentTypeBinary   = "application/octet-stream"
 	ContentLocation     = "Content-Location"
 	ExchangeOverride    = "X-Exchange-Override"
 	ContentResolver     = "X-Content-Resolver"
