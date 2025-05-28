@@ -15,6 +15,24 @@ func ExampleReadMap() {
 
 }
 
+func ExampleWriteMap() {
+	m := make(map[string]string)
+	m["ORIGIN-INSTANCE-ID"] = "instance-id"
+	m["ORIGIN-REGION"] = "region"
+	m["ORIGIN-SERVICE"] = "service"
+	m["ORIGIN-SUB-ZONE"] = "sub-zone"
+	m["ORIGIN-ZONE"] = "zone"
+	fmt.Printf("test: WriteMap() -> %v\n", WriteMap(m))
+
+	//Output:
+	//test: WriteMap() -> ORIGIN-SUB-ZONE : sub-zone
+	//ORIGIN-ZONE : zone
+	//ORIGIN-INSTANCE-ID : instance-id
+	//ORIGIN-REGION : region
+	//ORIGIN-SERVICE : service
+
+}
+
 func _TestParseLine(t *testing.T) {
 	type args struct {
 		line string

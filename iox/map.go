@@ -85,3 +85,12 @@ func valid(line string) bool {
 	}
 	return true
 }
+
+func WriteMap(m map[string]string) string {
+	sb := strings.Builder{}
+
+	for k, v := range m {
+		sb.WriteString(fmt.Sprintf("%v : %v\r\n", k, v))
+	}
+	return sb.String()
+}
