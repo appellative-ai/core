@@ -5,12 +5,104 @@ import (
 	"time"
 )
 
-func emptyRun(uri string, ctrl, data <-chan *Message, state any) {
-}
-
 var (
 	pkgPath = "/github/behavioral-ai/core/messaging"
 )
+
+type agentC struct {
+	running bool
+	uri     string
+	name    string
+	ch      chan *Message
+	handler Handler
+}
+
+func newControlAgent(uri string, handler Handler) *agentC {
+	c := new(agentC)
+	c.uri = uri
+	c.ch = make(chan *Message, ChannelSize)
+	c.handler = handler
+	return c
+}
+
+// Name -
+func (c *agentC) Name() string { return c.uri }
+
+// String - identity
+func (c *agentC) String() string { return c.Name() }
+
+// Message - message an agent
+func (c *agentC) Message(msg *Message) {
+	if msg == nil {
+		return
+	}
+	if msg.Name() == StartupEvent {
+		c.run()
+		return
+	}
+	if !c.running {
+		return
+	}
+	switch msg.Channel() {
+	case ChannelControl:
+		if c.ch != nil {
+			c.ch <- msg
+		}
+	default:
+	}
+}
+
+// Run - run the agent
+func (c *agentC) run() {
+	if c.running {
+		return
+	}
+	c.running = true
+	go controlAgentRun(c)
+}
+
+// Shutdown - shutdown the agent
+func (c *agentC) Shutdown() {
+	if !c.running {
+		return
+	}
+	c.running = false
+	c.Message(ShutdownMessage)
+}
+
+func (c *agentC) shutdown() {
+	close(c.ch)
+}
+
+// controlAgentRun - a simple run function that only handles control messages, and dispatches via a message handler
+func controlAgentRun(c *agentC) {
+	if c == nil || c.handler == nil {
+		return
+	}
+	// ctrlHandler Handler
+	//if h, ok := state.(Handler); ok {
+	//	ctrlHandler = h
+	//} else {
+	//	return
+	//}
+	for {
+		select {
+		case msg, open := <-c.ch:
+			if !open {
+				return
+			}
+			switch msg.Name() {
+			case ShutdownEvent:
+				c.handler(NewMessage(ChannelControl, msg.Name()))
+				c.shutdown()
+				return
+			default:
+				c.handler(msg)
+			}
+		default:
+		}
+	}
+}
 
 func emptyHandler(_ *Message) {}
 
@@ -23,7 +115,7 @@ func ExampleRegister() {
 	a := testDir.Get(uri1)
 	fmt.Printf("test: Get(%v) -> : [agent:%v]\n", uri1, a)
 
-	a1, _ := NewControlAgent(uri1, emptyHandler)
+	a1 := newControlAgent(uri1, emptyHandler)
 	err := testDir.Register(a1)
 	fmt.Printf("test: Register(%v) -> : [err:%v]\n", uri1, err)
 
@@ -32,7 +124,7 @@ func ExampleRegister() {
 	fmt.Printf("test: Get(%v) -> : [agent:%v]\n", uri1, m1.Name())
 
 	uri2 := "urn:test:two"
-	a2, _ := NewControlAgent(uri2, emptyHandler)
+	a2 := newControlAgent(uri2, emptyHandler)
 	err = testDir.Register(a2)
 	fmt.Printf("test: Register(%v) -> : [err:%v]\n", uri2, err)
 	fmt.Printf("test: Count() -> : %v\n", testDir.Count())
@@ -58,7 +150,7 @@ func ExampleRegisterError() {
 	uri := "urn:agent007"
 	ex := NewExchange()
 
-	a, _ := NewControlAgent(uri, emptyHandler)
+	a := newControlAgent(uri, emptyHandler)
 	err := ex.Register(a)
 	fmt.Printf("test: Register(%v) -> [%v]\n", uri, err)
 
@@ -100,9 +192,9 @@ func ExampleMessage() {
 	a3 := newTestAgent(uri3, c, nil)
 	ex.Register(a3)
 
-	ex.Message(newAddressableMessage(ChannelControl, uri1, pkgPath, StartupEvent))
-	ex.Message(newAddressableMessage(ChannelControl, uri2, pkgPath, StartupEvent))
-	ex.Message(newAddressableMessage(ChannelControl, uri3, pkgPath, StartupEvent))
+	ex.Message(NewAddressableMessage(ChannelControl, StartupEvent, uri1, pkgPath))
+	ex.Message(NewAddressableMessage(ChannelControl, StartupEvent, uri2, pkgPath))
+	ex.Message(NewAddressableMessage(ChannelControl, StartupEvent, uri3, pkgPath))
 
 	time.Sleep(time.Second * 1)
 	resp1 := <-c.C
@@ -180,3 +272,73 @@ func _ExampleExchangeOnShutdown() {
 	//test: Get-Ex2-Shutdown(urn:agent-1) -> : <nil>
 
 }
+
+/*
+const (
+	PingEvent        = "core:event/ping"
+	ReconfigureEvent = "core:event/reconfigure"
+)
+
+func newAgentCtrlHandler(msg *Message) {
+	fmt.Printf(fmt.Sprintf("test: NewControlAgent_CtrlHandler() -> %v\n", msg.Name()))
+}
+
+func ExampleNewControlAgent() {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("test: NewControlAgent() -> [recovered:%v]\n", r)
+		}
+	}()
+	//ex := NewExchange() //any(NewDirectory()).(*directory)
+	//c := make(chan Message, 16)
+	uri := "github.com/advanced-go/example-domain/activity"
+
+	a, error0 := NewControlAgent(uri, newAgentCtrlHandler)
+	if error0 != nil {
+		fmt.Printf("test: NewControlAgent() -> [err:%v]\n", error0)
+	}
+	//status = a.Register(agentDir)
+	//if !status.OK() {
+	//	fmt.Printf("test: Register() -> [status:%v]\n", status)
+	//}
+	// 1 -10 Nanoseconds works for a direct send to a channel, sending via an controller2 needs a longer sleep time
+	//d := time.Nanosecond * 10
+	// Needed time.Nanoseconds * 50 for directory send with mutex
+	// Needed time.Nanoseconds * 1 for directory send via sync.Map
+	d := time.Nanosecond * 1
+	//Startup(a)
+	a.Message(NewMessage(ChannelControl, StartupEvent))
+	//c <- Message{To: "", From: "", Event: aspect.StartupEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	time.Sleep(d)
+	a.Message(NewMessage(ChannelControl, PauseEvent))
+	//c <- Message{To: "", From: "", Event: aspect.PauseEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	time.Sleep(d)
+	a.Message(NewMessage(ChannelControl, ResumeEvent))
+	//c <- Message{To: "", From: "", Event: aspect.ResumeEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	time.Sleep(d)
+	a.Message(NewMessage(ChannelControl, PingEvent))
+	//c <- Message{To: "", From: "", Event: aspect.PingEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	time.Sleep(d)
+	a.Message(NewMessage(ChannelControl, ReconfigureEvent))
+	//c <- Message{To: "", From: "", Event: aspect.ReconfigureEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	time.Sleep(d)
+	a.Message(ShutdownMessage) //.SendCtrl(Message{To: uri, From: "", Event: aspect.ShutdownEvent})
+	//c <- Message{To: "", From: "", Event: aspect.ShutdownEvent, RelatesTo: "", Status: nil, Content: nil, ReplyTo: nil}
+	time.Sleep(time.Millisecond * 100)
+
+	a.Message(ShutdownMessage)
+	// will panic
+	//c <- Message{}
+
+	//Output:
+	//test: NewControlAgent_CtrlHandler() -> core:event/pause
+	//test: NewControlAgent_CtrlHandler() -> core:event/resume
+	//test: NewControlAgent_CtrlHandler() -> core:event/ping
+	//test: NewControlAgent_CtrlHandler() -> core:event/reconfigure
+	//test: NewControlAgent_CtrlHandler() -> core:event/shutdown
+	//test: NewControlAgent() -> [recovered:send on closed channel]
+
+}
+
+
+*/

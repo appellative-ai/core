@@ -1,10 +1,6 @@
 package messaging
 
-import (
-	"fmt"
-	"time"
-)
-
+/*
 const (
 	PingEvent        = "core:event/ping"
 	ReconfigureEvent = "core:event/reconfigure"
@@ -70,3 +66,6 @@ func ExampleNewControlAgent() {
 	//test: NewControlAgent() -> [recovered:send on closed channel]
 
 }
+
+
+*/

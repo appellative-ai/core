@@ -142,7 +142,7 @@ func ExampleAgentRun() {
 	uri := "urn:agent007"
 	a := newTestAgent(uri, nil, nil)
 	a.Run()
-	a.Message(newAddressableMessage(ChannelControl, uri, "ExampleAgentRun()", StartupEvent))
+	a.Message(NewAddressableMessage(ChannelControl, StartupEvent, uri, "ExampleAgentRun()"))
 	//a.Message(NewDataMessage(uri, "ExampleAgentRun()", DataEvent))
 	time.Sleep(time.Second)
 	a.Shutdown()

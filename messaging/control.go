@@ -1,9 +1,5 @@
 package messaging
 
-import (
-	"errors"
-)
-
 type controlAgent struct {
 	running bool
 	uri     string
@@ -12,6 +8,7 @@ type controlAgent struct {
 	handler Handler
 }
 
+/*
 // NewControlAgent - create an agent that only listens on a control channel, and has a default AgentRun func
 func NewControlAgent(name string, handler Handler) (Agent, error) {
 	if handler == nil {
@@ -66,15 +63,13 @@ func (c *controlAgent) run() {
 }
 
 // Shutdown - shutdown the agent
-/*
 func (c *controlAgent) Shutdown() {
 	if !c.running {
 		return
 	}
 	c.running = false
-	c.Message(Shutdown)
+	c.Message(ShutdownMessage)
 }
-*/
 
 func (c *controlAgent) shutdown() {
 	close(c.ch)
@@ -99,7 +94,7 @@ func controlAgentRun(c *controlAgent) {
 			}
 			switch msg.Name() {
 			case ShutdownEvent:
-				c.handler(NewMessageWithError(ChannelControl, msg.Name(), nil))
+				c.handler(NewMessage(ChannelControl, msg.Name()))
 				c.shutdown()
 				return
 			default:
@@ -109,3 +104,7 @@ func controlAgentRun(c *controlAgent) {
 		}
 	}
 }
+
+
+
+*/

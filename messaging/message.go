@@ -29,7 +29,6 @@ const (
 	XRelatesTo = "x-relates-to"
 
 	ContentType       = "Content-Type"
-	ContentTypeError  = "application/x-error"
 	ContentTypeMap    = "application/x-map"
 	ContentTypeStatus = "application/x-status"
 )
@@ -62,19 +61,20 @@ func NewMessage(channel, name string) *Message {
 	return m
 }
 
+/*
 func NewMessageWithError(channel, name string, err error) *Message {
 	m := NewMessage(channel, name)
 	m.SetContent(ContentTypeError, err)
 	return m
 }
 
-func newAddressableMessage(channel, to, from, name string) *Message {
+
+*/
+
+func NewAddressableMessage(channel, name, to, from string) *Message {
 	m := NewMessage(channel, name)
-	//m.Header = make(map[string]string)
-	//m.Header[XChannel, channel)
 	m.Header[XTo] = to
 	m.Header[XFrom] = from
-	//m.Header[XEvent, event)
 	return m
 }
 
