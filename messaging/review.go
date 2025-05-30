@@ -1,13 +1,12 @@
 package messaging
 
-import "time"
-
 const (
 	ContentTypeReview = "application/x-review"
 )
 
+// Review - maybe add Task??
 type Review struct {
-	Duration time.Duration
+	Duration string
 }
 
 func NewReviewMessage(review *Review) *Message {
