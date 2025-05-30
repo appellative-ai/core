@@ -1,9 +1,16 @@
 package messaging
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 func ConfigEmptyMapError(agent Agent) *Status {
 	return NewStatus(StatusInvalidArgument, errors.New("config map is nil")).WithLocation(agent.Name())
+}
+
+func ConfigMapContentError(agent Agent, key string) *Status {
+	return NewStatus(StatusInvalidArgument, errors.New(fmt.Sprintf("config map does not contain key: %v", key))).WithLocation(agent.Name())
 }
 
 func ConfigEmptyReviewError(agent Agent) *Status {

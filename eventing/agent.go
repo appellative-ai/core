@@ -118,7 +118,7 @@ func (a *agentT) configure(m *messaging.Message) {
 	case messaging.ContentTypeMap:
 		cfg := messaging.ConfigMapContent(m)
 		if cfg == nil {
-			messaging.Reply(m, messaging.ConfigEmptyStatusError(a), a.Name())
+			messaging.Reply(m, messaging.ConfigEmptyMapError(a), a.Name())
 		}
 		// TODO : configure
 	}
