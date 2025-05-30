@@ -1,5 +1,15 @@
 package messaging
 
+import "errors"
+
+func ConfigEmptyMapError(agent Agent) *Status {
+	return NewStatus(StatusInvalidArgument, errors.New("config map is nil")).WithLocation(agent.Name())
+}
+
+func ConfigEmptyReviewError(agent Agent) *Status {
+	return NewStatus(StatusInvalidArgument, errors.New("review is nil")).WithLocation(agent.Name())
+}
+
 /*
 func EventError(agentId string, msg *Message) error {
 	err := errors.New(fmt.Sprintf("error: message name:%v is invalid for agent:%v", msg.Name(), agentId))
@@ -11,9 +21,7 @@ func MessageContentTypeError(agentId string, msg *Message) error {
 	return err
 }
 
-func ConfigEmptyStatusError(agent Agent) *Status {
-	return NewStatus(StatusInvalidArgument, errors.New("config map is nil")).WithLocation(agent.Name())
-}
+
 
 func ConfigContentStatusError(agent Agent, key string) *Status {
 	return NewStatus(StatusInvalidArgument, errors.New(fmt.Sprintf("config map does not contain key: %v", key))).WithLocation(agent.Name())
