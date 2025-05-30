@@ -53,6 +53,14 @@ func NewReview(dur string) *Review {
 	return r
 }
 
+func newReview(dur time.Duration) *Review {
+	r := new(Review)
+	r.expired = new(atomic.Bool)
+	r.expired.Store(true)
+	r.duration = dur
+	return r
+}
+
 func (r *Review) Started() bool {
 	return r.started
 }
