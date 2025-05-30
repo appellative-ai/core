@@ -1,14 +1,13 @@
 package messaging
 
 import (
-	"github.com/behavioral-ai/core/fmtx"
 	"sync/atomic"
 	"time"
 )
 
 const (
 	ContentTypeReview = "application/x-review"
-	defaultDuration   = time.Minute * 1
+	defaultDuration   = 1
 )
 
 func NewReviewMessage(review *Review) *Message {
@@ -35,22 +34,11 @@ type Review struct {
 	ticker   *Ticker
 }
 
-func NewReview(dur string) *Review {
-	r := new(Review)
-	r.expired = new(atomic.Bool)
-	r.expired.Store(true)
-	if dur == "" {
-		return r
+func NewReview(minutes int) *Review {
+	if minutes <= 0 {
+		minutes = defaultDuration
 	}
-	d, err := fmtx.ParseDuration(dur)
-	if err != nil {
-		return r
-	}
-	r.duration = d
-	if r.duration < defaultDuration {
-		r.duration = defaultDuration
-	}
-	return r
+	return newReview(time.Minute * time.Duration(minutes))
 }
 
 func newReview(dur time.Duration) *Review {
@@ -63,10 +51,6 @@ func newReview(dur time.Duration) *Review {
 
 func (r *Review) Started() bool {
 	return r.started
-}
-
-func (r *Review) Scheduled() bool {
-	return r.duration != 0
 }
 
 func (r *Review) Expired() bool {
