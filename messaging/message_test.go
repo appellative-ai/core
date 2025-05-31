@@ -42,3 +42,15 @@ func ExampleStatusMessage() {
 	//test: NewStatusMessage() -> [I'm A Teapot] [core:event/config]
 
 }
+
+func ExampleVersioned() {
+	name := "event:test/one"
+
+	fmt.Printf("test: Versioned(\"%v\") [name:%v]\n", name, Versioned(name))
+	fmt.Printf("test: Versioned(\"%v\") [name:%v]\n", name, Versioned(name))
+
+	//Output:
+	//test: Versioned("event:test/one") [name:event:test/one#1]
+	//test: Versioned("event:test/one") [name:event:test/one#2]
+
+}

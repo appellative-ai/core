@@ -14,7 +14,7 @@ func NewRouteMessage(name, uri string, ex Exchange) *messaging.Message {
 }
 
 func RouteContent(m *messaging.Message) (*Route, bool) {
-	if m.Name() != messaging.ConfigEvent || m.ContentType() != ContentTypeRoute {
+	if m.Name != messaging.ConfigEvent || m.ContentType() != ContentTypeRoute {
 		return nil, false
 	}
 	if v, ok := m.Content.(*Route); ok {

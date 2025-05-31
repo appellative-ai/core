@@ -17,7 +17,7 @@ func NewReviewMessage(review *Review) *Message {
 }
 
 func ReviewContent(m *Message) *Review {
-	if m.Name() != ConfigEvent || m.ContentType() != ContentTypeReview {
+	if m.Name != ConfigEvent || m.ContentType() != ContentTypeReview {
 		return nil
 	}
 	if v, ok := m.Content.(*Review); ok {

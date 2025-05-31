@@ -33,11 +33,11 @@ func ExampleSubscription_Valid() {
 func _ExampleSubscriptionMessage() {
 	m := NewSubscriptionCreateMessage("create-to", NewSubscription("create-from", ChannelControl, SubscriptionCreateEvent, ""))
 	s, ok := SubscriptionCreateContent(m)
-	fmt.Printf("test: NewSubscriptionCreateMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Name(), s, ok)
+	fmt.Printf("test: NewSubscriptionCreateMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Name, s, ok)
 
 	m = NewSubscriptionCancelMessage("cancel-to", "cancel-from", SubscriptionCancelEvent)
 	s, ok = SubscriptionCancelContent(m)
-	fmt.Printf("test: NewSubscriptionCancelMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Name(), s, ok)
+	fmt.Printf("test: NewSubscriptionCancelMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Name, s, ok)
 
 	//Output:
 	//test: NewSubscriptionCreateMessage() -> [create-to] [Name:subscription-create] [{Name:subscription-create create-from}] [true]
@@ -233,7 +233,7 @@ func newWorkItemMessage(w workItem) *Message {
 }
 
 func workItemContent(m *Message) (workItem, bool) {
-	if m.Name() != workEvent || m.ContentType() != contentTypeItem {
+	if m.Name != workEvent || m.ContentType() != contentTypeItem {
 		return workItem{}, false
 	}
 	if v, ok := m.Content.(workItem); ok {
@@ -255,13 +255,13 @@ func newSubscriber() Agent {
 func (s *subscriber) Name() string { return subscriberName }
 func (s *subscriber) Message(m *Message) {
 	if !s.running {
-		if m.Name() == StartupEvent {
+		if m.Name == StartupEvent {
 			go s.run()
 			s.running = true
 		}
 		return
 	}
-	if m.Name() == ShutdownEvent {
+	if m.Name == ShutdownEvent {
 		s.running = false
 	}
 	s.emissary.C <- m
@@ -271,7 +271,7 @@ func (s *subscriber) run() {
 	for {
 		select {
 		case m := <-s.emissary.C:
-			switch m.Name() {
+			switch m.Name {
 			case publishEvent:
 				exchange.Message(NewSubscriptionCreateMessage(publisherName, NewSubscription(subscriberName, ChannelControl, workEvent, "")))
 				fmt.Printf("test: subscriber() -> [create] [%v]\n", workEvent)
@@ -311,13 +311,13 @@ func newPublisher() Agent {
 }
 func (p *publisher) Name() string { return publisherName }
 func (p *publisher) Message(m *Message) {
-	if m.Name() == StartupEvent && !p.running {
+	if m.Name == StartupEvent && !p.running {
 		p.running = true
 		go p.run()
 		return
 	}
 	if !p.running {
-		fmt.Printf("test: publisher() [message:%v]\n", m.Name())
+		fmt.Printf("test: publisher() [message:%v]\n", m.Name)
 		return
 	}
 	p.emissary.C <- m
@@ -326,10 +326,10 @@ func (p *publisher) run() {
 	for {
 		select {
 		case m := <-p.emissary.C:
-			switch m.Name() {
+			switch m.Name {
 			case workEvent:
-				fmt.Printf("test: publisher() -> [received] [%v]\n", m.Name())
-				if subs, ok := p.catalog.Lookup(m.Name()); ok {
+				fmt.Printf("test: publisher() -> [received] [%v]\n", m.Name)
+				if subs, ok := p.catalog.Lookup(m.Name); ok {
 					for _, item := range subs {
 						m.SetTo(item.From)
 						fmt.Printf("test: publisher() -> [published] [%v] [subscriber:%v] \n", item.Name, item.From)
@@ -341,13 +341,13 @@ func (p *publisher) run() {
 				if err != nil {
 					fmt.Printf("test: publisher() -> [err:%v]\n", err)
 				} else {
-					fmt.Printf("test: publisher() -> [created] [%v]\n", m.Name())
+					fmt.Printf("test: publisher() -> [created] [%v]\n", m.Name)
 				}
 			case SubscriptionCancelEvent:
 				p.catalog.CancelWithMessage(m)
-				fmt.Printf("test: publisher() -> [canceled] [%v]\n", m.Name())
+				fmt.Printf("test: publisher() -> [canceled] [%v]\n", m.Name)
 			case ShutdownEvent:
-				fmt.Printf("test: publisher() -> [%v]\n", m.Name())
+				fmt.Printf("test: publisher() -> [%v]\n", m.Name)
 				p.shutdown()
 				return
 			default:

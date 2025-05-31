@@ -17,7 +17,7 @@ func NewConfigExchangeMessage(ex rest.Exchange) *messaging.Message {
 }
 
 func ConfigExchangeContent(m *messaging.Message) (rest.Exchange, bool) {
-	if m.Name() != messaging.ConfigEvent || m.ContentType() != ContentTypeExchange {
+	if m.Name != messaging.ConfigEvent || m.ContentType() != ContentTypeExchange {
 		return nil, false
 	}
 	if cfg, ok := m.Content.(rest.Exchange); ok {

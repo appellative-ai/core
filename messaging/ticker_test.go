@@ -41,7 +41,7 @@ func tickerRun(ctrl <-chan *Message, t *Ticker) {
 				t.Reset()
 			}
 		case msg := <-ctrl:
-			switch msg.Name() {
+			switch msg.Name {
 			case ShutdownEvent:
 				return
 			default:

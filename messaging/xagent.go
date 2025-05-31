@@ -36,7 +36,7 @@ func (a *agentT) Register(agent Agent) {
 func (a *agentT) String() string { return a.Name() }
 
 func (a *agentT) Message(m *Message) {
-	switch m.Name() {
+	switch m.Name {
 	case ShutdownEvent:
 		a.ex.Broadcast(m)
 	case StartupEvent:

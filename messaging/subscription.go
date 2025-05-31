@@ -113,7 +113,7 @@ func NewSubscriptionCreateMessage(to string, s Subscription) *Message {
 }
 
 func SubscriptionCreateContent(m *Message) (Subscription, bool) {
-	if m == nil || m.Name() != SubscriptionCreateEvent || m.ContentType() != ContentTypeSubscription {
+	if m == nil || m.Name != SubscriptionCreateEvent || m.ContentType() != ContentTypeSubscription {
 		return Subscription{}, false
 	}
 	if v, ok := m.Content.(Subscription); ok {
@@ -134,7 +134,7 @@ func NewSubscriptionCancelMessage(to, from, Name string) *Message {
 }
 
 func SubscriptionCancelContent(m *Message) (Subscription, bool) {
-	if m == nil || m.Name() != SubscriptionCancelEvent || m.ContentType() != ContentTypeSubscription {
+	if m == nil || m.Name != SubscriptionCancelEvent || m.ContentType() != ContentTypeSubscription {
 		return Subscription{}, false
 	}
 	if v, ok := m.Content.(Subscription); ok {

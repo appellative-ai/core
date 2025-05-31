@@ -84,7 +84,7 @@ func testAgentRun(t *testAgent) {
 				return
 			}
 			fmt.Printf("test: AgentRun() -> %v\n", msg)
-			if msg.Name() == ShutdownEvent {
+			if msg.Name == ShutdownEvent {
 				return
 			}
 		default:

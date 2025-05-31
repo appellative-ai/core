@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"sync/atomic"
 	"time"
 )
 
@@ -24,9 +25,9 @@ const (
 	ChannelControl  = "ctrl"
 	ChannelData     = "data"
 
-	XTo        = "x-to"
-	XFrom      = "x-from"
-	XName      = "x-name"
+	XTo   = "x-to"
+	XFrom = "x-from"
+	//XName      = "x-name"
 	XChannel   = "x-channel"
 	XRelatesTo = "x-relates-to"
 
@@ -43,6 +44,7 @@ var (
 
 	EmissaryShutdownMessage = NewMessage(ChannelEmissary, ShutdownEvent)
 	MasterShutdownMessage   = NewMessage(ChannelMaster, ShutdownEvent)
+	vers                    = new(atomic.Int64)
 )
 
 // Handler - uniform interface for message handling
@@ -50,6 +52,7 @@ type Handler func(msg *Message)
 
 // Message - message
 type Message struct {
+	Name    string
 	Header  http.Header //map[string]string
 	Content any
 	Expiry  time.Time
@@ -58,9 +61,9 @@ type Message struct {
 
 func NewMessage(channel, name string) *Message {
 	m := new(Message)
+	m.Name = name
 	m.Header = make(http.Header) //map[string]string)
 	m.Header.Set(XChannel, channel)
-	m.Header.Set(XName, name)
 	return m
 }
 
@@ -80,7 +83,7 @@ func NewAddressableMessage(channel, name, to, from string) *Message {
 }
 
 func (m *Message) String() string {
-	return fmt.Sprintf("[chan:%v] [from:%v] [to:%v] [%v]", m.Channel(), m.From(), m.To(), m.Name())
+	return fmt.Sprintf("[chan:%v] [from:%v] [to:%v] [%v]", m.Channel(), m.From(), m.To(), m.Name)
 	//return fmt.Sprintf("[chan:%v] [%v]", m.Channel(), m.Name())
 }
 
@@ -109,10 +112,6 @@ func (m *Message) From() string {
 func (m *Message) SetFrom(name string) *Message {
 	m.Header.Set(XFrom, name)
 	return m
-}
-
-func (m *Message) Name() string {
-	return m.Header.Get(XName)
 }
 
 func (m *Message) Channel() string {
@@ -155,7 +154,7 @@ func NewConfigMapMessage(cfg map[string]string) *Message {
 }
 
 func ConfigMapContent(m *Message) map[string]string {
-	if m.Name() != ConfigEvent || m.ContentType() != ContentTypeMap {
+	if m.Name != ConfigEvent || m.ContentType() != ContentTypeMap {
 		return nil
 	}
 	if cfg, ok := m.Content.(map[string]string); ok {
@@ -174,7 +173,7 @@ func NewStatusMessage(status *Status, relatesTo string) *Message {
 }
 
 func StatusContent(m *Message) (*Status, string) {
-	if m.Name() != StatusEvent || m.ContentType() != ContentTypeStatus {
+	if m.Name != StatusEvent || m.ContentType() != ContentTypeStatus {
 		return nil, ""
 	}
 	if s, ok := m.Content.(*Status); ok {
@@ -188,7 +187,12 @@ func Reply(msg *Message, status *Status, from string) {
 	if msg == nil || status == nil || msg.Reply == nil {
 		return
 	}
-	m := NewStatusMessage(status, msg.Name())
+	m := NewStatusMessage(status, msg.Name)
 	m.Header.Set(XFrom, from)
 	msg.Reply(m)
+}
+
+func Versioned(name string) string {
+	i := vers.Add(1)
+	return fmt.Sprintf("%v#%v", name, i)
 }
