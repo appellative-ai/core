@@ -44,7 +44,7 @@ var (
 
 	EmissaryShutdownMessage = NewMessage(ChannelEmissary, ShutdownEvent)
 	MasterShutdownMessage   = NewMessage(ChannelMaster, ShutdownEvent)
-	vers                    = new(atomic.Int64)
+	counter                 = new(atomic.Int64)
 )
 
 // Handler - uniform interface for message handling
@@ -193,6 +193,5 @@ func Reply(msg *Message, status *Status, from string) {
 }
 
 func Versioned(name string) string {
-	i := vers.Add(1)
-	return fmt.Sprintf("%v#%v", name, i)
+	return fmt.Sprintf("%v#%v", name, counter.Add(1))
 }
