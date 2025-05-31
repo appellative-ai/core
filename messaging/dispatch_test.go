@@ -50,7 +50,7 @@ func ExampleTraceDispatch_Event() {
 
 func ExampleDispatcherMessage() {
 	m := NewDispatcherMessage(NewTraceDispatcher())
-	fmt.Printf("test: NewDispatcherMessage() -> [%v] [%v] [%v]\n", m.Name(), m.ContentType(), reflect.TypeOf(m.Body))
+	fmt.Printf("test: NewDispatcherMessage() -> [%v] [%v] [%v]\n", m.Name(), m.ContentType(), reflect.TypeOf(m.Content))
 
 	c, ok := DispatcherContent(m)
 	fmt.Printf("test: DispatcherContent() -> [%v] [%v]\n", reflect.TypeOf(c), ok)

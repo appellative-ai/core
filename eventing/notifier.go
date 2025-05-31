@@ -23,7 +23,7 @@ func NotifyConfigContent(m *messaging.Message) NotifyFunc {
 	if m.Name() != NotifyConfigEvent || m.ContentType() != ContentTypeNotifyConfig {
 		return nil
 	}
-	if v, ok := m.Body.(NotifyFunc); ok {
+	if v, ok := m.Content.(NotifyFunc); ok {
 		return v
 	}
 	return nil

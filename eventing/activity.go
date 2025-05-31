@@ -28,10 +28,10 @@ func NewActivityConfigMessage(fn ActivityFunc) *messaging.Message {
 }
 
 func ActivityConfigContent(msg *messaging.Message) ActivityFunc {
-	if msg == nil || msg.ContentType() != ContentTypeActivityConfig || msg.Body == nil {
+	if msg == nil || msg.ContentType() != ContentTypeActivityConfig || msg.Content == nil {
 		return nil
 	}
-	if v, ok := msg.Body.(ActivityFunc); ok {
+	if v, ok := msg.Content.(ActivityFunc); ok {
 		return v
 	}
 	return nil

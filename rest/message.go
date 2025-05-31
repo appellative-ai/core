@@ -17,7 +17,7 @@ func RouteContent(m *messaging.Message) (*Route, bool) {
 	if m.Name() != messaging.ConfigEvent || m.ContentType() != ContentTypeRoute {
 		return nil, false
 	}
-	if v, ok := m.Body.(*Route); ok {
+	if v, ok := m.Content.(*Route); ok {
 		return v, true
 	}
 	return nil, false

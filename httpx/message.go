@@ -20,7 +20,7 @@ func ConfigExchangeContent(m *messaging.Message) (rest.Exchange, bool) {
 	if m.Name() != messaging.ConfigEvent || m.ContentType() != ContentTypeExchange {
 		return nil, false
 	}
-	if cfg, ok := m.Body.(rest.Exchange); ok {
+	if cfg, ok := m.Content.(rest.Exchange); ok {
 		return cfg, true
 	}
 	return nil, false
