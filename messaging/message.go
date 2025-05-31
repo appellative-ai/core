@@ -52,11 +52,11 @@ type Handler func(msg *Message)
 
 // Message - message
 type Message struct {
-	Name    string
-	Header  http.Header //map[string]string
-	Content any
-	Expiry  time.Time
-	Reply   Handler
+	Name   string
+	Header http.Header //map[string]string
+	Body   any
+	Expiry time.Time
+	Reply  Handler
 }
 
 func NewMessage(channel, name string) *Message {
@@ -142,7 +142,7 @@ func (m *Message) SetContent(contentType string, content any) error {
 	if content == nil {
 		return errors.New("error: content is nil")
 	}
-	m.Content = content
+	m.Body = content
 	m.Header.Set(ContentType, contentType)
 	return nil
 }
@@ -157,7 +157,7 @@ func ConfigMapContent(m *Message) map[string]string {
 	if m.Name != ConfigEvent || m.ContentType() != ContentTypeMap {
 		return nil
 	}
-	if cfg, ok := m.Content.(map[string]string); ok {
+	if cfg, ok := m.Body.(map[string]string); ok {
 		return cfg
 	}
 	return nil
@@ -176,7 +176,7 @@ func StatusContent(m *Message) (*Status, string) {
 	if m.Name != StatusEvent || m.ContentType() != ContentTypeStatus {
 		return nil, ""
 	}
-	if s, ok := m.Content.(*Status); ok {
+	if s, ok := m.Body.(*Status); ok {
 		return s, m.RelatesTo()
 	}
 	return nil, ""

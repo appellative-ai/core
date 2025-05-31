@@ -236,7 +236,7 @@ func workItemContent(m *Message) (workItem, bool) {
 	if m.Name != workEvent || m.ContentType() != contentTypeItem {
 		return workItem{}, false
 	}
-	if v, ok := m.Content.(workItem); ok {
+	if v, ok := m.Body.(workItem); ok {
 		return v, true
 	}
 	return workItem{}, false

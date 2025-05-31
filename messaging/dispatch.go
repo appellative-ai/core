@@ -20,7 +20,7 @@ func DispatcherContent(m *Message) (Dispatcher, bool) {
 	if m.Name != ConfigEvent || m.ContentType() != ContentTypeDispatcher {
 		return nil, false
 	}
-	if v, ok := m.Content.(Dispatcher); ok {
+	if v, ok := m.Body.(Dispatcher); ok {
 		return v, true
 	}
 	return nil, false
