@@ -3,6 +3,7 @@ package messaging
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"time"
 )
 
@@ -49,7 +50,7 @@ type Handler func(msg *Message)
 
 // Message - message
 type Message struct {
-	Header  map[string]string
+	Header  http.Header //map[string]string
 	Content any
 	Expiry  time.Time
 	Reply   Handler
@@ -57,9 +58,9 @@ type Message struct {
 
 func NewMessage(channel, name string) *Message {
 	m := new(Message)
-	m.Header = make(map[string]string)
-	m.Header[XChannel] = channel
-	m.Header[XName] = name
+	m.Header = make(http.Header) //map[string]string)
+	m.Header.Set(XChannel, channel)
+	m.Header.Set(XName, name)
 	return m
 }
 
@@ -73,8 +74,8 @@ func NewMessageWithError(channel, name string, err error) *Message {
 
 func NewAddressableMessage(channel, name, to, from string) *Message {
 	m := NewMessage(channel, name)
-	m.Header[XTo] = to
-	m.Header[XFrom] = from
+	m.Header.Add(XTo, to)
+	m.Header.Add(XFrom, from)
 	return m
 }
 
@@ -84,42 +85,42 @@ func (m *Message) String() string {
 }
 
 func (m *Message) RelatesTo() string {
-	return m.Header[XRelatesTo]
+	return m.Header.Get(XRelatesTo)
 }
 
 func (m *Message) SetRelatesTo(s string) *Message {
-	m.Header[XRelatesTo] = s
+	m.Header.Add(XRelatesTo, s)
 	return m
 }
 
 func (m *Message) To() string {
-	return m.Header[XTo]
+	return m.Header.Get(XTo)
 }
 
-func (m *Message) SetTo(uri string) *Message {
-	m.Header[XTo] = uri
+func (m *Message) SetTo(name string) *Message {
+	m.Header.Set(XTo, name)
 	return m
 }
 
 func (m *Message) From() string {
-	return m.Header[XFrom]
+	return m.Header.Get(XFrom)
 }
 
-func (m *Message) SetFrom(uri string) *Message {
-	m.Header[XFrom] = uri
+func (m *Message) SetFrom(name string) *Message {
+	m.Header.Set(XFrom, name)
 	return m
 }
 
 func (m *Message) Name() string {
-	return m.Header[XName]
+	return m.Header.Get(XName)
 }
 
 func (m *Message) Channel() string {
-	return m.Header[XChannel]
+	return m.Header.Get(XChannel)
 }
 
 func (m *Message) SetChannel(channel string) *Message {
-	m.Header[XChannel] = channel
+	m.Header.Set(XChannel, channel)
 	return m
 }
 
@@ -127,12 +128,12 @@ func (m *Message) SetContentType(contentType string) *Message {
 	if len(contentType) == 0 {
 		return m //errors.New("error: content type is empty")
 	}
-	m.Header[ContentType] = contentType
+	m.Header.Set(ContentType, contentType)
 	return m
 }
 
 func (m *Message) ContentType() string {
-	return m.Header[ContentType]
+	return m.Header.Get(ContentType)
 }
 
 func (m *Message) SetContent(contentType string, content any) error {
@@ -143,7 +144,7 @@ func (m *Message) SetContent(contentType string, content any) error {
 		return errors.New("error: content is nil")
 	}
 	m.Content = content
-	m.Header[ContentType] = contentType
+	m.Header.Set(ContentType, contentType)
 	return nil
 }
 
@@ -167,7 +168,7 @@ func NewStatusMessage(status *Status, relatesTo string) *Message {
 	m := NewMessage(ChannelControl, StatusEvent)
 	m.SetContent(ContentTypeStatus, status)
 	if relatesTo != "" {
-		m.Header[XRelatesTo] = relatesTo
+		m.Header.Set(XRelatesTo, relatesTo)
 	}
 	return m
 }
@@ -188,6 +189,6 @@ func Reply(msg *Message, status *Status, from string) {
 		return
 	}
 	m := NewStatusMessage(status, msg.Name())
-	m.Header[XFrom] = from
+	m.Header.Set(XFrom, from)
 	msg.Reply(m)
 }
