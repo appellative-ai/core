@@ -25,11 +25,11 @@ const (
 	ChannelControl  = "ctrl"
 	ChannelData     = "data"
 
-	XTo   = "x-to"
-	XFrom = "x-from"
-	//XName      = "x-name"
-	XChannel   = "x-channel"
-	XRelatesTo = "x-relates-to"
+	XTo          = "x-to"
+	XFrom        = "x-from"
+	XChannel     = "x-channel"
+	XRelatesTo   = "x-relates-to"
+	XMessageName = "x-message-name" // Used in request header to reference a message
 
 	ContentType       = "Content-Type"
 	ContentTypeMap    = "application/x-map"
