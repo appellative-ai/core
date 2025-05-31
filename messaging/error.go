@@ -5,16 +5,16 @@ import (
 	"fmt"
 )
 
-func ConfigEmptyMapError(agent Agent) *Status {
-	return NewStatus(StatusInvalidArgument, errors.New("config map is nil")).WithLocation(agent.Name())
+func ConfigEmptyMapError(location string) *Status {
+	return NewStatus(StatusInvalidArgument, errors.New("config map is nil")).WithLocation(location)
 }
 
-func ConfigMapContentError(agent Agent, key string) *Status {
-	return NewStatus(StatusInvalidArgument, errors.New(fmt.Sprintf("config map does not contain key: %v", key))).WithLocation(agent.Name())
+func ConfigMapContentError(location string, key string) *Status {
+	return NewStatus(StatusInvalidArgument, errors.New(fmt.Sprintf("config map does not contain key: %v", key))).WithLocation(location)
 }
 
-func ConfigEmptyReviewError(agent Agent) *Status {
-	return NewStatus(StatusInvalidArgument, errors.New("review is nil")).WithLocation(agent.Name())
+func ConfigEmptyReviewError(location string) *Status {
+	return NewStatus(StatusInvalidArgument, errors.New("review is nil")).WithLocation(location)
 }
 
 /*
