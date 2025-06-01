@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	SubscriptionCreateEvent = "event:subscription-create"
-	SubscriptionCancelEvent = "event:subscription-cancel"
+	SubscriptionCreateEvent = "core:event/subscription-create"
+	SubscriptionCancelEvent = "core:event/subscription-cancel"
 	ContentTypeSubscription = "application/x-subscription"
 )
 
