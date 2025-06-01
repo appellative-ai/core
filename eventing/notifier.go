@@ -20,10 +20,10 @@ func NewNotifyConfigMessage(fn NotifyFunc) *messaging.Message {
 }
 
 func NotifyConfigContent(m *messaging.Message) NotifyFunc {
-	if m.Name() != NotifyConfigEvent || m.ContentType() != ContentTypeNotifyConfig {
+	if m.Name != NotifyConfigEvent || m.ContentType() != ContentTypeNotifyConfig {
 		return nil
 	}
-	if v, ok := m.Content.(NotifyFunc); ok {
+	if v, ok := m.Body.(NotifyFunc); ok {
 		return v
 	}
 	return nil

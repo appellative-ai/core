@@ -43,18 +43,18 @@ func (a *agentT) Message(m *messaging.Message) {
 		return
 	}
 	if !a.running {
-		if m.Name() == messaging.ConfigEvent || m.Name() == NotifyConfigEvent || m.Name() == ActivityConfigEvent {
+		if m.Name == messaging.ConfigEvent || m.Name == NotifyConfigEvent || m.Name == ActivityConfigEvent {
 			a.configure(m)
 			return
 		}
-		if m.Name() == messaging.StartupEvent {
+		if m.Name == messaging.StartupEvent {
 			a.run()
 			a.running = true
 			return
 		}
 		return
 	}
-	if m.Name() == messaging.ShutdownEvent {
+	if m.Name == messaging.ShutdownEvent {
 		a.running = false
 	}
 	switch m.Channel() {
@@ -118,7 +118,7 @@ func (a *agentT) configure(m *messaging.Message) {
 	case messaging.ContentTypeMap:
 		cfg := messaging.ConfigMapContent(m)
 		if cfg == nil {
-			messaging.Reply(m, messaging.ConfigEmptyMapError(a), a.Name())
+			messaging.Reply(m, messaging.ConfigEmptyMapError(a.Name()), a.Name())
 		}
 		// TODO : configure
 	}
