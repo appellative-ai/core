@@ -1,10 +1,6 @@
 package access2
 
-import (
-	"fmt"
-	"net/url"
-)
-
+/*
 const (
 	RegionKey                = "region"
 	ZoneKey                  = "zone"
@@ -15,8 +11,11 @@ const (
 	RegionZoneSubZoneHostFmt = "%v:%v.%v.%v.%v"
 )
 
-// Origin - location
-type Origin struct {
+
+*/
+
+// origin - location
+type originT struct {
 	Region     string `json:"region"`
 	Zone       string `json:"zone"`
 	SubZone    string `json:"sub-zone"`
@@ -24,7 +23,7 @@ type Origin struct {
 	InstanceId string `json:"instance-id"`
 }
 
-func (o Origin) Tag() string {
+func (o originT) Tag() string {
 	tag := o.Region
 	if o.Zone != "" {
 		tag += ":" + o.Zone
@@ -38,7 +37,8 @@ func (o Origin) Tag() string {
 	return tag
 }
 
-func (o Origin) Uri(class string) string {
+/*
+func (o originT) Uri(class string) string {
 	var uri string
 	if o.SubZone == "" {
 		uri = fmt.Sprintf(RegionZoneHostFmt, class, o.Region, o.Zone, o.Host)
@@ -48,7 +48,7 @@ func (o Origin) Uri(class string) string {
 	return uri
 }
 
-func NewValues(o Origin) url.Values {
+func NewValues(o originT) url.Values {
 	values := make(url.Values)
 	if o.Region != "" {
 		values.Add(RegionKey, o.Region)
@@ -65,8 +65,8 @@ func NewValues(o Origin) url.Values {
 	return values
 }
 
-func NewOrigin(values url.Values) Origin {
-	o := Origin{}
+func NewOrigin(values url.Values) originT {
+	o := originT{}
 	if values != nil {
 		o.Region = values.Get(RegionKey)
 		o.Zone = values.Get(ZoneKey)
@@ -76,3 +76,6 @@ func NewOrigin(values url.Values) Origin {
 	}
 	return o
 }
+
+
+*/

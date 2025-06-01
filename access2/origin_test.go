@@ -1,7 +1,6 @@
 package access2
 
-import "fmt"
-
+/*
 func ExampleNewValues() {
 	o := Origin{
 		Region:     "region",
@@ -85,3 +84,6 @@ func ExampleOrigin_Uri() {
 	//test: Origin_Uri_No_SubZone()    -> [class:region.zone.host]
 
 }
+
+
+*/

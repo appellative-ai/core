@@ -22,7 +22,7 @@ const (
 )
 
 var (
-	origin           = Origin{}
+	origin           = originT{}
 	originSet        bool
 	defaultOperators []Operator
 )
@@ -31,9 +31,13 @@ func init() {
 	log.SetFlags(0)
 }
 
-// SetOrigin - initialize the origin
-func SetOrigin(o Origin) {
-	origin = o
+// SetOrigin -
+func SetOrigin(region, zone, subZone, host, instanceId string) {
+	origin.Region = region
+	origin.Zone = zone
+	origin.SubZone = subZone
+	origin.Host = host
+	origin.InstanceId = instanceId
 	originSet = true
 }
 
