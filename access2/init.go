@@ -13,6 +13,7 @@ var operators = map[string]*Operator{
 	RouteOperator:          {"route", RouteOperator},
 
 	// Origin
+	OriginAppIdOperator:      {"app-id", OriginAppIdOperator},
 	OriginRegionOperator:     {"region", OriginRegionOperator},
 	OriginZoneOperator:       {"zone", OriginZoneOperator},
 	OriginSubZoneOperator:    {"sub-zone", OriginSubZoneOperator},

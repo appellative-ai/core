@@ -32,7 +32,8 @@ func init() {
 }
 
 // SetOrigin -
-func SetOrigin(region, zone, subZone, host, instanceId string) {
+func SetOrigin(appId, region, zone, subZone, host, instanceId string) {
+	origin.AppId = appId
 	origin.Region = region
 	origin.Zone = zone
 	origin.SubZone = subZone

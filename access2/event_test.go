@@ -22,7 +22,7 @@ func _ExampleValue_Duration() {
 }
 
 func ExampleValue_Origin() {
-	SetOrigin("region", "zone", "subZone", "host-name", "instanceId")
+	SetOrigin("app-id", "region", "zone", "subZone", "host-name", "instanceId")
 
 	data := event{}
 	fmt.Printf("test: Value(\"%v\") -> [%v]\n", "region", data.Value(OriginRegionOperator))

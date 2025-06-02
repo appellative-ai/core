@@ -21,6 +21,7 @@ const (
 	DurationStringOperator = "%DURATION_STR%" // Time package formatted
 	RouteOperator          = "%ROUTE%"        // Route name
 
+	OriginAppIdOperator      = "%ORIGIN_APP_ID%"      // origin application id
 	OriginRegionOperator     = "%ORIGIN_REGION%"      // origin region
 	OriginZoneOperator       = "%ORIGIN_ZONE%"        // origin zone
 	OriginSubZoneOperator    = "%ORIGIN_SUB_ZONE%"    // origin sub zone
