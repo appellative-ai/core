@@ -16,7 +16,7 @@ const (
 
 // origin - location
 type originT struct {
-	AppId      string
+	//AppId      string
 	Region     string `json:"region"`
 	Zone       string `json:"zone"`
 	SubZone    string `json:"sub-zone"`
