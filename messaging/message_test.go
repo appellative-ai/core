@@ -11,7 +11,7 @@ func ExampleNewMessage() {
 	fmt.Printf("test: NewMessage() -> [%v]\n", m)
 
 	//Output:
-	//test: NewMessage() -> [[chan:channel] [from:] [to:] [core:event/startup]]
+	//test: NewMessage() -> [[chan:channel] [from:] [to:] [common:core:event/startup]]
 
 }
 
@@ -39,18 +39,6 @@ func ExampleStatusMessage() {
 	fmt.Printf("test: NewStatusMessage() -> [%v] [%v]\n", status, event)
 
 	//Output:
-	//test: NewStatusMessage() -> [I'm A Teapot] [core:event/config]
-
-}
-
-func ExampleVersioned() {
-	name := "event:test/one"
-
-	fmt.Printf("test: Versioned(\"%v\") [name:%v]\n", name, Versioned(name))
-	fmt.Printf("test: Versioned(\"%v\") [name:%v]\n", name, Versioned(name))
-
-	//Output:
-	//test: Versioned("event:test/one") [name:event:test/one#1]
-	//test: Versioned("event:test/one") [name:event:test/one#2]
+	//test: NewStatusMessage() -> [I'm A Teapot] [common:core:event/config]
 
 }

@@ -5,7 +5,7 @@ import "fmt"
 const (
 	//registerEvent    = "core:event/agent/register"
 	//contentTypeAgent = "application/x-agent"
-	nameFmt = "core:agent/exchange%v"
+	nameFmt = "common:core:agent/exchange%v"
 )
 
 type ExchangeAgent interface {

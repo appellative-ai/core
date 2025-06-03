@@ -39,7 +39,7 @@ func ExampleNewChannel_Send() {
 	fmt.Printf("test: NewChannel_Send() -> [msg:%v]\n", msg2)
 
 	//Output:
-	//test: NewChannel_Send() -> [msg:[chan:ctrl] [from:] [to:] [core:event/startup]]
+	//test: NewChannel_Send() -> [msg:[chan:ctrl] [from:] [to:] [common:core:event/startup]]
 
 }
 

@@ -4,18 +4,18 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"sync/atomic"
 	"time"
 )
 
 const (
-	CoreDomain    = "core"
-	StartupEvent  = "core:event/startup"
-	ShutdownEvent = "core:event/shutdown"
-	PauseEvent    = "core:event/pause"  // disable data channel receive
-	ResumeEvent   = "core:event/resume" // enable data channel receive
-	ConfigEvent   = "core:event/config"
-	StatusEvent   = "core:event/status"
+	CommonCollective = "common"
+	CoreDomain       = "core"
+	StartupEvent     = "common:core:event/startup"
+	ShutdownEvent    = "common:core:event/shutdown"
+	PauseEvent       = "common:core:event/pause"  // disable data channel receive
+	ResumeEvent      = "common:core:event/resume" // enable data channel receive
+	ConfigEvent      = "common:core:event/config"
+	StatusEvent      = "common:core:event/status"
 
 	//ObservationEvent = "event:observation"
 	//TickEvent        = "event:tick"
@@ -45,7 +45,6 @@ var (
 
 	EmissaryShutdownMessage = NewMessage(ChannelEmissary, ShutdownEvent)
 	MasterShutdownMessage   = NewMessage(ChannelMaster, ShutdownEvent)
-	counter                 = new(atomic.Int64)
 )
 
 // Handler - uniform interface for message handling
@@ -54,7 +53,7 @@ type Handler func(msg *Message)
 // Message - message
 type Message struct {
 	Name   string
-	Header http.Header //map[string]string
+	Header http.Header
 	Body   any
 	Expiry time.Time
 	Reply  Handler
@@ -63,7 +62,7 @@ type Message struct {
 func NewMessage(channel, name string) *Message {
 	m := new(Message)
 	m.Name = name
-	m.Header = make(http.Header) //map[string]string)
+	m.Header = make(http.Header)
 	m.Header.Set(XChannel, channel)
 	return m
 }
@@ -191,8 +190,4 @@ func Reply(msg *Message, status *Status, from string) {
 	m := NewStatusMessage(status, msg.Name)
 	m.Header.Set(XFrom, from)
 	msg.Reply(m)
-}
-
-func Versioned(name string) string {
-	return fmt.Sprintf("%v#%v", name, counter.Add(1))
 }
