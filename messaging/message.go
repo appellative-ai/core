@@ -9,6 +9,7 @@ import (
 )
 
 const (
+	CoreDomain    = "core"
 	StartupEvent  = "core:event/startup"
 	ShutdownEvent = "core:event/shutdown"
 	PauseEvent    = "core:event/pause"  // disable data channel receive
