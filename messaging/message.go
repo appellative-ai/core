@@ -35,8 +35,10 @@ const (
 
 	ContentTypeMap      = "application/x-map"
 	ContentTypeStatus   = "application/x-status"
-	ContentTypeExchange = "application/exchange"
-	DefaultRelatesTo    = "default"
+	ContentTypeTextHtml = "text/html"
+	ContentTypeText     = "text/plain charset=utf-8"
+	ContentTypeBinary   = "application/octet-stream"
+	ContentTypeJson     = "application/json"
 )
 
 var (
@@ -51,21 +53,6 @@ var (
 
 // Handler - uniform interface for message handling
 type Handler func(msg *Message)
-
-// Content -
-type Content struct {
-	Fragment string // returned on a Get
-	Type     string // Content-Type
-	Value    any
-}
-
-func (c Content) String() string {
-	return fmt.Sprintf("fragment: %v type: %v value: %v", c.Fragment, c.Type, c.Value != nil)
-}
-
-func (c Content) Valid(contentType string) bool {
-	return c.Value != nil && c.Type == contentType
-}
 
 // Message - message
 type Message struct {
@@ -222,23 +209,3 @@ func Reply(msg *Message, status *Status, from string) {
 	m.Header.Set(XFrom, from)
 	msg.Reply(m)
 }
-
-/*
-func NewConfigExchangeMessage(ex rest.Exchange) *Message {
-	m := NewMessage(ChannelControl, ConfigEvent)
-	m.SetContent(ContentTypeExchange, "", ex)
-	return m
-}
-
-func ConfigExchangeContent(m *Message) (rest.Exchange, bool) {
-	if !ValidContent(m, ConfigEvent, ContentTypeExchange) {
-		return nil, false
-	}
-	if cfg, ok := m.Content.Value.(rest.Exchange); ok {
-		return cfg, true
-	}
-	return nil, false
-}
-
-
-*/
