@@ -49,6 +49,9 @@ func Unmarshal[T any](ct *Content) (t T, status *Status) {
 		}
 		*ptr = string(body)
 	case *[]byte:
+		if ct.Type != ContentTypeBinary {
+			return t, NewStatus(StatusInvalidContent, fmt.Sprintf("error: content type %v invalid for []byte", ct.Type))
+		}
 		*ptr = body
 	default:
 		if ct.Type != ContentTypeJson {
