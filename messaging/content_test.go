@@ -3,6 +3,7 @@ package messaging
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 )
 
 type Address struct {
@@ -15,53 +16,56 @@ type Address struct {
 
 func ExampleBinary() {
 	bytes := []byte("this is a test buffer")
+	// []byte -> []byte
 	t, status := Unmarshal[[]byte](&Content{Type: ContentTypeBinary, Value: bytes})
 	fmt.Printf("test: Unmarshal[[]byte]() -> [%v] [status:%v]\n", string(t), status)
 
-	/*
-		ct, status2 := Resolver.Representation(name, fragment)
-		fmt.Printf("test: Representation() -> [ct:%v] [status:%v]\n", ct, status2)
+	// []byte -> []byte
+	t, status = Marshal[[]byte](&Content{Type: ContentTypeBinary, Value: bytes})
+	fmt.Printf("test: Marshal[[]byte]() -> [%v] [status:%v]\n", string(t), status)
 
-		if buf, ok := ct.Value.([]byte); ok {
-			fmt.Printf("test: Representation() -> [value:%v] [status:%v]\n", string(buf), status2)
-		}
-
-		s3, status3 := Resolve[[]byte](name, fragment, Resolver)
-		fmt.Printf("test: Resolve() -> [value:%v] [status:%v]\n", string(s3), status3)
-
-	*/
+	// []byte -> io.Reader
+	t2, status2 := Marshal[io.Reader](&Content{Type: ContentTypeBinary, Value: bytes})
+	buf, err := io.ReadAll(t2)
+	if err != nil {
+		fmt.Printf("test: io.ReadAll() -> [err:%v]\n", err)
+	}
+	fmt.Printf("test: Marshal[io.Reader]() -> [%v] [status:%v]\n", string(buf), status2)
 
 	//Output:
 	//test: Unmarshal[[]byte]() -> [this is a test buffer] [status:OK]
+	//test: Marshal[[]byte]() -> [this is a test buffer] [status:OK]
+	//test: Marshal[io.Reader]() -> [this is a test buffer] [status:OK]
 
 }
 
 func ExampleString() {
 	s := "this is a test string"
 
+	// []byte -> string
 	t, status := Unmarshal[string](&Content{Type: ContentTypeText, Value: []byte(s)})
 	fmt.Printf("test: Unmarshal[string]() -> [%v] [status:%v]\n", t, status)
 
-	/*
-		ct, status2 := Resolver.Representation(name, fragment)
-		fmt.Printf("test: Representation() -> [ct:%v] [status:%v]\n", ct, status2)
+	// string -> []byte
+	t2, status2 := Marshal[[]byte](&Content{Type: ContentTypeText, Value: s})
+	fmt.Printf("test: Marshal[[]byte]() -> [%v] [status:%v]\n", string(t2), status2)
 
-		if buf, ok := ct.Value.([]byte); ok {
-			fmt.Printf("test: Representation() -> [value:%v] [status:%v]\n", string(buf), status2)
-		}
-
-		s3, status3 := Resolve[string](name, fragment, Resolver)
-		fmt.Printf("test: Resolve() -> [value:%v] [status:%v]\n", string(s3), status3)
-
-
-	*/
+	// string -> io.Reader
+	t3, status3 := Marshal[io.Reader](&Content{Type: ContentTypeText, Value: s})
+	buf, err := io.ReadAll(t3)
+	if err != nil {
+		fmt.Printf("test: io.ReadAll() -> [err:%v]\n", err)
+	}
+	fmt.Printf("test: Marshal[io.Reader]() -> [%v] [status:%v]\n", string(buf), status3)
 
 	//Output:
 	//test: Unmarshal[string]() -> [this is a test string] [status:OK]
+	//test: Marshal[[]byte]() -> [this is a test string] [status:OK]
+	//test: Marshal[io.Reader]() -> [this is a test string] [status:OK]
 
 }
 
-func ExampleResolveType() {
+func ExampleType() {
 	addr := Address{
 		Line1: "123 Main",
 		Line2: "",
@@ -69,6 +73,7 @@ func ExampleResolveType() {
 		State: "Ohio",
 		Zip:   "54321",
 	}
+	// []byte -> Address
 	buf, err := json.Marshal(&addr)
 	if err != nil {
 		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
@@ -76,28 +81,26 @@ func ExampleResolveType() {
 	t, status := Unmarshal[Address](&Content{Type: ContentTypeJson, Value: buf})
 	fmt.Printf("test: Unmarshal[Address]() -> [%v] [status:%v]\n", t, status)
 
-	/*
-		ct, status2 := Resolver.Representation(name, fragment)
-		fmt.Printf("test: Representation() -> [ct:%v] [status:%v]\n", ct, status2)
+	// Address -> []byte
+	t2, status2 := Marshal[[]byte](&Content{Type: ContentTypeJson, Value: addr})
+	fmt.Printf("test: Marshal[Address]() -> [%v] [status:%v]\n", string(t2), status2)
 
-		if buf, ok := ct.Value.([]byte); ok {
-			fmt.Printf("test: Representation() -> [value:%v] [status:%v]\n", len(buf), status2)
-		}
-
-		s3, status3 := Resolve[Address](name, fragment, Resolver)
-		fmt.Printf("test: Resolve() -> [value:%v] [status:%v]\n", s3, status3)
-
-
-	*/
+	// Address -> io.Reader
+	t3, status3 := Marshal[io.Reader](&Content{Type: ContentTypeJson, Value: addr})
+	buf, err = io.ReadAll(t3)
+	if err != nil {
+		fmt.Printf("test: io.ReadAll() -> [err:%v]\n", err)
+	}
+	fmt.Printf("test: Marshal[io.Reader]() -> [%v] [status:%v]\n", string(buf), status3)
 
 	//Output:
 	//test: Unmarshal[Address]() -> [{123 Main  Anytown Ohio 54321}] [status:OK]
+	//test: Marshal[Address]() -> [{"Line1":"123 Main","Line2":"","City":"Anytown","State":"Ohio","Zip":"54321"}] [status:OK]
+	//test: Marshal[io.Reader]() -> [{"Line1":"123 Main","Line2":"","City":"Anytown","State":"Ohio","Zip":"54321"}] [status:OK]
 
 }
 
-/*
-func ExampleResolveMap() {
-	NewAgent()
+func ExampleMap() {
 	m := map[string]string{
 		"Line1": "123 Main",
 		"Line2": "",
@@ -105,28 +108,83 @@ func ExampleResolveMap() {
 		"State": "Ohio",
 		"Zip":   "54321",
 	}
-	name := "core:type/map"
-	fragment := "v2"
-
-	status := Resolver.AddRepresentation(name, fragment, "author", m)
-	fmt.Printf("test: AddRepresentation() -> [status:%v]\n", status)
-
-	ct, status2 := Resolver.Representation(name, fragment)
-	fmt.Printf("test: Representation() -> [ct:%v] [status:%v]\n", ct, status2)
-
-	if buf, ok := ct.Value.([]byte); ok {
-		fmt.Printf("test: Representation() -> [value:%v] [status:%v]\n", len(buf), status2)
+	// []byte -> map[string]string
+	buf, err := json.Marshal(&m)
+	if err != nil {
+		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
 	}
+	t, status := Unmarshal[map[string]string](&Content{Type: ContentTypeJson, Value: buf})
+	fmt.Printf("test: Unmarshal[map[string]string]() -> [%v] [status:%v]\n", t, status)
 
-	s3, status3 := Resolve[map[string]string](name, fragment, Resolver)
-	fmt.Printf("test: Resolve() -> [value:%v] [status:%v]\n", s3, status3)
+	// map[string]string -> []byte
+	t2, status2 := Marshal[[]byte](&Content{Type: ContentTypeJson, Value: m})
+	fmt.Printf("test: Marshal[[]byte]() -> [%v] [status:%v]\n", string(t2), status2)
+
+	// map[string]string -> io.Reader
+	t3, status3 := Marshal[io.Reader](&Content{Type: ContentTypeJson, Value: m})
+	buf, err = io.ReadAll(t3)
+	if err != nil {
+		fmt.Printf("test: io.ReadAll() -> [err:%v]\n", err)
+	}
+	fmt.Printf("test: Marshal[io.Reader]() -> [%v] [status:%v]\n", string(buf), status3)
 
 	//Output:
-	//test: AddRepresentation() -> [status:OK]
-	//test: Representation() -> [ct:fragment: v2 type: application/json value: true] [status:OK]
-	//test: Representation() -> [value:77] [status:OK]
-	//test: Resolve() -> [value:map[City:Anytown Line1:123 Main Line2: State:Ohio Zip:54321]] [status:OK]
+	//test: Unmarshal[map[string]string]() -> [map[City:Anytown Line1:123 Main Line2: State:Ohio Zip:54321]] [status:OK]
+	//test: Marshal[[]byte]() -> [{"City":"Anytown","Line1":"123 Main","Line2":"","State":"Ohio","Zip":"54321"}] [status:OK]
+	//test: Marshal[io.Reader]() -> [{"City":"Anytown","Line1":"123 Main","Line2":"","State":"Ohio","Zip":"54321"}] [status:OK]
 
 }
 
-*/
+func _ExampleReader() {
+	//bytes := []byte("this is a test io.Reader")
+	m := map[string]string{
+		"Line1": "123 Main",
+		"Line2": "",
+		"City":  "Anytown",
+		"State": "Ohio",
+		"Zip":   "54321",
+	}
+	buf, err := json.Marshal(&m)
+	if err != nil {
+		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
+	}
+
+	t, status := Unmarshal[io.Reader](&Content{Type: ContentTypeJson, Value: buf})
+	buf2, err2 := io.ReadAll(t)
+	if err2 != nil {
+		fmt.Printf("test: io.ReadAll() -> [err:%v]\n", err2)
+	}
+	fmt.Printf("test: Unmarshal[io.Reader]() -> [%v] [status:%v]\n", string(buf2), status)
+
+	// JSON -> []byte
+	t2, status2 := Marshal[[]byte](&Content{Type: ContentTypeJson, Value: m})
+	fmt.Printf("test: Marshal[[]byte]() -> [%v] [status:%v]\n", string(t2), status2)
+
+	// JSON -> io.Reader
+	t3, status3 := Marshal[io.Reader](&Content{Type: ContentTypeJson, Value: m})
+	buf2, err2 = io.ReadAll(t3)
+	if err2 != nil {
+		fmt.Printf("test: io.ReadAll() -> [err:%v]\n", err2)
+	}
+	fmt.Printf("test: Marshal[io.Reader]() -> [%v] [status:%v]\n", string(buf2), status3)
+
+	// []byte -> []byte
+	t4, status4 := Marshal[[]byte](&Content{Type: ContentTypeBinary, Value: buf})
+	fmt.Printf("test: Marshal[[]byte]() -> [%v] [status:%v]\n", string(t4), status4)
+
+	// []byte -> io.Reader
+	t5, status5 := Marshal[io.Reader](&Content{Type: ContentTypeBinary, Value: buf})
+	buf2, err2 = io.ReadAll(t5)
+	if err2 != nil {
+		fmt.Printf("test: io.ReadAll() -> [err:%v]\n", err2)
+	}
+	fmt.Printf("test: Marshal[io.Reader]() -> [%v] [status:%v]\n", string(buf2), status5)
+
+	//Output:
+	//test: Unmarshal[io.Reader]() -> [{"City":"Anytown","Line1":"123 Main","Line2":"","State":"Ohio","Zip":"54321"}] [status:OK]
+	//test: Marshal[[]byte]() -> [{"City":"Anytown","Line1":"123 Main","Line2":"","State":"Ohio","Zip":"54321"}] [status:OK]
+	//test: Marshal[io.Reader]() -> [{"City":"Anytown","Line1":"123 Main","Line2":"","State":"Ohio","Zip":"54321"}] [status:OK]
+	//test: Marshal[[]byte]() -> [{"City":"Anytown","Line1":"123 Main","Line2":"","State":"Ohio","Zip":"54321"}] [status:OK]
+	//test: Marshal[io.Reader]() -> [{"City":"Anytown","Line1":"123 Main","Line2":"","State":"Ohio","Zip":"54321"}] [status:OK]
+
+}
