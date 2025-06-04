@@ -50,8 +50,6 @@ func Unmarshal[T any](ct *Content) (t T, status *Status) {
 		*ptr = string(body)
 	case *[]byte:
 		*ptr = body
-	//case *io.Reader:
-	//	*ptr = bytes.NewReader(body)
 	default:
 		if ct.Type != ContentTypeJson {
 			return t, NewStatus(StatusInvalidContent, fmt.Sprintf("error: content type %v invalid for %v", ct.Type, reflect.TypeOf(t)))
@@ -94,7 +92,6 @@ func Marshal[T any](ct *Content) (t T, status *Status) {
 		*ptr = buf
 		return t, StatusOK()
 	case *io.Reader:
-		//t2, status2 := Unmarshal[io.Reader](&Content{Type: ContentTypeBinary, Value: buf})
 		*ptr = bytes.NewReader(buf)
 		return t, StatusOK()
 	default:
