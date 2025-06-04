@@ -209,3 +209,17 @@ func Reply(msg *Message, status *Status, from string) {
 	m.Header.Set(XFrom, from)
 	msg.Reply(m)
 }
+
+func MarshalMessage[T any](msg *Message) (t any, status *Status) {
+	if msg == nil {
+		return t, NewStatus(http.StatusBadRequest, errors.New(fmt.Sprintf("error: message is nil")))
+	}
+	return Marshal[T](msg.Content)
+}
+
+func UnmarshalMessage[T any](msg *Message) (t any, status *Status) {
+	if msg == nil {
+		return t, NewStatus(http.StatusBadRequest, errors.New(fmt.Sprintf("error: message is nil")))
+	}
+	return Unmarshal[T](msg.Content)
+}
