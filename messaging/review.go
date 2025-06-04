@@ -12,15 +12,15 @@ const (
 
 func NewReviewMessage(review *Review) *Message {
 	m := NewMessage(ChannelControl, ConfigEvent)
-	m.SetContent(ContentTypeReview, review)
+	m.SetContent(ContentTypeReview, "", review)
 	return m
 }
 
 func ReviewContent(m *Message) *Review {
-	if m.Name != ConfigEvent || m.ContentType() != ContentTypeReview {
+	if m.Name != ConfigEvent || m.Content == nil || m.ContentType() != ContentTypeReview {
 		return nil
 	}
-	if v, ok := m.Body.(*Review); ok {
+	if v, ok := m.Content.Value.(*Review); ok {
 		return v
 	}
 	return nil

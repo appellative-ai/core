@@ -108,15 +108,15 @@ func NewSubscriptionCreateMessage(to string, s Subscription) *Message {
 	if s.Channel == "" {
 		s.Channel = ChannelControl
 	}
-	m.SetContent(ContentTypeSubscription, s)
+	m.SetContent(ContentTypeSubscription, "", s)
 	return m
 }
 
 func SubscriptionCreateContent(m *Message) (Subscription, bool) {
-	if m == nil || m.Name != SubscriptionCreateEvent || m.ContentType() != ContentTypeSubscription {
+	if !ValidContent(m, SubscriptionCreateEvent, ContentTypeSubscription) {
 		return Subscription{}, false
 	}
-	if v, ok := m.Body.(Subscription); ok {
+	if v, ok := m.Content.Value.(Subscription); ok {
 		return v, true
 	}
 	return Subscription{}, false
@@ -129,15 +129,15 @@ func NewSubscriptionCancelMessage(to, from, Name string) *Message {
 	m := NewMessage(ChannelControl, SubscriptionCancelEvent)
 	m.SetTo(to)
 	m.SetFrom(from)
-	m.SetContent(ContentTypeSubscription, Subscription{From: from, Name: Name})
+	m.SetContent(ContentTypeSubscription, "", Subscription{From: from, Name: Name})
 	return m
 }
 
 func SubscriptionCancelContent(m *Message) (Subscription, bool) {
-	if m == nil || m.Name != SubscriptionCancelEvent || m.ContentType() != ContentTypeSubscription {
+	if ValidContent(m, SubscriptionCancelEvent, ContentTypeSubscription) {
 		return Subscription{}, false
 	}
-	if v, ok := m.Body.(Subscription); ok {
+	if v, ok := m.Content.Value.(Subscription); ok {
 		return v, true
 	}
 	return Subscription{}, false

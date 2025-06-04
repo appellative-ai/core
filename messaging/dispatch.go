@@ -12,15 +12,15 @@ const (
 
 func NewDispatcherMessage(dispatcher Dispatcher) *Message {
 	m := NewMessage(ChannelControl, ConfigEvent)
-	m.SetContent(ContentTypeDispatcher, dispatcher)
+	m.SetContent(ContentTypeDispatcher, "", dispatcher)
 	return m
 }
 
 func DispatcherContent(m *Message) (Dispatcher, bool) {
-	if m.Name != ConfigEvent || m.ContentType() != ContentTypeDispatcher {
+	if !ValidContent(m, ConfigEvent, ContentTypeDispatcher) {
 		return nil, false
 	}
-	if v, ok := m.Body.(Dispatcher); ok {
+	if v, ok := m.Content.Value.(Dispatcher); ok {
 		return v, true
 	}
 	return nil, false

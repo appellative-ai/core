@@ -3,9 +3,7 @@ package messaging
 import "fmt"
 
 const (
-	//registerEvent    = "core:event/agent/register"
-	//contentTypeAgent = "application/x-agent"
-	nameFmt = "common:core:agent/exchange%v"
+	exchangeNameFmt = "common:core:agent/exchange%v"
 )
 
 type ExchangeAgent interface {
@@ -20,7 +18,7 @@ type agentT struct {
 
 func NewExchangeAgent(nss string) ExchangeAgent {
 	a := new(agentT)
-	a.name = fmt.Sprintf(nameFmt, nss)
+	a.name = fmt.Sprintf(exchangeNameFmt, nss)
 	a.ex = NewExchange()
 	return a
 }

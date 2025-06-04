@@ -9,15 +9,15 @@ const (
 func NewRouteMessage(name, uri string, ex Exchange) *messaging.Message {
 	m := messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent)
 	r := NewRoute(name, uri, ex)
-	m.SetContent(ContentTypeRoute, r)
+	m.SetContent(ContentTypeRoute, "", r)
 	return m
 }
 
 func RouteContent(m *messaging.Message) (*Route, bool) {
-	if m.Name != messaging.ConfigEvent || m.ContentType() != ContentTypeRoute {
+	if messaging.ValidContent(m, messaging.ConfigEvent, ContentTypeRoute) {
 		return nil, false
 	}
-	if v, ok := m.Body.(*Route); ok {
+	if v, ok := m.Content.Value.(*Route); ok {
 		return v, true
 	}
 	return nil, false

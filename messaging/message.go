@@ -20,6 +20,7 @@ const (
 	//ObservationEvent = "event:observation"
 	//TickEvent        = "event:tick"
 	//DataChangeEvent  = "event:data-change"
+	//ContentType       = "Content-Type"
 
 	ChannelMaster   = "master"
 	ChannelEmissary = "emissary"
@@ -32,9 +33,10 @@ const (
 	XRelatesTo   = "x-relates-to"
 	XMessageName = "x-message-name" // Used in request header to reference a message
 
-	ContentType       = "Content-Type"
-	ContentTypeMap    = "application/x-map"
-	ContentTypeStatus = "application/x-status"
+	ContentTypeMap      = "application/x-map"
+	ContentTypeStatus   = "application/x-status"
+	ContentTypeExchange = "application/exchange"
+	DefaultRelatesTo    = "default"
 )
 
 var (
@@ -50,13 +52,28 @@ var (
 // Handler - uniform interface for message handling
 type Handler func(msg *Message)
 
+// Content -
+type Content struct {
+	Fragment string // returned on a Get
+	Type     string // Content-Type
+	Value    any
+}
+
+func (c Content) String() string {
+	return fmt.Sprintf("fragment: %v type: %v value: %v", c.Fragment, c.Type, c.Value != nil)
+}
+
+func (c Content) Valid(contentType string) bool {
+	return c.Value != nil && c.Type == contentType
+}
+
 // Message - message
 type Message struct {
-	Name   string
-	Header http.Header
-	Body   any
-	Expiry time.Time
-	Reply  Handler
+	Name    string
+	Header  http.Header
+	Content *Content
+	Expiry  time.Time
+	Reply   Handler
 }
 
 func NewMessage(channel, name string) *Message {
@@ -123,6 +140,7 @@ func (m *Message) SetChannel(channel string) *Message {
 	return m
 }
 
+/*
 func (m *Message) SetContentType(contentType string) *Message {
 	if len(contentType) == 0 {
 		return m //errors.New("error: content type is empty")
@@ -130,34 +148,47 @@ func (m *Message) SetContentType(contentType string) *Message {
 	m.Header.Set(ContentType, contentType)
 	return m
 }
+*/
 
 func (m *Message) ContentType() string {
-	return m.Header.Get(ContentType)
+	if m.Content != nil {
+		return m.Content.Type
+	}
+	return ""
 }
 
-func (m *Message) SetContent(contentType string, content any) error {
+func (m *Message) SetContent(contentType, version string, content any) error {
 	if len(contentType) == 0 {
 		return errors.New("error: content type is empty")
 	}
 	if content == nil {
 		return errors.New("error: content is nil")
 	}
-	m.Body = content
-	m.Header.Set(ContentType, contentType)
+	m.Content = &Content{Type: contentType, Fragment: version, Value: content}
 	return nil
+}
+
+func ValidContent(m *Message, name, ct string) bool {
+	if m == nil || m.Name != name {
+		return false
+	}
+	if m.Content == nil || !m.Content.Valid(ct) {
+		return false
+	}
+	return true
 }
 
 func NewConfigMapMessage(cfg map[string]string) *Message {
 	m := NewMessage(ChannelControl, ConfigEvent)
-	m.SetContent(ContentTypeMap, cfg)
+	m.SetContent(ContentTypeMap, "", cfg)
 	return m
 }
 
 func ConfigMapContent(m *Message) map[string]string {
-	if m.Name != ConfigEvent || m.ContentType() != ContentTypeMap {
+	if !ValidContent(m, ConfigEvent, ContentTypeMap) {
 		return nil
 	}
-	if cfg, ok := m.Body.(map[string]string); ok {
+	if cfg, ok := m.Content.Value.(map[string]string); ok {
 		return cfg
 	}
 	return nil
@@ -165,7 +196,7 @@ func ConfigMapContent(m *Message) map[string]string {
 
 func NewStatusMessage(status *Status, relatesTo string) *Message {
 	m := NewMessage(ChannelControl, StatusEvent)
-	m.SetContent(ContentTypeStatus, status)
+	m.SetContent(ContentTypeStatus, "", status)
 	if relatesTo != "" {
 		m.Header.Set(XRelatesTo, relatesTo)
 	}
@@ -173,10 +204,10 @@ func NewStatusMessage(status *Status, relatesTo string) *Message {
 }
 
 func StatusContent(m *Message) (*Status, string) {
-	if m.Name != StatusEvent || m.ContentType() != ContentTypeStatus {
+	if !ValidContent(m, StatusEvent, ContentTypeStatus) {
 		return nil, ""
 	}
-	if s, ok := m.Body.(*Status); ok {
+	if s, ok := m.Content.Value.(*Status); ok {
 		return s, m.RelatesTo()
 	}
 	return nil, ""
@@ -191,3 +222,23 @@ func Reply(msg *Message, status *Status, from string) {
 	m.Header.Set(XFrom, from)
 	msg.Reply(m)
 }
+
+/*
+func NewConfigExchangeMessage(ex rest.Exchange) *Message {
+	m := NewMessage(ChannelControl, ConfigEvent)
+	m.SetContent(ContentTypeExchange, "", ex)
+	return m
+}
+
+func ConfigExchangeContent(m *Message) (rest.Exchange, bool) {
+	if !ValidContent(m, ConfigEvent, ContentTypeExchange) {
+		return nil, false
+	}
+	if cfg, ok := m.Content.Value.(rest.Exchange); ok {
+		return cfg, true
+	}
+	return nil, false
+}
+
+
+*/

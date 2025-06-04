@@ -228,15 +228,15 @@ type workItem struct {
 
 func newWorkItemMessage(w workItem) *Message {
 	m := NewMessage(ChannelControl, workEvent)
-	m.SetContent(contentTypeItem, w)
+	m.SetContent(contentTypeItem, "", w)
 	return m
 }
 
 func workItemContent(m *Message) (workItem, bool) {
-	if m.Name != workEvent || m.ContentType() != contentTypeItem {
+	if m.Name != workEvent || m.Content == nil || m.ContentType() != contentTypeItem {
 		return workItem{}, false
 	}
-	if v, ok := m.Body.(workItem); ok {
+	if v, ok := m.Content.Value.(workItem); ok {
 		return v, true
 	}
 	return workItem{}, false

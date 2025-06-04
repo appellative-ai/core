@@ -12,15 +12,15 @@ const (
 
 func NewConfigExchangeMessage(ex rest.Exchange) *messaging.Message {
 	m := messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent)
-	m.SetContent(ContentTypeExchange, ex)
+	m.SetContent(ContentTypeExchange, "", ex)
 	return m
 }
 
 func ConfigExchangeContent(m *messaging.Message) (rest.Exchange, bool) {
-	if m.Name != messaging.ConfigEvent || m.ContentType() != ContentTypeExchange {
+	if !messaging.ValidContent(m, messaging.ConfigEvent, ContentTypeExchange) {
 		return nil, false
 	}
-	if cfg, ok := m.Body.(rest.Exchange); ok {
+	if cfg, ok := m.Content.Value.(rest.Exchange); ok {
 		return cfg, true
 	}
 	return nil, false
