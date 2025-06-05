@@ -172,9 +172,28 @@ func ExampleMessageError() {
 	fmt.Printf("test: Message(%v) -> : %v\n", uri, ex.Message(NewMessage(ChannelControl, "")))
 
 	//Output:
-	//test: Message(urn:test) -> : error: exchange.Message() failed as message is nil
-	//test: Message(urn:test) -> : error: exchange.Message() failed as the message To is empty or invalid : []
-	//test: Message(urn:test) -> : error: exchange.Message() failed as the message To is empty or invalid : []
+	//test: Message(urn:test) -> : false
+	//test: Message(urn:test) -> : false
+	//test: Message(urn:test) -> : false
+
+}
+
+func ExampleExist() {
+	name1 := "common:core:agent/test/exist"
+	c := NewChannel("test")
+	a := newTestAgent(name1, c, nil)
+	ex := NewExchange()
+
+	fmt.Printf("test: Exists(%v) -> : %v\n", name1, ex.Exist(name1))
+	ex.Register(a)
+	fmt.Printf("test: Exists(%v) -> : %v\n", name1, ex.Exist(name1))
+	name1 = "bad:agent"
+	fmt.Printf("test: Exists(%v) -> : %v\n", name1, ex.Exist(name1))
+
+	//Output:
+	//test: Exists(common:core:agent/test/exist) -> : false
+	//test: Exists(common:core:agent/test/exist) -> : true
+	//test: Exists(bad:agent) -> : false
 
 }
 
