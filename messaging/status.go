@@ -101,18 +101,18 @@ func (s *Status) HttpCode() int {
 func (s *Status) String() string {
 	if s.Msg != "" {
 		if s.Place != "" {
-			return fmt.Sprintf("%v [msg:%v] [location:%v]", HttpStatus(s.Code), s.Msg, s.Place)
+			return fmt.Sprintf("%v [%v] [location:%v]", HttpStatus(s.Code), s.Msg, s.Place)
 		} else {
-			return fmt.Sprintf("%v [msg:%v]", HttpStatus(s.Code), s.Msg)
+			return fmt.Sprintf("%v [%v]", HttpStatus(s.Code), s.Msg)
 		}
 	}
 	if s.Err == nil {
 		return fmt.Sprintf("%v", HttpStatus(s.Code))
 	}
 	if s.Place != "" {
-		return fmt.Sprintf("%v [err:%v] [location:%v]", HttpStatus(s.Code), s.Err, s.Place)
+		return fmt.Sprintf("%v [%v] [location:%v]", HttpStatus(s.Code), s.Err, s.Place)
 	} else {
-		return fmt.Sprintf("%v [err:%v]", HttpStatus(s.Code), s.Err)
+		return fmt.Sprintf("%v [%v]", HttpStatus(s.Code), s.Err)
 	}
 }
 

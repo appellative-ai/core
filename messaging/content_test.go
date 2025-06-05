@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"reflect"
 )
 
 type Address struct {
@@ -186,5 +187,82 @@ func _ExampleReader() {
 	//test: Marshal[io.Reader]() -> [{"City":"Anytown","Line1":"123 Main","Line2":"","State":"Ohio","Zip":"54321"}] [status:OK]
 	//test: Marshal[[]byte]() -> [{"City":"Anytown","Line1":"123 Main","Line2":"","State":"Ohio","Zip":"54321"}] [status:OK]
 	//test: Marshal[io.Reader]() -> [{"City":"Anytown","Line1":"123 Main","Line2":"","State":"Ohio","Zip":"54321"}] [status:OK]
+
+}
+
+func ExampleNewT_Type() {
+	addr := Address{
+		Line1: "123 Main",
+		Line2: "",
+		City:  "Anytown",
+		State: "Ohio",
+		Zip:   "54321",
+	}
+	// Address type
+	msg := NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeJson, "", addr)
+	fmt.Printf("test: NewMessage() -> %v\n", msg)
+
+	t, status := NewT[Address](msg.Content)
+	fmt.Printf("test: NewT[Address]() -> %v [type:%v] [status:%v]\n", t, reflect.TypeOf(t), status)
+
+	t2, status2 := NewT[map[string]string](msg.Content)
+	fmt.Printf("test: NewT[map[string]string]() -> %v [type:%v] [status:%v]\n", t2, reflect.TypeOf(t2), status2)
+
+	// String type
+	msg = NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeText, "", "this is text content")
+	fmt.Printf("test: NewMessage() -> %v\n", msg)
+
+	t3, status3 := NewT[string](msg.Content)
+	fmt.Printf("test: NewT[string]() -> %v [type:%v] [status:%v]\n", t3, reflect.TypeOf(t3), status3)
+
+	//Output:
+	//test: NewMessage() -> [chan:ctrl] [from:] [to:] [common:core:event/startup]
+	//test: NewT[Address]() -> {123 Main  Anytown Ohio 54321} [type:messaging.Address] [status:OK]
+	//test: NewT[map[string]string]() -> map[] [type:map[string]string] [status:Invalid Content [error: content value type: messaging.Address is not of generic type: map[string]string]]
+	//test: NewMessage() -> [chan:ctrl] [from:] [to:] [common:core:event/startup]
+	//test: NewT[string]() -> this is text content [type:string] [status:OK]
+
+}
+
+func ExampleNewT_Binary() {
+	addr := Address{
+		Line1: "123 Main",
+		Line2: "",
+		City:  "Anytown",
+		State: "Ohio",
+		Zip:   "54321",
+	}
+	buf, err := json.Marshal(&addr)
+	if err != nil {
+		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
+	}
+	// Address
+	msg := NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeJson, "", buf)
+	fmt.Printf("test: NewMessage() -> %v\n", msg)
+
+	t, status := NewT[Address](msg.Content)
+	fmt.Printf("test: NewT[Address]() -> %v [type:%v] [status:%v]\n", t, reflect.TypeOf(t), status)
+
+	// String
+	msg = NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeText, "", []byte("this is a test string"))
+	fmt.Printf("test: NewMessage() -> %v\n", msg)
+
+	t2, status2 := NewT[string](msg.Content)
+	fmt.Printf("test: NewT[string]() -> %v [type:%v] [status:%v]\n", t2, reflect.TypeOf(t2), status2)
+
+	// Binary
+	msg = NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeBinary, "", []byte("this is a test string"))
+	fmt.Printf("test: NewMessage() -> %v\n", msg)
+
+	t3, status3 := NewT[[]byte](msg.Content)
+	fmt.Printf("test: NewT[[]byte]() -> %v [type:%v] [status:%v]\n", string(t3), reflect.TypeOf(t3), status3)
+
+	//Output:
+	//test: NewMessage() -> [chan:ctrl] [from:] [to:] [common:core:event/startup]
+	//test: NewT[Address]() -> {123 Main  Anytown Ohio 54321} [type:messaging.Address] [status:OK]
+	//test: NewMessage() -> [chan:ctrl] [from:] [to:] [common:core:event/startup]
+	//test: NewT[string]() -> this is a test string [type:string] [status:OK]
+	//test: NewMessage() -> [chan:ctrl] [from:] [to:] [common:core:event/startup]
+	//test: NewT[[]byte]() -> this is a test string [type:[]uint8] [status:OK]
 
 }

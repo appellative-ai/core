@@ -49,29 +49,29 @@ func (o Origin) Name(collective, domain string) string {
 	return name
 }
 
-func NewOriginFromMessage(m *Message) (Origin, error) {
+func NewOriginFromMessage(m *Message) (Origin, *Status) {
 	var origin Origin
 
-	cfg := ConfigMapContent(m)
+	cfg, status := MapContent(m)
 	if cfg == nil {
-		return origin, errors.New("config map is nil")
+		return origin, status
 	}
 
 	origin.Region = cfg[RegionKey]
 	if origin.Region == "" {
-		return origin, errors.New(fmt.Sprintf("config map does not contain key: %v", RegionKey))
+		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", RegionKey)))
 	}
 
 	origin.Zone = cfg[ZoneKey]
 	if origin.Zone == "" {
-		return origin, errors.New(fmt.Sprintf("config map does not contain key: %v", ZoneKey))
+		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", ZoneKey)))
 	}
 
 	origin.SubZone = cfg[SubZoneKey]
 
 	origin.Host = cfg[HostKey]
 	if origin.Host == "" {
-		return origin, errors.New(fmt.Sprintf("config map does not contain key: %v", HostKey))
+		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", HostKey)))
 	}
 	origin.InstanceId = cfg[InstanceIdKey]
 

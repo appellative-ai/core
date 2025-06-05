@@ -144,15 +144,15 @@ func (m *Message) ContentType() string {
 	return ""
 }
 
-func (m *Message) SetContent(contentType, version string, content any) error {
-	if len(contentType) == 0 {
-		return errors.New("error: content type is empty")
-	}
-	if content == nil {
-		return errors.New("error: content is nil")
-	}
+func (m *Message) SetContent(contentType, version string, content any) *Message {
+	//if len(contentType) == 0 {
+	//	return errors.New("error: content type is empty")
+	//}
+	//if content == nil {
+	//	return errors.New("error: content is nil")
+	//}
 	m.Content = &Content{Type: contentType, Fragment: version, Value: content}
-	return nil
+	return m
 }
 
 func ValidContent(m *Message, name, ct string) bool {
@@ -165,39 +165,38 @@ func ValidContent(m *Message, name, ct string) bool {
 	return true
 }
 
-func NewConfigMapMessage(cfg map[string]string) *Message {
-	m := NewMessage(ChannelControl, ConfigEvent)
-	m.SetContent(ContentTypeMap, "", cfg)
-	return m
+func NewMapMessage(m map[string]string) *Message {
+	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeMap, "", m)
 }
 
-func ConfigMapContent(m *Message) map[string]string {
+func MapContent(m *Message) (map[string]string, *Status) {
 	if !ValidContent(m, ConfigEvent, ContentTypeMap) {
-		return nil
+		return nil, NewStatus(StatusInvalidContent, "")
 	}
-	if cfg, ok := m.Content.Value.(map[string]string); ok {
-		return cfg
+	t, status := NewT[map[string]string](m.Content)
+	if status.OK() {
+		return t, status
 	}
-	return nil
+	return nil, status
 }
 
 func NewStatusMessage(status *Status, relatesTo string) *Message {
-	m := NewMessage(ChannelControl, StatusEvent)
-	m.SetContent(ContentTypeStatus, "", status)
+	m := NewMessage(ChannelControl, StatusEvent).SetContent(ContentTypeStatus, "", status)
 	if relatesTo != "" {
 		m.Header.Set(XRelatesTo, relatesTo)
 	}
 	return m
 }
 
-func StatusContent(m *Message) (*Status, string) {
+func StatusContent(m *Message) (*Status, string, *Status) {
 	if !ValidContent(m, StatusEvent, ContentTypeStatus) {
-		return nil, ""
+		return nil, "", NewStatus(StatusInvalidContent, "")
 	}
-	if s, ok := m.Content.Value.(*Status); ok {
-		return s, m.RelatesTo()
+	t, status := NewT[*Status](m.Content)
+	if status.OK() {
+		return t, m.RelatesTo(), status
 	}
-	return nil, ""
+	return nil, "", status
 }
 
 // Reply - function used by message recipient to reply with a Status
