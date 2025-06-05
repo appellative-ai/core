@@ -3,7 +3,7 @@ package messaging
 import "fmt"
 
 func ExampleNewOrigin() {
-	o := Origin{
+	o := OriginT{
 		Region:  "region",
 		Zone:    "zone",
 		SubZone: "sub-zone",
