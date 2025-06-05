@@ -228,7 +228,7 @@ type workItem struct {
 
 func newWorkItemMessage(w workItem) *Message {
 	m := NewMessage(ChannelControl, workEvent)
-	m.SetContent(contentTypeItem, "", w)
+	m.SetContent(contentTypeItem, w)
 	return m
 }
 

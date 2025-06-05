@@ -144,14 +144,14 @@ func (m *Message) ContentType() string {
 	return ""
 }
 
-func (m *Message) SetContent(contentType, version string, content any) *Message {
+func (m *Message) SetContent(contentType string, content any) *Message {
 	//if len(contentType) == 0 {
 	//	return errors.New("error: content type is empty")
 	//}
 	//if content == nil {
 	//	return errors.New("error: content is nil")
 	//}
-	m.Content = &Content{Type: contentType, Fragment: version, Value: content}
+	m.Content = &Content{Type: contentType, Value: content}
 	return m
 }
 
@@ -166,7 +166,7 @@ func ValidContent(m *Message, name, ct string) bool {
 }
 
 func NewMapMessage(m map[string]string) *Message {
-	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeMap, "", m)
+	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeMap, m)
 }
 
 func MapContent(m *Message) (map[string]string, *Status) {
@@ -177,7 +177,7 @@ func MapContent(m *Message) (map[string]string, *Status) {
 }
 
 func NewStatusMessage(status *Status, relatesTo string) *Message {
-	m := NewMessage(ChannelControl, StatusEvent).SetContent(ContentTypeStatus, "", status)
+	m := NewMessage(ChannelControl, StatusEvent).SetContent(ContentTypeStatus, status)
 	if relatesTo != "" {
 		m.Header.Set(XRelatesTo, relatesTo)
 	}

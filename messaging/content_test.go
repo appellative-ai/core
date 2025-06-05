@@ -199,7 +199,7 @@ func ExampleNew_Type() {
 		Zip:   "54321",
 	}
 	// Address type
-	msg := NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeJson, "", addr)
+	msg := NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeJson, addr)
 	fmt.Printf("test: NewMessage() -> %v\n", msg)
 
 	t, status := New[Address](msg.Content)
@@ -209,7 +209,7 @@ func ExampleNew_Type() {
 	fmt.Printf("test: New[map[string]string]() -> %v [type:%v] [status:%v]\n", t2, reflect.TypeOf(t2), status2)
 
 	// String type
-	msg = NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeText, "", "this is text content")
+	msg = NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeText, "this is text content")
 	fmt.Printf("test: NewMessage() -> %v\n", msg)
 
 	t3, status3 := New[string](msg.Content)
@@ -237,21 +237,21 @@ func ExampleNew_Binary() {
 		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
 	}
 	// Address
-	msg := NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeJson, "", buf)
+	msg := NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeJson, buf)
 	fmt.Printf("test: NewMessage() -> %v\n", msg)
 
 	t, status := New[Address](msg.Content)
 	fmt.Printf("test: New[Address]() -> %v [type:%v] [status:%v]\n", t, reflect.TypeOf(t), status)
 
 	// String
-	msg = NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeText, "", []byte("this is a test string"))
+	msg = NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeText, []byte("this is a test string"))
 	fmt.Printf("test: NewMessage() -> %v\n", msg)
 
 	t2, status2 := New[string](msg.Content)
 	fmt.Printf("test: New[string]() -> %v [type:%v] [status:%v]\n", t2, reflect.TypeOf(t2), status2)
 
 	// Binary
-	msg = NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeBinary, "", []byte("this is a test string"))
+	msg = NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeBinary, []byte("this is a test string"))
 	fmt.Printf("test: NewMessage() -> %v\n", msg)
 
 	t3, status3 := New[[]byte](msg.Content)

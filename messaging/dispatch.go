@@ -12,7 +12,7 @@ const (
 
 func NewDispatcherMessage(dispatcher Dispatcher) *Message {
 	m := NewMessage(ChannelControl, ConfigEvent)
-	m.SetContent(ContentTypeDispatcher, "", dispatcher)
+	m.SetContent(ContentTypeDispatcher, dispatcher)
 	return m
 }
 

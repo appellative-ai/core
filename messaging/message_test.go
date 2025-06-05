@@ -24,7 +24,7 @@ func ExampleMapMessage() {
 	t, status := MapContent(m)
 	fmt.Printf("test: MapContent() -> [%v] [status:%v]\n", t, status)
 
-	m.SetContent(ContentTypeMap, "", "invalid content")
+	m.SetContent(ContentTypeMap, "invalid content")
 	t2, status2 := MapContent(m)
 	fmt.Printf("test: MapContent() -> [%v] [status:%v]\n", t2, status2)
 
@@ -40,7 +40,7 @@ func ExampleStatusMessage() {
 	status, event, result := StatusContent(m)
 	fmt.Printf("test: StatusContent() -> [%v] [%v] [status:%v]\n", status, event, result)
 
-	m.SetContent(ContentTypeStatus, "", "invalid content")
+	m.SetContent(ContentTypeStatus, "invalid content")
 	status2, event2, result2 := StatusContent(m)
 	fmt.Printf("test: StatusContent() -> [%v] [%v] [status:%v]\n", status2, event2, result2)
 

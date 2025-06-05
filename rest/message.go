@@ -8,7 +8,7 @@ const (
 )
 
 func NewRouteMessage(name, uri string, ex Exchange) *messaging.Message {
-	return messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent).SetContent(ContentTypeRoute, "", NewRoute(name, uri, ex))
+	return messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent).SetContent(ContentTypeRoute, NewRoute(name, uri, ex))
 }
 
 func RouteContent(m *messaging.Message) (*Route, *messaging.Status) {
@@ -19,7 +19,7 @@ func RouteContent(m *messaging.Message) (*Route, *messaging.Status) {
 }
 
 func NewExchangeMessage(ex Exchange) *messaging.Message {
-	return messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent).SetContent(ContentTypeExchange, "", ex)
+	return messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent).SetContent(ContentTypeExchange, ex)
 }
 
 func ExchangeContent(m *messaging.Message) (Exchange, *messaging.Status) {

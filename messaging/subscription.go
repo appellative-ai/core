@@ -108,7 +108,7 @@ func NewSubscriptionCreateMessage(to string, s Subscription) *Message {
 	if s.Channel == "" {
 		s.Channel = ChannelControl
 	}
-	m.SetContent(ContentTypeSubscription, "", s)
+	m.SetContent(ContentTypeSubscription, s)
 	return m
 }
 
@@ -126,7 +126,7 @@ func NewSubscriptionCancelMessage(to, from, Name string) *Message {
 	m := NewMessage(ChannelControl, SubscriptionCancelEvent)
 	m.SetTo(to)
 	m.SetFrom(from)
-	m.SetContent(ContentTypeSubscription, "", Subscription{From: from, Name: Name})
+	m.SetContent(ContentTypeSubscription, Subscription{From: from, Name: Name})
 	return m
 }
 

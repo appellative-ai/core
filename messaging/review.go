@@ -12,7 +12,7 @@ const (
 )
 
 func NewReviewMessage(review *Review) *Message {
-	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeReview, "", review)
+	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeReview, review)
 }
 
 func ReviewContent(m *Message) (*Review, *Status) {
