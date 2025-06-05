@@ -15,7 +15,7 @@ func RouteContent(m *messaging.Message) (*Route, *messaging.Status) {
 	if !messaging.ValidContent(m, messaging.ConfigEvent, ContentTypeRoute) {
 		return nil, messaging.NewStatus(messaging.StatusInvalidContent, "")
 	}
-	return messaging.NewT[*Route](m.Content)
+	return messaging.New[*Route](m.Content)
 }
 
 func NewExchangeMessage(ex Exchange) *messaging.Message {
@@ -26,5 +26,5 @@ func ExchangeContent(m *messaging.Message) (Exchange, *messaging.Status) {
 	if !messaging.ValidContent(m, messaging.ConfigEvent, ContentTypeExchange) {
 		return nil, messaging.NewStatus(messaging.StatusInvalidContent, "")
 	}
-	return messaging.NewT[Exchange](m.Content)
+	return messaging.New[Exchange](m.Content)
 }

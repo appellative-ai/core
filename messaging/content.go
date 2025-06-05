@@ -25,7 +25,7 @@ func (c Content) Valid(contentType string) bool {
 	return c.Value != nil && c.Type == contentType
 }
 
-func NewT[T any](ct *Content) (t T, status *Status) {
+func New[T any](ct *Content) (t T, status *Status) {
 	if ct == nil {
 		return t, NewStatus(http.StatusBadRequest, errors.New(fmt.Sprintf("error: content is nil")))
 	}
