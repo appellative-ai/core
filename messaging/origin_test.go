@@ -3,41 +3,43 @@ package messaging
 import "fmt"
 
 func ExampleNewOrigin() {
-	o := OriginT{
-		Region:  "region",
-		Zone:    "zone",
-		SubZone: "sub-zone",
-		Host:    "host",
+	m := map[string]string{
+		RegionKey:      "region",
+		ZoneKey:        "zone",
+		SubZoneKey:     "sub-zone",
+		HostKey:        "host",
+		ServiceNameKey: "service-name",
 		//InstanceId: "instance-id",
-		Collective: "collective",
-		Domain:     "domain",
+		//"Collective: "collective",
+		//Domain:     "domain",
 	}
-	fmt.Printf("test: NewOrigin() -> [%v]\n", o)
+	o, status := NewOrigin(m, "collective", "domain")
+	fmt.Printf("test: NewOrigin() -> [%v] [status:%v]\n", o, status)
 
 	o.Zone = ""
-	fmt.Printf("test: NewOrigin() -> [%v]\n", o)
+	fmt.Printf("test: Name() -> [%v]\n", o)
 
 	o.Zone = "zone"
 	o.SubZone = ""
-	fmt.Printf("test: NewOrigin() -> [%v]\n", o)
+	fmt.Printf("test: Name() -> [%v]\n", o)
 
 	o.Zone = "zone"
 	o.SubZone = "sub-zone"
 	o.Host = ""
-	fmt.Printf("test: NewOrigin() -> [%v]\n", o)
+	fmt.Printf("test: Name() -> [%v]\n", o)
 
 	o.Zone = "zone"
 	o.SubZone = "sub-zone"
 	o.Host = "host"
 	o.InstanceId = "instance-id"
-	fmt.Printf("test: NewOrigin() -> [%v]\n", o)
+	fmt.Printf("test: Name() -> [%v]\n", o)
 
 	//Output:
-	//test: NewOrigin() -> [collective:domain:service/region/zone/sub-zone/host]
-	//test: NewOrigin() -> [collective:domain:service/region/sub-zone/host]
-	//test: NewOrigin() -> [collective:domain:service/region/zone/host]
-	//test: NewOrigin() -> [collective:domain:service/region/zone/sub-zone]
-	//test: NewOrigin() -> [collective:domain:service/region/zone/sub-zone/host#instance-id]
+	//test: NewOrigin() -> [collective:domain:service/region/zone/sub-zone/service-name] [status:<nil>]
+	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name]
+	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name]
+	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name]
+	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name]
 
 }
 

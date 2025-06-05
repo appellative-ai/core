@@ -6,29 +6,32 @@ import (
 )
 
 const (
-	originNameFmt = "%v:%v:%v"
-	ServiceKind   = "service"
-	RegionKey     = "region"
-	ZoneKey       = "zone"
-	SubZoneKey    = "sub-zone"
-	HostKey       = "host"
-	InstanceIdKey = "instance-id"
+	originNameFmt  = "%v:%v:%v"
+	ServiceKind    = "service"
+	RegionKey      = "region"
+	ZoneKey        = "zone"
+	SubZoneKey     = "sub-zone"
+	HostKey        = "host"
+	InstanceIdKey  = "instance-id"
+	ServiceNameKey = "service-name"
 )
 
 // OriginT - location
 type OriginT struct {
-	Name       string `json:"name"`
-	Region     string `json:"region"`
-	Zone       string `json:"zone"`
-	SubZone    string `json:"sub-zone"`
-	Host       string `json:"host"`
-	InstanceId string `json:"instance-id"`
-	Collective string `json:"collective"`
-	Domain     string `json:"domain"`
+	Name        string `json:"name"`
+	Region      string `json:"region"`
+	Zone        string `json:"zone"`
+	SubZone     string `json:"sub-zone"`
+	Host        string `json:"host"`
+	ServiceName string `json:"service-name"`
+	InstanceId  string `json:"instance-id"`
+	Collective  string `json:"collective"`
+	Domain      string `json:"domain"`
 }
 
 func (o OriginT) String() string { return o.Name }
 
+/*
 func NewOriginFromMessage(m *Message, collective, domain string) (OriginT, *Status) {
 	cfg, status := MapContent(m)
 	if !status.OK() {
@@ -36,6 +39,9 @@ func NewOriginFromMessage(m *Message, collective, domain string) (OriginT, *Stat
 	}
 	return NewOrigin(cfg, collective, domain)
 }
+
+
+*/
 
 func NewOrigin(m map[string]string, collective, domain string) (OriginT, *Status) {
 	var origin OriginT
@@ -65,6 +71,11 @@ func NewOrigin(m map[string]string, collective, domain string) (OriginT, *Status
 	if origin.Host == "" {
 		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", HostKey)))
 	}
+
+	origin.ServiceName = m[ServiceNameKey]
+	if origin.ServiceName == "" {
+		origin.ServiceName = origin.Host
+	}
 	origin.InstanceId = m[InstanceIdKey]
 	origin.Name = name(origin)
 	return origin, nil
@@ -82,8 +93,8 @@ func name(o OriginT) string {
 	if o.SubZone != "" {
 		name1 += "/" + o.SubZone
 	}
-	if o.Host != "" {
-		name1 += "/" + o.Host
+	if o.ServiceName != "" {
+		name1 += "/" + o.ServiceName
 	}
 	if o.InstanceId != "" {
 		name1 += "#" + o.InstanceId
