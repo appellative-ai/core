@@ -23,7 +23,7 @@ type Chainable interface {
 }
 
 // BuildChain - build a chain of http Exchanges - panic on nil or invalid type links
-func BuildChain(links ...any) Exchange {
+func BuildChain(links []any) Exchange {
 	if len(links) == 0 {
 		return nil
 	}
