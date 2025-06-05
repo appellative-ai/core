@@ -1,6 +1,7 @@
 package messaging
 
 import (
+	"errors"
 	"sync/atomic"
 	"time"
 )
@@ -11,19 +12,14 @@ const (
 )
 
 func NewReviewMessage(review *Review) *Message {
-	m := NewMessage(ChannelControl, ConfigEvent)
-	m.SetContent(ContentTypeReview, "", review)
-	return m
+	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeReview, "", review)
 }
 
-func ReviewContent(m *Message) *Review {
-	if m.Name != ConfigEvent || m.Content == nil || m.ContentType() != ContentTypeReview {
-		return nil
+func ReviewContent(m *Message) (*Review, *Status) {
+	if !ValidContent(m, ConfigEvent, ContentTypeReview) {
+		return nil, NewStatus(StatusInvalidContent, errors.New("invalid content"))
 	}
-	if v, ok := m.Content.Value.(*Review); ok {
-		return v
-	}
-	return nil
+	return New[*Review](m.Content)
 }
 
 // Review - maybe add Task??
