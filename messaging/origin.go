@@ -14,6 +14,8 @@ const (
 	HostKey        = "host"
 	InstanceIdKey  = "instance-id"
 	ServiceNameKey = "service-name"
+	CollectiveKey  = "collective"
+	DomainKey      = "domain"
 )
 
 // OriginT - location
@@ -43,18 +45,21 @@ func NewOriginFromMessage(m *Message, collective, domain string) (OriginT, *Stat
 
 */
 
-func NewOrigin(m map[string]string, collective, domain string) (OriginT, *Status) {
+func NewOrigin(m map[string]string) (OriginT, *Status) {
 	var origin OriginT
 
 	if m == nil {
 		return origin, NewStatus(StatusInvalidArgument, errors.New("error: origin map is nil"))
 	}
-	if domain == "" || collective == "" {
-		return origin, NewStatus(StatusInvalidArgument, errors.New("error: origin collective or domain is empty"))
-	}
-	origin.Domain = domain
-	origin.Collective = collective
 
+	origin.Domain = m[DomainKey]
+	if origin.Domain == "" {
+		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", DomainKey)))
+	}
+	origin.Collective = m[CollectiveKey]
+	if origin.Collective == "" {
+		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", CollectiveKey)))
+	}
 	origin.Region = m[RegionKey]
 	if origin.Region == "" {
 		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", RegionKey)))

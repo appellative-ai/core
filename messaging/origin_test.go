@@ -10,10 +10,10 @@ func ExampleNewOrigin() {
 		HostKey:        "host",
 		ServiceNameKey: "service-name",
 		//InstanceId: "instance-id",
-		//"Collective: "collective",
-		//Domain:     "domain",
+		CollectiveKey: "collective",
+		DomainKey:     "domain",
 	}
-	o, status := NewOrigin(m, "collective", "domain")
+	o, status := NewOrigin(m)
 	fmt.Printf("test: NewOrigin() -> [%v] [status:%v]\n", o, status)
 
 	o.Zone = ""
@@ -42,47 +42,3 @@ func ExampleNewOrigin() {
 	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name]
 
 }
-
-/*
-func _ExampleOrigin_Uri() {
-	target := originT{
-		Region:     "region",
-		Zone:       "zone",
-		SubZone:    "sub-zone",
-		Host:       "host",
-		InstanceId: "instance-id",
-	}
-
-	fmt.Printf("test: Origin_Uri_SubZone()       -> [%v]\n", target.Uri("class"))
-
-	target.SubZone = ""
-	fmt.Printf("test: Origin_Uri_No_SubZone()    -> [%v]\n", target.Uri("class"))
-
-	//Output:
-	//test: Origin_Uri_SubZone()       -> [class:region.zone.sub-zone.host]
-	//test: Origin_Uri_No_SubZone()    -> [class:region.zone.host]
-
-}
-
-func _ExampleOrigin_String() {
-	target := originT{
-		Region:     "region",
-		Zone:       "zone",
-		SubZone:    "sub-zone",
-		Host:       "host",
-		InstanceId: "instance-id",
-	}
-
-	fmt.Printf("test: Origin_Uri_SubZone()       -> [%v]\n", target)
-
-	target.SubZone = ""
-	fmt.Printf("test: Origin_Uri_No_SubZone()    -> [%v]\n", target)
-
-	//Output:
-	//test: Origin_Uri_SubZone()       -> [region.zone.sub-zone.host]
-	//test: Origin_Uri_No_SubZone()    -> [region.zone.host]
-
-}
-
-
-*/
