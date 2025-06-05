@@ -17,37 +17,17 @@ const (
 
 // OriginT - location
 type OriginT struct {
+	Name       string `json:"name"`
 	Region     string `json:"region"`
 	Zone       string `json:"zone"`
 	SubZone    string `json:"sub-zone"`
 	Host       string `json:"host"`
 	InstanceId string `json:"instance-id"`
-	Collective string
-	Domain     string
+	Collective string `json:"collective"`
+	Domain     string `json:"domain"`
 }
 
-func (o OriginT) String() string { return o.Name() }
-
-func (o OriginT) Name() string {
-	var name = fmt.Sprintf(originNameFmt, o.Collective, o.Domain, ServiceKind)
-
-	if o.Region != "" {
-		name += "/" + o.Region
-	}
-	if o.Zone != "" {
-		name += "/" + o.Zone
-	}
-	if o.SubZone != "" {
-		name += "/" + o.SubZone
-	}
-	if o.Host != "" {
-		name += "/" + o.Host
-	}
-	if o.InstanceId != "" {
-		name += "#" + o.InstanceId
-	}
-	return name
-}
+func (o OriginT) String() string { return o.Name }
 
 func NewOriginFromMessage(m *Message, collective, domain string) (OriginT, *Status) {
 	cfg, status := MapContent(m)
@@ -59,15 +39,16 @@ func NewOriginFromMessage(m *Message, collective, domain string) (OriginT, *Stat
 
 func NewOrigin(m map[string]string, collective, domain string) (OriginT, *Status) {
 	var origin OriginT
+
+	if m == nil {
+		return origin, NewStatus(StatusInvalidArgument, errors.New("error: origin map is nil"))
+	}
 	if domain == "" || collective == "" {
 		return origin, NewStatus(StatusInvalidArgument, errors.New("error: origin collective or domain is empty"))
 	}
 	origin.Domain = domain
 	origin.Collective = collective
 
-	if m == nil {
-		return origin, NewStatus(StatusInvalidArgument, errors.New("error: origin map is nil"))
-	}
 	origin.Region = m[RegionKey]
 	if origin.Region == "" {
 		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", RegionKey)))
@@ -85,8 +66,29 @@ func NewOrigin(m map[string]string, collective, domain string) (OriginT, *Status
 		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", HostKey)))
 	}
 	origin.InstanceId = m[InstanceIdKey]
-
+	origin.Name = name(origin)
 	return origin, nil
+}
+
+func name(o OriginT) string {
+	var name1 = fmt.Sprintf(originNameFmt, o.Collective, o.Domain, ServiceKind)
+
+	if o.Region != "" {
+		name1 += "/" + o.Region
+	}
+	if o.Zone != "" {
+		name1 += "/" + o.Zone
+	}
+	if o.SubZone != "" {
+		name1 += "/" + o.SubZone
+	}
+	if o.Host != "" {
+		name1 += "/" + o.Host
+	}
+	if o.InstanceId != "" {
+		name1 += "#" + o.InstanceId
+	}
+	return name1
 }
 
 /*
