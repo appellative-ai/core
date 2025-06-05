@@ -8,34 +8,23 @@ const (
 )
 
 func NewRouteMessage(name, uri string, ex Exchange) *messaging.Message {
-	m := messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent)
-	r := NewRoute(name, uri, ex)
-	m.SetContent(ContentTypeRoute, "", r)
-	return m
+	return messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent).SetContent(ContentTypeRoute, "", NewRoute(name, uri, ex))
 }
 
-func RouteContent(m *messaging.Message) (*Route, bool) {
+func RouteContent(m *messaging.Message) (*Route, *messaging.Status) {
 	if !messaging.ValidContent(m, messaging.ConfigEvent, ContentTypeRoute) {
-		return nil, false
+		return nil, messaging.NewStatus(messaging.StatusInvalidContent, "")
 	}
-	if v, ok := m.Content.Value.(*Route); ok {
-		return v, true
-	}
-	return nil, false
+	return messaging.NewT[*Route](m.Content)
 }
 
 func NewExchangeMessage(ex Exchange) *messaging.Message {
-	m := messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent)
-	m.SetContent(ContentTypeExchange, "", ex)
-	return m
+	return messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent).SetContent(ContentTypeExchange, "", ex)
 }
 
-func ExchangeContent(m *messaging.Message) (Exchange, bool) {
+func ExchangeContent(m *messaging.Message) (Exchange, *messaging.Status) {
 	if !messaging.ValidContent(m, messaging.ConfigEvent, ContentTypeExchange) {
-		return nil, false
+		return nil, messaging.NewStatus(messaging.StatusInvalidContent, "")
 	}
-	if cfg, ok := m.Content.Value.(Exchange); ok {
-		return cfg, true
-	}
-	return nil, false
+	return messaging.NewT[Exchange](m.Content)
 }

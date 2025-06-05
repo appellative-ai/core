@@ -30,18 +30,18 @@ func ExampleSubscription_Valid() {
 
 }
 
-func _ExampleSubscriptionMessage() {
+func ExampleSubscriptionMessage() {
 	m := NewSubscriptionCreateMessage("create-to", NewSubscription("create-from", ChannelControl, SubscriptionCreateEvent, ""))
-	s, ok := SubscriptionCreateContent(m)
-	fmt.Printf("test: NewSubscriptionCreateMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Name, s, ok)
+	s, status := SubscriptionCreateContent(m)
+	fmt.Printf("test: NewSubscriptionCreateMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Name, s, status)
 
 	m = NewSubscriptionCancelMessage("cancel-to", "cancel-from", SubscriptionCancelEvent)
-	s, ok = SubscriptionCancelContent(m)
-	fmt.Printf("test: NewSubscriptionCancelMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Name, s, ok)
+	s, status = SubscriptionCancelContent(m)
+	fmt.Printf("test: NewSubscriptionCancelMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Name, s, status)
 
 	//Output:
-	//test: NewSubscriptionCreateMessage() -> [create-to] [Name:subscription-create] [{Name:subscription-create create-from}] [true]
-	//test: NewSubscriptionCancelMessage() -> [cancel-to] [Name:subscription-cancel] [{Name:subscription-cancel cancel-from}] [true]
+	//test: NewSubscriptionCreateMessage() -> [create-to] [core:event/subscription-create] [{ ctrl core:event/subscription-create create-from}] [OK]
+	//test: NewSubscriptionCancelMessage() -> [cancel-to] [core:event/subscription-cancel] [{  core:event/subscription-cancel cancel-from}] [OK]
 
 }
 

@@ -56,7 +56,7 @@ func ExampleDispatcherMessage() {
 	fmt.Printf("test: DispatcherContent() -> [%v] [%v]\n", reflect.TypeOf(c), ok)
 
 	//Output:
-	//test: NewDispatcherMessage() -> [core:event/config] [application/x-dispatcher] [*messaging.traceDispatch]
+	//test: NewDispatcherMessage() -> [common:core:event/config] [application/x-dispatcher] [*messaging.traceDispatch]
 	//test: DispatcherContent() -> [*messaging.traceDispatch] [true]
 
 }

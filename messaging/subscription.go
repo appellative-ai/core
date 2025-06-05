@@ -57,7 +57,7 @@ func (c *Catalog) CreateWithMessage(m *Message) error {
 	if m == nil {
 		return nil
 	}
-	if s, ok := SubscriptionCreateContent(m); ok {
+	if s, status := SubscriptionCreateContent(m); status.OK() {
 		err := c.Create(s)
 		if err != nil {
 			return err
@@ -91,7 +91,7 @@ func (c *Catalog) CancelWithMessage(m *Message) {
 	if m == nil {
 		return
 	}
-	if s, ok := SubscriptionCancelContent(m); ok {
+	if s, status := SubscriptionCancelContent(m); status.OK() {
 		c.Cancel(s)
 	}
 }
@@ -112,14 +112,11 @@ func NewSubscriptionCreateMessage(to string, s Subscription) *Message {
 	return m
 }
 
-func SubscriptionCreateContent(m *Message) (Subscription, bool) {
+func SubscriptionCreateContent(m *Message) (Subscription, *Status) {
 	if !ValidContent(m, SubscriptionCreateEvent, ContentTypeSubscription) {
-		return Subscription{}, false
+		return Subscription{}, NewStatus(StatusInvalidContent, "")
 	}
-	if v, ok := m.Content.Value.(Subscription); ok {
-		return v, true
-	}
-	return Subscription{}, false
+	return NewT[Subscription](m.Content)
 }
 
 func NewSubscriptionCancelMessage(to, from, Name string) *Message {
@@ -133,12 +130,9 @@ func NewSubscriptionCancelMessage(to, from, Name string) *Message {
 	return m
 }
 
-func SubscriptionCancelContent(m *Message) (Subscription, bool) {
-	if ValidContent(m, SubscriptionCancelEvent, ContentTypeSubscription) {
-		return Subscription{}, false
+func SubscriptionCancelContent(m *Message) (Subscription, *Status) {
+	if !ValidContent(m, SubscriptionCancelEvent, ContentTypeSubscription) {
+		return Subscription{}, NewStatus(StatusInvalidContent, "")
 	}
-	if v, ok := m.Content.Value.(Subscription); ok {
-		return v, true
-	}
-	return Subscription{}, false
+	return NewT[Subscription](m.Content)
 }

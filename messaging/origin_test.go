@@ -9,6 +9,8 @@ func ExampleNewOrigin() {
 		SubZone: "sub-zone",
 		Host:    "host",
 		//InstanceId: "instance-id",
+		Collective: "collective",
+		Domain:     "domain",
 	}
 	fmt.Printf("test: NewOrigin() -> [%v]\n", o)
 
@@ -31,11 +33,11 @@ func ExampleNewOrigin() {
 	fmt.Printf("test: NewOrigin() -> [%v]\n", o)
 
 	//Output:
-	//test: NewOrigin() -> [core:service/region/zone/sub-zone/host]
-	//test: NewOrigin() -> [core:service/region/sub-zone/host]
-	//test: NewOrigin() -> [core:service/region/zone/host]
-	//test: NewOrigin() -> [core:service/region/zone/sub-zone]
-	//test: NewOrigin() -> [core:service/region/zone/sub-zone/host#instance-id]
+	//test: NewOrigin() -> [collective:domain:service/region/zone/sub-zone/host]
+	//test: NewOrigin() -> [collective:domain:service/region/sub-zone/host]
+	//test: NewOrigin() -> [collective:domain:service/region/zone/host]
+	//test: NewOrigin() -> [collective:domain:service/region/zone/sub-zone]
+	//test: NewOrigin() -> [collective:domain:service/region/zone/sub-zone/host#instance-id]
 
 }
 

@@ -173,11 +173,7 @@ func MapContent(m *Message) (map[string]string, *Status) {
 	if !ValidContent(m, ConfigEvent, ContentTypeMap) {
 		return nil, NewStatus(StatusInvalidContent, "")
 	}
-	t, status := NewT[map[string]string](m.Content)
-	if status.OK() {
-		return t, status
-	}
-	return nil, status
+	return NewT[map[string]string](m.Content)
 }
 
 func NewStatusMessage(status *Status, relatesTo string) *Message {

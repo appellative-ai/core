@@ -22,14 +22,14 @@ type Origin struct {
 	SubZone    string `json:"sub-zone"`
 	Host       string `json:"host"`
 	InstanceId string `json:"instance-id"`
+	Collective string
+	Domain     string
 }
 
-func (o Origin) String() string {
-	return o.Name("any", "any")
-}
+func (o Origin) String() string { return o.Name() }
 
-func (o Origin) Name(collective, domain string) string {
-	var name = fmt.Sprintf(originNameFmt, collective, domain, ServiceKind)
+func (o Origin) Name() string {
+	var name = fmt.Sprintf(originNameFmt, o.Collective, o.Domain, ServiceKind)
 
 	if o.Region != "" {
 		name += "/" + o.Region
@@ -49,8 +49,10 @@ func (o Origin) Name(collective, domain string) string {
 	return name
 }
 
-func NewOriginFromMessage(m *Message) (Origin, *Status) {
+func NewOriginFromMessage(m *Message, collective, domain string) (Origin, *Status) {
 	var origin Origin
+	origin.Domain = domain
+	origin.Collective = collective
 
 	cfg, status := MapContent(m)
 	if cfg == nil {
