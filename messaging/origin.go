@@ -83,7 +83,7 @@ func NewOrigin(m map[string]string) (OriginT, *Status) {
 	}
 	origin.InstanceId = m[InstanceIdKey]
 	origin.Name = name(origin)
-	return origin, nil
+	return origin, StatusOK()
 }
 
 func name(o OriginT) string {

@@ -35,7 +35,7 @@ func ExampleNewOrigin() {
 	fmt.Printf("test: Name() -> [%v]\n", o)
 
 	//Output:
-	//test: NewOrigin() -> [collective:domain:service/region/zone/sub-zone/service-name] [status:<nil>]
+	//test: NewOrigin() -> [collective:domain:service/region/zone/sub-zone/service-name] [status:OK]
 	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name]
 	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name]
 	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name]
