@@ -3,7 +3,6 @@ package host
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/behavioral-ai/core/iox"
 	"strings"
 	"sync"
@@ -43,7 +42,7 @@ func DefineNetwork(path string, roles []string) (*MapT[string, Resource], error)
 				if m[AtPath] != "" {
 					rsc.Config, rsc.Err = readConfig(newPath(path, m[AtPath]))
 				}
-				fmt.Printf("Resource -> %v\n", rsc)
+				//fmt.Printf("Resource -> %v\n", rsc)
 				net.Store(rsc.Role, rsc)
 			}(role)
 		}
