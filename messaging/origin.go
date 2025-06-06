@@ -52,26 +52,22 @@ func NewOrigin(m map[string]string) (OriginT, *Status) {
 		return origin, NewStatus(StatusInvalidArgument, errors.New("error: origin map is nil"))
 	}
 
-	origin.Domain = m[DomainKey]
-	if origin.Domain == "" {
-		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", DomainKey)))
-	}
 	origin.Collective = m[CollectiveKey]
 	if origin.Collective == "" {
 		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", CollectiveKey)))
+	}
+	origin.Domain = m[DomainKey]
+	if origin.Domain == "" {
+		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", DomainKey)))
 	}
 	origin.Region = m[RegionKey]
 	if origin.Region == "" {
 		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", RegionKey)))
 	}
-
 	origin.Zone = m[ZoneKey]
 	if origin.Zone == "" {
 		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", ZoneKey)))
 	}
-
-	origin.SubZone = m[SubZoneKey]
-
 	origin.Host = m[HostKey]
 	if origin.Host == "" {
 		return origin, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("config map does not contain key: %v", HostKey)))
@@ -81,6 +77,7 @@ func NewOrigin(m map[string]string) (OriginT, *Status) {
 	if origin.ServiceName == "" {
 		origin.ServiceName = origin.Host
 	}
+	origin.SubZone = m[SubZoneKey]
 	origin.InstanceId = m[InstanceIdKey]
 	origin.Name = name(origin)
 	return origin, StatusOK()
