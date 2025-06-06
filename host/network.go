@@ -3,8 +3,10 @@ package host
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/behavioral-ai/core/iox"
 	"strings"
+	"sync"
 )
 
 const (
@@ -12,35 +14,62 @@ const (
 )
 
 type Resource struct {
+	Role   string
 	Name   string
+	Err    error
 	Config map[string]string
 }
 
-func DefineNetwork(path string) ([]Resource, error) {
-	var ops []Resource
-	if path == "" {
-		return nil, errors.New("error: network config path is empty")
+func DefineNetwork(path string, roles []string) (*MapT[string, Resource], error) {
+	if path == "" || len(roles) == 0 {
+		return nil, errors.New("error: network config path is empty or roles are empty")
 	}
-	net, err := readConfig(path)
+	cfg, err := readConfig(path)
 	if err != nil {
 		return nil, err
 	}
-	for k, v := range net {
-		if strings.HasPrefix(v, AtPath) {
-			cfg, err2 := readConfig(newPath(path, v))
-			if err2 != nil {
-				return ops, err2
-			}
-			ops = append(ops, Resource{Name: k, Config: cfg})
-		} else {
-			m, err1 := parseConfig(v)
-			if err1 != nil {
-				return ops, err1
-			}
-			ops = append(ops, Resource{Name: k, Config: m})
+	var wg sync.WaitGroup
+	var net = NewSyncMap[string, Resource]()
+	for _, role := range roles {
+		if c, ok := cfg[role]; ok {
+			wg.Add(1)
+			go func(role1 string) {
+				defer wg.Done()
+				var rsc Resource
+				var m map[string]string
+				rsc.Role = role1
+				m, rsc.Err = parseConfig(c)
+				rsc.Name = m["name"]
+				if m[AtPath] != "" {
+					rsc.Config, rsc.Err = readConfig(newPath(path, m[AtPath]))
+				}
+				fmt.Printf("Resource -> %v\n", rsc)
+				net.Store(rsc.Role, rsc)
+			}(role)
 		}
 	}
-	return ops, nil
+
+	/*
+		for k, v := range net {
+			if strings.HasPrefix(v, AtPath) {
+				cfg, err2 := readConfig(newPath(path, v))
+				if err2 != nil {
+					return ops, err2
+				}
+				ops = append(ops, Resource{Name: k, Config: cfg})
+			} else {
+				m, err1 := parseConfig(v)
+				if err1 != nil {
+					return ops, err1
+				}
+				ops = append(ops, Resource{Name: k, Config: m})
+			}
+		}
+
+
+	*/
+	wg.Wait()
+	return net, nil
 }
 
 func newPath(path, fileName string) string {
@@ -48,11 +77,12 @@ func newPath(path, fileName string) string {
 	if i == -1 {
 		return "error: invalid path"
 	}
-	i2 := strings.Index(fileName, "=")
-	if i2 == -1 {
-		return "error: invalid file name"
-	}
-	return path[:i+1] + fileName[i2+1:]
+
+	//i2 := strings.Index(fileName, "=")
+	//if i2 == -1 {
+	//	return "error: invalid file name"
+	//}
+	return path[:i+1] + fileName
 }
 
 func readConfig(path string) (map[string]string, error) {
