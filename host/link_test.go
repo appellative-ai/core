@@ -33,7 +33,7 @@ func redirectLink(req *http.Request) (*http.Response, error) {
 func ExampleAccessLogLink_Limit() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := rest.BuildChain(accessLogLink, limitLink)
+	ex := rest.BuildChain([]any{accessLogLink, limitLink})
 	ex(req)
 
 	//Output:
@@ -44,7 +44,7 @@ func ExampleAccessLogLink_Limit() {
 func ExampleAccessLogLink_Timeout() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := rest.BuildChain(accessLogLink, timeoutLink)
+	ex := rest.BuildChain([]any{accessLogLink, timeoutLink})
 	ex(req)
 
 	//Output:
@@ -56,7 +56,7 @@ func ExampleAccessLogLink_Timeout() {
 func ExampleAccessLogLink_Redirect() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := rest.BuildChain(accessLogLink, redirectLink)
+	ex := rest.BuildChain([]any{accessLogLink, redirectLink})
 	ex(req)
 
 	//Output:

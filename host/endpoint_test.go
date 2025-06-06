@@ -94,7 +94,7 @@ func ExampleNewEndpoint() {
 	agent := newTestAgent()
 	fmt.Printf("test: NewEndpoint() -> [%v]\n", agent)
 
-	e := NewEndpoint(accessLogLink, authorizationLink, agent)
+	e := NewEndpoint([]any{accessLogLink, authorizationLink, agent})
 	fmt.Printf("test: NewEndpoint() -> [%v]\n", e)
 
 	//Output:
