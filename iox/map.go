@@ -16,6 +16,11 @@ const (
 	newline   = "\r\n"
 )
 
+func ReadMapT[T any](uri any) (t T, err error) {
+
+	return
+}
+
 func ReadMap(uri any) (map[string]string, error) {
 	buf, err := ReadFile(uri)
 	if err != nil {
