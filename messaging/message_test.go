@@ -49,3 +49,15 @@ func ExampleStatusMessage() {
 	//test: StatusContent() -> [<nil>] [] [status:Invalid Content [error: content value type: string is not of generic type: *messaging.Status]]
 
 }
+
+func ExampleHandlerMessage() {
+	a := newControlAgent("test:agent/example", nil)
+	m := NewHandlerMessage(a)
+
+	a1, status := HandlerContent(m)
+	fmt.Printf("test: HandlerContent() -> [%v] [status:%v]\n", a1, status)
+
+	//Output:
+	//test: HandlerContent() -> [test:agent/example] [status:OK]
+
+}

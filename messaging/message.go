@@ -35,6 +35,7 @@ const (
 
 	ContentTypeMap      = "application/x-map"
 	ContentTypeStatus   = "application/x-status"
+	ContentTypeHandler  = "application/x-handler"
 	ContentTypeTextHtml = "text/html"
 	ContentTypeText     = "text/plain charset=utf-8"
 	ContentTypeBinary   = "application/octet-stream"
@@ -193,6 +194,17 @@ func StatusContent(m *Message) (*Status, string, *Status) {
 		return t, m.RelatesTo(), status
 	}
 	return nil, "", status
+}
+
+func NewHandlerMessage(a Agent) *Message {
+	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeHandler, a)
+}
+
+func HandlerContent(m *Message) (Agent, *Status) {
+	if !ValidContent(m, ConfigEvent, ContentTypeHandler) {
+		return nil, NewStatus(StatusInvalidContent, "")
+	}
+	return New[Agent](m.Content)
 }
 
 // Reply - function used by message recipient to reply with a Status

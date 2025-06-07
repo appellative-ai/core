@@ -7,8 +7,8 @@ const (
 	FragmentIdentifier = "#"
 )
 
-// NewAgent - agent constructor with optional handler agent
-type NewAgent func(handler string) Agent
+// NewAgent - agent constructor
+type NewAgent func() Agent
 
 // Agent - agent
 type Agent interface {

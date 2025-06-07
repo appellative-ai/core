@@ -11,22 +11,21 @@ var (
 
 type agentC struct {
 	running bool
-	uri     string
 	name    string
 	ch      chan *Message
 	handler Handler
 }
 
-func newControlAgent(uri string, handler Handler) *agentC {
+func newControlAgent(name string, handler Handler) *agentC {
 	c := new(agentC)
-	c.uri = uri
+	c.name = name
 	c.ch = make(chan *Message, ChannelSize)
 	c.handler = handler
 	return c
 }
 
 // Name -
-func (c *agentC) Name() string { return c.uri }
+func (c *agentC) Name() string { return c.name }
 
 // String - identity
 func (c *agentC) String() string { return c.Name() }
