@@ -28,7 +28,7 @@ func (t *agentT) Message(m *messaging.Message) {
 	if m == nil {
 		return
 	}
-	if m.Name() == messaging.StartupEvent {
+	if m.Name == messaging.StartupEvent {
 		t.run()
 		return
 	}
@@ -39,7 +39,7 @@ func (t *agentT) run() {
 		for {
 			select {
 			case msg := <-t.ch.C:
-				switch msg.Name() {
+				switch msg.Name {
 				case messaging.ShutdownEvent:
 					t.ch.Close()
 					return
