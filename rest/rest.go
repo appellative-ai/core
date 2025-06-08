@@ -17,6 +17,9 @@ type Exchangeable interface {
 	Exchange(r *http.Request) (*http.Response, error)
 }
 
+// ExchangeLink - interface to link http Exchanges
+type ExchangeLink func(next Exchange) Exchange
+
 // Chainable - interface to link http Exchanges
 type Chainable interface {
 	Link(next Exchange) Exchange
@@ -55,4 +58,28 @@ func exchangeLink(last any) Exchange {
 		return exc.Exchange
 	}
 	panic(last)
+}
+
+// BuildMessagingChain - build a chain of messaging processing - panic on nil or invalid type links
+func BuildMessagingChain(links []any) Exchange {
+	if len(links) == 0 {
+		return nil
+	}
+	last := len(links) - 1
+	// create the last link which is of type Exchange or Exchangeable
+	head := exchangeLink(links[last])
+
+	// build chain
+	for i := last; i >= 0; i-- {
+		if fn, ok := links[i].(func(next Exchange) Exchange); ok {
+			head = fn(head)
+			continue
+		}
+		if c, ok := links[i].(Chainable); ok {
+			head = c.Link(head)
+			continue
+		}
+		panic(links[i])
+	}
+	return head
 }

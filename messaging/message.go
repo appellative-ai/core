@@ -53,7 +53,12 @@ var (
 )
 
 // Handler - uniform interface for message handling
-type Handler func(msg *Message)
+type Handler interface {
+	Handle(*Message)
+}
+
+// HandleFunc - func for message handling
+type HandleFunc func(msg *Message)
 
 // Message - message
 type Message struct {
@@ -61,7 +66,7 @@ type Message struct {
 	Header  http.Header
 	Content *Content
 	Expiry  time.Time
-	Reply   Handler
+	Reply   HandleFunc
 }
 
 func NewMessage(channel, name string) *Message {

@@ -13,10 +13,10 @@ type agentC struct {
 	running bool
 	name    string
 	ch      chan *Message
-	handler Handler
+	handler HandleFunc
 }
 
-func newControlAgent(name string, handler Handler) *agentC {
+func newControlAgent(name string, handler HandleFunc) *agentC {
 	c := new(agentC)
 	c.name = name
 	c.ch = make(chan *Message, ChannelSize)
