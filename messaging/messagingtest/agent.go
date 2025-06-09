@@ -1,30 +1,41 @@
 package messagingtest
 
 import (
+	"fmt"
 	"github.com/behavioral-ai/core/messaging"
 )
 
-type agentT struct {
-	name string
-	ch   *messaging.Channel
+type AgentT struct {
+	name  string
+	ch    *messaging.Channel
+	runFn func()
 }
 
 func NewAgent(name string) messaging.Agent {
-	a := new(agentT)
-	a.name = name
-	a.ch = messaging.NewEmissaryChannel()
-	return a
+	return newAgent(name, nil, nil)
 }
 
-func NewAgentWithChannel(name string, ch *messaging.Channel) messaging.Agent {
-	a := new(agentT)
-	a.name = name
-	a.ch = ch
-	return a
+func NewAgentOverride(name string, ch *messaging.Channel, run func()) messaging.Agent {
+	return newAgent(name, ch, run)
 }
 
-func (t *agentT) Name() string { return t.name }
-func (t *agentT) Message(m *messaging.Message) {
+func newAgent(name string, ch *messaging.Channel, run func()) *AgentT {
+	a := new(AgentT)
+	a.name = name
+	if ch != nil {
+		a.ch = ch
+	} else {
+		a.ch = messaging.NewChannel(messaging.ChannelControl)
+	}
+	if run != nil {
+		a.runFn = run
+	} else {
+		a.runFn = a.run
+	}
+	return a
+}
+func (t *AgentT) Name() string { return t.name }
+func (t *AgentT) Message(m *messaging.Message) {
 	if m == nil {
 		return
 	}
@@ -34,11 +45,12 @@ func (t *agentT) Message(m *messaging.Message) {
 	}
 	t.ch.C <- m
 }
-func (t *agentT) run() {
+func (t *AgentT) run() {
 	go func() {
 		for {
 			select {
 			case msg := <-t.ch.C:
+				fmt.Printf("test: agent.Message() -> %v", msg)
 				switch msg.Name {
 				case messaging.ShutdownEvent:
 					t.ch.Close()
