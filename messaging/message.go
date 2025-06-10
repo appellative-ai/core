@@ -1,9 +1,9 @@
 package messaging
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
+	"reflect"
 	"time"
 )
 
@@ -35,7 +35,7 @@ const (
 
 	ContentTypeMap      = "application/x-map"
 	ContentTypeStatus   = "application/x-status"
-	ContentTypeHandler  = "application/x-handler"
+	ContentTypeAgent    = "application/x-agent"
 	ContentTypeTextHtml = "text/html"
 	ContentTypeText     = "text/plain charset=utf-8"
 	ContentTypeBinary   = "application/octet-stream"
@@ -53,12 +53,10 @@ var (
 )
 
 // Handler - uniform interface for message handling
-type Handler interface {
-	Handle(*Message)
-}
+type Handler func(*Message)
 
 // HandleFunc - func for message handling
-type HandleFunc func(msg *Message)
+//type HandleFunc func(msg *Message)
 
 // Message - message
 type Message struct {
@@ -66,7 +64,7 @@ type Message struct {
 	Header  http.Header
 	Content *Content
 	Expiry  time.Time
-	Reply   HandleFunc
+	Reply   Handler
 }
 
 func NewMessage(channel, name string) *Message {
@@ -76,14 +74,6 @@ func NewMessage(channel, name string) *Message {
 	m.Header.Set(XChannel, channel)
 	return m
 }
-
-/*
-func NewMessageWithError(channel, name string, err error) *Message {
-	m := NewMessage(channel, name)
-	m.SetContent(ContentTypeError, err)
-	return m
-}
-*/
 
 func NewAddressableMessage(channel, name, to, from string) *Message {
 	m := NewMessage(channel, name)
@@ -201,12 +191,12 @@ func StatusContent(m *Message) (*Status, string, *Status) {
 	return nil, "", status
 }
 
-func NewHandlerMessage(a Agent) *Message {
-	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeHandler, a)
+func NewAgentMessage(a Agent) *Message {
+	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeAgent, a)
 }
 
-func HandlerContent(m *Message) (Agent, *Status) {
-	if !ValidContent(m, ConfigEvent, ContentTypeHandler) {
+func AgentContent(m *Message) (Agent, *Status) {
+	if !ValidContent(m, ConfigEvent, ContentTypeAgent) {
 		return nil, NewStatus(StatusInvalidContent, "")
 	}
 	return New[Agent](m.Content)
@@ -222,6 +212,34 @@ func Reply(msg *Message, status *Status, from string) {
 	msg.Reply(m)
 }
 
+// SetReply - set a message reply, using the following constraint:
+//
+//	type ReplyConstraints interface {
+//	    Agent | HandlerNotifiable
+//	}
+func SetReply(msg *Message, t any) {
+	if t == nil {
+		msg.Reply = func(msg *Message) {
+			fmt.Printf("error: generic type is nil on call to messaging.SetReply\n")
+		}
+		return
+	}
+	if fn, ok := t.(func(m *Message)); ok {
+		msg.Reply = fn
+		return
+	}
+	if agent, ok := t.(Agent); ok {
+		msg.Reply = func(m *Message) {
+			agent.Message(m)
+		}
+		return
+	}
+	msg.Reply = func(msg *Message) {
+		fmt.Printf(fmt.Sprintf("error: generic type: %v, is invalid for messaging.SetReply\n", reflect.TypeOf(t)))
+	}
+}
+
+/*
 func MarshalMessage[T any](msg *Message) (t any, status *Status) {
 	if msg == nil {
 		return t, NewStatus(http.StatusBadRequest, errors.New(fmt.Sprintf("error: message is nil")))
@@ -235,3 +253,6 @@ func UnmarshalMessage[T any](msg *Message) (t any, status *Status) {
 	}
 	return Unmarshal[T](msg.Content)
 }
+
+
+*/

@@ -3,6 +3,7 @@ package messaging
 import (
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func ExampleNewMessage() {
@@ -50,14 +51,48 @@ func ExampleStatusMessage() {
 
 }
 
-func ExampleHandlerMessage() {
+func ExampleAgentMessage() {
 	a := newControlAgent("test:agent/example", nil)
-	m := NewHandlerMessage(a)
+	m := NewAgentMessage(a)
 
-	a1, status := HandlerContent(m)
-	fmt.Printf("test: HandlerContent() -> [%v] [status:%v]\n", a1, status)
+	a1, status := AgentContent(m)
+	fmt.Printf("test: AgentContent() -> [%v] [status:%v]\n", a1, status)
 
 	//Output:
-	//test: HandlerContent() -> [test:agent/example] [status:OK]
+	//test: AgentContent() -> [test:agent/example] [status:OK]
+
+}
+
+func ExampleSetReply() {
+	a := newControlAgent("test:agent/example", nil)
+	a.run()
+	m := NewMessage(ChannelControl, "test:agent/test")
+
+	SetReply(m, nil)
+	m.Reply(NewStatusMessage(StatusOK(), ""))
+
+	SetReply(m, m)
+	m.Reply(NewStatusMessage(StatusOK(), ""))
+
+	SetReply(m, func(m *Message) {
+		fmt.Printf("test: SetReply() -> %v\n", m)
+	})
+	m.Reply(NewStatusMessage(StatusNotFound(), ""))
+
+	SetReply(m, a)
+	m.Reply(NewStatusMessage(StatusOK(), ""))
+
+	time.Sleep(time.Second * 5)
+	a.Message(ShutdownMessage)
+	time.Sleep(time.Second * 5)
+
+	//m.Reply(NewStatusMessage(StatusOK(), ""))
+
+	//Output:
+	//error: generic type is nil on call to messaging.SetReply
+	//error: generic type: *messaging.Message, is invalid for messaging.SetReply
+	//test: SetReply() -> [chan:ctrl] [from:] [to:] [common:core:event/status]
+	//test: controlAgent.run() -> [chan:ctrl] [from:] [to:] [common:core:event/status]
+	//test: controlAgent.run() -> [chan:ctrl] [from:] [to:] [common:core:event/shutdown]
 
 }

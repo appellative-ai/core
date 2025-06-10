@@ -13,14 +13,18 @@ type agentC struct {
 	running bool
 	name    string
 	ch      chan *Message
-	handler HandleFunc
+	handler Handler
 }
 
-func newControlAgent(name string, handler HandleFunc) *agentC {
+func newControlAgent(name string, handler Handler) *agentC {
 	c := new(agentC)
 	c.name = name
 	c.ch = make(chan *Message, ChannelSize)
-	c.handler = handler
+	if handler == nil {
+		c.handler = func(m *Message) {}
+	} else {
+		c.handler = handler
+	}
 	return c
 }
 
@@ -78,18 +82,13 @@ func controlAgentRun(c *agentC) {
 	if c == nil || c.handler == nil {
 		return
 	}
-	// ctrlHandler Handler
-	//if h, ok := state.(Handler); ok {
-	//	ctrlHandler = h
-	//} else {
-	//	return
-	//}
 	for {
 		select {
 		case msg, open := <-c.ch:
 			if !open {
 				return
 			}
+			fmt.Printf("test: controlAgent.run() -> %v\n", msg)
 			switch msg.Name {
 			case ShutdownEvent:
 				c.handler(NewMessage(ChannelControl, msg.Name))
