@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+/*
 func ExampleNewRouteMessage() {
 	m := NewRouteMessage("test-route", "https://www.google.com/search?q=golang", func(r *http.Request) (*http.Response, error) {
 		return &http.Response{StatusCode: http.StatusTeapot}, nil
@@ -16,6 +17,9 @@ func ExampleNewRouteMessage() {
 	//test: RouteContent() [name:test-route] [uri:https://www.google.com/search?q=golang] [status:OK]
 
 }
+
+
+*/
 
 func ExampleNewExchangeMessage() {
 	req, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q=golang", nil)

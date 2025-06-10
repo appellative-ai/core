@@ -8,15 +8,13 @@ import (
 
 func ExampleBuildChain_Link() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3LinkFn, do5ExchangeFn})
+	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3LinkFn})
 	ex(req)
 
 	//Output:
 	//test: Do1-Link() -> request
 	//test: Do2-Link() -> request
 	//test: Do3-Link() -> request
-	//test: Do5-Exchange() -> request
-	//test: Do5-Exchange() -> response
 	//test: Do3-Link() -> response
 	//test: Do2-Link() -> response
 	//test: Do1-Link() -> response
@@ -25,15 +23,13 @@ func ExampleBuildChain_Link() {
 
 func ExampleBuildChain_Chainable() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1{}, do2{}, do3{}, do5{}})
+	ex := BuildChain([]any{do1{}, do2{}, do3{}})
 	ex(req)
 
 	//Output:
 	//test: Do1-Link() -> request
 	//test: Do2-Link() -> request
 	//test: Do3-Link() -> request
-	//test: Do5-Exchange() -> request
-	//test: Do5-Exchange() -> response
 	//test: Do3-Link() -> response
 	//test: Do2-Link() -> response
 	//test: Do1-Link() -> response
@@ -42,7 +38,7 @@ func ExampleBuildChain_Chainable() {
 
 func ExampleBuildChain_Any() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1{}, do2LinkFn, do3{}, do4LinkFn, do5{}})
+	ex := BuildChain([]any{do1{}, do2LinkFn, do3{}, do4LinkFn})
 	ex(req)
 
 	//Output:
@@ -50,8 +46,6 @@ func ExampleBuildChain_Any() {
 	//test: Do2-Link() -> request
 	//test: Do3-Link() -> request
 	//test: Do4-Link() -> request
-	//test: Do5-Exchange() -> request
-	//test: Do5-Exchange() -> response
 	//test: Do4-Link() -> response
 	//test: Do3-Link() -> response
 	//test: Do2-Link() -> response
@@ -61,7 +55,7 @@ func ExampleBuildChain_Any() {
 
 func ExampleBuildChain_Abbreviated() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3FailLinkFn, do4LinkFn, do5{}})
+	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3FailLinkFn, do4LinkFn})
 	ex(req)
 
 	//Output:
@@ -76,15 +70,13 @@ func ExampleBuildChain_Abbreviated() {
 
 func ExampleBuildChain_Exchange() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3LinkFn, do5ExchangeFn})
+	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3LinkFn})
 	ex(req)
 
 	//Output:
 	//test: Do1-Link() -> request
 	//test: Do2-Link() -> request
 	//test: Do3-Link() -> request
-	//test: Do5-Exchange() -> request
-	//test: Do5-Exchange() -> response
 	//test: Do3-Link() -> response
 	//test: Do2-Link() -> response
 	//test: Do1-Link() -> response
@@ -93,15 +85,13 @@ func ExampleBuildChain_Exchange() {
 
 func ExampleBuildChain_Exchangeable() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3LinkFn, do5{}})
+	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3LinkFn})
 	ex(req)
 
 	//Output:
 	//test: Do1-Link() -> request
 	//test: Do2-Link() -> request
 	//test: Do3-Link() -> request
-	//test: Do5-Exchange() -> request
-	//test: Do5-Exchange() -> response
 	//test: Do3-Link() -> response
 	//test: Do2-Link() -> response
 	//test: Do1-Link() -> response
@@ -177,12 +167,16 @@ func do4LinkFn(next Exchange) Exchange {
 	}
 }
 
+/*
 func do5ExchangeFn(req *http.Request) (resp *http.Response, err error) {
 	fmt.Printf("test: Do5-Exchange() -> request\n")
 	resp = &http.Response{StatusCode: http.StatusOK}
 	fmt.Printf("test: Do5-Exchange() -> response\n")
 	return
 }
+
+
+*/
 
 type do1 struct{}
 
@@ -214,11 +208,14 @@ func (d do4) Link(next Exchange) Exchange {
 	return do4LinkFn(next)
 }
 
+/*
 type do5 struct{}
 
 func (d do5) Exchange(r *http.Request) (*http.Response, error) {
 	return do5ExchangeFn(r)
 }
+
+*/
 
 func _ExampleBuildChain_Panic_Type() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
@@ -240,7 +237,7 @@ func _ExampleBuildChain_Panic_Nil() {
 
 func _ExampleBuildChain_Exchange_Panic() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do5ExchangeFn, do3LinkFn})
+	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3LinkFn})
 	ex(req)
 
 	//Output:

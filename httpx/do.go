@@ -36,9 +36,14 @@ func init() {
 
 // Do - process an HTTP request, checking for file:// scheme
 func Do(req *http.Request) (resp *http.Response, err error) {
+	var deadline bool
+
 	// panic if req or URL is nil - should be resolved during testing
 	if req.URL.Scheme == fileScheme {
 		return NewResponseFromUri(req.URL)
+	}
+	if req.Context() != nil {
+		_, deadline = req.Context().Deadline()
 	}
 	resp, err = Client.Do(req)
 	if resp != nil && resp.Header == nil {
@@ -52,6 +57,10 @@ func Do(req *http.Request) (resp *http.Response, err error) {
 			}
 		}
 		resp = serverResponse
+	} else {
+		if deadline {
+			err = TransformBody(resp)
+		}
 	}
 	return
 }

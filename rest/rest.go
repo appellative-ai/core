@@ -31,11 +31,10 @@ func BuildChain(links []any) Exchange {
 		return nil
 	}
 	last := len(links) - 1
-	// create the last link which is of type Exchange or Exchangeable
-	head := exchangeLink(links[last])
+	var head Exchange
 
 	// build rest of chain
-	for i := last - 1; i >= 0; i-- {
+	for i := last; i >= 0; i-- {
 		if fn, ok := links[i].(func(next Exchange) Exchange); ok {
 			head = fn(head)
 			continue
@@ -49,25 +48,13 @@ func BuildChain(links []any) Exchange {
 	return head
 }
 
-// exchangeLink - last link needs to be of type Exchange or Exchangeable
-func exchangeLink(last any) Exchange {
-	if ex, ok := last.(func(r *http.Request) (*http.Response, error)); ok {
-		return ex
-	}
-	if exc, ok1 := last.(Exchangeable); ok1 {
-		return exc.Exchange
-	}
-	panic(last)
-}
-
 // BuildMessagingChain - build a chain of messaging processing - panic on nil or invalid type links
 func BuildMessagingChain(links []any) Exchange {
 	if len(links) == 0 {
 		return nil
 	}
 	last := len(links) - 1
-	// create the last link which is of type Exchange or Exchangeable
-	head := exchangeLink(links[last])
+	var head Exchange
 
 	// build chain
 	for i := last; i >= 0; i-- {
@@ -83,3 +70,18 @@ func BuildMessagingChain(links []any) Exchange {
 	}
 	return head
 }
+
+// exchangeLink - last link needs to be of type Exchange or Exchangeable
+/*
+func exchangeLink(last any) Exchange {
+	if ex, ok := last.(func(r *http.Request) (*http.Response, error)); ok {
+		return ex
+	}
+	if exc, ok1 := last.(Exchangeable); ok1 {
+		return exc.Exchange
+	}
+	panic(last)
+}
+
+
+*/

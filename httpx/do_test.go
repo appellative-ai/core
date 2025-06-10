@@ -217,29 +217,29 @@ func ExampleExchangeDo_OK() {
 
 }
 
-/*
 func ExampleExchangeDo_Timeout() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*1)
 	defer cancel()
 	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, "https://www.google.com/search?q=golang", nil)
 
-	resp, err := exchangeDo(req)
-	fmt.Printf("test: ExchangeDo_Timeout()-Get()-timeout -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
+	resp, err := Do(req)
+	fmt.Printf("test: Do_Timeout() -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
 	ctx2, cancel2 := context.WithTimeout(context.Background(), time.Second*8)
 	defer cancel2()
 	req, _ = http.NewRequestWithContext(ctx2, http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	resp, err = exchangeDo(req)
-	fmt.Printf("test: ExchangeDo_Timeout()-ReadAll()-timeout -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
+	resp, err = Do(req)
+	fmt.Printf("test: Do() -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
+
+	buf, err1 := io.ReadAll(resp.Body)
+	fmt.Printf("test: io.ReadAll() -> [buff:%v] [err:%v]\n", len(buf), err1)
 
 	//Output:
-	//test: ExchangeDo_Timeout()-Get()-timeout -> [status-code:504] [err:<nil>]
-	//test: ExchangeDo_Timeout()-ReadAll()-timeout -> [status-code:200] [err:<nil>]
+	//test: Do_Timeout() -> [status-code:504] [err:Get "https://www.google.com/search?q=golang": context deadline exceeded]
+	//test: Do() -> [status-code:200] [err:<nil>]
+	//test: io.ReadAll() -> [buff:83659] [err:<nil>]
 
 }
-
-
-*/
 
 func ExampleExchangeDoWithTimeout() {
 	req, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q=golang", nil)

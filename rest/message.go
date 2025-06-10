@@ -7,6 +7,7 @@ const (
 	ContentTypeExchange = "application/x-exchange"
 )
 
+/*
 func NewRouteMessage(name, uri string, ex Exchange) *messaging.Message {
 	return messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent).SetContent(ContentTypeRoute, NewRoute(name, uri, ex))
 }
@@ -17,6 +18,9 @@ func RouteContent(m *messaging.Message) (*Route, *messaging.Status) {
 	}
 	return messaging.New[*Route](m.Content)
 }
+
+
+*/
 
 func NewExchangeMessage(ex Exchange) *messaging.Message {
 	return messaging.NewMessage(messaging.ChannelControl, messaging.ConfigEvent).SetContent(ContentTypeExchange, ex)
