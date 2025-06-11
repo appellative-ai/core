@@ -420,10 +420,10 @@ func ExampleBuildChain_Combined() {
 
 }
 
-func ExampleBuildChain_Empty() {
+func _ExampleBuildChain_Empty() {
+	// This will panic
 	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]](nil)
 	fmt.Printf("test: BuildChain_Empty() -> %v\n", rec)
-	//rec(messaging.ShutdownMessage)
 
 	//Output:
 	//test: BuildChain_Empty() -> <nil>

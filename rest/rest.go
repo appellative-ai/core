@@ -34,7 +34,7 @@ func BuildReceiverChain(links []any) messaging.Receiver {
 // BuildChain - build a chain of links - panic on nil or invalid type links
 func BuildChain[T any, U Chainable[T]](links []any) (head T) {
 	if len(links) == 0 {
-		return head
+		panic("error: chain links slice is nil")
 	}
 	for i := len(links) - 1; i >= 0; i-- {
 		// Check for a next function
