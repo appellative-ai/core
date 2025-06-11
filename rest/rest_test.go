@@ -361,3 +361,34 @@ func ExampleBuildChainMessage_Any() {
 	//test: Do3-Message() -> receive
 	//test: Do4-Message() -> receive
 }
+
+type do1Combined struct{}
+
+func (d do1Combined) Link(next messaging.Receiver) messaging.Receiver {
+	return do1MessageFn(next)
+}
+
+func (d do1Combined) doExchange(next Exchange) Exchange {
+	return do1ExchangeFn(next)
+}
+
+func ExampleBuildChain_Combined() {
+	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1Combined{}})
+	rec(messaging.ShutdownMessage)
+
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+
+	// This will panic as do1Combined is not of type Chainable[Exchange]
+	//ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Combined{}})
+	//ex(req)
+
+	// This works
+	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Combined{}.doExchange})
+	ex(req)
+
+	//Output:
+	//test: Do1-Message() -> receive
+	//test: Do1-Exchange() -> request
+	//test: Do1-Exchange() -> response
+
+}
