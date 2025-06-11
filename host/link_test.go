@@ -8,32 +8,38 @@ import (
 	"time"
 )
 
-func limitLink(req *http.Request) (*http.Response, error) {
-	time.Sleep(time.Second * 3)
-	h := make(http.Header)
-	h.Add(access.XRateLimit, "123")
-	return &http.Response{StatusCode: http.StatusTooManyRequests, Header: h}, nil
+func limitLink(next rest.Exchange) rest.Exchange {
+	return func(req *http.Request) (*http.Response, error) {
+		time.Sleep(time.Second * 3)
+		h := make(http.Header)
+		h.Add(access.XRateLimit, "123")
+		return &http.Response{StatusCode: http.StatusTooManyRequests, Header: h}, nil
+	}
 }
 
-func timeoutLink(req *http.Request) (*http.Response, error) {
-	time.Sleep(time.Second * 3)
-	h := make(http.Header)
-	h.Add(access.XTimeout, "1500ms")
-	return &http.Response{StatusCode: http.StatusGatewayTimeout, Header: h}, nil
+func timeoutLink(next rest.Exchange) rest.Exchange {
+	return func(req *http.Request) (*http.Response, error) {
+		time.Sleep(time.Second * 3)
+		h := make(http.Header)
+		h.Add(access.XTimeout, "1500ms")
+		return &http.Response{StatusCode: http.StatusGatewayTimeout, Header: h}, nil
+	}
 }
 
-func redirectLink(req *http.Request) (*http.Response, error) {
-	time.Sleep(time.Second * 3)
-	h := make(http.Header)
-	h.Add(access.XRedirect, "51")
-	h.Add(access.XTimeout, "1500ms")
-	return &http.Response{StatusCode: http.StatusGatewayTimeout, Header: h}, nil
+func redirectLink(next rest.Exchange) rest.Exchange {
+	return func(req *http.Request) (*http.Response, error) {
+		time.Sleep(time.Second * 3)
+		h := make(http.Header)
+		h.Add(access.XRedirect, "51")
+		h.Add(access.XTimeout, "1500ms")
+		return &http.Response{StatusCode: http.StatusGatewayTimeout, Header: h}, nil
+	}
 }
 
 func ExampleAccessLogLink_Limit() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := rest.BuildChain([]any{accessLogLink, limitLink})
+	ex := rest.BuildChain[rest.Exchange, rest.Chainable[rest.Exchange]]([]any{accessLogLink, limitLink})
 	ex(req)
 
 	//Output:
@@ -44,7 +50,7 @@ func ExampleAccessLogLink_Limit() {
 func ExampleAccessLogLink_Timeout() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := rest.BuildChain([]any{accessLogLink, timeoutLink})
+	ex := rest.BuildChain[rest.Exchange, rest.Chainable[rest.Exchange]]([]any{accessLogLink, timeoutLink})
 	ex(req)
 
 	//Output:
@@ -56,7 +62,7 @@ func ExampleAccessLogLink_Timeout() {
 func ExampleAccessLogLink_Redirect() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := rest.BuildChain([]any{accessLogLink, redirectLink})
+	ex := rest.BuildChain[rest.Exchange, rest.Chainable[rest.Exchange]]([]any{accessLogLink, redirectLink})
 	ex(req)
 
 	//Output:

@@ -24,8 +24,10 @@ func (a *agentT) Uri() string { return "agent:test" }
 // Message - message the agent
 func (a *agentT) Message(m *messaging.Message) {}
 
-func (a *agentT) Exchange(r *http.Request) (*http.Response, error) {
-	return nil, nil
+func (a *agentT) Link(next rest.Exchange) rest.Exchange {
+	return func(r *http.Request) (*http.Response, error) {
+		return nil, nil
+	}
 }
 
 func ExchangeTest(w http.ResponseWriter, r *http.Request, handler rest.Exchange) {
