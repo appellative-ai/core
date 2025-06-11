@@ -267,105 +267,105 @@ func ExampleBuildChain_Chainable() {
 
 }
 
-func do1MessageFn(next messaging.Receiver) messaging.Receiver {
+func do1ReceiverFn(next messaging.Receiver) messaging.Receiver {
 	return func(m *messaging.Message) {
-		fmt.Printf("test: Do1-Message() -> receive\n")
+		fmt.Printf("test: Do1-Receiver() -> receive\n")
 		if next != nil {
 			next(m)
 		}
 	}
 }
 
-func do2MessageFn(next messaging.Receiver) messaging.Receiver {
+func do2ReceiverFn(next messaging.Receiver) messaging.Receiver {
 	return func(m *messaging.Message) {
-		fmt.Printf("test: Do2-Message() -> receive\n")
+		fmt.Printf("test: Do2-Receiver() -> receive\n")
 		if next != nil {
 			next(m)
 		}
 	}
 }
 
-func do3MessageFn(next messaging.Receiver) messaging.Receiver {
+func do3ReceiverFn(next messaging.Receiver) messaging.Receiver {
 	return func(m *messaging.Message) {
-		fmt.Printf("test: Do3-Message() -> receive\n")
+		fmt.Printf("test: Do3-Receiver() -> receive\n")
 		if next != nil {
 			next(m)
 		}
 	}
 }
 
-func do4MessageFn(next messaging.Receiver) messaging.Receiver {
+func do4ReceiverFn(next messaging.Receiver) messaging.Receiver {
 	return func(m *messaging.Message) {
-		fmt.Printf("test: Do4-Message() -> receive\n")
+		fmt.Printf("test: Do4-Receiver() -> receive\n")
 		if next != nil {
 			next(m)
 		}
 	}
 }
 
-type do1Message struct{}
+type do1Receiver struct{}
 
-func (d do1Message) Link(next messaging.Receiver) messaging.Receiver {
-	return do1MessageFn(next)
+func (d do1Receiver) Link(next messaging.Receiver) messaging.Receiver {
+	return do1ReceiverFn(next)
 }
 
-type do2Message struct{}
+type do2Receiver struct{}
 
-func (d do2Message) Link(next messaging.Receiver) messaging.Receiver {
-	return do2MessageFn(next)
+func (d do2Receiver) Link(next messaging.Receiver) messaging.Receiver {
+	return do2ReceiverFn(next)
 }
 
-type do3Message struct{}
+type do3Receiver struct{}
 
-func (d do3Message) Link(next messaging.Receiver) messaging.Receiver {
-	return do3MessageFn(next)
+func (d do3Receiver) Link(next messaging.Receiver) messaging.Receiver {
+	return do3ReceiverFn(next)
 }
 
-type do4Message struct{}
+type do4Receiver struct{}
 
-func (d do4Message) Link(next messaging.Receiver) messaging.Receiver {
-	return do4MessageFn(next)
+func (d do4Receiver) Link(next messaging.Receiver) messaging.Receiver {
+	return do4ReceiverFn(next)
 }
 
-func ExampleBuildChainMessage_Func() {
-	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1MessageFn, do2MessageFn, do3MessageFn, do4MessageFn})
+func ExampleBuildChainReceiver_Func() {
+	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1ReceiverFn, do2ReceiverFn, do3ReceiverFn, do4ReceiverFn})
 	rec(messaging.ShutdownMessage)
 
 	//Output:
-	//test: Do1-Message() -> receive
-	//test: Do2-Message() -> receive
-	//test: Do3-Message() -> receive
-	//test: Do4-Message() -> receive
+	//test: Do1-Receiver() -> receive
+	//test: Do2-Receiver() -> receive
+	//test: Do3-Receiver() -> receive
+	//test: Do4-Receiver() -> receive
 
 }
 
-func ExampleBuildChainMessage_Chainable() {
-	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1Message{}, do2Message{}, do3Message{}, do4Message{}})
+func ExampleBuildChainReceiver_Chainable() {
+	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1Receiver{}, do2Receiver{}, do3Receiver{}, do4Receiver{}})
 	rec(messaging.ShutdownMessage)
 
 	//Output:
-	//test: Do1-Message() -> receive
-	//test: Do2-Message() -> receive
-	//test: Do3-Message() -> receive
-	//test: Do4-Message() -> receive
+	//test: Do1-Receiver() -> receive
+	//test: Do2-Receiver() -> receive
+	//test: Do3-Receiver() -> receive
+	//test: Do4-Receiver() -> receive
 
 }
 
-func ExampleBuildChainMessage_Any() {
-	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1Message{}, do2MessageFn, do3Message{}, do4MessageFn})
+func ExampleBuildChainReceiver_Any() {
+	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1Receiver{}, do2ReceiverFn, do3Receiver{}, do4ReceiverFn})
 	rec(messaging.ShutdownMessage)
 
 	//Output:
-	//test: Do1-Message() -> receive
-	//test: Do2-Message() -> receive
-	//test: Do3-Message() -> receive
-	//test: Do4-Message() -> receive
+	//test: Do1-Receiver() -> receive
+	//test: Do2-Receiver() -> receive
+	//test: Do3-Receiver() -> receive
+	//test: Do4-Receiver() -> receive
 }
 
 type do1Combined struct{}
 
 func (d do1Combined) Link(next messaging.Receiver) messaging.Receiver {
-	return do1MessageFn(next)
+	return do1ReceiverFn(next)
 }
 
 func (d do1Combined) doExchange(next Exchange) Exchange {
@@ -387,8 +387,18 @@ func ExampleBuildChain_Combined() {
 	ex(req)
 
 	//Output:
-	//test: Do1-Message() -> receive
+	//test: Do1-Receiver() -> receive
 	//test: Do1-Exchange() -> request
 	//test: Do1-Exchange() -> response
+
+}
+
+func ExampleBuildChain_Empty() {
+	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]](nil)
+	fmt.Printf("test: BuildChain_Empty() -> %v\n", rec)
+	//rec(messaging.ShutdownMessage)
+
+	//Output:
+	//test: BuildChain_Empty() -> <nil>
 
 }
