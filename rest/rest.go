@@ -33,10 +33,12 @@ func BuildChain[T any, U Chainable[T]](links []any) (head T) {
 		return head
 	}
 	for i := len(links) - 1; i >= 0; i-- {
+		// Check for a next function
 		if fn, ok := links[i].(func(next T) T); ok {
 			head = fn(head)
 			continue
 		}
+		// Check for a Chainable interface
 		if c, ok := links[i].(U); ok {
 			head = c.Link(head)
 			continue
