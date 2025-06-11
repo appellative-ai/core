@@ -123,6 +123,34 @@ func (m *Message) SetChannel(channel string) *Message {
 	return m
 }
 
+// SetReply - set a message reply, using the following constraint:
+//
+//	type ReplyConstraints interface {
+//	    Agent | HandlerNotifiable
+//	}
+func (m *Message) SetReply(t any) *Message {
+	if t == nil {
+		m.Reply = func(msg *Message) {
+			fmt.Printf("error: generic type is nil on call to messaging.SetReply\n")
+		}
+		return m
+	}
+	if fn, ok := t.(func(m *Message)); ok {
+		m.Reply = fn
+		return m
+	}
+	if agent, ok := t.(Agent); ok {
+		m.Reply = func(m *Message) {
+			agent.Message(m)
+		}
+		return m
+	}
+	m.Reply = func(msg *Message) {
+		fmt.Printf(fmt.Sprintf("error: generic type: %v, is invalid for messaging.SetReply\n", reflect.TypeOf(t)))
+	}
+	return m
+}
+
 /*
 func (m *Message) SetContentType(contentType string) *Message {
 	if len(contentType) == 0 {
@@ -210,33 +238,6 @@ func Reply(msg *Message, status *Status, from string) {
 	m := NewStatusMessage(status, msg.Name)
 	m.Header.Set(XFrom, from)
 	msg.Reply(m)
-}
-
-// SetReply - set a message reply, using the following constraint:
-//
-//	type ReplyConstraints interface {
-//	    Agent | HandlerNotifiable
-//	}
-func SetReply(msg *Message, t any) {
-	if t == nil {
-		msg.Reply = func(msg *Message) {
-			fmt.Printf("error: generic type is nil on call to messaging.SetReply\n")
-		}
-		return
-	}
-	if fn, ok := t.(func(m *Message)); ok {
-		msg.Reply = fn
-		return
-	}
-	if agent, ok := t.(Agent); ok {
-		msg.Reply = func(m *Message) {
-			agent.Message(m)
-		}
-		return
-	}
-	msg.Reply = func(msg *Message) {
-		fmt.Printf(fmt.Sprintf("error: generic type: %v, is invalid for messaging.SetReply\n", reflect.TypeOf(t)))
-	}
 }
 
 /*

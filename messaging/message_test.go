@@ -68,25 +68,23 @@ func ExampleSetReply() {
 	a.run()
 	m := NewMessage(ChannelControl, "test:agent/test")
 
-	SetReply(m, nil)
+	m.SetReply(nil)
 	m.Reply(NewStatusMessage(StatusOK(), ""))
 
-	SetReply(m, m)
+	m.SetReply(m)
 	m.Reply(NewStatusMessage(StatusOK(), ""))
 
-	SetReply(m, func(m *Message) {
+	m.SetReply(func(m *Message) {
 		fmt.Printf("test: SetReply() -> %v\n", m)
 	})
 	m.Reply(NewStatusMessage(StatusNotFound(), ""))
 
-	SetReply(m, a)
+	m.SetReply(a)
 	m.Reply(NewStatusMessage(StatusOK(), ""))
 
 	time.Sleep(time.Second * 5)
 	a.Message(ShutdownMessage)
 	time.Sleep(time.Second * 5)
-
-	//m.Reply(NewStatusMessage(StatusOK(), ""))
 
 	//Output:
 	//error: generic type is nil on call to messaging.SetReply
