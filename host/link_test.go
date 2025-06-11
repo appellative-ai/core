@@ -39,7 +39,7 @@ func redirectLink(next rest.Exchange) rest.Exchange {
 func ExampleAccessLogLink_Limit() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := rest.BuildChain[rest.Exchange, rest.Chainable[rest.Exchange]]([]any{accessLogLink, limitLink})
+	ex := rest.BuildExchangeChain([]any{accessLogLink, limitLink})
 	ex(req)
 
 	//Output:
@@ -50,7 +50,7 @@ func ExampleAccessLogLink_Limit() {
 func ExampleAccessLogLink_Timeout() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := rest.BuildChain[rest.Exchange, rest.Chainable[rest.Exchange]]([]any{accessLogLink, timeoutLink})
+	ex := rest.BuildExchangeChain([]any{accessLogLink, timeoutLink})
 	ex(req)
 
 	//Output:
@@ -62,7 +62,7 @@ func ExampleAccessLogLink_Timeout() {
 func ExampleAccessLogLink_Redirect() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	req.Header.Add(access.XRequestId, "request-id")
-	ex := rest.BuildChain[rest.Exchange, rest.Chainable[rest.Exchange]]([]any{accessLogLink, redirectLink})
+	ex := rest.BuildExchangeChain([]any{accessLogLink, redirectLink})
 	ex(req)
 
 	//Output:

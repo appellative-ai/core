@@ -15,6 +15,6 @@ func Init(r *http.Request) {
 }
 
 func NewEndpoint(links []any) *rest.Endpoint {
-	chain := rest.BuildChain[rest.Exchange, rest.Chainable[rest.Exchange]](links)
+	chain := rest.BuildExchangeChain(links)
 	return rest.NewEndpoint(ExchangeHandler, Init, chain)
 }

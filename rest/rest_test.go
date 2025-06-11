@@ -7,6 +7,21 @@ import (
 	"net/http"
 )
 
+func ExampleBuildExchangeChain() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	ex := BuildExchangeChain([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
+	ex(req)
+
+	//Output:
+	//test: Do1-Exchange() -> request
+	//test: Do2-Exchange() -> request
+	//test: Do3-Exchange() -> request
+	//test: Do3-Exchange() -> response
+	//test: Do2-Exchange() -> response
+	//test: Do1-Exchange() -> response
+
+}
+
 func ExampleBuildChainExchange_Link() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
@@ -325,6 +340,18 @@ type do4Receiver struct{}
 
 func (d do4Receiver) Link(next messaging.Receiver) messaging.Receiver {
 	return do4ReceiverFn(next)
+}
+
+func ExampleBuildReceiverChain() {
+	rec := BuildReceiverChain([]any{do1ReceiverFn, do2ReceiverFn, do3ReceiverFn, do4ReceiverFn})
+	rec(messaging.ShutdownMessage)
+
+	//Output:
+	//test: Do1-Receiver() -> receive
+	//test: Do2-Receiver() -> receive
+	//test: Do3-Receiver() -> receive
+	//test: Do4-Receiver() -> receive
+
 }
 
 func ExampleBuildChainReceiver_Func() {

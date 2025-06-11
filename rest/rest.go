@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"github.com/behavioral-ai/core/messaging"
 	"net/http"
 )
 
@@ -18,6 +19,16 @@ type ExchangeLink func(next Exchange) Exchange
 // Chainable - interface to create a link
 type Chainable[T any] interface {
 	Link(t T) T
+}
+
+// BuildExchangeChain - build Exchange chain
+func BuildExchangeChain(links []any) Exchange {
+	return BuildChain[Exchange, Chainable[Exchange]](links)
+}
+
+// BuildReceiverChain - build messaging Receiver chain
+func BuildReceiverChain(links []any) messaging.Receiver {
+	return BuildChain[messaging.Receiver, Chainable[messaging.Receiver]](links)
 }
 
 // BuildChain - build a chain of links - panic on nil or invalid type links
