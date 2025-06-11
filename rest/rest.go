@@ -12,15 +12,8 @@ type Exchange func(r *http.Request) (*http.Response, error)
 // ExchangeHandler - extend the http.HandlerFunc to include the http.Response
 type ExchangeHandler func(w http.ResponseWriter, req *http.Request, resp *http.Response)
 
-/*
-// Exchangeable - interface to http Exchanges
-type Exchangeable interface {
-	Exchange(r *http.Request) (*http.Response, error)
-}
-
-// ExchangeLink - interface to link http Exchanges
+// ExchangeLink - interface to link http Exchanges. Used in the collective repository
 type ExchangeLink func(next Exchange) Exchange
-*/
 
 // Chainable - interface to create a link
 type Chainable[T any] interface {
@@ -47,3 +40,10 @@ func BuildChain[T any, U Chainable[T]](links []any) (head T) {
 	}
 	return head
 }
+
+/*
+// Exchangeable - interface to http Exchanges
+type Exchangeable interface {
+	Exchange(r *http.Request) (*http.Response, error)
+}
+*/
