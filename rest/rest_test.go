@@ -3,130 +3,131 @@ package rest
 import (
 	"context"
 	"fmt"
+	"github.com/behavioral-ai/core/messaging"
 	"net/http"
 )
 
-func ExampleBuildChain_Link() {
+func ExampleBuildChainExchange_Link() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3LinkFn})
+	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
 	ex(req)
 
 	//Output:
-	//test: Do1-Link() -> request
-	//test: Do2-Link() -> request
-	//test: Do3-Link() -> request
-	//test: Do3-Link() -> response
-	//test: Do2-Link() -> response
-	//test: Do1-Link() -> response
+	//test: Do1-Exchange() -> request
+	//test: Do2-Exchange() -> request
+	//test: Do3-Exchange() -> request
+	//test: Do3-Exchange() -> response
+	//test: Do2-Exchange() -> response
+	//test: Do1-Exchange() -> response
 
 }
 
-func ExampleBuildChain_Chainable() {
+func ExampleBuildChainExchange_Chainable() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1{}, do2{}, do3{}})
+	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, do2Exchange{}, do3Exchange{}})
 	ex(req)
 
 	//Output:
-	//test: Do1-Link() -> request
-	//test: Do2-Link() -> request
-	//test: Do3-Link() -> request
-	//test: Do3-Link() -> response
-	//test: Do2-Link() -> response
-	//test: Do1-Link() -> response
+	//test: Do1-Exchange() -> request
+	//test: Do2-Exchange() -> request
+	//test: Do3-Exchange() -> request
+	//test: Do3-Exchange() -> response
+	//test: Do2-Exchange() -> response
+	//test: Do1-Exchange() -> response
 
 }
 
-func ExampleBuildChain_Any() {
+func ExampleBuildChainExchange_Any() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1{}, do2LinkFn, do3{}, do4LinkFn})
+	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, do2ExchangeFn, do3Exchange{}, do4ExchangeFn})
 	ex(req)
 
 	//Output:
-	//test: Do1-Link() -> request
-	//test: Do2-Link() -> request
-	//test: Do3-Link() -> request
-	//test: Do4-Link() -> request
-	//test: Do4-Link() -> response
-	//test: Do3-Link() -> response
-	//test: Do2-Link() -> response
-	//test: Do1-Link() -> response
+	//test: Do1-Exchange() -> request
+	//test: Do2-Exchange() -> request
+	//test: Do3-Exchange() -> request
+	//test: Do4-Exchange() -> request
+	//test: Do4-Exchange() -> response
+	//test: Do3-Exchange() -> response
+	//test: Do2-Exchange() -> response
+	//test: Do1-Exchange() -> response
 
 }
 
-func ExampleBuildChain_Abbreviated() {
+func ExampleBuildChainExchange_Abbreviated() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3FailLinkFn, do4LinkFn})
+	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFailFn, do4ExchangeFn})
 	ex(req)
 
 	//Output:
-	//test: Do1-Link() -> request
-	//test: Do2-Link() -> request
-	//test: Do3-Fail-Link() -> request
-	//test: Do3-Fail-Link() -> response
-	//test: Do2-Link() -> response
-	//test: Do1-Link() -> response
+	//test: Do1-Exchange() -> request
+	//test: Do2-Exchange() -> request
+	//test: Do3-Exchange-Fail() -> request
+	//test: Do3-Exchange-Fail() -> response
+	//test: Do2-Exchange() -> response
+	//test: Do1-Exchange() -> response
 
 }
 
 func ExampleBuildChain_Exchange() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3LinkFn})
+	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
 	ex(req)
 
 	//Output:
-	//test: Do1-Link() -> request
-	//test: Do2-Link() -> request
-	//test: Do3-Link() -> request
-	//test: Do3-Link() -> response
-	//test: Do2-Link() -> response
-	//test: Do1-Link() -> response
+	//test: Do1-Exchange() -> request
+	//test: Do2-Exchange() -> request
+	//test: Do3-Exchange() -> request
+	//test: Do3-Exchange() -> response
+	//test: Do2-Exchange() -> response
+	//test: Do1-Exchange() -> response
 
 }
 
-func ExampleBuildChain_Exchangeable() {
+func ExampleBuildChainExchange_Exchangeable() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3LinkFn})
+	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
 	ex(req)
 
 	//Output:
-	//test: Do1-Link() -> request
-	//test: Do2-Link() -> request
-	//test: Do3-Link() -> request
-	//test: Do3-Link() -> response
-	//test: Do2-Link() -> response
-	//test: Do1-Link() -> response
+	//test: Do1-Exchange() -> request
+	//test: Do2-Exchange() -> request
+	//test: Do3-Exchange() -> request
+	//test: Do3-Exchange() -> response
+	//test: Do2-Exchange() -> response
+	//test: Do1-Exchange() -> response
 
 }
 
-func do1LinkFn(next Exchange) Exchange {
+func do1ExchangeFn(next Exchange) Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
-		fmt.Printf("test: Do1-Link() -> request\n")
+		fmt.Printf("test: Do1-Exchange() -> request\n")
 		if next != nil {
 			resp, err = next(req)
 		} else {
 			resp = &http.Response{StatusCode: http.StatusOK}
 		}
-		fmt.Printf("test: Do1-Link() -> response\n")
+		fmt.Printf("test: Do1-Exchange() -> response\n")
 		return
 	}
 }
 
-func do2LinkFn(next Exchange) Exchange {
+func do2ExchangeFn(next Exchange) Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
-		fmt.Printf("test: Do2-Link() -> request\n")
+		fmt.Printf("test: Do2-Exchange() -> request\n")
 		if next != nil {
 			resp, err = next(req)
 		} else {
 			resp = &http.Response{StatusCode: http.StatusOK}
 		}
-		fmt.Printf("test: Do2-Link() -> response\n")
+		fmt.Printf("test: Do2-Exchange() -> response\n")
 		return
 	}
 }
 
-func do3LinkFn(next Exchange) Exchange {
+func do3ExchangeFn(next Exchange) Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
-		fmt.Printf("test: Do3-Link() -> request\n")
+		fmt.Printf("test: Do3-Exchange() -> request\n")
 		//fmt.Printf("test: Do3() -> response\n")
 		//return &http.Response{StatusCode: http.StatusBadRequest}, nil
 		if next != nil {
@@ -134,35 +135,35 @@ func do3LinkFn(next Exchange) Exchange {
 		} else {
 			resp = &http.Response{StatusCode: http.StatusOK}
 		}
-		fmt.Printf("test: Do3-Link() -> response\n")
+		fmt.Printf("test: Do3-Exchange() -> response\n")
 		return
 	}
 }
 
-func do3FailLinkFn(next Exchange) Exchange {
+func do3ExchangeFailFn(next Exchange) Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
-		fmt.Printf("test: Do3-Fail-Link() -> request\n")
-		fmt.Printf("test: Do3-Fail-Link() -> response\n")
+		fmt.Printf("test: Do3-Exchange-Fail() -> request\n")
+		fmt.Printf("test: Do3-Exchange-Fail() -> response\n")
 		return &http.Response{StatusCode: http.StatusBadRequest}, nil
 		if next != nil {
 			resp, err = next(req)
 		} else {
 			resp = &http.Response{StatusCode: http.StatusOK}
 		}
-		fmt.Printf("test: Do3-Fail-Link() -> response\n")
+		fmt.Printf("test: Do3-Exchange-Fail() -> response\n")
 		return
 	}
 }
 
-func do4LinkFn(next Exchange) Exchange {
+func do4ExchangeFn(next Exchange) Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
-		fmt.Printf("test: Do4-Link() -> request\n")
+		fmt.Printf("test: Do4-Exchange() -> request\n")
 		if next != nil {
 			resp, err = next(req)
 		} else {
 			resp = &http.Response{StatusCode: http.StatusOK}
 		}
-		fmt.Printf("test: Do4-Link() -> response\n")
+		fmt.Printf("test: Do4-Exchange() -> response\n")
 		return
 	}
 }
@@ -178,34 +179,34 @@ func do5ExchangeFn(req *http.Request) (resp *http.Response, err error) {
 
 */
 
-type do1 struct{}
+type do1Exchange struct{}
 
-func (d do1) Link(next Exchange) Exchange {
-	return do1LinkFn(next)
+func (d do1Exchange) Link(next Exchange) Exchange {
+	return do1ExchangeFn(next)
 }
 
-type do2 struct{}
+type do2Exchange struct{}
 
-func (d do2) Link(next Exchange) Exchange {
-	return do2LinkFn(next)
+func (d do2Exchange) Link(next Exchange) Exchange {
+	return do2ExchangeFn(next)
 }
 
-type do3 struct{}
+type do3Exchange struct{}
 
-func (d do3) Link(next Exchange) Exchange {
-	return do3LinkFn(next)
+func (d do3Exchange) Link(next Exchange) Exchange {
+	return do3ExchangeFn(next)
 }
 
-type do3Fail struct{}
+type do3FailExchange struct{}
 
-func (d do3Fail) Link(next Exchange) Exchange {
-	return do3FailLinkFn(next)
+func (d do3FailExchange) Link(next Exchange) Exchange {
+	return do3ExchangeFailFn(next)
 }
 
-type do4 struct{}
+type do4Exchange struct{}
 
-func (d do4) Link(next Exchange) Exchange {
-	return do4LinkFn(next)
+func (d do4Exchange) Link(next Exchange) Exchange {
+	return do4ExchangeFn(next)
 }
 
 /*
@@ -219,7 +220,7 @@ func (d do5) Exchange(r *http.Request) (*http.Response, error) {
 
 func _ExampleBuildChain_Panic_Type() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1{}, req, do3{}, do4LinkFn})
+	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, req, do3Exchange{}, do4ExchangeFn})
 	ex(req)
 
 	//Output:
@@ -228,7 +229,7 @@ func _ExampleBuildChain_Panic_Type() {
 
 func _ExampleBuildChain_Panic_Nil() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1{}, nil, do3{}, do4LinkFn})
+	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, nil, do3Exchange{}, do4ExchangeFn})
 	ex(req)
 
 	//Output:
@@ -237,7 +238,7 @@ func _ExampleBuildChain_Panic_Nil() {
 
 func _ExampleBuildChain_Exchange_Panic() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain([]any{do1LinkFn, do2LinkFn, do3LinkFn})
+	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
 	ex(req)
 
 	//Output:
@@ -249,4 +250,114 @@ func _ExampleBuildChain_Exchange_Panic() {
 	//test: Do3-Link() -> response
 	//test: Do2-Link() -> response
 
+}
+
+func ExampleBuildChain_Chainable() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, do2Exchange{}, do3Exchange{}})
+	ex(req)
+
+	//Output:
+	//test: Do1-Exchange() -> request
+	//test: Do2-Exchange() -> request
+	//test: Do3-Exchange() -> request
+	//test: Do3-Exchange() -> response
+	//test: Do2-Exchange() -> response
+	//test: Do1-Exchange() -> response
+
+}
+
+func do1MessageFn(next messaging.Receiver) messaging.Receiver {
+	return func(m *messaging.Message) {
+		fmt.Printf("test: Do1-Message() -> receive\n")
+		if next != nil {
+			next(m)
+		}
+	}
+}
+
+func do2MessageFn(next messaging.Receiver) messaging.Receiver {
+	return func(m *messaging.Message) {
+		fmt.Printf("test: Do2-Message() -> receive\n")
+		if next != nil {
+			next(m)
+		}
+	}
+}
+
+func do3MessageFn(next messaging.Receiver) messaging.Receiver {
+	return func(m *messaging.Message) {
+		fmt.Printf("test: Do3-Message() -> receive\n")
+		if next != nil {
+			next(m)
+		}
+	}
+}
+
+func do4MessageFn(next messaging.Receiver) messaging.Receiver {
+	return func(m *messaging.Message) {
+		fmt.Printf("test: Do4-Message() -> receive\n")
+		if next != nil {
+			next(m)
+		}
+	}
+}
+
+type do1Message struct{}
+
+func (d do1Message) Link(next messaging.Receiver) messaging.Receiver {
+	return do1MessageFn(next)
+}
+
+type do2Message struct{}
+
+func (d do2Message) Link(next messaging.Receiver) messaging.Receiver {
+	return do2MessageFn(next)
+}
+
+type do3Message struct{}
+
+func (d do3Message) Link(next messaging.Receiver) messaging.Receiver {
+	return do3MessageFn(next)
+}
+
+type do4Message struct{}
+
+func (d do4Message) Link(next messaging.Receiver) messaging.Receiver {
+	return do4MessageFn(next)
+}
+
+func ExampleBuildChainMessage_Func() {
+	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1MessageFn, do2MessageFn, do3MessageFn, do4MessageFn})
+	rec(messaging.ShutdownMessage)
+
+	//Output:
+	//test: Do1-Message() -> receive
+	//test: Do2-Message() -> receive
+	//test: Do3-Message() -> receive
+	//test: Do4-Message() -> receive
+
+}
+
+func ExampleBuildChainMessage_Chainable() {
+	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1Message{}, do2Message{}, do3Message{}, do4Message{}})
+	rec(messaging.ShutdownMessage)
+
+	//Output:
+	//test: Do1-Message() -> receive
+	//test: Do2-Message() -> receive
+	//test: Do3-Message() -> receive
+	//test: Do4-Message() -> receive
+
+}
+
+func ExampleBuildChainMessage_Any() {
+	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1Message{}, do2MessageFn, do3Message{}, do4MessageFn})
+	rec(messaging.ShutdownMessage)
+
+	//Output:
+	//test: Do1-Message() -> receive
+	//test: Do2-Message() -> receive
+	//test: Do3-Message() -> receive
+	//test: Do4-Message() -> receive
 }

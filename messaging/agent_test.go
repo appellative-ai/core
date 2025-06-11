@@ -11,7 +11,7 @@ type testAgent struct {
 	name       string
 	ctrl       *Channel
 	data       *Channel
-	handler    Handler
+	handler    Receiver
 	shutdownFn func()
 }
 

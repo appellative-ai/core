@@ -331,7 +331,7 @@ func (p *publisher) run() {
 				fmt.Printf("test: publisher() -> [received] [%v]\n", m.Name)
 				if subs, ok := p.catalog.Lookup(m.Name); ok {
 					for _, item := range subs {
-						m.SetTo(item.From)
+						m.AddTo(item.From)
 						fmt.Printf("test: publisher() -> [published] [%v] [subscriber:%v] \n", item.Name, item.From)
 						exchange.Message(m)
 					}

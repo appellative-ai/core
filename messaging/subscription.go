@@ -102,8 +102,8 @@ func NewSubscriptionCreateMessage(to string, s Subscription) *Message {
 	}
 	// Send to publishers control channel
 	m := NewMessage(ChannelControl, SubscriptionCreateEvent)
-	m.SetTo(to)
-	m.SetFrom(s.From)
+	m.AddTo(to)
+	m.AddFrom(s.From)
 	// Allow subscriber to determine receive channel
 	if s.Channel == "" {
 		s.Channel = ChannelControl
@@ -124,8 +124,8 @@ func NewSubscriptionCancelMessage(to, from, Name string) *Message {
 		return nil
 	}
 	m := NewMessage(ChannelControl, SubscriptionCancelEvent)
-	m.SetTo(to)
-	m.SetFrom(from)
+	m.AddTo(to)
+	m.AddFrom(from)
 	m.SetContent(ContentTypeSubscription, Subscription{From: from, Name: Name})
 	return m
 }

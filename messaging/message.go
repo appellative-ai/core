@@ -53,10 +53,10 @@ var (
 )
 
 // Handler - uniform interface for message handling
-type Handler func(*Message)
+//type Handler func(*Message)
 
-// HandleFunc - func for message handling
-//type HandleFunc func(msg *Message)
+// Receiver - func for message receive
+type Receiver func(msg *Message)
 
 // Message - message
 type Message struct {
@@ -64,7 +64,7 @@ type Message struct {
 	Header  http.Header
 	Content *Content
 	Expiry  time.Time
-	Reply   Handler
+	Reply   Receiver
 }
 
 func NewMessage(channel, name string) *Message {
@@ -91,7 +91,7 @@ func (m *Message) RelatesTo() string {
 	return m.Header.Get(XRelatesTo)
 }
 
-func (m *Message) SetRelatesTo(s string) *Message {
+func (m *Message) AddRelatesTo(s string) *Message {
 	m.Header.Add(XRelatesTo, s)
 	return m
 }
@@ -100,8 +100,8 @@ func (m *Message) To() string {
 	return m.Header.Get(XTo)
 }
 
-func (m *Message) SetTo(name string) *Message {
-	m.Header.Set(XTo, name)
+func (m *Message) AddTo(name string) *Message {
+	m.Header.Add(XTo, name)
 	return m
 }
 
@@ -109,8 +109,8 @@ func (m *Message) From() string {
 	return m.Header.Get(XFrom)
 }
 
-func (m *Message) SetFrom(name string) *Message {
-	m.Header.Set(XFrom, name)
+func (m *Message) AddFrom(name string) *Message {
+	m.Header.Add(XFrom, name)
 	return m
 }
 
@@ -203,7 +203,7 @@ func MapContent(m *Message) (map[string]string, *Status) {
 func NewStatusMessage(status *Status, relatesTo string) *Message {
 	m := NewMessage(ChannelControl, StatusEvent).SetContent(ContentTypeStatus, status)
 	if relatesTo != "" {
-		m.Header.Set(XRelatesTo, relatesTo)
+		m.AddRelatesTo(relatesTo)
 	}
 	return m
 }
