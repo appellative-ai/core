@@ -12,7 +12,7 @@ func ExampleNewMessage() {
 	fmt.Printf("test: NewMessage() -> [%v]\n", m)
 
 	//Output:
-	//test: NewMessage() -> [[chan:channel] [from:] [to:] [common:core:event/startup]]
+	//test: NewMessage() -> [[chan:channel] [from:] [to:[]] [common:core:event/startup]]
 
 }
 
@@ -89,8 +89,8 @@ func ExampleSetReply() {
 	//Output:
 	//error: generic type is nil on call to messaging.SetReply
 	//error: generic type: *messaging.Message, is invalid for messaging.SetReply
-	//test: SetReply() -> [chan:ctrl] [from:] [to:] [common:core:event/status]
-	//test: controlAgent.run() -> [chan:ctrl] [from:] [to:] [common:core:event/status]
-	//test: controlAgent.run() -> [chan:ctrl] [from:] [to:] [common:core:event/shutdown]
+	//test: SetReply() -> [chan:ctrl] [from:] [to:[]] [common:core:event/status]
+	//test: controlAgent.run() -> [chan:ctrl] [from:] [to:[]] [common:core:event/status]
+	//test: controlAgent.run() -> [chan:ctrl] [from:] [to:[]] [common:core:event/shutdown]
 
 }

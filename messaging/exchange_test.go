@@ -217,11 +217,41 @@ func ExampleMessage() {
 	resp1 := <-c.C
 	resp2 := <-c.C
 	resp3 := <-c.C
-	fmt.Printf("test: <- c -> : [%v] [%v] [%v]\n", resp1.To(), resp2.To(), resp3.To())
+	fmt.Printf("test: <- c -> : %v %v %v\n", resp1.To(), resp2.To(), resp3.To())
 	c.Close()
 
 	//Output:
 	//test: <- c -> : [urn:agent-1] [urn:agent-2] [urn:agent-3]
+
+}
+
+func ExampleMessage_To() {
+	name1 := "*:*:agent/test-1"
+	name2 := "*:*:agent/test-2"
+	name3 := "*:*:agent/test-3"
+	c := NewChannel("test") //make(chan *Message, 16)
+	ex := NewExchange()
+
+	a1 := newTestAgent(name1, c, nil)
+	ex.Register(a1)
+	a2 := newTestAgent(name2, c, nil)
+	ex.Register(a2)
+	a3 := newTestAgent(name3, c, nil)
+	ex.Register(a3)
+
+	m := NewMessage(ChannelControl, "event/test-multiple-to")
+	m.AddTo(name1)
+	sent := ex.Message(m)
+	fmt.Printf("test: exchange.Message() -> [count:%v] [sent:%v]\n", len(m.To()), sent)
+
+	m = NewMessage(ChannelControl, "event/test-multiple-to")
+	m.AddTo(name1, name2, name3)
+	sent = ex.Message(m)
+	fmt.Printf("test: exchange.Message() -> [count:%v] [sent:%v]\n", len(m.To()), sent)
+
+	//Output:
+	//test: exchange.Message() -> [count:1] [sent:true]
+	//test: exchange.Message() -> [count:3] [sent:true]
 
 }
 

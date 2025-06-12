@@ -91,17 +91,19 @@ func (m *Message) RelatesTo() string {
 	return m.Header.Get(XRelatesTo)
 }
 
-func (m *Message) AddRelatesTo(s string) *Message {
-	m.Header.Add(XRelatesTo, s)
+func (m *Message) SetRelatesTo(s string) *Message {
+	m.Header.Set(XRelatesTo, s)
 	return m
 }
 
-func (m *Message) To() string {
-	return m.Header.Get(XTo)
+func (m *Message) To() []string {
+	return m.Header.Values(XTo)
 }
 
-func (m *Message) AddTo(name string) *Message {
-	m.Header.Add(XTo, name)
+func (m *Message) AddTo(names ...string) *Message {
+	for _, n := range names {
+		m.Header.Add(XTo, n)
+	}
 	return m
 }
 
@@ -109,8 +111,8 @@ func (m *Message) From() string {
 	return m.Header.Get(XFrom)
 }
 
-func (m *Message) AddFrom(name string) *Message {
-	m.Header.Add(XFrom, name)
+func (m *Message) SetFrom(name string) *Message {
+	m.Header.Set(XFrom, name)
 	return m
 }
 
@@ -203,7 +205,7 @@ func MapContent(m *Message) (map[string]string, *Status) {
 func NewStatusMessage(status *Status, relatesTo string) *Message {
 	m := NewMessage(ChannelControl, StatusEvent).SetContent(ContentTypeStatus, status)
 	if relatesTo != "" {
-		m.AddRelatesTo(relatesTo)
+		m.SetRelatesTo(relatesTo)
 	}
 	return m
 }

@@ -73,15 +73,19 @@ func (e *Exchange) Get(name string) Agent {
 }
 
 // Message - send a message
-func (e *Exchange) Message(msg *Message) bool {
+func (e *Exchange) Message(msg *Message) (sent bool) {
 	if msg == nil {
 		return false
 	}
-	a := e.Get(msg.To())
-	if a != nil {
-		a.Message(msg)
+	list := msg.Header.Values(XTo)
+	for _, id := range list {
+		a := e.Get(id)
+		if a != nil {
+			sent = true
+			a.Message(msg)
+		}
 	}
-	return a != nil
+	return sent
 }
 
 // Broadcast - broadcast a message
