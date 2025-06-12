@@ -46,7 +46,7 @@ var operators = map[string]*Operator{
 	RedirectOperator:        {"redirect", RedirectOperator},
 }
 
-func CreateOperators(operators []string) ([]Operator, error) {
+func createOperators(operators []string) ([]Operator, error) {
 	var items []Operator
 	for _, op := range operators {
 		items = append(items, Operator{
@@ -54,10 +54,10 @@ func CreateOperators(operators []string) ([]Operator, error) {
 			Value: op,
 		})
 	}
-	return InitOperators(items)
+	return initOperators(items)
 }
 
-func InitOperators(operators []Operator) ([]Operator, error) {
+func initOperators(operators []Operator) ([]Operator, error) {
 	var items []Operator
 
 	if len(operators) == 0 {
@@ -82,7 +82,7 @@ func createOperator(op Operator) (Operator, error) {
 	if op.Value == "" {
 		return Operator{}, errors.New(fmt.Sprintf("invalid operator: value is empty %v", op.Name))
 	}
-	if IsDirectOperator(op) {
+	if isDirectOperator(op) {
 		if op.Name == "" {
 			return Operator{}, errors.New(fmt.Sprintf("invalid operator: name is empty [%v]", op.Value))
 		}

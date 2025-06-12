@@ -83,7 +83,7 @@ func Example_CreateOperators() {
 		items []Operator
 	)
 
-	items, err = CreateOperators([]string{TrafficOperator,
+	items, err = createOperators([]string{TrafficOperator,
 		StartTimeOperator,
 		DurationOperator,
 		OriginRegionOperator})
@@ -100,27 +100,27 @@ func Example_InitOperators() {
 		items []Operator
 	)
 
-	items, err = InitOperators([]Operator{})
+	items, err = initOperators([]Operator{})
 	fmt.Printf("test: InitOperators({}) -> [err:%v] [%v]\n", err, items)
 
-	items, err = InitOperators([]Operator{{Name: "name", Value: ""}})
+	items, err = initOperators([]Operator{{Name: "name", Value: ""}})
 	fmt.Printf("test: InitOperators(\"items: nil\") -> [err:%v] [%v]\n", err, items)
 
-	items, err = InitOperators([]Operator{{Name: "", Value: "%INVALID"}})
+	items, err = initOperators([]Operator{{Name: "", Value: "%INVALID"}})
 	fmt.Printf("test: InitOperators(\"Value: INVALID\") -> [err:%v] [%v]\n", err, items)
 
-	items, err = InitOperators([]Operator{{Name: "name", Value: "static"}})
+	items, err = initOperators([]Operator{{Name: "name", Value: "static"}})
 	fmt.Printf("test: InitOperators(\"Value: static\") -> [err:%v] [%v]\n", err, items)
 
-	items, err = InitOperators([]Operator{{Name: "", Value: "%START_TIME%"}})
+	items, err = initOperators([]Operator{{Name: "", Value: "%START_TIME%"}})
 	fmt.Printf("test: InitOperators(\"Value: START_TIME\") -> [err:%v] [%v]\n", err, items)
 
-	items, err = InitOperators([]Operator{{Name: "duration", Value: "%DURATION%"}})
+	items, err = initOperators([]Operator{{Name: "duration", Value: "%DURATION%"}})
 	fmt.Printf("test: InitOperators(\"Value: START_TIME\") -> [err:%v] [%v]\n", err, items)
 
 	var newItems []Operator
 
-	newItems, err = InitOperators([]Operator{{Name: "duration", Value: "%DURATION%"}, {Name: "duration", Value: "%DURATION%"}})
+	newItems, err = initOperators([]Operator{{Name: "duration", Value: "%DURATION%"}, {Name: "duration", Value: "%DURATION%"}})
 	fmt.Printf("test: InitOperators(\"Value: START_TIME\") -> [err:%v] [%v]\n", err, newItems)
 
 	//Output:

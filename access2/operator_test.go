@@ -6,10 +6,10 @@ import (
 
 func Example_IsDirectOperator() {
 	op := Operator{Name: "test", Value: "   %"}
-	fmt.Printf("test: IsDirectOperator() -> %v [value:%v]\n", IsDirectOperator(op), op.Value)
+	fmt.Printf("test: IsDirectOperator() -> %v [value:%v]\n", isDirectOperator(op), op.Value)
 
 	op = Operator{Name: "test", Value: "%"}
-	fmt.Printf("test: IsDirectOperator() -> %v [value:%v]\n", IsDirectOperator(op), op.Value)
+	fmt.Printf("test: IsDirectOperator() -> %v [value:%v]\n", isDirectOperator(op), op.Value)
 
 	//Output:
 	//test: IsDirectOperator() -> true [value:   %]

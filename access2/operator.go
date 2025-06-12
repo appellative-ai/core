@@ -52,30 +52,13 @@ const (
 
 )
 
-func init() {
-	defaultOperators, _ = CreateOperators([]string{TrafficOperator,
-		StartTimeOperator,
-		DurationOperator,
-		RouteOperator,
-		RequestMethodOperator,
-		RequestUrlOperator,
-		ResponseStatusCodeOperator,
-		ResponseCachedOperator,
-		ResponseContentEncodingOperator,
-		ResponseBytesReceivedOperator,
-		TimeoutDurationOperator,
-		RateLimitOperator,
-		RedirectOperator,
-	})
-}
-
 // Operator - configuration of logging entries
 type Operator struct {
 	Name  string
 	Value string
 }
 
-func IsDirectOperator(op Operator) bool {
+func isDirectOperator(op Operator) bool {
 	return !strings.HasPrefix(op.Value, OperatorPrefix)
 }
 
