@@ -31,6 +31,7 @@ type LogAgent interface {
 	messaging.Agent
 	SetOrigin(region, zone, subZone, host, instanceId string)
 	ConfigureOperators(read func() ([]byte, error)) error
+	Log(traffic string, start time.Time, duration time.Duration, route string, req any, resp any, thresholds Threshold)
 }
 
 var (

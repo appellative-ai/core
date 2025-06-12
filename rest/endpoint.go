@@ -3,13 +3,15 @@ package rest
 import "net/http"
 
 type Endpoint struct {
+	Pattern string
 	Handler ExchangeHandler
 	Chain   Exchange
 	Init    func(r *http.Request)
 }
 
-func NewEndpoint(handler ExchangeHandler, init func(r *http.Request), chain Exchange) *Endpoint {
+func NewEndpoint(pattern string, handler ExchangeHandler, init func(r *http.Request), chain Exchange) *Endpoint {
 	e := new(Endpoint)
+	e.Pattern = pattern
 	e.Handler = handler
 	e.Chain = chain
 	e.Init = init
