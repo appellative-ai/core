@@ -35,12 +35,13 @@ type LogAgent interface {
 }
 
 var (
-	Agent = newLogAgent()
+	Agent LogAgent
 	agent *agentT
 )
 
 func init() {
 	log.SetFlags(0)
+	Agent = newLogAgent()
 }
 
 type agentT struct {
