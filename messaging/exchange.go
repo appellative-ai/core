@@ -112,14 +112,14 @@ func (e *Exchange) Broadcast(msg *Message) {
 // Register - register an agent
 func (e *Exchange) Register(agent Agent) error {
 	if agent == nil {
-		return errors.New("error: exchange.Register() agent is nil")
+		return errors.New("exchange.Register() agent is nil")
 	}
 	if agent.Name() == "" {
-		return errors.New("error: exchange.Register() agent Name is empty")
+		return errors.New("exchange.Register() agent Name is empty")
 	}
 	_, ok := e.m.Load(agent.Name())
 	if ok {
-		return errors.New(fmt.Sprintf("error: exchange.Register() agent already exists: [%v]", agent.Name()))
+		return errors.New(fmt.Sprintf("exchange.Register() agent already exists: [%v]", agent.Name()))
 	}
 	e.m.Store(agent.Name(), agent)
 	/*
