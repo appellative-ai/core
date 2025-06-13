@@ -1,8 +1,10 @@
 package rest
 
 import (
+	"fmt"
 	"github.com/behavioral-ai/core/messaging"
 	"net/http"
+	"reflect"
 )
 
 // Micro-REST
@@ -47,7 +49,7 @@ func BuildChain[T any, U Chainable[T]](links []any) (head T) {
 			head = c.Link(head)
 			continue
 		}
-		panic(links[i])
+		panic(fmt.Sprintf("invalid link type: %v", reflect.TypeOf(links[i])))
 	}
 	return head
 }

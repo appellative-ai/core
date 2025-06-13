@@ -429,3 +429,13 @@ func _ExampleBuildChain_Empty() {
 	//test: BuildChain_Empty() -> <nil>
 
 }
+
+func ExampleBuildChain_Invalid_Link() {
+	// This will panic
+	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{"test string"})
+	fmt.Printf("test: BuildChain_Empty() -> %v\n", rec)
+
+	//Output:
+	//test: BuildChain_Empty() -> <nil>
+
+}
