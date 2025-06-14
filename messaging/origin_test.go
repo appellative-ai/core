@@ -78,3 +78,32 @@ func ExampleNewOrigin_Error() {
 	//test: NewOrigin() -> [collective:domain:service/region/zone/host] [status:OK]
 
 }
+
+func ExampleIsLocalCollectiveNewOrigin() {
+	m := map[string]string{
+		RegionKey:      "region",
+		ZoneKey:        "zone",
+		SubZoneKey:     "sub-zone",
+		HostKey:        "host",
+		ServiceNameKey: "service-name",
+		InstanceIdKey:  "instance-id",
+		CollectiveKey:  "collective",
+		DomainKey:      "domain",
+	}
+	o, _ := NewOrigin(m)
+
+	name1 := ""
+	fmt.Printf("test: IsLocalCollective(\"%v\") -> [local:%v]\n", name1, o.IsLocalCollective(name1))
+
+	name1 = o.Collective
+	fmt.Printf("test: IsLocalCollective(\"%v\") -> [local:%v]\n", name1, o.IsLocalCollective(name1))
+
+	name1 = o.Collective + ":"
+	fmt.Printf("test: IsLocalCollective(\"%v\") -> [local:%v]\n", name1, o.IsLocalCollective(name1))
+
+	//Output:
+	//test: IsLocalCollective("") -> [local:false]
+	//test: IsLocalCollective("collective") -> [local:false]
+	//test: IsLocalCollective("collective:") -> [local:true]
+
+}

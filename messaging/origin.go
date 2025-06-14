@@ -3,6 +3,7 @@ package messaging
 import (
 	"errors"
 	"fmt"
+	"strings"
 )
 
 const (
@@ -32,6 +33,13 @@ type OriginT struct {
 }
 
 func (o OriginT) String() string { return o.Name }
+
+func (o OriginT) IsLocalCollective(name string) bool {
+	if strings.HasPrefix(name, o.Collective+":") {
+		return true
+	}
+	return false
+}
 
 /*
 func NewOriginFromMessage(m *Message, collective, domain string) (OriginT, *Status) {
