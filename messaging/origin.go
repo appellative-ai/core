@@ -32,9 +32,9 @@ type OriginT struct {
 	Domain      string `json:"domain"`
 }
 
-func (o OriginT) String() string { return o.Name }
+func (o *OriginT) String() string { return o.Name }
 
-func (o OriginT) IsLocalCollective(name string) bool {
+func (o *OriginT) IsLocalCollective(name string) bool {
 	if strings.HasPrefix(name, o.Collective+":") {
 		return true
 	}

@@ -1,10 +1,11 @@
 package messaging
 
 var (
-	Origin OriginT
+	Origin *OriginT
 )
 
-func SetOrigin(m map[string]string) (status *Status) {
-	Origin, status = NewOrigin(m)
+func SetOrigin(m map[string]string) *Status {
+	o, status := NewOrigin(m)
+	Origin = &o
 	return status
 }

@@ -35,11 +35,11 @@ func ExampleNewOrigin() {
 	fmt.Printf("test: Name() -> [%v]\n", o)
 
 	//Output:
-	//test: NewOrigin() -> [collective:domain:service/region/zone/sub-zone/service-name#instance-id] [status:OK]
-	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name#instance-id]
-	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name#instance-id]
-	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name#instance-id]
-	//test: Name() -> [collective:domain:service/region/zone/sub-zone/service-name#instance-id]
+	//test: NewOrigin() -> [{collective:domain:service/region/zone/sub-zone/service-name#instance-id region zone sub-zone host service-name instance-id collective domain}] [status:OK]
+	//test: Name() -> [{collective:domain:service/region/zone/sub-zone/service-name#instance-id region  sub-zone host service-name instance-id collective domain}]
+	//test: Name() -> [{collective:domain:service/region/zone/sub-zone/service-name#instance-id region zone  host service-name instance-id collective domain}]
+	//test: Name() -> [{collective:domain:service/region/zone/sub-zone/service-name#instance-id region zone sub-zone  service-name instance-id collective domain}]
+	//test: Name() -> [{collective:domain:service/region/zone/sub-zone/service-name#instance-id region zone sub-zone host service-name instance-id collective domain}]
 
 }
 
@@ -70,12 +70,12 @@ func ExampleNewOrigin_Error() {
 	fmt.Printf("test: NewOrigin() -> [%v] [status:%v]\n", o, status)
 
 	//Output:
-	//test: NewOrigin() -> [] [status:Invalid Content [config map does not contain key: collective]]
-	//test: NewOrigin() -> [] [status:Invalid Content [config map does not contain key: domain]]
-	//test: NewOrigin() -> [] [status:Invalid Content [config map does not contain key: region]]
-	//test: NewOrigin() -> [] [status:Invalid Content [config map does not contain key: zone]]
-	//test: NewOrigin() -> [] [status:Invalid Content [config map does not contain key: host]]
-	//test: NewOrigin() -> [collective:domain:service/region/zone/host] [status:OK]
+	//test: NewOrigin() -> [{        }] [status:Invalid Content [config map does not contain key: collective]]
+	//test: NewOrigin() -> [{       collective }] [status:Invalid Content [config map does not contain key: domain]]
+	//test: NewOrigin() -> [{       collective domain}] [status:Invalid Content [config map does not contain key: region]]
+	//test: NewOrigin() -> [{ region      collective domain}] [status:Invalid Content [config map does not contain key: zone]]
+	//test: NewOrigin() -> [{ region zone     collective domain}] [status:Invalid Content [config map does not contain key: host]]
+	//test: NewOrigin() -> [{collective:domain:service/region/zone/host region zone  host host  collective domain}] [status:OK]
 
 }
 
