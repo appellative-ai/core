@@ -107,6 +107,11 @@ func (m *Message) AddTo(names ...string) *Message {
 	return m
 }
 
+func (m *Message) DeleteTo() *Message {
+	m.Header.Del(XTo)
+	return m
+}
+
 func (m *Message) From() string {
 	return m.Header.Get(XFrom)
 }
