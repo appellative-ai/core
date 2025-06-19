@@ -81,6 +81,7 @@ func (e *Exchange) Message(msg *Message) (sent bool) {
 		a := e.Get(careOf)
 		if a != nil {
 			sent = true
+			msg.DeleteCareOf()
 			a.Message(msg)
 		}
 		return

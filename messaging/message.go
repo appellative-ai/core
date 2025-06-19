@@ -126,6 +126,11 @@ func (m *Message) SetCareOf(name string) *Message {
 	return m
 }
 
+func (m *Message) DeleteCareOf() *Message {
+	m.Header.Del(XCareOf)
+	return m
+}
+
 func (m *Message) DeleteTo() *Message {
 	m.Header.Del(XTo)
 	return m

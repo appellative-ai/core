@@ -123,7 +123,11 @@ func ExampleMessage_CareOf() {
 
 	fmt.Printf("test: CareOf() -> [%v]\n", m.CareOf())
 
+	m.DeleteCareOf()
+	fmt.Printf("test: CareOf() -> [%v]\n", m.CareOf())
+
 	//Output:
 	//test: CareOf() -> [test:agent/one]
+	//test: CareOf() -> []
 
 }
