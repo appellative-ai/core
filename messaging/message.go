@@ -28,6 +28,7 @@ const (
 	ChannelData     = "data"
 
 	XTo          = "x-to"
+	XCareOf      = "x-c/o"
 	XFrom        = "x-from"
 	XChannel     = "x-channel"
 	XRelatesTo   = "x-relates-to"
@@ -113,6 +114,15 @@ func (m *Message) AddTo(names ...string) *Message {
 	for _, n := range names {
 		m.Header.Add(XTo, n)
 	}
+	return m
+}
+
+func (m *Message) CareOf() string {
+	return m.Header.Get(XCareOf)
+}
+
+func (m *Message) SetCareOf(name string) *Message {
+	m.Header.Set(XCareOf, name)
 	return m
 }
 

@@ -77,6 +77,14 @@ func (e *Exchange) Message(msg *Message) (sent bool) {
 	if msg == nil {
 		return false
 	}
+	if careOf := msg.CareOf(); careOf != "" {
+		a := e.Get(careOf)
+		if a != nil {
+			sent = true
+			a.Message(msg)
+		}
+		return
+	}
 	list := msg.Header.Values(XTo)
 	for _, id := range list {
 		a := e.Get(id)

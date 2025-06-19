@@ -117,3 +117,13 @@ func ExampleMessage_IsRecipient() {
 	//test: IsRecipient("test:agent/two") -> [ok:true]
 
 }
+func ExampleMessage_CareOf() {
+	m := NewMessage(ChannelControl, ConfigEvent).SetCareOf("test:agent/one")
+	m.AddTo("test:agent/two", "test:agent/three")
+
+	fmt.Printf("test: CareOf() -> [%v]\n", m.CareOf())
+
+	//Output:
+	//test: CareOf() -> [test:agent/one]
+
+}
