@@ -18,6 +18,9 @@ type ExchangeHandler func(w http.ResponseWriter, req *http.Request, resp *http.R
 // ExchangeLink - interface to link http Exchanges. Used in the collective repository
 type ExchangeLink func(next Exchange) Exchange
 
+// MessageLink - interface to link http Exchanges. Used in the collective repository
+type MessageLink func(next *messaging.Message)
+
 // Chainable - interface to create a link
 type Chainable[T any] interface {
 	Link(t T) T
