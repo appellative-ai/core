@@ -100,6 +100,15 @@ func (m *Message) To() []string {
 	return m.Header.Values(XTo)
 }
 
+func (m *Message) IsRecipient(name string) bool {
+	for _, to := range m.Header.Values(XTo) {
+		if to == name {
+			return true
+		}
+	}
+	return false
+}
+
 func (m *Message) AddTo(names ...string) *Message {
 	for _, n := range names {
 		m.Header.Add(XTo, n)

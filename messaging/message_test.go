@@ -94,3 +94,26 @@ func ExampleSetReply() {
 	//test: controlAgent.run() -> [chan:ctrl] [from:] [to:[]] [common:core:event/shutdown]
 
 }
+
+func ExampleMessage_IsRecipient() {
+	m := NewMessage(ChannelControl, ConfigEvent)
+	m.AddTo("test:agent/one", "test:agent/two", "test:agent/three")
+
+	name1 := ""
+	ok := m.IsRecipient(name1)
+	fmt.Printf("test: IsRecipient(\"%v\") -> [ok:%v]\n", name1, ok)
+
+	name1 = "invalid"
+	ok = m.IsRecipient(name1)
+	fmt.Printf("test: IsRecipient(\"%v\") -> [ok:%v]\n", name1, ok)
+
+	name1 = "test:agent/two"
+	ok = m.IsRecipient(name1)
+	fmt.Printf("test: IsRecipient(\"%v\") -> [ok:%v]\n", name1, ok)
+
+	//Output:
+	//test: IsRecipient("") -> [ok:false]
+	//test: IsRecipient("invalid") -> [ok:false]
+	//test: IsRecipient("test:agent/two") -> [ok:true]
+
+}
