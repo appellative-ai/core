@@ -25,6 +25,13 @@ const (
 	XRedirect       = "x-redirect"
 	XCached         = "x-cached"
 	ContentEncoding = "Content-Encoding"
+
+	ThresholdRequest       = "x-threshold-request"
+	ThresholdResponse      = "x-threshold-response"
+	ThresholdCacheName     = "cache"
+	ThresholdRateLimitName = "rate-limit"
+	ThresholdTimeoutName   = "timeout"
+	ThresholdRedirectName  = "redirect"
 )
 
 type LogAgent interface {

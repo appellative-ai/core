@@ -5,12 +5,18 @@ import (
 	"strings"
 )
 
-// Request - request attributes interface for non HTTP traffic
+// Request - request interface for non HTTP traffic
 type Request interface {
 	Url() string
 	Header() http.Header
 	Method() string
 	Protocol() string
+}
+
+// Response - response interface for non HTTP traffic
+type Response interface {
+	StatusCode() int
+	Header() http.Header
 }
 
 // RequestImpl - non HTTP request attributes
@@ -50,6 +56,9 @@ func BuildResponse(r any) *http.Response {
 			newResp.Header = make(http.Header)
 		}
 		return newResp
+	}
+	if resp, ok := r.(Response); ok {
+		return &http.Response{StatusCode: resp.StatusCode(), Header: resp.Header()}
 	}
 	if sc, ok := r.(int); ok {
 		return &http.Response{StatusCode: sc, Header: make(http.Header)}
