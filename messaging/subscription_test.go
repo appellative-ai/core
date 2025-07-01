@@ -294,7 +294,7 @@ func (s *subscriber) run() {
 
 func (s *subscriber) shutdown() {
 	s.running = false
-	s.emissary.Close()
+	close(s.emissary.C)
 }
 
 type publisher struct {

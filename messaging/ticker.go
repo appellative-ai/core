@@ -48,6 +48,7 @@ func (t *Ticker) IsStopped() bool {
 }
 */
 
+/*
 func (t *Ticker) Reset(duration time.Duration) {
 	t.T.Reset(duration)
 }
@@ -55,3 +56,6 @@ func (t *Ticker) Reset(duration time.Duration) {
 func (t *Ticker) Stop() {
 	t.T.Stop()
 }
+
+
+*/
