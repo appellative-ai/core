@@ -6,7 +6,7 @@ import (
 )
 
 func ExampleNewChannel() {
-	c := NewChannel("test")
+	c := NewChannel("test", ChannelSize)
 
 	fmt.Printf("test: NewChannel() -> [name:%v]\n", c)
 
@@ -18,7 +18,7 @@ func ExampleNewChannel() {
 	//c.Disable()
 	//fmt.Printf("test: NewChannel_Disable() -> [enabled:%v]\n", c.IsEnabled())
 
-	c.Close()
+	close(c.C)
 	fmt.Printf("test: NewChannel_Close()   -> [closed:%v]\n", c.C == nil)
 
 	//Output:
@@ -28,11 +28,11 @@ func ExampleNewChannel() {
 }
 
 func ExampleNewChannel_Send() {
-	c := NewChannel("test-send")
+	c := NewChannel("test-send", ChannelSize)
 	msg := NewMessage(ChannelControl, StartupEvent)
 
 	//c.Enable()
-	c.Send(msg)
+	c.C <- msg
 	time.Sleep(time.Second * 2)
 
 	msg2 := <-c.C

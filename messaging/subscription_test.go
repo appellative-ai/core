@@ -249,7 +249,7 @@ type subscriber struct {
 
 func newSubscriber() Agent {
 	s := new(subscriber)
-	s.emissary = NewChannel(ChannelEmissary)
+	s.emissary = NewChannel(ChannelEmissary, ChannelSize)
 	return s
 }
 func (s *subscriber) Name() string { return subscriberName }
@@ -306,7 +306,7 @@ type publisher struct {
 func newPublisher() Agent {
 	s := new(publisher)
 	s.catalog = new(Catalog)
-	s.emissary = NewChannel(ChannelEmissary)
+	s.emissary = NewChannel(ChannelEmissary, ChannelSize)
 	return s
 }
 func (p *publisher) Name() string { return publisherName }
@@ -360,7 +360,7 @@ func (p *publisher) run() {
 
 func (p *publisher) shutdown() {
 	p.running = false
-	p.emissary.Close()
+	close(p.emissary.C)
 }
 
 func _ExampleSubscription_Publisher() {

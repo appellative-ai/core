@@ -178,7 +178,7 @@ func ExampleMessageError() {
 
 func ExampleExist() {
 	name1 := "common:core:agent/test/exist"
-	c := NewChannel("test")
+	c := NewChannel("test", ChannelSize)
 	a := newTestAgent(name1, c, nil)
 	ex := NewExchange()
 
@@ -199,7 +199,7 @@ func ExampleMessage() {
 	uri1 := "urn:agent-1"
 	uri2 := "urn:agent-2"
 	uri3 := "urn:agent-3"
-	c := NewChannel("test") //make(chan *Message, 16)
+	c := NewChannel("test", ChannelSize) //make(chan *Message, 16)
 	ex := NewExchange()
 
 	a1 := newTestAgent(uri1, c, nil)
@@ -218,7 +218,7 @@ func ExampleMessage() {
 	resp2 := <-c.C
 	resp3 := <-c.C
 	fmt.Printf("test: <- c -> : %v %v %v\n", resp1.To(), resp2.To(), resp3.To())
-	c.Close()
+	close(c.C)
 
 	//Output:
 	//test: <- c -> : [urn:agent-1] [urn:agent-2] [urn:agent-3]
@@ -229,7 +229,7 @@ func ExampleMessage_To() {
 	name1 := "*:*:agent/test-1"
 	name2 := "*:*:agent/test-2"
 	name3 := "*:*:agent/test-3"
-	c := NewChannel("test") //make(chan *Message, 16)
+	c := NewChannel("test", ChannelSize) //make(chan *Message, 16)
 	ex := NewExchange()
 
 	a1 := newTestAgent(name1, c, nil)

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func _ExampleTicker() {
+func ExampleTicker() {
 	t := NewTicker("messagingtest-ticker", time.Second*2)
 	ctrl := make(chan *Message)
 
@@ -26,19 +26,19 @@ func _ExampleTicker() {
 
 }
 
-func tickerRun(ctrl <-chan *Message, t *Ticker) {
+func tickerRun(ctrl <-chan *Message, ticker *Ticker) {
 	count := 0
-	t.Start(0)
+	//t.TStart(0)
 	for {
 		select {
-		case <-t.ticker.C:
+		case <-ticker.T.C:
 			fmt.Printf("messagingtest: Ticker() -> %v\n", fmtx.FmtRFC3339Millis(time.Now().UTC()))
 			count++
 			if count == 2 {
-				t.Start(time.Second * 5)
+				ticker.T.Reset(time.Second * 5)
 			}
 			if count == 4 {
-				t.Reset()
+				ticker.T.Reset(time.Second * 2)
 			}
 		case msg := <-ctrl:
 			switch msg.Name {

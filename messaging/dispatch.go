@@ -35,11 +35,11 @@ func Dispatch(agent Agent, dispatcher Dispatcher, channel any, event string) {
 		return
 	}
 	if ch, ok := channel.(*Channel); ok {
-		dispatcher.Dispatch(agent, "ch:"+ch.Name(), event)
+		dispatcher.Dispatch(agent, "ch:"+ch.Name, event)
 		return
 	}
 	if t, ok := channel.(*Ticker); ok {
-		dispatcher.Dispatch(agent, "tk:"+t.Name(), event)
+		dispatcher.Dispatch(agent, "tk:"+t.Name, event)
 	}
 }
 
@@ -72,13 +72,13 @@ func (t *traceDispatch) Dispatch(agent Agent, channel any, event string) {
 	}
 	name := "<nil>"
 	if ch, ok := channel.(*Channel); ok {
-		name = "ch:" + ch.Name()
-		if !t.validChannel(ch.Name()) {
+		name = "ch:" + ch.Name
+		if !t.validChannel(ch.Name) {
 			return
 		}
 	} else {
 		if tk, ok1 := channel.(*Ticker); ok1 {
-			name = "tk:" + tk.Name()
+			name = "tk:" + tk.Name
 		}
 	}
 	id := "<nil>"

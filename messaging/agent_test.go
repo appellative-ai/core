@@ -23,12 +23,12 @@ func newTestAgent(name string, ctrl, data *Channel) *testAgent {
 	t := new(testAgent)
 	t.name = name
 	if ctrl == nil {
-		t.ctrl = NewChannel(ChannelData)
+		t.ctrl = NewChannel(ChannelData, ChannelSize)
 	} else {
 		t.ctrl = ctrl
 	}
 	if data == nil {
-		t.data = NewChannel(ChannelControl)
+		t.data = NewChannel(ChannelControl, ChannelSize)
 	} else {
 		t.data = data
 	}

@@ -3,23 +3,23 @@ package messaging
 //PrimaryChannel  = "primary"
 
 type Channel struct {
-	name string
+	Name string
 	C    chan *Message
 }
 
-func NewChannel(name string) *Channel {
+func NewChannel(name string, size int) *Channel {
 	c := new(Channel)
-	c.name = name
-	c.C = make(chan *Message, ChannelSize)
+	c.Name = name
+	c.C = make(chan *Message, size)
 	return c
 }
 
 func NewEmissaryChannel() *Channel {
-	return NewChannel(ChannelEmissary)
+	return NewChannel(ChannelEmissary, ChannelSize)
 }
 
 func NewMasterChannel() *Channel {
-	return NewChannel(ChannelMaster)
+	return NewChannel(ChannelMaster, ChannelSize)
 }
 
 /*
@@ -28,15 +28,18 @@ func NewPrimaryChannel(enabled bool) *Channel {
 }
 */
 
-func (c *Channel) String() string { return c.Name() }
+func (c *Channel) String() string { return c.Name }
+
+/*
 func (c *Channel) Name() string   { return c.name }
 func (c *Channel) IsClosed() bool { return c.C == nil }
+*/
+
 func (c *Channel) Close() {
-	if c.C != nil {
-		close(c.C)
-		c.C = nil
-	}
+	close(c.C)
 }
+
+/*
 
 func (c *Channel) Send(m *Message) {
 	if m != nil {
@@ -44,6 +47,8 @@ func (c *Channel) Send(m *Message) {
 	}
 }
 
+
+*/
 //func (c *Channel) IsEnabled() bool { return c.enabled }
 //func (c *Channel) Enable()         { c.enabled = true }
 //func (c *Channel) Disable()        { c.enabled = false }

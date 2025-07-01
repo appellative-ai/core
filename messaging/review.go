@@ -63,7 +63,7 @@ func (r *Review) Start() {
 func reviewAttend(r *Review) {
 	for {
 		select {
-		case <-r.ticker.C():
+		case <-r.ticker.T.C:
 			r.expired.Store(true)
 			return
 		default:
