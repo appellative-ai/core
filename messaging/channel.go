@@ -35,13 +35,10 @@ func (c *Channel) Name() string   { return c.name }
 func (c *Channel) IsClosed() bool { return c.C == nil }
 */
 
-/*
 func (c *Channel) Close() {
 	close(c.C)
 }
 
-
-*/
 /*
 
 func (c *Channel) Send(m *Message) {
