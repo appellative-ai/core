@@ -37,16 +37,16 @@ func (c *Channel) Close() {
 	close(c.C)
 }
 
-/*
-
 func (c *Channel) Send(m *Message) {
 	if m != nil {
 		c.C <- m
 	}
 }
 
+func (c *Channel) Receive() *Message {
+	return <-c.C
+}
 
-*/
 //func (c *Channel) IsEnabled() bool { return c.enabled }
 //func (c *Channel) Enable()         { c.enabled = true }
 //func (c *Channel) Disable()        { c.enabled = false }

@@ -26,15 +26,15 @@ func ExampleNewChannel() {
 
 }
 
-func ExampleNewChannel_Send() {
+func ExampleNewChannel_SendReceive() {
 	c := NewChannel("test-send", ChannelSize)
 	msg := NewMessage(ChannelControl, StartupEvent)
 
 	//c.Enable()
-	c.C <- msg
+	c.Send(msg)
 	time.Sleep(time.Second * 2)
 
-	msg2 := <-c.C
+	msg2 := c.Receive()
 	fmt.Printf("test: NewChannel_Send() -> [msg:%v]\n", msg2)
 
 	//Output:
