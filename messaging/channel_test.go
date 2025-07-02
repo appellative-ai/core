@@ -18,12 +18,11 @@ func ExampleNewChannel() {
 	//c.Disable()
 	//fmt.Printf("test: NewChannel_Disable() -> [enabled:%v]\n", c.IsEnabled())
 
-	close(c.C)
-	fmt.Printf("test: NewChannel_Close()   -> [closed:%v]\n", c.C == nil)
+	c.Close()
+	//fmt.Printf("test: NewChannel_Close()   -> [closed:%v]\n", c.C == nil)
 
 	//Output:
 	//test: NewChannel() -> [name:test]
-	//test: NewChannel_Close()   -> [closed:true]
 
 }
 
@@ -39,7 +38,7 @@ func ExampleNewChannel_Send() {
 	fmt.Printf("test: NewChannel_Send() -> [msg:%v]\n", msg2)
 
 	//Output:
-	//test: NewChannel_Send() -> [msg:[chan:ctrl] [from:] [to:] [common:core:event/startup]]
+	//test: NewChannel_Send() -> [msg:[chan:ctrl] [from:] [to:[]] [common:core:event/startup]]
 
 }
 

@@ -1,7 +1,5 @@
 package messaging
 
-//PrimaryChannel  = "primary"
-
 type Channel struct {
 	Name string
 	C    chan *Message
