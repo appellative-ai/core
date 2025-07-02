@@ -11,29 +11,32 @@ type ExchangeAgent interface {
 	Register(agent Agent)
 }
 
-type agentT struct {
+type exAgentT struct {
 	name string
 	ex   *Exchange
 }
 
 func NewExchangeAgent(nss string) ExchangeAgent {
-	a := new(agentT)
+	a := new(exAgentT)
 	a.name = fmt.Sprintf(exchangeNameFmt, nss)
 	a.ex = NewExchange()
 	return a
 }
 
-func (a *agentT) Name() string {
+func (a *exAgentT) Name() string {
 	return a.name
 }
 
-func (a *agentT) Register(agent Agent) {
+func (a *exAgentT) Register(agent Agent) {
 	a.ex.Register(agent)
 }
 
-func (a *agentT) String() string { return a.Name() }
+func (a *exAgentT) String() string { return a.Name() }
 
-func (a *agentT) Message(m *Message) {
+func (a *exAgentT) Message(m *Message) {
+	if m == nil {
+		return
+	}
 	switch m.Name {
 	case ShutdownEvent:
 		a.ex.Broadcast(m)
