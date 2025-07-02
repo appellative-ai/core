@@ -282,117 +282,117 @@ func ExampleBuildChain_Chainable() {
 
 }
 
-func do1ReceiverFn(next messaging.Receiver) messaging.Receiver {
+func do1HandlerFn(next messaging.Handler) messaging.Handler {
 	return func(m *messaging.Message) {
-		fmt.Printf("test: Do1-Receiver() -> receive\n")
+		fmt.Printf("test: Do1-Handler() -> receive\n")
 		if next != nil {
 			next(m)
 		}
 	}
 }
 
-func do2ReceiverFn(next messaging.Receiver) messaging.Receiver {
+func do2HandlerFn(next messaging.Handler) messaging.Handler {
 	return func(m *messaging.Message) {
-		fmt.Printf("test: Do2-Receiver() -> receive\n")
+		fmt.Printf("test: Do2-Handler() -> receive\n")
 		if next != nil {
 			next(m)
 		}
 	}
 }
 
-func do3ReceiverFn(next messaging.Receiver) messaging.Receiver {
+func do3HandlerFn(next messaging.Handler) messaging.Handler {
 	return func(m *messaging.Message) {
-		fmt.Printf("test: Do3-Receiver() -> receive\n")
+		fmt.Printf("test: Do3-Handler() -> receive\n")
 		if next != nil {
 			next(m)
 		}
 	}
 }
 
-func do4ReceiverFn(next messaging.Receiver) messaging.Receiver {
+func do4HandlerFn(next messaging.Handler) messaging.Handler {
 	return func(m *messaging.Message) {
-		fmt.Printf("test: Do4-Receiver() -> receive\n")
+		fmt.Printf("test: Do4-Handler() -> receive\n")
 		if next != nil {
 			next(m)
 		}
 	}
 }
 
-type do1Receiver struct{}
+type do1Handler struct{}
 
-func (d do1Receiver) Link(next messaging.Receiver) messaging.Receiver {
-	return do1ReceiverFn(next)
+func (d do1Handler) Link(next messaging.Handler) messaging.Handler {
+	return do1HandlerFn(next)
 }
 
-type do2Receiver struct{}
+type do2Handler struct{}
 
-func (d do2Receiver) Link(next messaging.Receiver) messaging.Receiver {
-	return do2ReceiverFn(next)
+func (d do2Handler) Link(next messaging.Handler) messaging.Handler {
+	return do2HandlerFn(next)
 }
 
-type do3Receiver struct{}
+type do3Handler struct{}
 
-func (d do3Receiver) Link(next messaging.Receiver) messaging.Receiver {
-	return do3ReceiverFn(next)
+func (d do3Handler) Link(next messaging.Handler) messaging.Handler {
+	return do3HandlerFn(next)
 }
 
-type do4Receiver struct{}
+type do4Handler struct{}
 
-func (d do4Receiver) Link(next messaging.Receiver) messaging.Receiver {
-	return do4ReceiverFn(next)
+func (d do4Handler) Link(next messaging.Handler) messaging.Handler {
+	return do4HandlerFn(next)
 }
 
-func ExampleBuildReceiverChain() {
-	rec := BuildReceiverChain([]any{do1ReceiverFn, do2ReceiverFn, do3ReceiverFn, do4ReceiverFn})
+func ExampleBuildHandlerChain() {
+	rec := BuildMessagingChain([]any{do1HandlerFn, do2HandlerFn, do3HandlerFn, do4HandlerFn})
 	rec(messaging.ShutdownMessage)
 
 	//Output:
-	//test: Do1-Receiver() -> receive
-	//test: Do2-Receiver() -> receive
-	//test: Do3-Receiver() -> receive
-	//test: Do4-Receiver() -> receive
+	//test: Do1-Handler() -> receive
+	//test: Do2-Handler() -> receive
+	//test: Do3-Handler() -> receive
+	//test: Do4-Handler() -> receive
 
 }
 
-func ExampleBuildChainReceiver_Func() {
-	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1ReceiverFn, do2ReceiverFn, do3ReceiverFn, do4ReceiverFn})
+func ExampleBuildChainHandler_Func() {
+	rec := BuildChain[messaging.Handler, Chainable[messaging.Handler]]([]any{do1HandlerFn, do2HandlerFn, do3HandlerFn, do4HandlerFn})
 	rec(messaging.ShutdownMessage)
 
 	//Output:
-	//test: Do1-Receiver() -> receive
-	//test: Do2-Receiver() -> receive
-	//test: Do3-Receiver() -> receive
-	//test: Do4-Receiver() -> receive
+	//test: Do1-Handler() -> receive
+	//test: Do2-Handler() -> receive
+	//test: Do3-Handler() -> receive
+	//test: Do4-Handler() -> receive
 
 }
 
-func ExampleBuildChainReceiver_Chainable() {
-	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1Receiver{}, do2Receiver{}, do3Receiver{}, do4Receiver{}})
+func ExampleBuildChainHandler_Chainable() {
+	rec := BuildChain[messaging.Handler, Chainable[messaging.Handler]]([]any{do1Handler{}, do2Handler{}, do3Handler{}, do4Handler{}})
 	rec(messaging.ShutdownMessage)
 
 	//Output:
-	//test: Do1-Receiver() -> receive
-	//test: Do2-Receiver() -> receive
-	//test: Do3-Receiver() -> receive
-	//test: Do4-Receiver() -> receive
+	//test: Do1-Handler() -> receive
+	//test: Do2-Handler() -> receive
+	//test: Do3-Handler() -> receive
+	//test: Do4-Handler() -> receive
 
 }
 
-func ExampleBuildChainReceiver_Any() {
-	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1Receiver{}, do2ReceiverFn, do3Receiver{}, do4ReceiverFn})
+func ExampleBuildChainHandler_Any() {
+	rec := BuildChain[messaging.Handler, Chainable[messaging.Handler]]([]any{do1Handler{}, do2HandlerFn, do3Handler{}, do4HandlerFn})
 	rec(messaging.ShutdownMessage)
 
 	//Output:
-	//test: Do1-Receiver() -> receive
-	//test: Do2-Receiver() -> receive
-	//test: Do3-Receiver() -> receive
-	//test: Do4-Receiver() -> receive
+	//test: Do1-Handler() -> receive
+	//test: Do2-Handler() -> receive
+	//test: Do3-Handler() -> receive
+	//test: Do4-Handler() -> receive
 }
 
 type do1Combined struct{}
 
-func (d do1Combined) Link(next messaging.Receiver) messaging.Receiver {
-	return do1ReceiverFn(next)
+func (d do1Combined) Link(next messaging.Handler) messaging.Handler {
+	return do1HandlerFn(next)
 }
 
 func (d do1Combined) doExchange(next Exchange) Exchange {
@@ -400,7 +400,7 @@ func (d do1Combined) doExchange(next Exchange) Exchange {
 }
 
 func ExampleBuildChain_Combined() {
-	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{do1Combined{}})
+	rec := BuildChain[messaging.Handler, Chainable[messaging.Handler]]([]any{do1Combined{}})
 	rec(messaging.ShutdownMessage)
 
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
@@ -414,7 +414,7 @@ func ExampleBuildChain_Combined() {
 	ex(req)
 
 	//Output:
-	//test: Do1-Receiver() -> receive
+	//test: Do1-Handler() -> receive
 	//test: Do1-Exchange() -> request
 	//test: Do1-Exchange() -> response
 
@@ -422,7 +422,7 @@ func ExampleBuildChain_Combined() {
 
 func _ExampleBuildChain_Empty() {
 	// This will panic
-	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]](nil)
+	rec := BuildChain[messaging.Handler, Chainable[messaging.Handler]](nil)
 	fmt.Printf("test: BuildChain_Empty() -> %v\n", rec)
 
 	//Output:
@@ -432,7 +432,7 @@ func _ExampleBuildChain_Empty() {
 
 func ExampleBuildChain_Invalid_Link() {
 	// This will panic
-	rec := BuildChain[messaging.Receiver, Chainable[messaging.Receiver]]([]any{"test string"})
+	rec := BuildChain[messaging.Handler, Chainable[messaging.Handler]]([]any{"test string"})
 	fmt.Printf("test: BuildChain_Empty() -> %v\n", rec)
 
 	//Output:

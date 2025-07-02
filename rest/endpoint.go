@@ -2,18 +2,22 @@ package rest
 
 import "net/http"
 
+// HttpHandler - extend the http.HandlerFunc to include the http.Response
+type HttpHandler func(w http.ResponseWriter, req *http.Request, resp *http.Response)
+
 type Endpoint interface {
 	Pattern() string
 	ServeHTTP(w http.ResponseWriter, r *http.Request)
 }
+
 type endpoint struct {
 	pattern string
-	handler ExchangeHandler
+	handler HttpHandler
 	chain   Exchange
 	init    func(r *http.Request)
 }
 
-func NewEndpoint(pattern string, handler ExchangeHandler, init func(r *http.Request), chain Exchange) Endpoint {
+func NewEndpoint(pattern string, handler HttpHandler, init func(r *http.Request), chain Exchange) Endpoint {
 	e := new(endpoint)
 	e.pattern = pattern
 	e.handler = handler

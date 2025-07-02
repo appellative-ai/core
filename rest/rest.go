@@ -12,13 +12,10 @@ import (
 // Exchange - http exchange
 type Exchange func(r *http.Request) (*http.Response, error)
 
-// ExchangeHandler - extend the http.HandlerFunc to include the http.Response
-type ExchangeHandler func(w http.ResponseWriter, req *http.Request, resp *http.Response)
-
 // ExchangeLink - interface to link http Exchanges. Used in the collective repository
 type ExchangeLink func(next Exchange) Exchange
 
-// MessageLink - interface to link http Exchanges. Used in the collective repository
+// MessageLink - interface to link message handlers. Used in the collective repository
 type MessageLink func(next *messaging.Message)
 
 // Chainable - interface to create a link
@@ -31,9 +28,9 @@ func BuildExchangeChain(links []any) Exchange {
 	return BuildChain[Exchange, Chainable[Exchange]](links)
 }
 
-// BuildReceiverChain - build messaging Receiver chain
-func BuildReceiverChain(links []any) messaging.Receiver {
-	return BuildChain[messaging.Receiver, Chainable[messaging.Receiver]](links)
+// BuildMessagingChain - build messaging handler chain
+func BuildMessagingChain(links []any) messaging.Handler {
+	return BuildChain[messaging.Handler, Chainable[messaging.Handler]](links)
 }
 
 // BuildChain - build a chain of links - panic on nil or invalid type links
