@@ -10,15 +10,16 @@ func ExampleUpdateExchange() {
 	UpdateExchange("", nil, nil)
 	fmt.Printf("test: UpdateExchange() -> nil Review\n")
 
+	//var ex Exchange
 	ex := func(r *http.Request) (*http.Response, error) {
 		fmt.Printf("test: UpdateExchange() -> original\n")
 		return nil, nil
 	}
-	UpdateExchange("", &ex, nil)
+	UpdateExchange("", (*Exchange)(&ex), nil)
 	fmt.Printf("test: UpdateExchange() -> nil message\n")
 
 	m := messaging.NewMessage(messaging.ChannelControl, "test-message")
-	UpdateExchange("", &ex, m)
+	UpdateExchange("", (*Exchange)(&ex), m)
 	fmt.Printf("test: UpdateExchange() -> invalid content type\n")
 
 	var ex2 Exchange
@@ -31,7 +32,7 @@ func ExampleUpdateExchange() {
 	//return nil, nil
 	//})
 	original := ex
-	UpdateExchange("", &ex, m)
+	UpdateExchange("", (*Exchange)(&ex), m)
 	original(nil)
 	ex(nil)
 
