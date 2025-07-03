@@ -7,8 +7,8 @@ type Spanner interface {
 }
 
 type Ticker struct {
-	Name string
-	//duration time.Duration
+	Name     string
+	Duration time.Duration
 	//original time.Duration
 	T *time.Ticker
 }
@@ -16,7 +16,7 @@ type Ticker struct {
 func NewTicker(name string, duration time.Duration) *Ticker {
 	t := new(Ticker)
 	t.Name = name
-	//t.duration = duration
+	t.Duration = duration
 	//t.original = duration
 	t.T = time.NewTicker(duration)
 	return t
@@ -49,6 +49,7 @@ func (t *Ticker) IsStopped() bool {
 */
 
 func (t *Ticker) Reset(duration time.Duration) {
+	t.Duration = duration
 	t.T.Reset(duration)
 }
 
