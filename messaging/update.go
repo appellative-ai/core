@@ -23,3 +23,15 @@ func UpdateMap(name string, fn func(cfg map[string]string), m *Message) {
 	}
 	fn(cfg)
 }
+
+func UpdateDispatcher(name string, d *Dispatcher, m *Message) {
+	if m == nil || d == nil || m.ContentType() != ContentTypeDispatcher {
+		return
+	}
+	dsp, ok := DispatcherContent(m)
+	if !ok {
+		Reply(m, NewStatus(StatusInvalidArgument, nil), name)
+		return
+	}
+	*d = dsp
+}

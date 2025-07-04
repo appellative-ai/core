@@ -52,3 +52,31 @@ func ExampleUpdateReview() {
 	//test: UpdateReview() -> [original:5m0s] [updated:10m0s]
 
 }
+
+func ExampleUpdateDispatcher() {
+	UpdateDispatcher("", nil, nil)
+	fmt.Printf("test: UpdateDispatcher() -> nil Dispatcher\n")
+
+	d := NewTraceDispatcher()
+	UpdateDispatcher("", &d, nil)
+	fmt.Printf("test: UpdateDispatcher() -> nil message\n")
+
+	m := NewMessage(ChannelControl, "test-message")
+	UpdateDispatcher("", &d, m)
+	fmt.Printf("test: UpdateDispatcher() -> invalid content type\n")
+
+	/*
+		before := review
+		m = NewReviewMessage(NewReview(10))
+		UpdateDispatcher("", &review, m)
+		fmt.Printf("test: UpdateDispatcher() -> [original:%v] [updated:%v]\n", before.duration, review.duration)
+
+
+	*/
+
+	//Output:
+	//test: UpdateDispatcher() -> nil Dispatcher
+	//test: UpdateDispatcher() -> nil message
+	//test: UpdateDispatcher() -> invalid content type
+
+}
