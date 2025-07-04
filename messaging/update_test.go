@@ -65,18 +65,15 @@ func ExampleUpdateDispatcher() {
 	UpdateDispatcher("", &d, m)
 	fmt.Printf("test: UpdateDispatcher() -> invalid content type\n")
 
-	/*
-		before := review
-		m = NewReviewMessage(NewReview(10))
-		UpdateDispatcher("", &review, m)
-		fmt.Printf("test: UpdateDispatcher() -> [original:%v] [updated:%v]\n", before.duration, review.duration)
-
-
-	*/
+	var d2 Dispatcher
+	m = NewDispatcherMessage(NewTraceDispatcher())
+	UpdateDispatcher("", &d2, m)
+	fmt.Printf("test: UpdateDispatcher() -> [original:%v] [updated:%v]\n", nil, d2)
 
 	//Output:
 	//test: UpdateDispatcher() -> nil Dispatcher
 	//test: UpdateDispatcher() -> nil message
 	//test: UpdateDispatcher() -> invalid content type
+	//test: UpdateDispatcher() -> [original:<nil>] [updated:&{true  map[]}]
 
 }
