@@ -14,6 +14,7 @@ func UpdateExchange(name string, ex *Exchange, m *messaging.Message) {
 		return
 	}
 	*ex = newEx
+	messaging.Reply(m, messaging.StatusOK(), name)
 }
 
 /*

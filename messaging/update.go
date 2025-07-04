@@ -10,6 +10,7 @@ func UpdateReview(name string, review **Review, m *Message) {
 		return
 	}
 	*review = review2
+	Reply(m, StatusOK(), name)
 }
 
 func UpdateMap(name string, fn func(cfg map[string]string), m *Message) {
@@ -22,6 +23,7 @@ func UpdateMap(name string, fn func(cfg map[string]string), m *Message) {
 		return
 	}
 	fn(cfg)
+	Reply(m, StatusOK(), name)
 }
 
 func UpdateDispatcher(name string, d *Dispatcher, m *Message) {
@@ -34,4 +36,5 @@ func UpdateDispatcher(name string, d *Dispatcher, m *Message) {
 		return
 	}
 	*d = dsp
+	Reply(m, StatusOK(), name)
 }
