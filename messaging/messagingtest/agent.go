@@ -25,7 +25,7 @@ func newAgent(name string, ch *messaging.Channel, run func()) *AgentT {
 	if ch != nil {
 		a.ch = ch
 	} else {
-		a.ch = messaging.NewChannel(messaging.ChannelControl)
+		a.ch = messaging.NewChannel(messaging.ChannelControl, messaging.ChannelSize)
 	}
 	if run != nil {
 		a.runFn = run
