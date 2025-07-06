@@ -1,6 +1,8 @@
 package messaging
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func ExampleUpdateMap() {
 	UpdateMap("", nil, nil)
@@ -75,5 +77,31 @@ func ExampleUpdateDispatcher() {
 	//test: UpdateDispatcher() -> nil message
 	//test: UpdateDispatcher() -> invalid content type
 	//test: UpdateDispatcher() -> [original:<nil>] [updated:&{true  map[]}]
+
+}
+
+func ExampleUpdateAgent() {
+	UpdateAgent("", nil, nil)
+	fmt.Printf("test: UpdateAgent() -> nil update fn\n")
+
+	fn := func(agent Agent) {
+		fmt.Printf("test: UpdateAgent() -> %v\n", agent)
+	}
+	UpdateAgent("", fn, nil)
+	fmt.Printf("test: UpdateAgent() -> nil message\n")
+
+	m := NewMessage(ChannelControl, "test-message")
+	UpdateAgent("", fn, m)
+	fmt.Printf("test: UpdateAgent() -> invalid content type\n")
+
+	a := NewAgent("test:agent", func(m *Message) {})
+	m = NewAgentMessage(a)
+	UpdateAgent("", fn, m)
+
+	//Output:
+	//test: UpdateAgent() -> nil update fn
+	//test: UpdateAgent() -> nil message
+	//test: UpdateAgent() -> invalid content type
+	//test: UpdateAgent() -> test:agent
 
 }

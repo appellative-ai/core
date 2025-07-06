@@ -38,3 +38,17 @@ func UpdateDispatcher(name string, d *Dispatcher, m *Message) {
 	*d = dsp
 	Reply(m, StatusOK(), name)
 }
+
+func UpdateAgent(name string, fn func(agent Agent), m *Message) {
+	if m == nil || fn == nil || m.ContentType() != ContentTypeAgent {
+		return
+	}
+	a, status := AgentContent(m)
+	if !status.OK() {
+		Reply(m, status, name)
+		return
+
+	}
+	fn(a)
+	Reply(m, StatusOK(), name)
+}
