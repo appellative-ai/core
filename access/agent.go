@@ -20,10 +20,10 @@ const (
 
 	failsafeUri     = "https://invalid-uri.com"
 	RequestIdName   = "x-request-id"
-	RateLimitName   = "x-rate-limit"
-	TimeoutName     = "x-timeout"
-	RedirectName    = "x-redirect"
-	CachedName      = "x-cached"
+	RateLimitName   = "rate-limit"
+	TimeoutName     = "timeout"
+	RedirectName    = "redirect"
+	CachedName      = "cached"
 	ContentEncoding = "Content-Encoding"
 
 	ThresholdRequest       = "x-threshold-request"
