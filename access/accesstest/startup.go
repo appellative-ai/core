@@ -77,7 +77,7 @@ func initLogging() error {
 	},
 	)
 
-	err := access2.CreateIngressOperators(func() ([]byte, error) {
+	err := access.CreateIngressOperators(func() ([]byte, error) {
 		return resource.ReadFile(ingressLogOperatorNameFmt)
 	})
 	if err == nil {

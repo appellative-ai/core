@@ -1,4 +1,4 @@
-package access2
+package access
 
 import (
 	"fmt"
@@ -108,7 +108,7 @@ func (e *event) Value(value string) string {
 	case ResponseContentEncodingOperator:
 		return Encoding(e.NewResp)
 	case ResponseCachedOperator:
-		s := e.NewResp.Header.Get(XCached)
+		s := e.NewResp.Header.Get(CachedName)
 		if s == "" {
 			s = "false"
 		}

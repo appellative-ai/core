@@ -1,4 +1,4 @@
-package access2
+package access
 
 import (
 	"encoding/json"
@@ -10,20 +10,20 @@ import (
 	"time"
 )
 
-const (
-	NamespaceName = "test:core:agent/log/access/http"
-	Route         = "host"
+//XRateBurst      = "x-rate-burst"
 
+const (
+	NamespaceName  = "core:common:agent/log/access/http"
+	Route          = "host"
 	EgressTraffic  = "egress"
 	IngressTraffic = "ingress"
 
 	failsafeUri     = "https://invalid-uri.com"
-	XRequestId      = "x-request-id"
-	XRateLimit      = "x-rate-limit"
-	XRateBurst      = "x-rate-burst"
-	XTimeout        = "x-timeout"
-	XRedirect       = "x-redirect"
-	XCached         = "x-cached"
+	RequestIdName   = "x-request-id"
+	RateLimitName   = "x-rate-limit"
+	TimeoutName     = "x-timeout"
+	RedirectName    = "x-redirect"
+	CachedName      = "x-cached"
 	ContentEncoding = "Content-Encoding"
 
 	ThresholdRequest       = "x-threshold-request"
@@ -146,12 +146,12 @@ func LogWithOperators(operators []Operator, traffic string, start time.Time, dur
 }
 
 func newThreshold(resp *http.Response) Threshold {
-	limit := resp.Header.Get(XRateLimit)
-	resp.Header.Del(XRateLimit)
-	timeout := resp.Header.Get(XTimeout)
-	resp.Header.Del(XTimeout)
-	redirect := resp.Header.Get(XRedirect)
-	resp.Header.Del(XRedirect)
+	limit := resp.Header.Get(RateLimitName)
+	resp.Header.Del(RateLimitName)
+	timeout := resp.Header.Get(TimeoutName)
+	resp.Header.Del(TimeoutName)
+	redirect := resp.Header.Get(RedirectName)
+	resp.Header.Del(RedirectName)
 	return Threshold{Timeout: timeout, RateLimit: limit, Redirect: redirect}
 }
 
