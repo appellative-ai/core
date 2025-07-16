@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/appellative-ai/core/iox"
 	"io"
 	"reflect"
 	"strings"
@@ -31,7 +30,7 @@ func writeContent(w io.Writer, content any, contentType string) (length int64, e
 		var buf []byte
 		var err1 error
 
-		buf, err1 = iox.ReadAll(ptr, nil)
+		buf, err1 = readAll(ptr)
 		if err1 != nil {
 			return 0, err1
 		}
@@ -40,7 +39,7 @@ func writeContent(w io.Writer, content any, contentType string) (length int64, e
 		var buf []byte
 		var err1 error
 
-		buf, err1 = iox.ReadAll(ptr, nil)
+		buf, err1 = readAll(ptr)
 		_ = ptr.Close()
 		if err1 != nil {
 			return 0, err1

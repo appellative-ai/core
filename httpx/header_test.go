@@ -2,7 +2,6 @@ package httpx
 
 import (
 	"fmt"
-	"github.com/appellative-ai/core/iox"
 	"net/http"
 )
 
@@ -30,7 +29,7 @@ func ExampleCloneHeaderWithEncoding() {
 	req.Header = h
 
 	h2 := CloneHeaderWithEncoding(req)
-	fmt.Printf("test: CloneHeaderWithEncoding() -> %v\n", h2.Get(iox.AcceptEncoding))
+	fmt.Printf("test: CloneHeaderWithEncoding() -> %v\n", h2.Get(AcceptEncoding))
 
 	//Output:
 	//test: CloneHeaderWithEncoding() -> gzip

@@ -58,7 +58,7 @@ func (c *cacheT) Put(uri string, resp *http.Response) error {
 	if uri == "" || resp == nil {
 		return errors.New("invalid argument: either uri is empty or http.Response is nil")
 	}
-	buf, err := io.ReadAll(resp.Body)
+	buf, err := readAll(resp.Body)
 	if err != nil {
 		return err
 	}

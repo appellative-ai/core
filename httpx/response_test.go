@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/appellative-ai/core/iox"
 	"io"
 	"net/http"
 	"net/url"
@@ -25,31 +24,31 @@ func ExampleTransformBody() {
 	resp := &http.Response{StatusCode: http.StatusGatewayTimeout, Body: EmptyReader}
 	err = TransformBody(resp)
 	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", resp.ContentLength, err)
-	buf, err1 := io.ReadAll(resp.Body)
-	fmt.Printf("test: io.ReadAll() -> [buf:%v] [err:%v]\n", string(buf), err1)
+	buf, err1 := readAll(resp.Body)
+	fmt.Printf("test: readAll() -> [buf:%v] [err:%v]\n", string(buf), err1)
 
 	resp = &http.Response{StatusCode: http.StatusGatewayTimeout, Body: io.NopCloser(bytes.NewReader([]byte("this is content")))}
 	err = TransformBody(resp)
 	fmt.Printf("test: TransformBody() -> [cnt:%v] [err:%v]\n", resp.ContentLength, err)
-	buf, err1 = io.ReadAll(resp.Body)
-	fmt.Printf("test: io.ReadAll() -> [buf:%v] [err:%v]\n", string(buf), err1)
+	buf, err1 = readAll(resp.Body)
+	fmt.Printf("test: readAll() -> [buf:%v] [err:%v]\n", string(buf), err1)
 
 	//Output:
 	//test: TransformBody() -> [cnt:0] [err:<nil>]
 	//test: TransformBody() -> [cnt:0] [err:<nil>]
 	//test: TransformBody() -> [cnt:0] [err:<nil>]
-	//test: io.ReadAll() -> [buf:] [err:<nil>]
+	//test: readAll() -> [buf:] [err:<nil>]
 	//test: TransformBody() -> [cnt:15] [err:<nil>]
-	//test: io.ReadAll() -> [buf:this is content] [err:<nil>]
+	//test: readAll() -> [buf:this is content] [err:<nil>]
 
 }
 
-func readAll(body io.ReadCloser) ([]byte, error) {
+func readAll2(body io.ReadCloser) ([]byte, error) {
 	if body == nil {
 		return nil, nil
 	}
 	defer body.Close()
-	buf, err := io.ReadAll(body)
+	buf, err := readAll(body)
 	if err != nil {
 		return nil, err
 	}
@@ -58,11 +57,11 @@ func readAll(body io.ReadCloser) ([]byte, error) {
 
 func ExampleNewResponse_Error() {
 	resp := NewResponse(http.StatusGatewayTimeout, nil, nil)
-	buf, _ := iox.ReadAll(resp.Body, nil)
+	buf, _ := readAll(resp.Body)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
 	resp = NewResponse(http.StatusGatewayTimeout, nil, errors.New("Deadline Exceeded"))
-	buf, _ = iox.ReadAll(resp.Body, nil)
+	buf, _ = readAll(resp.Body)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
 	//Output:
@@ -76,7 +75,7 @@ func ExampleNewResponse() {
 	fmt.Printf("test: NewResponse() -> [status-code:%v]\n", resp.StatusCode)
 
 	resp = NewResponse(http.StatusOK, nil, "version 1.2.35")
-	buf, _ := iox.ReadAll(resp.Body, nil)
+	buf, _ := readAll(resp.Body)
 	fmt.Printf("test: NewResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
 	//Output:
@@ -87,7 +86,7 @@ func ExampleNewResponse() {
 func ExampleNewHealthResponseOK() {
 	status := "\"status\": \"up\""
 	resp := NewHealthResponseOK()
-	buf, _ := iox.ReadAll(resp.Body, nil)
+	buf, _ := readAll(resp.Body)
 	body := string(buf)
 	fmt.Printf("test: NewHealthResponseOK() -> [status-code:%v] [content:%v]\n", resp.StatusCode, strings.Contains(body, status))
 
@@ -98,7 +97,7 @@ func ExampleNewHealthResponseOK() {
 
 func ExampleNewNotFoundResponseWithStatus() {
 	resp := NewNotFoundResponse()
-	buf, _ := iox.ReadAll(resp.Body, nil)
+	buf, _ := readAll(resp.Body)
 	fmt.Printf("test: NewNotFoundResponse() -> [status-code:%v] [content:%v]\n", resp.StatusCode, string(buf))
 
 	//Output:

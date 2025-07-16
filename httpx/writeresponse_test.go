@@ -5,7 +5,6 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
-	"github.com/appellative-ai/core/iox"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -41,7 +40,7 @@ func init() {
 	var err error
 	var buf []byte
 
-	buf, err = os.ReadFile(iox.FileName(activityJsonFile))
+	buf, err = os.ReadFile(fileName(activityJsonFile))
 	if err != nil {
 		fmt.Printf("test: os.ReadFile() -> [err:%v]\n", err)
 		return
@@ -57,7 +56,7 @@ func init() {
 		return
 	}
 
-	activityGzip, err = os.ReadFile(iox.FileName(activityGzipFile))
+	activityGzip, err = os.ReadFile(fileName(activityGzipFile))
 	if err != nil {
 		if strings.Contains(err.Error(), "open") {
 			buff := new(bytes.Buffer)
@@ -68,7 +67,7 @@ func init() {
 			ferr := zw.Flush()
 			cerr := zw.Close()
 			fmt.Printf("test: gzip.Writer() -> [cnt:%v] [write-err:%v] [flush-err:%v] [close_err:%v]\n", cnt, err0, ferr, cerr)
-			err = os.WriteFile(iox.FileName(activityGzipFile), buff.Bytes(), 667)
+			err = os.WriteFile(fileName(activityGzipFile), buff.Bytes(), 667)
 			fmt.Printf("test: os.WriteFile(\"%v\") -> [err:%v]\n", activityGzipFile, err)
 
 		} else {
@@ -116,19 +115,19 @@ func ExampleWriteResponse_JSON() {
 	// JSON activity list
 	rec := httptest.NewRecorder()
 	WriteResponse(rec, h, 0, activityList, nil)
-	buf, status0 := iox.ReadAll(rec.Result().Body, nil)
+	buf, status0 := readAll(rec.Result().Body)
 	fmt.Printf("test: WriteResponse(w,httpx.Header,OK,[]activity) -> [read-all:%v] [in:%v] [out:%v]\n", status0, len(activityJson), len(buf))
 
 	// JSON reader
 	rec = httptest.NewRecorder()
 	reader := bytes.NewReader(activityJson)
 	WriteResponse(rec, h, 0, reader, nil)
-	buf, status0 = iox.ReadAll(rec.Result().Body, nil)
-	fmt.Printf("test: WriteResponse(w,httpx.Header,OK,iox.Reader) -> [read-all:%v] [in:%v] [out:%v]\n", status0, len(activityJson), len(buf))
+	buf, status0 = readAll(rec.Result().Body)
+	fmt.Printf("test: WriteResponse(w,httpx.Header,OK,io.Reader) -> [read-all:%v] [in:%v] [out:%v]\n", status0, len(activityJson), len(buf))
 
 	//Output:
 	//test: WriteResponse(w,httpx.Header,OK,[]activity) -> [read-all:<nil>] [in:395] [out:395]
-	//test: WriteResponse(w,httpx.Header,OK,iox.Reader) -> [read-all:<nil>] [in:395] [out:395]
+	//test: WriteResponse(w,httpx.Header,OK,io.Reader) -> [read-all:<nil>] [in:395] [out:395]
 
 }
 
@@ -140,17 +139,17 @@ func ExampleWriteResponse_Encoding() {
 	// Should encode
 	rec := httptest.NewRecorder()
 	WriteResponse(rec, h, 0, activityList, CreateAcceptEncodingHeader())
-	buf, status0 := iox.ReadAll(rec.Result().Body, nil)
+	buf, status0 := readAll(rec.Result().Body)
 	fmt.Printf("test: WriteResponse(w,httpx.Header,0,[]activity) -> [read-all:%v] [buf:%v][header:%v]\n", status0, http.DetectContentType(buf), rec.Result().Header)
 
 	// Should not encode as a ContentEncoding header exists
 	h = make(http.Header)
 	h.Add(ContentType, ContentTypeJson)
 	//h.Add(AcceptEncoding, AcceptEncodingValue)
-	h.Add(ContentEncoding, iox.NoneEncoding)
+	//h.Add(ContentEncoding, NoneEncoding)
 	rec = httptest.NewRecorder()
 	WriteResponse(rec, h, 0, activityList, CreateAcceptEncodingHeader())
-	buf, status0 = iox.ReadAll(rec.Result().Body, nil)
+	buf, status0 = readAll(rec.Result().Body)
 	fmt.Printf("test: WriteResponse(w,httpx.Header,0,[]activity) -> [read-all:%v] [buf:%v][header:%v]\n", status0, http.DetectContentType(buf), rec.Result().Header)
 
 	//Output:

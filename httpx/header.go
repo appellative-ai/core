@@ -1,7 +1,6 @@
 package httpx
 
 import (
-	"github.com/appellative-ai/core/iox"
 	"net/http"
 	"strings"
 )
@@ -12,6 +11,8 @@ const (
 	ContentEncoding     = "Content-Encoding"
 	AcceptEncoding      = "Accept-Encoding"
 	AcceptEncodingValue = "gzip, deflate, br"
+	GzipEncoding        = "gzip"
+	NoneEncoding        = "none"
 	ContentLength       = "Content-Length"
 	ContentEncodingGzip = "gzip"
 	ContentTypeTextHtml = "text/html"
@@ -66,8 +67,8 @@ func CloneHeaderWithEncoding(req *http.Request) http.Header {
 		return make(http.Header)
 	}
 	h := CloneHeader(req.Header)
-	if req.Method == http.MethodGet && h.Get(iox.AcceptEncoding) == "" {
-		h.Add(iox.AcceptEncoding, iox.GzipEncoding)
+	if req.Method == http.MethodGet && h.Get(AcceptEncoding) == "" {
+		h.Add(AcceptEncoding, GzipEncoding)
 	}
 	return h
 }

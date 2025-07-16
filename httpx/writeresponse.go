@@ -1,7 +1,6 @@
 package httpx
 
 import (
-	"github.com/appellative-ai/core/iox"
 	"net/http"
 )
 
@@ -21,13 +20,13 @@ func WriteResponse(w http.ResponseWriter, headers any, statusCode int, content a
 	if len(w.Header().Get(ContentEncoding)) != 0 {
 		clone.Del(AcceptEncoding)
 	}
-	writer, err := iox.NewEncodingWriter(w, clone)
+	writer, err := newEncodingWriter(w, clone)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 		return 0
 	}
-	if writer.ContentEncoding() != iox.NoneEncoding {
+	if writer.ContentEncoding() != NoneEncoding {
 		w.Header().Add(ContentEncoding, writer.ContentEncoding())
 	}
 	w.WriteHeader(statusCode)

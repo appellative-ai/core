@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+type LogFunc func(start time.Time, duration time.Duration, req *http.Request, resp *http.Response, timeout time.Duration)
+
 type ConcurrentResult interface {
 	Get(name string) *ExchangeResponse
 }
@@ -16,7 +18,6 @@ type ExchangeInvoke struct {
 	Timeout time.Duration
 	Do      rest.Exchange
 	Req     *http.Request
-	Log     func(start time.Time, duration time.Duration, req *http.Request, resp *http.Response, timeout time.Duration)
 }
 
 type ExchangeResponse struct {
@@ -24,7 +25,7 @@ type ExchangeResponse struct {
 	Err  error
 }
 
-func DoConcurrent(invokes []ExchangeInvoke) ConcurrentResult {
+func DoConcurrent(invokes []ExchangeInvoke, logger LogFunc) ConcurrentResult {
 	var wg sync.WaitGroup
 
 	cnt := len(invokes)
@@ -35,8 +36,8 @@ func DoConcurrent(invokes []ExchangeInvoke) ConcurrentResult {
 			defer wg.Done()
 			start := time.Now().UTC()
 			resp, err := ExchangeWithTimeout(i.Timeout, i.Do)(i.Req)
-			if i.Log != nil {
-				i.Log(start, time.Since(start), i.Req, resp, i.Timeout)
+			if logger != nil {
+				logger(start, time.Since(start), i.Req, resp, i.Timeout)
 			}
 			m.put(i.Name, &ExchangeResponse{Resp: resp, Err: err})
 		}(&invokes[i])

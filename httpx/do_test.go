@@ -3,7 +3,6 @@ package httpx
 import (
 	"context"
 	"fmt"
-	"io"
 	"net/http"
 	"time"
 )
@@ -102,7 +101,7 @@ func _ExampleDo_Proxy() {
 	fmt.Printf("test: Do() -> [write-relatesTo:%v] [response-relatesTo:%v]\n", relatesTo, resp.Header.Get(aspect.XRelatesTo))
 	fmt.Printf("test: Do() -> [write-statusCode:%v] [response-statusCode:%v]\n", statusCode, resp.StatusCode)
 
-	buf, _ := iox.ReadAll(resp.Body)
+	buf, _ := readAll(resp.Body)
 	fmt.Printf("test: Do() -> [write-content:%v] [response-content:%v]\n", testContent, string(buf))
 
 	//Output:
@@ -128,7 +127,7 @@ func defaultDo(r *http.Request) (*http.Response, error) {
 		return resp, err //&http.Response{StatusCode: http.StatusInternalServerError}, err
 	}
 	//time.Sleep(time.Second * 2)
-	buf, err1 := io.ReadAll(resp.Body)
+	buf, err1 := readAll(resp.Body)
 	if err1 != nil {
 		if deadlineExceededError(err1) {
 			return &http.Response{StatusCode: http.StatusGatewayTimeout}, err1
@@ -187,7 +186,7 @@ func exchangeDo(r *http.Request) (*http.Response, error) {
 	if err != nil {
 		return resp, err
 	}
-	buf, err1 := io.ReadAll(resp.Body)
+	buf, err1 := readAll(resp.Body)
 	if err1 != nil {
 		if deadlineExceededError(err1) {
 			return &http.Response{StatusCode: http.StatusGatewayTimeout}, err1
@@ -231,13 +230,13 @@ func ExampleExchangeDo_Timeout() {
 	resp, err = Do(req)
 	fmt.Printf("test: Do() -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
-	buf, err1 := io.ReadAll(resp.Body)
-	fmt.Printf("test: io.ReadAll() -> [buff:%v] [err:%v]\n", len(buf), err1)
+	buf, err1 := readAll(resp.Body)
+	fmt.Printf("test: readAll() -> [buff:%v] [err:%v]\n", len(buf), err1)
 
 	//Output:
 	//test: Do_Timeout() -> [status-code:504] [err:Get "https://www.google.com/search?q=golang": context deadline exceeded]
 	//test: Do() -> [status-code:200] [err:<nil>]
-	//test: io.ReadAll() -> [buff:83659] [err:<nil>]
+	//test: readAll() -> [buff:83659] [err:<nil>]
 
 }
 
@@ -252,13 +251,13 @@ func ExampleExchangeDoWithTimeout() {
 	resp, err = ExchangeWithTimeout(time.Second*8, nil)(req)
 	fmt.Printf("test: DoWithTimeout() -> [status-code:%v] [err:%v]\n", resp.StatusCode, err)
 
-	buf, err1 := io.ReadAll(resp.Body)
-	fmt.Printf("test: io.ReadAll() -> [buf:%v] [buf:%v]\n", err1, len(buf) > 0)
+	buf, err1 := readAll(resp.Body)
+	fmt.Printf("test: readAll() -> [buf:%v] [buf:%v]\n", err1, len(buf) > 0)
 
 	//Output:
 	//test: DoWithTimeout() -> [status-code:504] [err:Get "https://www.google.com/search?q=golang": context deadline exceeded]
 	//test: DoWithTimeout() -> [status-code:200] [err:<nil>]
-	//test: io.ReadAll() -> [buf:<nil>] [buf:true]
+	//test: readAll() -> [buf:<nil>] [buf:true]
 
 }
 

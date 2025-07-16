@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/appellative-ai/core/iox"
 	"io"
 	"net/http"
 	"reflect"
@@ -26,7 +25,7 @@ func TransformBody(resp *http.Response) error {
 	if resp == nil || resp.Body == nil {
 		return nil
 	}
-	buf, err := io.ReadAll(resp.Body)
+	buf, err := readAll(resp.Body)
 	if err == nil {
 		resp.ContentLength = int64(len(buf))
 		resp.Body = io.NopCloser(bytes.NewReader(buf))
@@ -71,7 +70,7 @@ func NewResponseFromUri(uri any) (*http.Response, error) {
 	if uri == nil {
 		return serverErr, errors.New("error: URL is nil")
 	}
-	buf, err := iox.ReadFile(uri)
+	buf, err := readFile(uri)
 	if err != nil {
 		if strings.Contains(err.Error(), fileExistsError) {
 			return &http.Response{StatusCode: http.StatusNotFound, Status: "Not Found", Header: make(http.Header)}, err
