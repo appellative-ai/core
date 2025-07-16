@@ -85,7 +85,7 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 
 /*
 func _ExampleDo_Proxy() {
-	uri := "http://localhost:8080/github.com/advanced-go/core/exchange:Do"
+	uri := "http://localhost:8080/github.com/appellative-ai/core/exchange:Do"
 	req, _ := httpx.NewRequest("", uri, nil)
 
 	resp, status := Do(req)

@@ -2,13 +2,11 @@ package host
 
 import (
 	"fmt"
-	"github.com/appellative-ai/core/access"
 	"github.com/appellative-ai/core/httpx"
 	"github.com/appellative-ai/core/messaging"
 	"github.com/appellative-ai/core/rest"
 	"net/http"
 	"net/http/httptest"
-	"time"
 )
 
 type agentT struct{}
@@ -60,6 +58,7 @@ const (
 	route         = "host"
 )
 
+/*
 func authorizationLink(next rest.Exchange) rest.Exchange {
 	return func(r *http.Request) (resp *http.Response, err error) {
 		auth := r.Header.Get(authorization)
@@ -92,6 +91,8 @@ func accessLogLink(next rest.Exchange) rest.Exchange {
 	}
 }
 
+
+
 func ExampleNewEndpoint() {
 	agent := newTestAgent()
 	fmt.Printf("test: NewEndpoint() -> [%v]\n", agent)
@@ -104,6 +105,9 @@ func ExampleNewEndpoint() {
 	//test: NewEndpoint() -> [&{/resource 0xfa0000 0xfa1d20 0xfa0120}]
 
 }
+
+
+*/
 
 /*
 func ExampleExchangeHandler() {

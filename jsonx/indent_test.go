@@ -1,4 +1,4 @@
-package json
+package jsonx
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	customerAddr = "file://[cwd]/jsontest/customer-address.txt"
+	customerAddr = "file://[cwd]/jsonxtest/customer-address.txt"
 )
 
 func ExampleIndent() {

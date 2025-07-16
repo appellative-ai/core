@@ -7,10 +7,10 @@ import (
 )
 
 type echo struct {
-	Method string      `json:"method"`
-	Host   string      `json:"host"`
-	Url    string      `json:"url"`
-	Header http.Header `json:"header"`
+	Method string      `jsonx:"method"`
+	Host   string      `jsonx:"host"`
+	Url    string      `jsonx:"url"`
+	Header http.Header `jsonx:"header"`
 }
 
 func ExampleEncodeContent() {
@@ -24,7 +24,7 @@ func ExampleEncodeContent() {
 	}
 	content, err1 := json.Marshal(e)
 	if err1 != nil {
-		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err1)
+		fmt.Printf("test: jsonx.Marshal() -> [err:%v]\n", err1)
 	}
 	//buf, encoding, err := EncodeContent(nil, content)
 	//fmt.Printf("test: EncodeContent-Nil-Header() -> [buf:%v] [encoding:%v] [err:%v]\n", len(buf), encoding, err)

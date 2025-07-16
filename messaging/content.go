@@ -74,7 +74,7 @@ func Unmarshal[T any](ct *Content) (t T, status *Status) {
 		*ptr = body
 	default:
 		if ct.Type != ContentTypeJson {
-			return t, NewStatus(StatusInvalidContent, fmt.Sprintf("error: content type: %v is invalid for json.Unmarshal()", ct.Type))
+			return t, NewStatus(StatusInvalidContent, fmt.Sprintf("error: content type: %v is invalid for jsonx.Unmarshal()", ct.Type))
 		}
 		err := json.Unmarshal(body, ptr)
 		if err != nil {

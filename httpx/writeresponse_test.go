@@ -12,22 +12,22 @@ import (
 )
 
 const (
-	activityJsonFile = "file://[cwd]/httpxtest/activity.json"
+	activityJsonFile = "file://[cwd]/httpxtest/activity.jsonx"
 	activityGzipFile = "file://[cwd]/httpxtest/activity.gz"
 
 	testResponseText = "file://[cwd]/httpxtest/test-response.txt"
-	jsonContentType  = "application/json"
+	jsonContentType  = "application/jsonx"
 )
 
 type activity struct {
-	ActivityID   string `json:"ActivityID"`
-	ActivityType string `json:"ActivityType"`
-	Agent        string `json:"Agent"`
-	AgentUri     string `json:"AgentUri"`
-	Assignment   string `json:"Assignment"`
-	Controller   string `json:"Controller"`
-	Behavior     string `json:"Behavior"`
-	Description  string `json:"Description"`
+	ActivityID   string `jsonx:"ActivityID"`
+	ActivityType string `jsonx:"ActivityType"`
+	Agent        string `jsonx:"Agent"`
+	AgentUri     string `jsonx:"AgentUri"`
+	Assignment   string `jsonx:"Assignment"`
+	Controller   string `jsonx:"Controller"`
+	Behavior     string `jsonx:"Behavior"`
+	Description  string `jsonx:"Description"`
 }
 
 var (
@@ -47,12 +47,12 @@ func init() {
 	}
 	err = json.Unmarshal(buf, &activityList)
 	if err != nil {
-		fmt.Printf("test: json.Unmarshal() -> [err:%v]\n", err)
+		fmt.Printf("test: jsonx.Unmarshal() -> [err:%v]\n", err)
 		return
 	}
 	activityJson, err = json.Marshal(activityList)
 	if err != nil {
-		fmt.Printf("test: json.Mmarshal() -> [err:%v]\n", err)
+		fmt.Printf("test: jsonx.Mmarshal() -> [err:%v]\n", err)
 		return
 	}
 
@@ -104,7 +104,7 @@ func ExampleWriteResponse_StatusHeaders() {
 	//test: WriteResponse(w,nil,0,nil) -> [status-code:200] [header:map[]]
 	//test: WriteResponse(w,nil,StatusTeapot,nil) -> [status-code:418] [header:map[]]
 	//test: WriteResponse(w,list,StatusOK,nil) -> [status-code:200] [header:map[Content-Type:[text/html]]]
-	//test: WriteResponse(w,httpx.Header,StatusGatewayTimeout,nil) -> [status-code:504] [header:map[Content-Encoding:[gzip] Content-Type:[application/json]]]
+	//test: WriteResponse(w,httpx.Header,StatusGatewayTimeout,nil) -> [status-code:504] [header:map[Content-Encoding:[gzip] Content-Type:[application/jsonx]]]
 
 }
 
@@ -153,7 +153,7 @@ func ExampleWriteResponse_Encoding() {
 	fmt.Printf("test: WriteResponse(w,httpx.Header,0,[]activity) -> [read-all:%v] [buf:%v][header:%v]\n", status0, http.DetectContentType(buf), rec.Result().Header)
 
 	//Output:
-	//test: WriteResponse(w,httpx.Header,0,[]activity) -> [read-all:<nil>] [buf:application/x-gzip][header:map[Content-Encoding:[gzip] Content-Type:[application/json]]]
-	//test: WriteResponse(w,httpx.Header,0,[]activity) -> [read-all:<nil>] [buf:text/plain; charset=utf-8][header:map[Content-Encoding:[none] Content-Type:[application/json]]]
+	//test: WriteResponse(w,httpx.Header,0,[]activity) -> [read-all:<nil>] [buf:application/x-gzip][header:map[Content-Encoding:[gzip] Content-Type:[application/jsonx]]]
+	//test: WriteResponse(w,httpx.Header,0,[]activity) -> [read-all:<nil>] [buf:text/plain; charset=utf-8][header:map[Content-Encoding:[none] Content-Type:[application/jsonx]]]
 
 }

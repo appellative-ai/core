@@ -24,10 +24,10 @@ const (
 
 	testResponseGzip = "file://[cwd]/ioxtest/test-response.gz"
 
-	address1Url = "file://[cwd]/ioxtest/address1.json"
-	address2Url = "file://[cwd]/ioxtest/address2.json"
-	address3Url = "file://[cwd]/ioxtest/address3.json"
-	status504   = "file://[cwd]/ioxtest/status-504.json"
+	address1Url = "file://[cwd]/ioxtest/address1.jsonx"
+	address2Url = "file://[cwd]/ioxtest/address2.jsonx"
+	address3Url = "file://[cwd]/ioxtest/address3.jsonx"
+	status504   = "file://[cwd]/ioxtest/status-504.jsonx"
 )
 
 // parseRaw - parse a raw Uri without error
@@ -52,12 +52,12 @@ func ExampleDirFS() {
 	})
 
 	//Output:
-	//test: fs.ReadFile() -> [err:<nil>] [address1.json] true
-	//test: fs.ReadFile() -> [err:<nil>] [address2.json] true
-	//test: fs.ReadFile() -> [err:<nil>] [address3.json] true
+	//test: fs.ReadFile() -> [err:<nil>] [address1.jsonx] true
+	//test: fs.ReadFile() -> [err:<nil>] [address2.jsonx] true
+	//test: fs.ReadFile() -> [err:<nil>] [address3.jsonx] true
 	//test: fs.ReadFile() -> [err:<nil>] [hello-world.gz] true
 	//test: fs.ReadFile() -> [err:<nil>] [hello-world.txt] true
-	//test: fs.ReadFile() -> [err:<nil>] [status-504.json] true
+	//test: fs.ReadFile() -> [err:<nil>] [status-504.jsonx] true
 	//test: fs.ReadFile() -> [err:<nil>] [test-response.gz] true
 	//test: fs.ReadFile() -> [err:<nil>] [test-response.txt] true
 	//test: fs.ReadFile() -> [err:<nil>] [test-response2.gz] true
@@ -191,10 +191,10 @@ func ExampleReadFile() {
 	fmt.Printf("test: ReadFile(%v) -> [type:%v] [buf:%v] [status:%v]\n", s, reflect.TypeOf(u), len(buf), status)
 
 	//Output:
-	//test: ReadFile(file://[cwd]/ioxtest/status-504.json) -> [type:string] [buf:82] [status:<nil>]
-	//test: ReadFile(file://[cwd]/ioxtest/address1.json) -> [type:string] [buf:68] [status:<nil>]
-	//test: ReadFile(file://[cwd]/ioxtest/status-504.json) -> [type:*url.URL] [buf:82] [status:<nil>]
-	//test: ReadFile(file://[cwd]/ioxtest/address1.json) -> [type:*url.URL] [buf:68] [status:<nil>]
+	//test: ReadFile(file://[cwd]/ioxtest/status-504.jsonx) -> [type:string] [buf:82] [status:<nil>]
+	//test: ReadFile(file://[cwd]/ioxtest/address1.jsonx) -> [type:string] [buf:68] [status:<nil>]
+	//test: ReadFile(file://[cwd]/ioxtest/status-504.jsonx) -> [type:*url.URL] [buf:82] [status:<nil>]
+	//test: ReadFile(file://[cwd]/ioxtest/address1.jsonx) -> [type:*url.URL] [buf:68] [status:<nil>]
 
 }
 

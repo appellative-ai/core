@@ -1,4 +1,4 @@
-package json
+package jsonx
 
 import (
 	"encoding/json"
@@ -122,7 +122,7 @@ func New[T any](v any, h http.Header) (t T, status error) {
 			*ptr1 = buf
 			return t, StatusOK()
 		}
-		err := json.NewDecoder(ptr.Body).Decode(&t)
+		err := jsonx.NewDecoder(ptr.Body).Decode(&t)
 		_ = ptr.Body.Close()
 		if err != nil {
 			return t, NewStatus(StatusJsonDecodeError, err)
@@ -137,7 +137,7 @@ func New[T any](v any, h http.Header) (t T, status error) {
 			*ptr1 = buf
 			return t, StatusOK()
 		}
-		err := json.NewDecoder(ptr.Body).Decode(&t)
+		err := jsonx.NewDecoder(ptr.Body).Decode(&t)
 		_ = ptr.Body.Close()
 		if err != nil {
 			return t, NewStatus(StatusJsonDecodeError, err)

@@ -77,7 +77,7 @@ func ExampleType() {
 	// []byte -> Address
 	buf, err := json.Marshal(&addr)
 	if err != nil {
-		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
+		fmt.Printf("test: jsonx.Marshal() -> [err:%v]\n", err)
 	}
 	t, status := Unmarshal[Address](&Content{Type: ContentTypeJson, Value: buf})
 	fmt.Printf("test: Unmarshal[Address]() -> [%v] [status:%v]\n", t, status)
@@ -112,7 +112,7 @@ func ExampleMap() {
 	// []byte -> map[string]string
 	buf, err := json.Marshal(&m)
 	if err != nil {
-		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
+		fmt.Printf("test: jsonx.Marshal() -> [err:%v]\n", err)
 	}
 	t, status := Unmarshal[map[string]string](&Content{Type: ContentTypeJson, Value: buf})
 	fmt.Printf("test: Unmarshal[map[string]string]() -> [%v] [status:%v]\n", t, status)
@@ -147,7 +147,7 @@ func _ExampleReader() {
 	}
 	buf, err := json.Marshal(&m)
 	if err != nil {
-		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
+		fmt.Printf("test: jsonx.Marshal() -> [err:%v]\n", err)
 	}
 
 	t, status := Unmarshal[io.Reader](&Content{Type: ContentTypeJson, Value: buf})
@@ -234,7 +234,7 @@ func ExampleNew_Binary() {
 	}
 	buf, err := json.Marshal(&addr)
 	if err != nil {
-		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
+		fmt.Printf("test: jsonx.Marshal() -> [err:%v]\n", err)
 	}
 	// Address
 	msg := NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeJson, buf)

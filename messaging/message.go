@@ -40,7 +40,7 @@ const (
 	ContentTypeTextHtml = "text/html"
 	ContentTypeText     = "text/plain charset=utf-8"
 	ContentTypeBinary   = "application/octet-stream"
-	ContentTypeJson     = "application/json"
+	ContentTypeJson     = "application/jsonx"
 )
 
 var (
