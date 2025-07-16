@@ -1,5 +1,5 @@
 module github.com/appellative-ai/core
 
-go 1.21.4
+go 1.23.11
 
 require github.com/google/uuid v1.6.0
