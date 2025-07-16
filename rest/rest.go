@@ -53,10 +53,3 @@ func BuildChain[T any, U Chainable[T]](links []any) (head T) {
 	}
 	return head
 }
-
-/*
-// Exchangeable - interface to http Exchanges
-type Exchangeable interface {
-	Exchange(r *http.Request) (*http.Response, error)
-}
-*/
