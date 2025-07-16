@@ -2,11 +2,11 @@ package host
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/messaging"
+	"github.com/appellative-ai/core/messaging"
 )
 
 func ExampleNewMap() {
-	m := NewSyncMap[string, messaging.NewAgent]()
+	m := NewSyncMap[string, messaging.NewAgentFunc]()
 	name := ""
 	t := m.Load("")
 	fmt.Printf("test:  get(\"%v\") -> %v\n", name, t)

@@ -2,7 +2,7 @@ package messagingtest
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/messaging"
+	"github.com/appellative-ai/core/messaging"
 )
 
 type AgentT struct {

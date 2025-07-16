@@ -14,7 +14,7 @@ func ExampleNewStatus_OK() {
 	fmt.Printf("test: NewStatus() -> [status:%v] [type:%v]\n", s, path)
 
 	//Output:
-	//test: NewStatus() -> [status:OK] [type:github.com/behavioral-ai/core/messaging/Status]
+	//test: NewStatus() -> [status:OK] [type:github.com/appellative-ai/core/messaging/Status]
 
 }
 

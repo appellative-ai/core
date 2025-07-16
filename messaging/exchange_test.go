@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	pkgPath = "/github/behavioral-ai/core/messaging"
+	pkgPath = "/github/appellative-ai/core/messaging"
 )
 
 type agentC struct {

@@ -1,7 +1,7 @@
 package httpx
 
 import (
-	"github.com/behavioral-ai/core/iox"
+	"github.com/appellative-ai/core/iox"
 	"net/http"
 	"strings"
 )

@@ -2,7 +2,6 @@ package messaging
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/fmtx"
 	"time"
 )
 
@@ -70,22 +69,22 @@ func (t *traceDispatch) Dispatch(agent Agent, channel any, event string) {
 	if !t.validEvent(event) {
 		return
 	}
-	name := "<nil>"
+	name1 := "<nil>"
 	if ch, ok := channel.(*Channel); ok {
-		name = "ch:" + ch.Name
+		name1 = "ch:" + ch.Name
 		if !t.validChannel(ch.Name) {
 			return
 		}
 	} else {
 		if tk, ok1 := channel.(*Ticker); ok1 {
-			name = "tk:" + tk.Name
+			name1 = "tk:" + tk.Name
 		}
 	}
 	id := "<nil>"
 	if agent != nil {
 		id = agent.Name()
 	}
-	fmt.Printf("trace -> %v [%v] [%v] [%v]\n", fmtx.FmtRFC3339Millis(time.Now().UTC()), id, name, event)
+	fmt.Printf("trace -> %v [%v] [%v] [%v]\n", time.Now().UTC(), id, name1, event)
 	//} else {
 	//	fmt.Printf("trace -> %v [%v] [%v] [%v] [%v]\n", FmtRFC3339Millis(time.Now().UTC()), channel, eventing, id, activity)
 	//}

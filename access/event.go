@@ -2,7 +2,7 @@ package access
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/fmtx"
+	"github.com/appellative-ai/core/fmtx"
 	"net/http"
 	"strconv"
 	"strings"

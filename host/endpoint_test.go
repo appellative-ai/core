@@ -2,10 +2,10 @@ package host
 
 import (
 	"fmt"
-	access "github.com/behavioral-ai/core/access2"
-	"github.com/behavioral-ai/core/httpx"
-	"github.com/behavioral-ai/core/messaging"
-	"github.com/behavioral-ai/core/rest"
+	"github.com/appellative-ai/core/access"
+	"github.com/appellative-ai/core/httpx"
+	"github.com/appellative-ai/core/messaging"
+	"github.com/appellative-ai/core/rest"
 	"net/http"
 	"net/http/httptest"
 	"time"
@@ -81,12 +81,12 @@ func accessLogLink(next rest.Exchange) rest.Exchange {
 		if next != nil {
 			resp, err = next(r)
 		}
-		limit = resp.Header.Get(access.XRateLimit)
-		resp.Header.Del(access.XRateLimit)
-		timeout = resp.Header.Get(access.XTimeout)
-		resp.Header.Del(access.XTimeout)
-		pct = resp.Header.Get(access.XRedirect)
-		resp.Header.Del(access.XRedirect)
+		limit = resp.Header.Get(access.RateLimitName)
+		resp.Header.Del(access.RateLimitName)
+		timeout = resp.Header.Get(access.TimeoutName)
+		resp.Header.Del(access.TimeoutName)
+		pct = resp.Header.Get(access.RedirectName)
+		resp.Header.Del(access.RedirectName)
 		access.Agent.Log(access.IngressTraffic, start, time.Since(start), route, r, resp, access.Threshold{Timeout: timeout, RateLimit: limit, Redirect: pct})
 		return
 	}

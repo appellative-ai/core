@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/behavioral-ai/core/iox"
+	"github.com/appellative-ai/core/iox"
 	"io"
 	"reflect"
 	"strings"

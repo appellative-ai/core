@@ -2,7 +2,7 @@ package json
 
 import (
 	"fmt"
-	"github.com/behavioral-ai/core/iox"
+	"github.com/appellative-ai/core/iox"
 	"io"
 	"net/url"
 	"os"

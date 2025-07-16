@@ -1,4 +1,4 @@
-module github.com/behavioral-ai/core
+module github.com/appellative-ai/core
 
 go 1.21.4
 

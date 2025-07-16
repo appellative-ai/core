@@ -1,6 +1,6 @@
 package rest
 
-import "github.com/behavioral-ai/core/messaging"
+import "github.com/appellative-ai/core/messaging"
 
 const (
 	ContentTypeRoute    = "application/x-route"

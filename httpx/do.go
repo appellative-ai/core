@@ -2,7 +2,7 @@ package httpx
 
 import (
 	"crypto/tls"
-	"github.com/behavioral-ai/core/rest"
+	"github.com/appellative-ai/core/rest"
 	"net/http"
 	"net/url"
 	"time"

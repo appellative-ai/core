@@ -1,8 +1,8 @@
 package host
 
 import (
-	"github.com/behavioral-ai/core/httpx"
-	"github.com/behavioral-ai/core/rest"
+	"github.com/appellative-ai/core/httpx"
+	"github.com/appellative-ai/core/rest"
 	"net/http"
 )
 

@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"github.com/behavioral-ai/core/messaging"
+	"github.com/appellative-ai/core/messaging"
 )
 
 func UpdateExchange(name string, ex *Exchange, m *messaging.Message) {

@@ -3,7 +3,7 @@ package json
 import (
 	"bytes"
 	"fmt"
-	"github.com/behavioral-ai/core/iox"
+	"github.com/appellative-ai/core/iox"
 	"io"
 )
 

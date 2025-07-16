@@ -3,8 +3,8 @@ package access
 import (
 	"encoding/json"
 	"errors"
-	"github.com/behavioral-ai/core/messaging"
-	"github.com/behavioral-ai/core/rest"
+	"github.com/appellative-ai/core/messaging"
+	"github.com/appellative-ai/core/rest"
 	"log"
 	"net/http"
 	"time"

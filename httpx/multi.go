@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	//"github.com/advanced-go/stdlib/core"
-	"github.com/behavioral-ai/core/messaging"
+	"github.com/appellative-ai/core/messaging"
 	"net/http"
 	"sync"
 	"sync/atomic"
@@ -27,7 +27,7 @@ func MultiExchange(reqs []*http.Request, handler OnResponse) ([]ExchangeResultM,
 	var wg sync.WaitGroup
 	failure := atomic.Bool{}
 
-	results := make([]ExchangeResultM, cnt)
+	results1 := make([]ExchangeResultM, cnt)
 	for i := 0; i < cnt; i++ {
 		if reqs[i] == nil {
 			continue
@@ -46,11 +46,11 @@ func MultiExchange(reqs []*http.Request, handler OnResponse) ([]ExchangeResultM,
 					return
 				}
 			}
-		}(reqs[i], &results[i])
+		}(reqs[i], &results1[i])
 	}
 	wg.Wait()
 	if failure.Load() {
-		return results, messaging.NewStatus(messaging.StatusExecError, errors.New("error: request failures"))
+		return results1, messaging.NewStatus(messaging.StatusExecError, errors.New("error: request failures"))
 	}
-	return results, messaging.StatusOK()
+	return results1, messaging.StatusOK()
 }
