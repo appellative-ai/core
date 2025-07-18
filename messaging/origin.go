@@ -21,15 +21,15 @@ const (
 
 // OriginT - location
 type OriginT struct {
-	Name        string `jsonx:"name"`
-	Region      string `jsonx:"region"`
-	Zone        string `jsonx:"zone"`
-	SubZone     string `jsonx:"sub-zone"`
-	Host        string `jsonx:"host"`
-	ServiceName string `jsonx:"service-name"`
-	InstanceId  string `jsonx:"instance-id"`
-	Collective  string `jsonx:"collective"`
-	Domain      string `jsonx:"domain"`
+	Name        string `json:"name"`
+	Region      string `json:"region"`
+	Zone        string `json:"zone"`
+	SubZone     string `json:"sub-zone"`
+	Host        string `json:"host"`
+	ServiceName string `json:"service-name"`
+	InstanceId  string `json:"instance-id"`
+	Collective  string `json:"collective"`
+	Domain      string `json:"domain"`
 }
 
 func (o *OriginT) String() string { return o.Name }

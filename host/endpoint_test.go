@@ -38,7 +38,7 @@ func ExchangeTest(w http.ResponseWriter, r *http.Request, handler rest.Exchange)
 	httpx.WriteResponse(w, resp.Header, resp.StatusCode, resp.Body, r.Header)
 }
 
-func _ExampleHost() {
+func ExampleHost() {
 	r := httptest.NewRecorder()
 	req, _ := http.NewRequest("", "http://localhost:8081/github/advanced-go/search:google?q=golang", nil)
 
@@ -110,8 +110,9 @@ func ExampleNewEndpoint() {
 */
 
 /*
+
 func ExampleExchangeHandler() {
-	e := NewEndpoint2(nil)
+	e := NewEndpoint(nil)
 
 	rec := httptest.NewRecorder()
 	req, _ := http.NewRequest(http.MethodGet, "https://www.google.com/search?q=golang", nil)

@@ -77,7 +77,7 @@ func ExampleType() {
 	// []byte -> Address
 	buf, err := json.Marshal(&addr)
 	if err != nil {
-		fmt.Printf("test: jsonx.Marshal() -> [err:%v]\n", err)
+		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
 	}
 	t, status := Unmarshal[Address](&Content{Type: ContentTypeJson, Value: buf})
 	fmt.Printf("test: Unmarshal[Address]() -> [%v] [status:%v]\n", t, status)
@@ -112,7 +112,7 @@ func ExampleMap() {
 	// []byte -> map[string]string
 	buf, err := json.Marshal(&m)
 	if err != nil {
-		fmt.Printf("test: jsonx.Marshal() -> [err:%v]\n", err)
+		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
 	}
 	t, status := Unmarshal[map[string]string](&Content{Type: ContentTypeJson, Value: buf})
 	fmt.Printf("test: Unmarshal[map[string]string]() -> [%v] [status:%v]\n", t, status)
@@ -147,7 +147,7 @@ func _ExampleReader() {
 	}
 	buf, err := json.Marshal(&m)
 	if err != nil {
-		fmt.Printf("test: jsonx.Marshal() -> [err:%v]\n", err)
+		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
 	}
 
 	t, status := Unmarshal[io.Reader](&Content{Type: ContentTypeJson, Value: buf})
@@ -216,10 +216,10 @@ func ExampleNew_Type() {
 	fmt.Printf("test: New[string]() -> %v [type:%v] [status:%v]\n", t3, reflect.TypeOf(t3), status3)
 
 	//Output:
-	//test: NewMessage() -> [chan:ctrl] [from:] [to:] [common:core:event/startup]
+	//test: NewMessage() -> [chan:ctrl] [from:] [to:[]] [common:core:event/startup]
 	//test: New[Address]() -> {123 Main  Anytown Ohio 54321} [type:messaging.Address] [status:OK]
 	//test: New[map[string]string]() -> map[] [type:map[string]string] [status:Invalid Content [error: content value type: messaging.Address is not of generic type: map[string]string]]
-	//test: NewMessage() -> [chan:ctrl] [from:] [to:] [common:core:event/startup]
+	//test: NewMessage() -> [chan:ctrl] [from:] [to:[]] [common:core:event/startup]
 	//test: New[string]() -> this is text content [type:string] [status:OK]
 
 }
@@ -234,7 +234,7 @@ func ExampleNew_Binary() {
 	}
 	buf, err := json.Marshal(&addr)
 	if err != nil {
-		fmt.Printf("test: jsonx.Marshal() -> [err:%v]\n", err)
+		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err)
 	}
 	// Address
 	msg := NewMessage(ChannelControl, StartupEvent).SetContent(ContentTypeJson, buf)
@@ -258,11 +258,11 @@ func ExampleNew_Binary() {
 	fmt.Printf("test: New[[]byte]() -> %v [type:%v] [status:%v]\n", string(t3), reflect.TypeOf(t3), status3)
 
 	//Output:
-	//test: NewMessage() -> [chan:ctrl] [from:] [to:] [common:core:event/startup]
+	//test: NewMessage() -> [chan:ctrl] [from:] [to:[]] [common:core:event/startup]
 	//test: New[Address]() -> {123 Main  Anytown Ohio 54321} [type:messaging.Address] [status:OK]
-	//test: NewMessage() -> [chan:ctrl] [from:] [to:] [common:core:event/startup]
+	//test: NewMessage() -> [chan:ctrl] [from:] [to:[]] [common:core:event/startup]
 	//test: New[string]() -> this is a test string [type:string] [status:OK]
-	//test: NewMessage() -> [chan:ctrl] [from:] [to:] [common:core:event/startup]
+	//test: NewMessage() -> [chan:ctrl] [from:] [to:[]] [common:core:event/startup]
 	//test: New[[]byte]() -> this is a test string [type:[]uint8] [status:OK]
 
 }

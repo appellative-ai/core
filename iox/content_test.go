@@ -24,7 +24,7 @@ func ExampleEncodeContent() {
 	}
 	content, err1 := json.Marshal(e)
 	if err1 != nil {
-		fmt.Printf("test: jsonx.Marshal() -> [err:%v]\n", err1)
+		fmt.Printf("test: json.Marshal() -> [err:%v]\n", err1)
 	}
 	//buf, encoding, err := EncodeContent(nil, content)
 	//fmt.Printf("test: EncodeContent-Nil-Header() -> [buf:%v] [encoding:%v] [err:%v]\n", len(buf), encoding, err)

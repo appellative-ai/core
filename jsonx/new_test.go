@@ -43,7 +43,7 @@ func ExampleNew_String_Error() {
 	//Output:
 	//test: New("") -> [status:open error: URL is empty: The system cannot find the file specified.]
 	//test: New(https://www.google.com/search) -> [status:open error: scheme is invalid [https]: The system cannot find the file specified.]
-	//test: New(file://[cwd]/jsonxtest/address.txt) -> [status:open C:\Users\markb\GitHub\core\jsonx\jsonxtest\address.txt: The system cannot find the file specified.]
+	//test: New(file://[cwd]/jsonxtest/address.txt) -> [status:open C:\Users\markw\GitHub\core\jsonx\jsonxtest\address.txt: The system cannot find the file specified.]
 
 }
 
@@ -78,7 +78,7 @@ func ExampleNew_URL_Error() {
 	//Output:
 	//test: New("") -> [status:error: value parameter is nil]
 	//test: New(https://www.google.com/search) -> [status:open error: scheme is invalid [https]: The system cannot find the file specified.]
-	//test: New(file://[cwd]/jsonxtest/address.txt) -> [status:open C:\Users\markb\GitHub\core\jsonx\jsonxtest\address.txt: The system cannot find the file specified.]
+	//test: New(file://[cwd]/jsonxtest/address.txt) -> [status:open C:\Users\markw\GitHub\core\jsonx\jsonxtest\address.txt: The system cannot find the file specified.]
 
 }
 

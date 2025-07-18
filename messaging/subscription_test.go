@@ -40,8 +40,8 @@ func ExampleSubscriptionMessage() {
 	fmt.Printf("test: NewSubscriptionCancelMessage() -> [%v] [%v] [%v] [%v]\n", m.To(), m.Name, s, status)
 
 	//Output:
-	//test: NewSubscriptionCreateMessage() -> [create-to] [core:event/subscription-create] [{ ctrl core:event/subscription-create create-from}] [OK]
-	//test: NewSubscriptionCancelMessage() -> [cancel-to] [core:event/subscription-cancel] [{  core:event/subscription-cancel cancel-from}] [OK]
+	//test: NewSubscriptionCreateMessage() -> [[create-to]] [core:event/subscription-create] [{ ctrl core:event/subscription-create create-from}] [OK]
+	//test: NewSubscriptionCancelMessage() -> [[cancel-to]] [core:event/subscription-cancel] [{  core:event/subscription-cancel cancel-from}] [OK]
 
 }
 
