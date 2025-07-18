@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	ContentTypeJson     = "application/jsonx"
+	ContentTypeJson     = "application/json"
 	ContentType         = "Content-Type"
 	ContentEncoding     = "Content-Encoding"
 	AcceptEncoding      = "Accept-Encoding"

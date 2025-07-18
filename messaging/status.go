@@ -25,11 +25,11 @@ const (
 )
 
 type Status struct {
-	Code  int    `jsonx:"code"`
-	Err   error  `jsonx:"err"`
-	Msg   string `jsonx:"message"`
-	Place string `jsonx:"location"`
-	Id    string `jsonx:"request-id"`
+	Code  int    `json:"code"`
+	Err   error  `json:"err"`
+	Msg   string `json:"message"`
+	Place string `json:"location"`
+	Id    string `json:"request-id"`
 }
 
 func StatusOK() *Status {

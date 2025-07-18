@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	jsonToken = "jsonx"
+	jsonToken = "json"
 )
 
 func writeContent(w io.Writer, content any, contentType string) (length int64, err error) {

@@ -7,10 +7,10 @@ import (
 )
 
 type echo struct {
-	Method string      `jsonx:"method"`
-	Host   string      `jsonx:"host"`
-	Url    string      `jsonx:"url"`
-	Header http.Header `jsonx:"header"`
+	Method string      `json:"method"`
+	Host   string      `json:"host"`
+	Url    string      `json:"url"`
+	Header http.Header `json:"header"`
 }
 
 func ExampleEncodeContent() {
