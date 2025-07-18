@@ -34,6 +34,7 @@ const (
 	XRelatesTo   = "x-relates-to"
 	XMessageName = "x-message-name" // Used in request header to reference a message
 
+	ContentTypeAny      = "application/x-any"
 	ContentTypeMap      = "application/x-map"
 	ContentTypeStatus   = "application/x-status"
 	ContentTypeAgent    = "application/x-agent"

@@ -1,5 +1,16 @@
 package messaging
 
+func NewConfigMessage(v any) *Message {
+	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeAny, v)
+}
+
+func ConfigContent[T any](m *Message) (t T, status *Status) {
+	if m == nil || m.Content == nil || m.ContentType() != ContentTypeAny {
+		return t, NewStatus(StatusInvalidContent, "")
+	}
+	return New[T](m.Content)
+}
+
 func NewMapMessage(m map[string]string) *Message {
 	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeMap, m)
 }
