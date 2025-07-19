@@ -4,11 +4,23 @@ func NewConfigMessage(v any) *Message {
 	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeAny, v)
 }
 
-func ConfigContent[T any](m *Message) (t T, status *Status) {
+func ConfigContent[T any](m *Message) (t T, ok bool) {
 	if m == nil || m.Content == nil || m.ContentType() != ContentTypeAny {
-		return t, NewStatus(StatusInvalidContent, "")
+		return
 	}
-	return New[T](m.Content)
+	t, ok = m.Content.Value.(T)
+	return
+}
+
+func UpdateContent[T any](t *T, m *Message) bool {
+	if m == nil || m.Content == nil || m.ContentType() != ContentTypeAny {
+		return false
+	}
+	if t1, ok := ConfigContent[T](m); ok {
+		*t = t1
+		return true
+	}
+	return false
 }
 
 func NewMapMessage(m map[string]string) *Message {

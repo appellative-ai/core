@@ -5,6 +5,29 @@ import (
 	"net/http"
 )
 
+func ExampleConfigContent() {
+	cfg := make(map[string]string)
+	cfg["hostname"] = "localhost"
+	m := NewConfigMessage(cfg)
+
+	cfg2, ok := ConfigContent[map[string]string](m)
+	fmt.Printf("test: ConfigContent() -> [%v] [ok:%v]\n", cfg2, ok)
+
+	cfg3, ok2 := ConfigContent[string](m)
+	fmt.Printf("test: ConfigContent() -> [%v] [ok:%v]\n", cfg3, ok2)
+
+	var cfg4 map[string]string
+
+	ok2 = UpdateContent[map[string]string](&cfg4, m)
+	fmt.Printf("test: UpdateContent() -> [%v] [ok:%v]\n", cfg4, ok2)
+
+	//Output:
+	//test: ConfigContent() -> [map[hostname:localhost]] [ok:true]
+	//test: ConfigContent() -> [] [ok:false]
+	//test: UpdateContent() -> [map[hostname:localhost]] [ok:true]
+	
+}
+
 func ExampleMapMessage() {
 	cfg := make(map[string]string)
 	cfg["key1"] = "value1"
