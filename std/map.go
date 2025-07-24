@@ -1,4 +1,4 @@
-package messaging
+package std
 
 import (
 	"sync"

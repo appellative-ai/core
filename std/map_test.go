@@ -1,11 +1,12 @@
-package messaging
+package std
 
 import (
 	"fmt"
+	"github.com/appellative-ai/core/messaging"
 )
 
 func ExampleNewMap() {
-	m := NewSyncMap[string, NewAgentFunc]()
+	m := NewSyncMap[string, messaging.NewAgentFunc]()
 	name := ""
 	t := m.Load("")
 	fmt.Printf("test:  get(\"%v\") -> %v\n", name, t)
@@ -14,7 +15,7 @@ func ExampleNewMap() {
 	m.Store(name, nil)
 	//fmt.Printf("test:  store(\"%v\") -> %v\n", name, t)
 
-	m.Store(name, func() Agent { return nil })
+	m.Store(name, func() messaging.Agent { return nil })
 	t = m.Load(name)
 	fmt.Printf("test:  get(\"%v\") -> %v\n", name, t != nil)
 
