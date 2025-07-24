@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"fmt"
+	"github.com/appellative-ai/core/std"
 	"time"
 )
 
@@ -21,18 +22,18 @@ func ExampleSetReply() {
 	m := NewMessage(ChannelControl, "test:agent/test")
 
 	m.SetReply(nil)
-	m.Reply(NewStatusMessage(StatusOK(), ""))
+	m.Reply(NewStatusMessage(std.StatusOK, ""))
 
 	m.SetReply(m)
-	m.Reply(NewStatusMessage(StatusOK(), ""))
+	m.Reply(NewStatusMessage(std.StatusOK, ""))
 
 	m.SetReply(func(m *Message) {
 		fmt.Printf("test: SetReply() -> %v\n", m)
 	})
-	m.Reply(NewStatusMessage(StatusNotFound(), ""))
+	m.Reply(NewStatusMessage(std.StatusNotFound, ""))
 
 	m.SetReply(a)
-	m.Reply(NewStatusMessage(StatusOK(), ""))
+	m.Reply(NewStatusMessage(std.StatusOK, ""))
 
 	time.Sleep(time.Second * 5)
 	a.Message(ShutdownMessage)

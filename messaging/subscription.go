@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"errors"
+	"github.com/appellative-ai/core/std"
 )
 
 const (
@@ -112,11 +113,11 @@ func NewSubscriptionCreateMessage(to string, s Subscription) *Message {
 	return m
 }
 
-func SubscriptionCreateContent(m *Message) (Subscription, *Status) {
+func SubscriptionCreateContent(m *Message) (Subscription, *std.Status) {
 	if !ValidContent(m, SubscriptionCreateEvent, ContentTypeSubscription) {
-		return Subscription{}, NewStatus(StatusInvalidContent, "")
+		return Subscription{}, std.NewStatus(StatusInvalidContent, "", nil)
 	}
-	return New[Subscription](m.Content)
+	return std.New[Subscription](m.Content)
 }
 
 func NewSubscriptionCancelMessage(to, from, Name string) *Message {
@@ -130,9 +131,9 @@ func NewSubscriptionCancelMessage(to, from, Name string) *Message {
 	return m
 }
 
-func SubscriptionCancelContent(m *Message) (Subscription, *Status) {
+func SubscriptionCancelContent(m *Message) (Subscription, *std.Status) {
 	if !ValidContent(m, SubscriptionCancelEvent, ContentTypeSubscription) {
-		return Subscription{}, NewStatus(StatusInvalidContent, "")
+		return Subscription{}, std.NewStatus(StatusInvalidContent, "", nil)
 	}
-	return New[Subscription](m.Content)
+	return std.New[Subscription](m.Content)
 }

@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"fmt"
+	"github.com/appellative-ai/core/std"
 	"net/http"
 	"reflect"
 	"time"
@@ -64,7 +65,7 @@ type Handler func(*Message)
 type Message struct {
 	Name    string
 	Header  http.Header
-	Content *Content
+	Content *std.Content
 	Expiry  time.Time
 	Reply   Handler
 }
@@ -207,7 +208,7 @@ func (m *Message) SetContent(contentType string, content any) *Message {
 	//if content == nil {
 	//	return errors.New("error: content is nil")
 	//}
-	m.Content = &Content{Type: contentType, Value: content}
+	m.Content = &std.Content{Type: contentType, Value: content}
 	return m
 }
 
@@ -222,7 +223,7 @@ func ValidContent(m *Message, name, ct string) bool {
 }
 
 // Reply - function used by message recipient to reply with a Status
-func Reply(msg *Message, status *Status, from string) {
+func Reply(msg *Message, status *std.Status, from string) {
 	if msg == nil || status == nil || msg.Reply == nil {
 		return
 	}

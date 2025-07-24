@@ -1,5 +1,7 @@
 package messaging
 
+import "github.com/appellative-ai/core/std"
+
 func NewConfigMessage(v any) *Message {
 	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeAny, v)
 }
@@ -27,14 +29,14 @@ func NewMapMessage(m map[string]string) *Message {
 	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeMap, m)
 }
 
-func MapContent(m *Message) (map[string]string, *Status) {
+func MapContent(m *Message) (map[string]string, *std.Status) {
 	if !ValidContent(m, ConfigEvent, ContentTypeMap) {
-		return nil, NewStatus(StatusInvalidContent, "")
+		return nil, std.NewStatus(StatusInvalidContent, "", nil)
 	}
-	return New[map[string]string](m.Content)
+	return std.New[map[string]string](m.Content)
 }
 
-func NewStatusMessage(status *Status, relatesTo string) *Message {
+func NewStatusMessage(status *std.Status, relatesTo string) *Message {
 	m := NewMessage(ChannelControl, StatusEvent).SetContent(ContentTypeStatus, status)
 	if relatesTo != "" {
 		m.SetRelatesTo(relatesTo)
@@ -42,11 +44,11 @@ func NewStatusMessage(status *Status, relatesTo string) *Message {
 	return m
 }
 
-func StatusContent(m *Message) (*Status, string, *Status) {
+func StatusContent(m *Message) (*std.Status, string, *std.Status) {
 	if !ValidContent(m, StatusEvent, ContentTypeStatus) {
-		return nil, "", NewStatus(StatusInvalidContent, "")
+		return nil, "", std.NewStatus(StatusInvalidContent, "", nil)
 	}
-	t, status := New[*Status](m.Content)
+	t, status := std.New[*std.Status](m.Content)
 	if status.OK() {
 		return t, m.RelatesTo(), status
 	}
@@ -57,9 +59,9 @@ func NewAgentMessage(a Agent) *Message {
 	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeAgent, a)
 }
 
-func AgentContent(m *Message) (Agent, *Status) {
+func AgentContent(m *Message) (Agent, *std.Status) {
 	if !ValidContent(m, ConfigEvent, ContentTypeAgent) {
-		return nil, NewStatus(StatusInvalidContent, "")
+		return nil, std.NewStatus(StatusInvalidContent, "", nil)
 	}
-	return New[Agent](m.Content)
+	return std.New[Agent](m.Content)
 }

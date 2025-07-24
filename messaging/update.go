@@ -1,5 +1,7 @@
 package messaging
 
+import "github.com/appellative-ai/core/std"
+
 func UpdateReview(name string, review **Review, m *Message) {
 	if m == nil || review == nil || m.ContentType() != ContentTypeReview {
 		return
@@ -10,7 +12,7 @@ func UpdateReview(name string, review **Review, m *Message) {
 		return
 	}
 	*review = review2
-	Reply(m, StatusOK(), name)
+	Reply(m, std.StatusOK, name)
 }
 
 func UpdateMap(name string, fn func(cfg map[string]string), m *Message) {
@@ -23,7 +25,7 @@ func UpdateMap(name string, fn func(cfg map[string]string), m *Message) {
 		return
 	}
 	fn(cfg)
-	Reply(m, StatusOK(), name)
+	Reply(m, std.StatusOK, name)
 }
 
 func UpdateDispatcher(name string, d *Dispatcher, m *Message) {
@@ -32,11 +34,11 @@ func UpdateDispatcher(name string, d *Dispatcher, m *Message) {
 	}
 	dsp, ok := DispatcherContent(m)
 	if !ok {
-		Reply(m, NewStatus(StatusInvalidArgument, nil), name)
+		Reply(m, std.NewStatus(StatusInvalidArgument, "", nil), name)
 		return
 	}
 	*d = dsp
-	Reply(m, StatusOK(), name)
+	Reply(m, std.StatusOK, name)
 }
 
 func UpdateAgent(name string, fn func(agent Agent), m *Message) {
@@ -50,5 +52,5 @@ func UpdateAgent(name string, fn func(agent Agent), m *Message) {
 
 	}
 	fn(a)
-	Reply(m, StatusOK(), name)
+	Reply(m, std.StatusOK, name)
 }

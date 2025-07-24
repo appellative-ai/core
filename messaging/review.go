@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"errors"
+	"github.com/appellative-ai/core/std"
 	"sync/atomic"
 	"time"
 )
@@ -15,11 +16,11 @@ func NewReviewMessage(review *Review) *Message {
 	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeReview, review)
 }
 
-func ReviewContent(m *Message) (*Review, *Status) {
+func ReviewContent(m *Message) (*Review, *std.Status) {
 	if !ValidContent(m, ConfigEvent, ContentTypeReview) {
-		return nil, NewStatus(StatusInvalidContent, errors.New("invalid content"))
+		return nil, std.NewStatus(StatusInvalidContent, "", errors.New("invalid content"))
 	}
-	return New[*Review](m.Content)
+	return std.New[*Review](m.Content)
 }
 
 // Review - maybe add Task??

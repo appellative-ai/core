@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"fmt"
+	"github.com/appellative-ai/core/std"
 	"net/http"
 )
 
@@ -25,7 +26,7 @@ func ExampleConfigContent() {
 	//test: ConfigContent() -> [map[hostname:localhost]] [ok:true]
 	//test: ConfigContent() -> [] [ok:false]
 	//test: UpdateContent() -> [map[hostname:localhost]] [ok:true]
-	
+
 }
 
 func ExampleMapMessage() {
@@ -48,7 +49,7 @@ func ExampleMapMessage() {
 }
 
 func ExampleStatusMessage() {
-	m := NewStatusMessage(NewStatus(http.StatusTeapot, nil), ConfigEvent)
+	m := NewStatusMessage(std.NewStatus(http.StatusTeapot, "", nil), ConfigEvent)
 
 	status, event, result := StatusContent(m)
 	fmt.Printf("test: StatusContent() -> [%v] [%v] [status:%v]\n", status, event, result)
