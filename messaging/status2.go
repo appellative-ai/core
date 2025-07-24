@@ -1,41 +1,51 @@
 package messaging
 
-import "net/http"
-
-var (
-	Status2OK = NewStatus2(http.StatusOK, nil)
+import (
+	"fmt"
+	"net/http"
 )
 
+var (
+	Status2OK = NewStatus2(http.StatusOK, "", nil)
+)
+
+/*
 type Status2 interface {
-	error
+	//fmt.Stringer
+	//error
+	String() string
 	Code() int
 	OK() bool
 	Location() string
 }
 
-type status2 struct {
-	err      error
-	code     int
-	location string
+
+*/
+
+type Status2 struct {
+	Err      error
+	Code     int
+	Location string
 }
 
-func NewStatus2(code int, err error) *status2 {
-	s := new(status2)
-	s.code = code
-	s.err = err
+func NewStatus2(code int, location string, err error) *Status2 {
+	s := new(Status2)
+	s.Code = code
+	s.Err = err
+	s.Location = location
 	return s
 }
 
-func (s *status2) Code() int { return s.code }
-func (s *status2) OK() bool  { return s.code == http.StatusOK }
-func (s *status2) Error() string {
-	if s.err != nil {
-		return s.err.Error()
+func (s *Status2) OK() bool { return s.Code == http.StatusOK }
+
+func (s *Status2) String() string {
+	if s.Err != nil {
+		return fmt.Sprintf("%v - %v", HttpStatus(s.Code), s.Err)
 	}
-	return ""
+	return fmt.Sprintf("%v", HttpStatus(s.Code))
+
 }
-func (s *status2) Location() string { return s.location }
-func (s *status2) WithLocation(l string) Status2 {
-	s.location = l
-	return s
-}
+
+// func (s *Status2) Code() int { return s.Code }
+// func (s *Status2) Error() error { return s.Err }
+// func (s *status2) Location() string { return s.location }
