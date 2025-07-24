@@ -13,8 +13,11 @@ func ExampleStatus2() {
 
 	fmt.Printf("test: NewStatus() -> %v\n", Status2OK)
 
+	fmt.Printf("test: NewStatus() -> %v\n", Status2NotFound)
+
 	//Output:
 	//test: NewStatus() -> I'm A Teapot - this is an error
 	//test: NewStatus() -> OK
+	//test: NewStatus() -> Not Found
 
 }

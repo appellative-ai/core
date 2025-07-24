@@ -6,7 +6,8 @@ import (
 )
 
 var (
-	Status2OK = NewStatus2(http.StatusOK, "", nil)
+	Status2OK       = NewStatus2(http.StatusOK, "", nil)
+	Status2NotFound = NewStatus2(http.StatusNotFound, "", nil)
 )
 
 /*
@@ -36,8 +37,8 @@ func NewStatus2(code int, location string, err error) *Status2 {
 	return s
 }
 
-func (s *Status2) OK() bool { return s.Code == http.StatusOK }
-
+func (s *Status2) OK() bool       { return s.Code == http.StatusOK }
+func (s *Status2) NotFound() bool { return s.Code == http.StatusNotFound }
 func (s *Status2) String() string {
 	if s.Err != nil {
 		return fmt.Sprintf("%v - %v", HttpStatus(s.Code), s.Err)
