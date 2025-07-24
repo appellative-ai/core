@@ -31,7 +31,7 @@ func NewMapMessage(m map[string]string) *Message {
 
 func MapContent(m *Message) (map[string]string, *std.Status) {
 	if !ValidContent(m, ConfigEvent, ContentTypeMap) {
-		return nil, std.NewStatus(StatusInvalidContent, "", nil)
+		return nil, std.NewStatus(std.StatusInvalidContent, "", nil)
 	}
 	return std.New[map[string]string](m.Content)
 }
@@ -46,7 +46,7 @@ func NewStatusMessage(status *std.Status, relatesTo string) *Message {
 
 func StatusContent(m *Message) (*std.Status, string, *std.Status) {
 	if !ValidContent(m, StatusEvent, ContentTypeStatus) {
-		return nil, "", std.NewStatus(StatusInvalidContent, "", nil)
+		return nil, "", std.NewStatus(std.StatusInvalidContent, "", nil)
 	}
 	t, status := std.New[*std.Status](m.Content)
 	if status.OK() {
@@ -61,7 +61,7 @@ func NewAgentMessage(a Agent) *Message {
 
 func AgentContent(m *Message) (Agent, *std.Status) {
 	if !ValidContent(m, ConfigEvent, ContentTypeAgent) {
-		return nil, std.NewStatus(StatusInvalidContent, "", nil)
+		return nil, std.NewStatus(std.StatusInvalidContent, "", nil)
 	}
 	return std.New[Agent](m.Content)
 }

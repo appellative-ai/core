@@ -184,16 +184,16 @@ func Example_NewResponseFromUri_EOF_Error() {
 
 /*
 func ExampleNewError() {
-	status := messaging.StatusOK()
+	status := std.StatusOK
 	//var resp *httpx.Response
 
 	err := NewError(nil, nil)
 	fmt.Printf("test: NewError() -> [status:%v] [resp:%v] [err:%v]\n", nil, nil, err)
 
 	err = NewError(status, nil)
-	fmt.Printf("test: NewError() -> [status:%v] [resp:%v] [err:%v]\n", messaging.StatusOK(), nil, err)
+	fmt.Printf("test: NewError() -> [status:%v] [resp:%v] [err:%v]\n", std.StatusOK, nil, err)
 
-	status = messaging.NewStatus(messaging.StatusInvalidContent, errors.New("error: invalid content"))
+	status = std.NewStatus(std.StatusInvalidContent, "",errors.New("error: invalid content"))
 	err = NewError(status, nil)
 	fmt.Printf("test: NewError() -> [status:%v] [resp:%v] [%v]\n", status, nil, err)
 

@@ -34,7 +34,7 @@ func UpdateDispatcher(name string, d *Dispatcher, m *Message) {
 	}
 	dsp, ok := DispatcherContent(m)
 	if !ok {
-		Reply(m, std.NewStatus(StatusInvalidArgument, "", nil), name)
+		Reply(m, std.NewStatus(std.StatusInvalidArgument, "", nil), name)
 		return
 	}
 	*d = dsp

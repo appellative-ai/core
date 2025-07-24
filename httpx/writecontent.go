@@ -51,7 +51,7 @@ func writeContent(w io.Writer, content any, contentType string) (length int64, e
 
 			buf, err = json.Marshal(content)
 			if err != nil {
-				return //status = messaging.NewStatus(messaging.StatusJsonEncodeError, err)
+				return
 			}
 			cnt, err = w.Write(buf)
 		} else {

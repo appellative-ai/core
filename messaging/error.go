@@ -3,18 +3,19 @@ package messaging
 import (
 	"errors"
 	"fmt"
+	"github.com/appellative-ai/core/std"
 )
 
-func EmptyMapError(location string) *Status {
-	return NewStatus(StatusInvalidArgument, errors.New("map is nil")).WithLocation(location)
+func EmptyMapError(location string) *std.Status {
+	return std.NewStatus(std.StatusInvalidArgument, location, errors.New("map is nil"))
 }
 
-func MapContentError(location string, key string) *Status {
-	return NewStatus(StatusInvalidArgument, errors.New(fmt.Sprintf("map does not contain key: %v", key))).WithLocation(location)
+func MapContentError(location string, key string) *std.Status {
+	return std.NewStatus(std.StatusInvalidArgument, location, errors.New(fmt.Sprintf("map does not contain key: %v", key)))
 }
 
-func EmptyReviewError(location string) *Status {
-	return NewStatus(StatusInvalidArgument, errors.New("review is nil")).WithLocation(location)
+func EmptyReviewError(location string) *std.Status {
+	return std.NewStatus(std.StatusInvalidArgument, location, errors.New("review is nil"))
 }
 
 /*

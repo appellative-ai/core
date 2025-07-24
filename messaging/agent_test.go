@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"fmt"
+	"github.com/appellative-ai/core/std"
 	"time"
 )
 
@@ -55,7 +56,7 @@ func (t *testAgent) Message(msg *Message) {
 	default:
 	}
 }
-func (t *testAgent) Notify(status *Status) { fmt.Printf("%v", status) }
+func (t *testAgent) Notify(status *std.Status) { fmt.Printf("%v", status) }
 func (t *testAgent) Run() {
 	if t.running {
 		return
