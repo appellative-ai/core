@@ -52,6 +52,13 @@ func (s *Status) String() string {
 
 }
 
-// func (s *Status2) Code() int { return s.Code }
-// func (s *Status2) Error() error { return s.Err }
-// func (s *status2) Location() string { return s.location }
+/*
+func (s *Status) Error() string {
+	if s.Err != nil {
+		return s.Err.Error()
+	}
+	return ""
+}
+
+
+*/
