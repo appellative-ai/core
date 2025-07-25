@@ -42,21 +42,25 @@ func NewResponse(statusCode int, h http.Header, content any) (resp *http.Respons
 		return resp
 	}
 	switch ptr := (content).(type) {
-	case []byte:
-		if len(ptr) > 0 {
-			resp.ContentLength = int64(len(ptr))
-			resp.Body = io.NopCloser(bytes.NewReader(ptr))
+	case error:
+		if ptr.Error() != "" {
+			resp.ContentLength = int64(len(ptr.Error()))
+			resp.Body = io.NopCloser(bytes.NewReader([]byte(ptr.Error())))
 		}
 	case string:
 		if ptr != "" {
 			resp.ContentLength = int64(len(ptr))
 			resp.Body = io.NopCloser(bytes.NewReader([]byte(ptr)))
 		}
-	case error:
-		if ptr.Error() != "" {
-			resp.ContentLength = int64(len(ptr.Error()))
-			resp.Body = io.NopCloser(bytes.NewReader([]byte(ptr.Error())))
+	case []byte:
+		if len(ptr) > 0 {
+			resp.ContentLength = int64(len(ptr))
+			resp.Body = io.NopCloser(bytes.NewReader(ptr))
 		}
+	case bytes.Buffer:
+		buf := ptr.Bytes()
+		resp.ContentLength = int64(len(buf))
+		resp.Body = io.NopCloser(bytes.NewReader(buf))
 	default:
 		err := errors.New(fmt.Sprintf("error: content type is invalid: %v", reflect.TypeOf(ptr)))
 		return &http.Response{StatusCode: http.StatusInternalServerError, Header: SetHeader(nil, ContentType, ContentTypeText), ContentLength: int64(len(err.Error())), Body: io.NopCloser(bytes.NewReader([]byte(err.Error())))}
