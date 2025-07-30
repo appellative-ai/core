@@ -53,7 +53,7 @@ const (
 )
 
 var (
-	defaultOperators, _ = createOperators([]string{TrafficOperator, StartTimeOperator,
+	defaultOperators, _ = CreateOperators([]string{TrafficOperator, StartTimeOperator,
 		DurationOperator, RouteOperator,
 		RequestMethodOperator, RequestUrlOperator,
 		ResponseStatusCodeOperator, ResponseCachedOperator,

@@ -46,7 +46,7 @@ var operators = map[string]*Operator{
 	RedirectOperator:        {"redirect", RedirectOperator},
 }
 
-func createOperators(operators []string) ([]Operator, error) {
+func CreateOperators(operators []string) ([]Operator, error) {
 	var items []Operator
 	for _, op := range operators {
 		items = append(items, Operator{

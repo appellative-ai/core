@@ -83,7 +83,7 @@ func Example_CreateOperators() {
 		items []Operator
 	)
 
-	items, err = createOperators([]string{TrafficOperator,
+	items, err = CreateOperators([]string{TrafficOperator,
 		StartTimeOperator,
 		DurationOperator,
 		OriginRegionOperator})
