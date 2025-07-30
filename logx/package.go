@@ -26,6 +26,11 @@ const (
 	contentEncoding = "Content-Encoding"
 )
 
+func init() {
+	// initialize Golang logging
+	log.SetFlags(0)
+}
+
 // Operator - configuration of logging entries
 type Operator struct {
 	Name  string
