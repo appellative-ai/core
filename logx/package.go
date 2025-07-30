@@ -14,10 +14,9 @@ import (
 //
 
 const (
-	DefaultRoute   = "host"
 	EgressTraffic  = "egress"
 	IngressTraffic = "ingress"
-	
+
 	ThresholdName = "x-threshold"
 	RateLimitName = "rate-limit"
 	TimeoutName   = "timeout"
