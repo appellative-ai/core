@@ -54,10 +54,10 @@ func createOperators(operators []string) ([]Operator, error) {
 			Value: op,
 		})
 	}
-	return initOperators(items)
+	return InitOperators(items)
 }
 
-func initOperators(operators []Operator) ([]Operator, error) {
+func InitOperators(operators []Operator) ([]Operator, error) {
 	var items []Operator
 
 	if len(operators) == 0 {

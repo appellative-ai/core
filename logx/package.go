@@ -62,13 +62,13 @@ func LogAccess(operators []Operator, traffic string, start time.Time, duration t
 }
 
 // LogEgress - egress traffic
-func LogEgress(start time.Time, duration time.Duration, route string, req any, resp any, timeout time.Duration) {
+func LogEgress(operators []Operator, start time.Time, duration time.Duration, route string, req any, resp any, timeout time.Duration) {
 	var r *http.Response
 	if duration > 0 {
 		r = buildResponse(resp)
 		SetTimeout(r.Header, timeout)
 	}
-	LogAccess(nil, EgressTraffic, start, duration, route, req, r)
+	LogAccess(operators, EgressTraffic, start, duration, route, req, r)
 }
 
 // LogStatus - log status
