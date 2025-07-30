@@ -80,13 +80,13 @@ func accessLogLink(next rest.Exchange) rest.Exchange {
 		if next != nil {
 			resp, err = next(r)
 		}
-		limit = resp.Header.Get(access.RateLimitName)
-		resp.Header.Del(access.RateLimitName)
-		timeout = resp.Header.Get(access.TimeoutName)
-		resp.Header.Del(access.TimeoutName)
-		pct = resp.Header.Get(access.RedirectName)
-		resp.Header.Del(access.RedirectName)
-		access.Agent.Log(access.IngressTraffic, start, time.Since(start), route, r, resp, access.Threshold{Timeout: timeout, RateLimit: limit, Redirect: pct})
+		limit = resp.Header.Get(logx.RateLimitName)
+		resp.Header.Del(logx.RateLimitName)
+		timeout = resp.Header.Get(logx.TimeoutName)
+		resp.Header.Del(logx.TimeoutName)
+		pct = resp.Header.Get(logx.RedirectName)
+		resp.Header.Del(logx.RedirectName)
+		logx.Agent.Log(logx.IngressTraffic, start, time.Since(start), route, r, resp, logx.Threshold{Timeout: timeout, RateLimit: limit, Redirect: pct})
 		return
 	}
 }
