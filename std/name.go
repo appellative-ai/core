@@ -46,9 +46,6 @@ func Versioned(name string) string {
 		return NewName(name).Domain
 	}
 
-	func Kind(name string) string {
-		return NewName(name).Kind
-	}
 
 	func Path(name string) string {
 		return NewName(name).Path
@@ -58,6 +55,11 @@ func Versioned(name string) string {
 		return NewName(name).Path
 	}
 */
+
+func Kind(name string) string {
+	return NewName(name).Kind
+}
+
 func parse(name string) Name {
 	if name == "" {
 		return Name{}
