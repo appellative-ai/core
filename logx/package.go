@@ -9,13 +9,15 @@ import (
 )
 
 //ContentTypeOperators = "application/x-log-operators"
-//DefaultRoute         = "host"
+
 //RequestIdName = "x-request-id"
-//	IngressTraffic       = "ingress"
+//
 
 const (
-	EgressTraffic = "egress"
-
+	DefaultRoute   = "host"
+	EgressTraffic  = "egress"
+	IngressTraffic = "ingress"
+	
 	ThresholdName = "x-threshold"
 	RateLimitName = "rate-limit"
 	TimeoutName   = "timeout"
