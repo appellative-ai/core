@@ -18,7 +18,8 @@ func UpdateContent[T any](t *T, m *Message) bool {
 	if m == nil || m.Content == nil || m.ContentType() != ContentTypeAny {
 		return false
 	}
-	if t1, ok := ConfigContent[T](m); ok {
+	if t1, ok := m.Content.Value.(T); ok {
+		//if t1, ok := ConfigContent[T](m); ok {
 		*t = t1
 		return true
 	}

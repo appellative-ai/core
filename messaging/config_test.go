@@ -44,7 +44,7 @@ func ExampleMapMessage() {
 
 	//Output:
 	//test: MapContent() -> [map[key1:value1 key2:value2]] [status:OK]
-	//test: MapContent() -> [map[]] [status:Invalid Content [error: content value type: string is not of generic type: map[string]string]]
+	//test: MapContent() -> [map[]] [status:Invalid Content - error: content value type: string is not of generic type: map[string]string]
 
 }
 
@@ -60,7 +60,7 @@ func ExampleStatusMessage() {
 
 	//Output:
 	//test: StatusContent() -> [I'm A Teapot] [common:core:event/config] [status:OK]
-	//test: StatusContent() -> [<nil>] [] [status:Invalid Content [error: content value type: string is not of generic type: *messaging.Status]]
+	//test: StatusContent() -> [<nil>] [] [status:Invalid Content - error: content value type: string is not of generic type: *std.Status]
 
 }
 
