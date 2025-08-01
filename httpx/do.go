@@ -2,6 +2,7 @@ package httpx
 
 import (
 	"crypto/tls"
+	"errors"
 	"github.com/appellative-ai/core/rest"
 	"net/http"
 	"net/url"
@@ -34,16 +35,20 @@ func init() {
 	}
 }
 
+//if req.Context() != nil {
+//	_, deadline = req.Context().Deadline()
+//}
+////else {
+//	//	if deadline {
+//	//		err = TransformBody(resp)
+//	//	}
+//	//}
+
 // Do - process an HTTP request, checking for file:// scheme
 func Do(req *http.Request) (resp *http.Response, err error) {
-	var deadline bool
-
 	// panic if req or URL is nil - should be resolved during testing
 	if req.URL.Scheme == fileScheme {
 		return NewResponseFromUri(req.URL)
-	}
-	if req.Context() != nil {
-		_, deadline = req.Context().Deadline()
 	}
 	resp, err = Client.Do(req)
 	if resp != nil && resp.Header == nil {
@@ -51,16 +56,13 @@ func Do(req *http.Request) (resp *http.Response, err error) {
 	}
 	// catch *url.Error - can be a connectivity or a context deadline exceeded error
 	if err != nil {
-		if urlErr, ok := any(err).(*url.Error); ok {
+		var urlErr *url.Error
+		if errors.As(err, &urlErr) {
 			if urlErr.Timeout() {
 				return timeoutResponse, err
 			}
 		}
 		resp = serverResponse
-	} else {
-		if deadline {
-			err = TransformBody(resp)
-		}
 	}
 	return
 }
