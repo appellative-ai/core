@@ -19,7 +19,7 @@ func ExampleConfigContent() {
 
 	var cfg4 map[string]string
 
-	ok2 = UpdateContent[map[string]string](&cfg4, m)
+	ok2 = UpdateContent[map[string]string](m, &cfg4)
 	fmt.Printf("test: UpdateContent() -> [%v] [ok:%v]\n", cfg4, ok2)
 
 	//Output:

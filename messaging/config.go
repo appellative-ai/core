@@ -14,7 +14,7 @@ func ConfigContent[T any](m *Message) (t T, ok bool) {
 	return
 }
 
-func UpdateContent[T any](t *T, m *Message) bool {
+func UpdateContent[T any](m *Message, t *T) bool {
 	if m == nil || m.Content == nil || m.ContentType() != ContentTypeAny {
 		return false
 	}
