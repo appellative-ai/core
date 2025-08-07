@@ -16,15 +16,15 @@ func NewSyncMap[T, U any]() *MapT[T, U] {
 	return c
 }
 
-func (m *MapT[T, U]) Load(t T) (u U) {
-	v, ok := m.m.Load(t)
-	if !ok {
-		return u
+func (m *MapT[T, U]) Load(t T) (u U, ok bool) {
+	v, ok1 := m.m.Load(t)
+	if !ok1 {
+		return u, ok1
 	}
-	if v1, ok1 := v.(U); ok1 {
-		return v1
+	if v1, ok2 := v.(U); ok2 {
+		return v1, ok2
 	}
-	return u
+	return u, false
 }
 
 func (m *MapT[T, U]) Store(t T, u U) {
