@@ -1,7 +1,6 @@
 package messaging
 
-import "github.com/appellative-ai/core/std"
-
+/*
 func UpdateReview(name string, review **Review, m *Message) {
 	if m == nil || review == nil || m.ContentType() != ContentTypeReview {
 		return
@@ -54,3 +53,6 @@ func UpdateAgent(name string, fn func(agent Agent), m *Message) {
 	fn(a)
 	Reply(m, std.StatusOK, name)
 }
+
+
+*/

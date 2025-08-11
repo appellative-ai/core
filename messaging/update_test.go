@@ -1,9 +1,6 @@
 package messaging
 
-import (
-	"fmt"
-)
-
+/*
 func ExampleUpdateMap() {
 	UpdateMap("", nil, nil)
 	fmt.Printf("test: UpdateMap() -> nil update fn\n")
@@ -105,3 +102,6 @@ func ExampleUpdateAgent() {
 	//test: UpdateAgent() -> test:agent
 
 }
+
+
+*/
