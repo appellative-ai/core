@@ -27,17 +27,19 @@ func ReviewContent(m *Message) (*Review, *std.Status) {
 type Review struct {
 	started  bool
 	duration time.Duration
-	expired  *atomic.Bool
+	expired  atomic.Bool
 	ticker   *Ticker
 }
 
-func NewReview(minutes int) *Review {
-	if minutes <= 0 {
-		minutes = defaultDuration
-	}
-	return newReview(time.Minute * time.Duration(minutes))
+func NewReview() *Review {
+	//if minutes <= 0 {
+	//	minutes = defaultDuration
+	//}
+	r := new(Review)
+	return r //newReview(time.Minute * time.Duration(minutes))
 }
 
+/*
 func newReview(dur time.Duration) *Review {
 	r := new(Review)
 	r.expired = new(atomic.Bool)
@@ -45,6 +47,9 @@ func newReview(dur time.Duration) *Review {
 	r.duration = dur
 	return r
 }
+
+
+*/
 
 func (r *Review) Started() bool {
 	return r.started
@@ -54,10 +59,17 @@ func (r *Review) Expired() bool {
 	return r.expired.Load()
 }
 
-func (r *Review) Start() {
-	r.ticker = NewTicker(ChannelControl, r.duration)
+func (r *Review) Start(dur time.Duration) {
+	if r.started {
+		return
+	}
+	if dur <= 0 {
+		dur = defaultDuration
+	}
+	r.ticker = NewTicker(ChannelControl, dur)
 	r.expired.Store(false)
 	r.started = true
+	r.duration = dur
 	go reviewAttend(r)
 }
 

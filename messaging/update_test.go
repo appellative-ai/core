@@ -34,7 +34,7 @@ func ExampleUpdateReview() {
 	UpdateReview("", nil, nil)
 	fmt.Printf("test: UpdateReview() -> nil Review\n")
 
-	review := NewReview(5)
+	review := NewReview()
 	UpdateReview("", &review, nil)
 	fmt.Printf("test: UpdateReview() -> nil message\n")
 
@@ -43,7 +43,7 @@ func ExampleUpdateReview() {
 	fmt.Printf("test: UpdateReview() -> invalid content type\n")
 
 	before := review
-	m = NewReviewMessage(NewReview(10))
+	m = NewReviewMessage(NewReview())
 	UpdateReview("", &review, m)
 	fmt.Printf("test: UpdateReview() -> [original:%v] [updated:%v]\n", before.duration, review.duration)
 
