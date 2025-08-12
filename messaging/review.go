@@ -25,18 +25,15 @@ func ReviewContent(m *Message) (*Review, *std.Status) {
 
 // Review - maybe add Task??
 type Review struct {
-	started  bool
-	duration time.Duration
+	started  atomic.Bool
 	expired  atomic.Bool
+	duration time.Duration
 	ticker   *Ticker
 }
 
 func NewReview() *Review {
-	//if minutes <= 0 {
-	//	minutes = defaultDuration
-	//}
 	r := new(Review)
-	return r //newReview(time.Minute * time.Duration(minutes))
+	return r
 }
 
 /*
@@ -52,15 +49,19 @@ func newReview(dur time.Duration) *Review {
 */
 
 func (r *Review) Started() bool {
-	return r.started
+	return r.started.Load()
 }
 
 func (r *Review) Expired() bool {
 	return r.expired.Load()
 }
 
+func (r *Review) Duration() time.Duration {
+	return r.duration
+}
+
 func (r *Review) Start(dur time.Duration) {
-	if r.started {
+	if r.started.Load() {
 		return
 	}
 	if dur <= 0 {
@@ -68,7 +69,7 @@ func (r *Review) Start(dur time.Duration) {
 	}
 	r.ticker = NewTicker(ChannelControl, dur)
 	r.expired.Store(false)
-	r.started = true
+	r.started.Store(true)
 	r.duration = dur
 	go reviewAttend(r)
 }
@@ -78,6 +79,8 @@ func reviewAttend(r *Review) {
 		select {
 		case <-r.ticker.T.C:
 			r.expired.Store(true)
+			r.started.Store(false)
+			r.ticker.Stop()
 			return
 		default:
 		}

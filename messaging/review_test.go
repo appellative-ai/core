@@ -35,6 +35,6 @@ func ExampleReview_Start() {
 	//Output:
 	//test: NewReview() -> [started:false] [expired:false] [dur:0s]
 	//test: Start() -> [started:true] [expired:false] [dur:500ms]
-	//test: Start() -> [started:true] [expired:true] [dur:500ms]
+	//test: Start() -> [started:false] [expired:true] [dur:500ms]
 
 }
