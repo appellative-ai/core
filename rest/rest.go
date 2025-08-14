@@ -2,7 +2,6 @@ package rest
 
 import (
 	"fmt"
-	"github.com/appellative-ai/core/messaging"
 	"net/http"
 	"reflect"
 )
@@ -12,11 +11,8 @@ import (
 // Exchange - http exchange
 type Exchange func(r *http.Request) (*http.Response, error)
 
-// ExchangeLink - interface to link http Exchanges. Used in the collective repository
+// ExchangeLink - interface to link http Exchanges. Used in the collective exchange
 type ExchangeLink func(next Exchange) Exchange
-
-// MessageLink - interface to link message handlers. Used in the collective repository
-type MessageLink func(next *messaging.Message)
 
 // Chainable - interface to create a link
 type Chainable[T any] interface {
@@ -25,16 +21,11 @@ type Chainable[T any] interface {
 
 // BuildExchangeChain - build Exchange chain
 func BuildExchangeChain(links []any) Exchange {
-	return BuildChain[Exchange, Chainable[Exchange]](links)
+	return BuildNetwork[Exchange, Chainable[Exchange]](links)
 }
 
-// BuildMessagingChain - build messaging handler chain
-func BuildMessagingChain(links []any) messaging.Handler {
-	return BuildChain[messaging.Handler, Chainable[messaging.Handler]](links)
-}
-
-// BuildChain - build a chain of links - panic on nil or invalid type links
-func BuildChain[T any, U Chainable[T]](links []any) (head T) {
+// BuildNetwork - build a chain of links - panic on nil or invalid type links
+func BuildNetwork[T any, U Chainable[T]](links []any) (head T) {
 	if len(links) == 0 {
 		panic("error: chain links slice is nil")
 	}
