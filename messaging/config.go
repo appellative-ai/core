@@ -25,21 +25,6 @@ func UpdateContent[T any](m *Message, t *T) bool {
 	return false
 }
 
-/*
-func NewMapMessage(m map[string]string) *Message {
-	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeMap, m)
-}
-
-func MapContent(m *Message) (map[string]string, *std.Status) {
-	if !ValidContent(m, ConfigEvent, ContentTypeMap) {
-		return nil, std.NewStatus(std.StatusInvalidContent, "", nil)
-	}
-	return std.New[map[string]string](m.Content)
-}
-
-
-*/
-
 func NewStatusMessage(status *std.Status, relatesTo string) *Message {
 	m := NewMessage(ChannelControl, StatusEvent).SetContent(ContentTypeStatus, status)
 	if relatesTo != "" {
@@ -58,18 +43,3 @@ func StatusContent(m *Message) (*std.Status, string, *std.Status) {
 	}
 	return nil, "", status
 }
-
-/*
-func NewAgentMessage(a Agent) *Message {
-	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeAgent, a)
-}
-
-func AgentContent(m *Message) (Agent, *std.Status) {
-	if !ValidContent(m, ConfigEvent, ContentTypeAgent) {
-		return nil, std.NewStatus(std.StatusInvalidContent, "", nil)
-	}
-	return std.New[Agent](m.Content)
-}
-
-
-*/
