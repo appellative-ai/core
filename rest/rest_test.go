@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-func ExampleBuildExchangeChain() {
+func ExampleBuildNetwork() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildExchangeChain([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
+	ex := BuildNetwork([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
 	ex(req)
 
 	//Output:
@@ -21,9 +21,9 @@ func ExampleBuildExchangeChain() {
 
 }
 
-func ExampleBuildChainExchange_Link() {
+func ExampleBuildNetworkExchange_Link() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
+	ex := buildNetwork[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
 	ex(req)
 
 	//Output:
@@ -36,9 +36,9 @@ func ExampleBuildChainExchange_Link() {
 
 }
 
-func ExampleBuildChainExchange_Chainable() {
+func ExampleBuildNetworkExchange_Chainable() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, do2Exchange{}, do3Exchange{}})
+	ex := buildNetwork[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, do2Exchange{}, do3Exchange{}})
 	ex(req)
 
 	//Output:
@@ -51,9 +51,9 @@ func ExampleBuildChainExchange_Chainable() {
 
 }
 
-func ExampleBuildChainExchange_Any() {
+func ExampleBuildNetworkExchange_Any() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, do2ExchangeFn, do3Exchange{}, do4ExchangeFn})
+	ex := buildNetwork[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, do2ExchangeFn, do3Exchange{}, do4ExchangeFn})
 	ex(req)
 
 	//Output:
@@ -68,9 +68,9 @@ func ExampleBuildChainExchange_Any() {
 
 }
 
-func ExampleBuildChainExchange_Abbreviated() {
+func ExampleBuildNetworkExchange_Abbreviated() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFailFn, do4ExchangeFn})
+	ex := buildNetwork[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFailFn, do4ExchangeFn})
 	ex(req)
 
 	//Output:
@@ -83,9 +83,9 @@ func ExampleBuildChainExchange_Abbreviated() {
 
 }
 
-func ExampleBuildChain_Exchange() {
+func ExampleBuildNetwork_Exchange() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
+	ex := buildNetwork[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
 	ex(req)
 
 	//Output:
@@ -98,9 +98,9 @@ func ExampleBuildChain_Exchange() {
 
 }
 
-func ExampleBuildChainExchange_Exchangeable() {
+func ExampleBuildNetworkExchange_Exchangeable() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
+	ex := buildNetwork[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
 	ex(req)
 
 	//Output:
@@ -182,17 +182,6 @@ func do4ExchangeFn(next Exchange) Exchange {
 	}
 }
 
-/*
-func do5ExchangeFn(req *http.Request) (resp *http.Response, err error) {
-	fmt.Printf("test: Do5-Exchange() -> request\n")
-	resp = &http.Response{StatusCode: http.StatusOK}
-	fmt.Printf("test: Do5-Exchange() -> response\n")
-	return
-}
-
-
-*/
-
 type do1Exchange struct{}
 
 func (d do1Exchange) Link(next Exchange) Exchange {
@@ -223,52 +212,9 @@ func (d do4Exchange) Link(next Exchange) Exchange {
 	return do4ExchangeFn(next)
 }
 
-/*
-type do5 struct{}
-
-func (d do5) Exchange(r *http.Request) (*http.Response, error) {
-	return do5ExchangeFn(r)
-}
-
-*/
-
-func _ExampleBuildChain_Panic_Type() {
+func ExampleBuildNetwork_Chainable() {
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, req, do3Exchange{}, do4ExchangeFn})
-	ex(req)
-
-	//Output:
-	//fail
-}
-
-func _ExampleBuildChain_Panic_Nil() {
-	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, nil, do3Exchange{}, do4ExchangeFn})
-	ex(req)
-
-	//Output:
-	//fail
-}
-
-func _ExampleBuildChain_Exchange_Panic() {
-	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1ExchangeFn, do2ExchangeFn, do3ExchangeFn})
-	ex(req)
-
-	//Output:
-	//test: Do1-Link() -> request
-	//test: Do2-Link() -> request
-	//test: Do3-Link() -> request
-	//test: Do5-Exchange() -> request
-	//test: Do5-Exchange() -> response
-	//test: Do3-Link() -> response
-	//test: Do2-Link() -> response
-
-}
-
-func ExampleBuildChain_Chainable() {
-	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
-	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, do2Exchange{}, do3Exchange{}})
+	ex := buildNetwork[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, do2Exchange{}, do3Exchange{}})
 	ex(req)
 
 	//Output:
@@ -279,6 +225,33 @@ func ExampleBuildChain_Chainable() {
 	//test: Do2-Exchange() -> response
 	//test: Do1-Exchange() -> response
 
+}
+
+func _ExampleBuildNetwork_Panic_Nil() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	ex := buildNetwork[Exchange, Chainable[Exchange]]([]any{})
+	ex(req)
+
+	//Output:
+	//fail
+}
+
+func _ExampleBuildNetwork_Panic_Nil_Operative() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	ex := buildNetwork[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, nil, do3Exchange{}, do4ExchangeFn})
+	ex(req)
+
+	//Output:
+	//fail
+}
+
+func _ExampleBuildNetwork_Panic_Type() {
+	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
+	ex := buildNetwork[Exchange, Chainable[Exchange]]([]any{do1Exchange{}, req, do3Exchange{}, do4ExchangeFn})
+	ex(req)
+
+	//Output:
+	//fail
 }
 
 /*
@@ -292,18 +265,18 @@ func (d do1Combined) doExchange(next Exchange) Exchange {
 	return do1ExchangeFn(next)
 }
 
-func ExampleBuildChain_Combined() {
-	rec := BuildChain[messaging.Handler, Chainable[messaging.Handler]]([]any{do1Combined{}})
+func ExampleBuildNetwork_Combined() {
+	rec := BuildNetwork[messaging.Handler, Chainable[messaging.Handler]]([]any{do1Combined{}})
 	rec(messaging.ShutdownMessage)
 
 	req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "https://www.google.com/search?q=golang", nil)
 
 	// This will panic as do1Combined is not of type Chainable[Exchange]
-	//ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Combined{}})
+	//ex := BuildNetwork[Exchange, Chainable[Exchange]]([]any{do1Combined{}})
 	//ex(req)
 
 	// This works
-	ex := BuildChain[Exchange, Chainable[Exchange]]([]any{do1Combined{}.doExchange})
+	ex := BuildNetwork[Exchange, Chainable[Exchange]]([]any{do1Combined{}.doExchange})
 	ex(req)
 
 	//Output:

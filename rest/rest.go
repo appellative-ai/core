@@ -19,28 +19,31 @@ type Chainable[T any] interface {
 	Link(t T) T
 }
 
-// BuildExchangeChain - build Exchange chain
-func BuildExchangeChain(links []any) Exchange {
-	return BuildNetwork[Exchange, Chainable[Exchange]](links)
+// BuildNetwork - build network
+func BuildNetwork(operatives []any) Exchange {
+	return buildNetwork[Exchange, Chainable[Exchange]](operatives)
 }
 
-// BuildNetwork - build a chain of links - panic on nil or invalid type links
-func BuildNetwork[T any, U Chainable[T]](links []any) (head T) {
-	if len(links) == 0 {
-		panic("error: chain links slice is nil")
+// buildNetwork - build a chain of links - panic on nil or invalid type links
+func buildNetwork[T any, U Chainable[T]](operatives []any) (head T) {
+	if len(operatives) == 0 {
+		panic("operatives list is nil")
 	}
-	for i := len(links) - 1; i >= 0; i-- {
+	for i := len(operatives) - 1; i >= 0; i-- {
+		if operatives[i] == nil {
+			panic(fmt.Sprintf("operative is nil at index: %v", i))
+		}
 		// Check for a next function
-		if fn, ok := links[i].(func(next T) T); ok {
+		if fn, ok := operatives[i].(func(next T) T); ok {
 			head = fn(head)
 			continue
 		}
 		// Check for a Chainable interface
-		if c, ok := links[i].(U); ok {
+		if c, ok := operatives[i].(U); ok {
 			head = c.Link(head)
 			continue
 		}
-		panic(fmt.Sprintf("invalid link type: %v", reflect.TypeOf(links[i])))
+		panic(fmt.Sprintf("invalid operative type: %v", reflect.TypeOf(operatives[i])))
 	}
 	return head
 }
