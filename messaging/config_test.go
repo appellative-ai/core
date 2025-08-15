@@ -29,6 +29,7 @@ func ExampleConfigContent() {
 
 }
 
+/*
 func ExampleMapMessage() {
 	cfg := make(map[string]string)
 	cfg["key1"] = "value1"
@@ -48,6 +49,9 @@ func ExampleMapMessage() {
 
 }
 
+
+*/
+
 func ExampleStatusMessage() {
 	m := NewStatusMessage(std.NewStatus(http.StatusTeapot, "", nil), ConfigEvent)
 
@@ -64,6 +68,7 @@ func ExampleStatusMessage() {
 
 }
 
+/*
 func ExampleAgentMessage() {
 	a := newControlAgent("test:agent/example", nil)
 	m := NewAgentMessage(a)
@@ -75,3 +80,6 @@ func ExampleAgentMessage() {
 	//test: AgentContent() -> [test:agent/example] [status:OK]
 
 }
+
+
+*/

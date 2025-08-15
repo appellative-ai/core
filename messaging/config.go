@@ -25,6 +25,7 @@ func UpdateContent[T any](m *Message, t *T) bool {
 	return false
 }
 
+/*
 func NewMapMessage(m map[string]string) *Message {
 	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeMap, m)
 }
@@ -35,6 +36,9 @@ func MapContent(m *Message) (map[string]string, *std.Status) {
 	}
 	return std.New[map[string]string](m.Content)
 }
+
+
+*/
 
 func NewStatusMessage(status *std.Status, relatesTo string) *Message {
 	m := NewMessage(ChannelControl, StatusEvent).SetContent(ContentTypeStatus, status)
@@ -55,6 +59,7 @@ func StatusContent(m *Message) (*std.Status, string, *std.Status) {
 	return nil, "", status
 }
 
+/*
 func NewAgentMessage(a Agent) *Message {
 	return NewMessage(ChannelControl, ConfigEvent).SetContent(ContentTypeAgent, a)
 }
@@ -65,3 +70,6 @@ func AgentContent(m *Message) (Agent, *std.Status) {
 	}
 	return std.New[Agent](m.Content)
 }
+
+
+*/
