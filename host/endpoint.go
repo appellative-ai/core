@@ -14,7 +14,7 @@ func Init(r *http.Request) {
 	httpx.AddRequestId(r)
 }
 
-func NewEndpoint(pattern string, links []any) rest.Endpoint {
-	chain := rest.BuildExchangeChain(links)
-	return rest.NewEndpoint(pattern, ExchangeHandler, Init, chain)
+func NewEndpoint(pattern string, operatives []any) rest.Endpoint {
+	net := rest.BuildNetwork(operatives)
+	return rest.NewEndpoint(pattern, ExchangeHandler, Init, net)
 }
