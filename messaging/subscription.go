@@ -115,7 +115,7 @@ func NewSubscriptionCreateMessage(to string, s Subscription) *Message {
 
 func SubscriptionCreateContent(m *Message) (Subscription, *std.Status) {
 	if !ValidContent(m, SubscriptionCreateEvent, ContentTypeSubscription) {
-		return Subscription{}, std.NewStatus(std.StatusInvalidContent, "", nil)
+		return Subscription{}, std.NewStatus(std.StatusInvalidContent, nil)
 	}
 	return std.New[Subscription](m.Content)
 }
@@ -133,7 +133,7 @@ func NewSubscriptionCancelMessage(to, from, Name string) *Message {
 
 func SubscriptionCancelContent(m *Message) (Subscription, *std.Status) {
 	if !ValidContent(m, SubscriptionCancelEvent, ContentTypeSubscription) {
-		return Subscription{}, std.NewStatus(std.StatusInvalidContent, "", nil)
+		return Subscription{}, std.NewStatus(std.StatusInvalidContent, nil)
 	}
 	return std.New[Subscription](m.Content)
 }

@@ -18,7 +18,7 @@ func NewReviewMessage(review *Review) *Message {
 
 func ReviewContent(m *Message) (*Review, *std.Status) {
 	if !ValidContent(m, ConfigEvent, ContentTypeReview) {
-		return nil, std.NewStatus(std.StatusInvalidContent, "", errors.New("invalid content"))
+		return nil, std.NewStatus(std.StatusInvalidContent, errors.New("invalid content"))
 	}
 	return std.New[*Review](m.Content)
 }

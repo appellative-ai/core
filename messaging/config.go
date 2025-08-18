@@ -35,7 +35,7 @@ func NewStatusMessage(status *std.Status, relatesTo string) *Message {
 
 func StatusContent(m *Message) (*std.Status, string, *std.Status) {
 	if !ValidContent(m, StatusEvent, ContentTypeStatus) {
-		return nil, "", std.NewStatus(std.StatusInvalidContent, "", nil)
+		return nil, "", std.NewStatus(std.StatusInvalidContent, nil)
 	}
 	t, status := std.New[*std.Status](m.Content)
 	if status.OK() {

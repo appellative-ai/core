@@ -53,7 +53,7 @@ func ExampleMapMessage() {
 */
 
 func ExampleStatusMessage() {
-	m := NewStatusMessage(std.NewStatus(http.StatusTeapot, "", nil), ConfigEvent)
+	m := NewStatusMessage(std.NewStatus(http.StatusTeapot, nil), ConfigEvent)
 
 	status, event, result := StatusContent(m)
 	fmt.Printf("test: StatusContent() -> [%v] [%v] [status:%v]\n", status, event, result)

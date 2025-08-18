@@ -1,13 +1,8 @@
 package messaging
 
-import (
-	"errors"
-	"fmt"
-	"github.com/appellative-ai/core/std"
-)
-
+/*
 func EmptyMapError(location string) *std.Status {
-	return std.NewStatus(std.StatusInvalidArgument, location, errors.New("map is nil"))
+	return std.NewStatus(std.StatusInvalidArgument, errors.New("map is nil"),location, )
 }
 
 func MapContentError(location string, key string) *std.Status {
@@ -17,6 +12,9 @@ func MapContentError(location string, key string) *std.Status {
 func EmptyReviewError(location string) *std.Status {
 	return std.NewStatus(std.StatusInvalidArgument, location, errors.New("review is nil"))
 }
+
+
+*/
 
 /*
 func EventError(agentId string, msg *Message) error {
