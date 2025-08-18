@@ -27,10 +27,10 @@ func (c Content) Valid(contentType string) bool {
 
 func New[T any](ct *Content) (t T, status *Status) {
 	if ct == nil {
-		return t, NewStatus(http.StatusBadRequest, "", errors.New(fmt.Sprintf("error: content is nil")))
+		return t, NewStatus(http.StatusBadRequest, errors.New(fmt.Sprintf("error: content is nil")))
 	}
 	if ct.Type == "" || ct.Value == nil {
-		return t, NewStatus(http.StatusNoContent, "", errors.New(fmt.Sprintf("error: content type is empty, or content value is nil")))
+		return t, NewStatus(http.StatusNoContent, errors.New(fmt.Sprintf("error: content type is empty, or content value is nil")))
 	}
 	// Check for binary and unmarshal
 	if _, ok := ct.Value.([]byte); ok {
@@ -41,7 +41,7 @@ func New[T any](ct *Content) (t T, status *Status) {
 	if t, ok = ct.Value.(T); ok {
 		return t, StatusOK
 	}
-	return t, NewStatus(StatusInvalidContent, "", errors.New(fmt.Sprintf("error: content value type: %v is not of generic type: %v", reflect.TypeOf(ct.Value), reflect.TypeOf(t))))
+	return t, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("error: content value type: %v is not of generic type: %v", reflect.TypeOf(ct.Value), reflect.TypeOf(t))))
 }
 
 // Unmarshal - []byte -> string, []byte, io.Reader, type via json.Unmarshal
@@ -50,13 +50,13 @@ func Unmarshal[T any](ct *Content) (t T, status *Status) {
 	var ok bool
 
 	if ct == nil {
-		return t, NewStatus(http.StatusBadRequest, "", errors.New(fmt.Sprintf("error: content is nil")))
+		return t, NewStatus(http.StatusBadRequest, errors.New(fmt.Sprintf("error: content is nil")))
 	}
 	if ct.Type == "" || ct.Value == nil {
-		return t, NewStatus(http.StatusNoContent, "", errors.New(fmt.Sprintf("error: content type is empty, or content value is nil")))
+		return t, NewStatus(http.StatusNoContent, errors.New(fmt.Sprintf("error: content type is empty, or content value is nil")))
 	}
 	if body, ok = ct.Value.([]byte); !ok {
-		return t, NewStatus(StatusInvalidContent, "", errors.New(fmt.Sprintf("error: content value type: %v is not of type: []byte", reflect.TypeOf(ct.Value))))
+		return t, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("error: content value type: %v is not of type: []byte", reflect.TypeOf(ct.Value))))
 	}
 	if len(body) == 0 {
 		return t, StatusOK
@@ -64,21 +64,21 @@ func Unmarshal[T any](ct *Content) (t T, status *Status) {
 	switch ptr := any(&t).(type) {
 	case *string:
 		if ct.Type != ContentTypeText && ct.Type != ContentTypeTextHtml {
-			return t, NewStatus(StatusInvalidContent, "", errors.New(fmt.Sprintf("error: content type: %v is invalid for string", ct.Type)))
+			return t, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("error: content type: %v is invalid for string", ct.Type)))
 		}
 		*ptr = string(body)
 	case *[]byte:
 		if ct.Type != ContentTypeBinary {
-			return t, NewStatus(StatusInvalidContent, "", errors.New(fmt.Sprintf("error: content type: %v is invalid for []byte", ct.Type)))
+			return t, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("error: content type: %v is invalid for []byte", ct.Type)))
 		}
 		*ptr = body
 	default:
 		if ct.Type != ContentTypeJson {
-			return t, NewStatus(StatusInvalidContent, "", errors.New(fmt.Sprintf("error: content type: %v is invalid for json.Unmarshal()", ct.Type)))
+			return t, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("error: content type: %v is invalid for json.Unmarshal()", ct.Type)))
 		}
 		err := json.Unmarshal(body, ptr)
 		if err != nil {
-			return t, NewStatus(StatusJsonDecodeError, "", errors.New(fmt.Sprintf("error: JSON unmarshalling %v", err)))
+			return t, NewStatus(StatusJsonDecodeError, errors.New(fmt.Sprintf("error: JSON unmarshalling %v", err)))
 		}
 	}
 	return t, StatusOK
@@ -89,10 +89,10 @@ func Marshal[T any](ct *Content) (t T, status *Status) {
 	var buf []byte
 
 	if ct == nil {
-		return t, NewStatus(http.StatusBadRequest, "", errors.New(fmt.Sprintf("error: content is nil")))
+		return t, NewStatus(http.StatusBadRequest, errors.New(fmt.Sprintf("error: content is nil")))
 	}
 	if ct.Type == "" || ct.Value == nil {
-		return t, NewStatus(http.StatusNoContent, "", errors.New(fmt.Sprintf("error: content type is empty, or content value is nil")))
+		return t, NewStatus(http.StatusNoContent, errors.New(fmt.Sprintf("error: content type is empty, or content value is nil")))
 	}
 	switch ptr := ct.Value.(type) {
 	case string:
@@ -103,11 +103,11 @@ func Marshal[T any](ct *Content) (t T, status *Status) {
 		var err error
 		buf, err = json.Marshal(ptr)
 		if err != nil {
-			return t, NewStatus(StatusJsonEncodeError, "", err)
+			return t, NewStatus(StatusJsonEncodeError, err)
 		}
 	}
 	if len(buf) == 0 {
-		return t, NewStatus(http.StatusNoContent, "", errors.New("content value is empty"))
+		return t, NewStatus(http.StatusNoContent, errors.New("content value is empty"))
 	}
 	switch ptr := any(&t).(type) {
 	case *[]byte:
@@ -118,5 +118,5 @@ func Marshal[T any](ct *Content) (t T, status *Status) {
 		return t, StatusOK
 	default:
 	}
-	return t, NewStatus(StatusInvalidContent, "", errors.New(fmt.Sprintf("error: generic type: %v is not supported for marshalling", reflect.TypeOf(t))))
+	return t, NewStatus(StatusInvalidContent, errors.New(fmt.Sprintf("error: generic type: %v is not supported for marshalling", reflect.TypeOf(t))))
 }

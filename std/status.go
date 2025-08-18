@@ -24,8 +24,8 @@ const (
 )
 
 var (
-	StatusOK       = NewStatus(http.StatusOK, "", nil)
-	StatusNotFound = NewStatus(http.StatusNotFound, "", nil)
+	StatusOK       = NewStatus(http.StatusOK, nil)
+	StatusNotFound = NewStatus(http.StatusNotFound, nil)
 )
 
 type Status struct {
@@ -34,10 +34,15 @@ type Status struct {
 	Location string
 }
 
-func NewStatus(code int, location string, err error) *Status {
+func NewStatus(code int, err error) *Status {
 	s := new(Status)
 	s.Code = code
 	s.Err = err
+	return s
+}
+
+func NewStatusWithLocation(code int, err error, location string) *Status {
+	s := NewStatus(code, err)
 	s.Location = location
 	return s
 }
