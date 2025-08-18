@@ -7,7 +7,7 @@ import (
 )
 
 func ExampleStatus() {
-	s := NewStatusWithLocation(http.StatusTeapot, errors.New("this is an error"), "agent\test")
+	s := NewStatus(http.StatusTeapot, errors.New("this is an error")).SetLocation("agent\test")
 
 	fmt.Printf("test: NewStatus() -> %v\n", s)
 

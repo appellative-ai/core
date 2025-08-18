@@ -41,12 +41,6 @@ func NewStatus(code int, err error) *Status {
 	return s
 }
 
-func NewStatusWithLocation(code int, err error, location string) *Status {
-	s := NewStatus(code, err)
-	s.Location = location
-	return s
-}
-
 func (s *Status) OK() bool       { return s.Code == http.StatusOK }
 func (s *Status) NotFound() bool { return s.Code == http.StatusNotFound }
 func (s *Status) String() string {
@@ -55,6 +49,11 @@ func (s *Status) String() string {
 	}
 	return fmt.Sprintf("%v", HttpStatus(s.Code))
 
+}
+
+func (s *Status) SetLocation(location string) *Status {
+	s.Location = location
+	return s
 }
 
 /*
