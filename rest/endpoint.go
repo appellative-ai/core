@@ -17,11 +17,11 @@ type endpoint struct {
 	init    func(r *http.Request)
 }
 
-func NewEndpoint(pattern string, handler HttpHandler, init func(r *http.Request), chain Exchange) Endpoint {
+func NewEndpoint(pattern string, handler HttpHandler, init func(r *http.Request), operatives []any) Endpoint {
 	e := new(endpoint)
 	e.pattern = pattern
 	e.handler = handler
-	e.chain = chain
+	e.chain = BuildNetwork(operatives)
 	e.init = init
 	return e
 }

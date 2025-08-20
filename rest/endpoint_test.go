@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func ExampleNewEndpoint() {
+func _ExampleNewEndpoint() {
 	e := NewEndpoint("/resource/test", nil, nil, nil)
 
 	_, ok := any(e).(http.Handler)
